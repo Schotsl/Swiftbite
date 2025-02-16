@@ -21,8 +21,8 @@ export default function NavigationButton() {
       }
     }
 
-    // Navigate to the scan screen
-    router.push("/scan");
+    // Navigate to the add screen
+    router.push("/add");
   };
 
   return (

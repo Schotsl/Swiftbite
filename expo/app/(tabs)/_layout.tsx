@@ -9,7 +9,7 @@ export default function TabsLayout() {
       screenOptions={({ route }: { route: { name: string } }) => ({
         tabBarActiveTintColor: "blue",
         tabBarStyle: {
-          display: route.name === "add" ? "none" : "flex",
+          display: route.name.startsWith("add") ? "none" : "flex",
         },
       })}
     >
@@ -29,6 +29,14 @@ export default function TabsLayout() {
           title: "Add",
           headerShown: false,
           tabBarButton: NavigationButton,
+        }}
+      />
+
+      <Tabs.Screen
+        name="add/preview"
+        options={{
+          href: null,
+          headerShown: false,
         }}
       />
 

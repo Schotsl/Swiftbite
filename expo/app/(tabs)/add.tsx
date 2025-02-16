@@ -1,21 +1,19 @@
 import { CameraView, CameraType } from "expo-camera";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import {
-  ImageManipulator,
-  ImageManipulatorContext,
-  SaveFormat,
-} from "expo-image-manipulator";
+import { useRouter } from "expo-router";
 
 export default function App() {
+  const router = useRouter();
   const camera = useRef<CameraView>(null);
+
   const [facing, setFacing] = useState<CameraType>("back");
 
-  function toggleCameraFacing() {
+  function flipImage() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
-  const takePicture = async () => {
+  const takeImage = async () => {
     if (!camera.current) {
       return;
     }
@@ -31,90 +29,9 @@ export default function App() {
       return;
     }
 
-    console.log("[DEVICE] Manipulating picture...");
+    const { uri, width, height } = picture;
 
-    const smallManipulator = ImageManipulator.manipulate(picture.uri);
-    const largeManipulator = ImageManipulator.manipulate(picture.uri);
-
-    const pictureLandscape = picture.width > picture.height;
-
-    smallManipulator.resize({
-      width: pictureLandscape ? 512 : null,
-      height: pictureLandscape ? null : 512,
-    });
-
-    largeManipulator.resize({
-      width: pictureLandscape ? 1440 : null,
-      height: pictureLandscape ? null : 1440,
-    });
-
-    const [smallBase64, largeBase64] = await Promise.all([
-      renderToBase64(smallManipulator, true),
-      renderToBase64(largeManipulator, false),
-    ]);
-
-    console.log("[DEVICE] Picture manipulated");
-
-    fetchTitle(smallBase64);
-    fetchNutrition(largeBase64);
-  };
-
-  const renderToBase64 = async (
-    manipulator: ImageManipulatorContext,
-    compressed: boolean
-  ) => {
-    const format = SaveFormat.JPEG;
-    const base64 = true;
-    const compress = compressed ? 0.5 : 1;
-
-    const manipulatorRender = await manipulator.renderAsync();
-    const manipulatorSaved = await manipulatorRender.saveAsync({
-      format,
-      base64,
-      compress,
-    });
-
-    return manipulatorSaved.base64!;
-  };
-
-  const fetchTitle = async (image: string) => {
-    console.log("[API] Fetching title...");
-
-    const url = "https://swiftbite.app/api/fetch-title";
-    const body = JSON.stringify({ image });
-    const method = "POST";
-
-    const response = await fetch(url, { body, method });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-
-    const parsed = await response.json();
-
-    console.log("[API] Received title");
-
-    return parsed.title;
-  };
-
-  const fetchNutrition = async (image: string) => {
-    console.log("[API] Fetching nutrition...");
-
-    const url = "https://swiftbite.app/api/fetch-nutrition";
-    const body = JSON.stringify({ image });
-    const method = "POST";
-
-    const response = await fetch(url, { body, method });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-
-    const parsed = await response.json();
-
-    console.log("[API] Received nutrition");
-
-    return parsed.nutrition;
+    router.push({ pathname: "/add/preview", params: { uri, width, height } });
   };
 
   return (
@@ -134,7 +51,7 @@ export default function App() {
       >
         <TouchableOpacity
           style={{ flex: 1, alignSelf: "flex-end", alignItems: "center" }}
-          onPress={toggleCameraFacing}
+          onPress={flipImage}
         >
           <Text style={{ fontSize: 24, fontWeight: "bold", color: "white" }}>
             Flip
@@ -143,7 +60,7 @@ export default function App() {
 
         <TouchableOpacity
           style={{ flex: 1, alignSelf: "flex-end", alignItems: "center" }}
-          onPress={takePicture}
+          onPress={takeImage}
         >
           <Text style={{ fontSize: 24, fontWeight: "bold", color: "white" }}>
             Snap
