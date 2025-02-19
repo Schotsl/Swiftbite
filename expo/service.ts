@@ -8,6 +8,8 @@ export const fetchTitle = async (image: string) => {
   const response = await fetch(url, { body, method });
 
   if (!response.ok) {
+    console.log(`API request failed with status ${response.status}`);
+
     throw new Error(`API request failed with status ${response.status}`);
   }
 
@@ -28,6 +30,8 @@ export const fetchNutrition = async (image: string) => {
   const response = await fetch(url, { body, method });
 
   if (!response.ok) {
+    console.log(`API request failed with status ${response.status}`);
+
     throw new Error(`API request failed with status ${response.status}`);
   }
 

@@ -1,28 +1,26 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import {
-  ImageManipulator,
-  ImageManipulatorContext,
-  SaveFormat,
-} from "expo-image-manipulator";
+import { ImageManipulator } from "expo-image-manipulator";
 
-import Crypto from "expo-crypto";
+import * as Crypto from "expo-crypto";
+
+import { Image } from "@/types";
 import { renderToBase64 } from "@/helper";
 import { fetchNutrition, fetchTitle } from "@/service";
 
 type FoodContextType = {
-  food: FoodItem[];
-  addFood: (uri: string, width: number, height: number) => void;
+  foods: FoodItem[];
+  addFood: (image: Image) => string;
   removeFood: (id: string) => void;
   resizeFood: (id: string) => void;
   analyzeFood: (id: string) => void;
 };
 
 const FoodContext = createContext<FoodContextType>({
-  food: [],
-  addFood: (uri: string, width: number, height: number) => {},
-  removeFood: (id: string) => {},
-  resizeFood: (id: string) => {},
-  analyzeFood: (id: string) => {},
+  foods: [],
+  addFood: () => "",
+  removeFood: () => {},
+  resizeFood: () => {},
+  analyzeFood: () => {},
 });
 
 type FoodProviderProps = {
@@ -32,19 +30,17 @@ type FoodProviderProps = {
 enum Status {
   Idle = "idle",
   Resizing = "resizing",
-  ResizingIdle = "resizing-idle",
+  ResizingDone = "resizing-done",
   Analyzing = "analyzing",
-  Processed = "processed",
+  AnalyzingDone = "analyzing-done",
 }
 
 type FoodItem = {
   id: string;
+  image: Image;
   status: Status;
-  image: {
-    uri: string;
-    width: number;
-    height: number;
-  };
+  pending: boolean;
+  // TODO: Rename these to resizingData and analyzingData
   base64Small?: string;
   base64Large?: string;
   title?: string;
@@ -52,51 +48,52 @@ type FoodItem = {
 };
 
 export const FoodProvider = ({ children }: FoodProviderProps) => {
-  const [food, setFood] = useState<FoodItem[]>([]);
+  const [foods, setFoods] = useState<FoodItem[]>([]);
 
-  const addFood = (uri: string, width: number, height: number) => {
-    const food = {
-      id: Crypto.randomUUID(),
-      status: Status.Idle,
-      image: { uri, width, height },
-    };
-    setFood((current) => [...current, food]);
+  const addFood = (image: Image) => {
+    const id = Crypto.randomUUID();
+    const status = Status.Idle;
+    const pending = false;
+
+    const food = { id, image, status, pending };
+
+    setFoods((current) => [...current, food]);
+
+    return food;
   };
 
   const removeFood = (id: string) => {
-    setFood((current) => current.filter((food) => food.id !== id));
+    setFoods((current) => current.filter((food) => food.id !== id));
   };
 
   const resizeFood = async (id: string) => {
-    const item = food.find((food) => food.id === id);
+    const food = foods.find((food) => food.id === id);
 
-    setFood((current) =>
+    if (!food) throw new Error(`Food item with id ${id} not found`);
+
+    setFoods((current) =>
       current.map((food) =>
         food.id === id ? { ...food, status: Status.Resizing } : food
       )
     );
 
-    if (!item) {
-      throw new Error(`Food item with id ${id} not found`);
-    }
-
-    const { uri, width, height } = item.image;
+    const { uri, width, height } = food.image;
 
     console.log("[DEVICE] Manipulating picture...");
 
     const smallManipulator = ImageManipulator.manipulate(uri);
     const largeManipulator = ImageManipulator.manipulate(uri);
 
-    const imageLandscape = width > height;
+    const isLandscape = width > height;
 
     smallManipulator.resize({
-      width: imageLandscape ? 512 : null,
-      height: imageLandscape ? null : 512,
+      width: isLandscape ? 512 : null,
+      height: isLandscape ? null : 512,
     });
 
     largeManipulator.resize({
-      width: imageLandscape ? 1440 : null,
-      height: imageLandscape ? null : 1440,
+      width: isLandscape ? 1440 : null,
+      height: isLandscape ? null : 1440,
     });
 
     const [smallBase64, largeBase64] = await Promise.all([
@@ -104,60 +101,74 @@ export const FoodProvider = ({ children }: FoodProviderProps) => {
       renderToBase64(largeManipulator, false),
     ]);
 
-    setFood((current) =>
+    console.log("[DEVICE] Picture manipulated");
+
+    setFoods((current) =>
+      current.map((food) => {
+        const { id, pending } = food;
+
+        if (id !== id) return food;
+        if (pending) {
+          analyzeFood(id);
+        }
+
+        return {
+          ...food,
+          status: Status.ResizingDone,
+          pending: false,
+          base64Small: smallBase64,
+          base64Large: largeBase64,
+        };
+      })
+    );
+  };
+
+  const analyzeFood = (id: string) => {
+    // Change the status or set pending flag to true if resizing is not done
+    setFoods((current) =>
       current.map((food) =>
         food.id === id
-          ? {
-              ...food,
-              status: Status.ResizingIdle,
-              base64Small: smallBase64,
-              base64Large: largeBase64,
-            }
+          ? food.status === Status.Resizing
+            ? { ...food, pending: true }
+            : { ...food, status: Status.Analyzing }
           : food
       )
     );
 
-    console.log("[DEVICE] Picture manipulated");
-  };
+    const food = foods.find((food) => food.id === id);
 
-  const analyzeFood = (id: string) => {
-    const item = food.find((food) => food.id === id);
+    if (!food) throw new Error(`Food item with id ${id} not found`);
 
-    setFood((current) =>
-      current.map((food) =>
-        food.id === id ? { ...food, status: Status.Analyzing } : food
-      )
-    );
-
-    if (!item) {
-      throw new Error(`Food item with id ${id} not found`);
-    }
-
-    const { base64Large, base64Small } = item;
-
-    if (!base64Large || !base64Small) {
-      throw new Error(`Food item with id ${id} is missing base64 data`);
-    }
-
-    //Set title and nutrition if either is returned and once both are returned, set status to processed
-    fetchTitle(base64Small).then((title: string) => {
-      setFood((current) =>
+    fetchTitle(food.base64Small!).then((title: string) => {
+      setFoods((current) =>
         current.map((food) => {
           const complete = food.id === id && food.nutrition;
-          const status = complete ? Status.Processed : food.status;
+          const status = complete ? Status.AnalyzingDone : food.status;
 
-          return food.id === id ? { ...food, title, status } : food;
+          return food.id === id
+            ? {
+                ...food,
+                title,
+                status,
+              }
+            : food;
         })
       );
     });
 
-    fetchNutrition(base64Large).then((nutrition: string) => {
-      setFood((current) =>
+    fetchNutrition(food.base64Large!).then((nutrition: string) => {
+      setFoods((current) =>
         current.map((food) => {
           const complete = food.id === id && food.title;
-          const status = complete ? Status.Processed : food.status;
+          const status = complete ? Status.AnalyzingDone : food.status;
 
-          return food.id === id ? { ...food, nutrition, status } : food;
+          return food.id === id
+            ? {
+                ...food,
+                status,
+                nutrition,
+              }
+            : food;
         })
       );
     });
@@ -166,7 +177,7 @@ export const FoodProvider = ({ children }: FoodProviderProps) => {
   return (
     <FoodContext.Provider
       value={{
-        food,
+        foods,
         addFood,
         removeFood,
         resizeFood,
@@ -176,4 +187,14 @@ export const FoodProvider = ({ children }: FoodProviderProps) => {
       {children}
     </FoodContext.Provider>
   );
+};
+
+export const useFoodProvider = () => {
+  const context = useContext(FoodContext);
+
+  if (!context) {
+    throw new Error("useFoodProvider must be used within a FoodProvider");
+  }
+
+  return context;
 };

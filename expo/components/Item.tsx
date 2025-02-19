@@ -1,9 +1,10 @@
 import { Image } from "react-native";
 import { View, Text } from "react-native";
+import SkeletonContent from "react-native-skeleton-content";
 
 type ItemProps = {
-  kcal: number;
-  title: string;
+  kcal?: number;
+  title?: string;
 };
 
 export default function Item({ kcal, title }: ItemProps) {
@@ -24,8 +25,8 @@ export default function Item({ kcal, title }: ItemProps) {
       />
 
       <View style={{ gap: 2 }}>
-        <Text style={{ fontSize: 16 }}>{title}</Text>
-        <Text style={{ fontSize: 14 }}>{kcal} kcal</Text>
+        <Text style={{ fontSize: 16 }}>{title ? title : "Loading..."}</Text>
+        <Text style={{ fontSize: 14 }}>{kcal ? kcal : "Loading..."} kcal</Text>
       </View>
     </View>
   );

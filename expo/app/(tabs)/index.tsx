@@ -2,8 +2,11 @@ import { FlatList } from "react-native";
 import { View } from "react-native";
 
 import Item from "@/components/Item";
+import { useFoodProvider } from "@/context/FoodContext";
 
 export default function Index() {
+  const { foods } = useFoodProvider();
+
   return (
     <View
       style={{
@@ -14,10 +17,7 @@ export default function Index() {
     >
       <FlatList
         style={{ width: "100%" }}
-        data={[
-          { id: "a", title: "Pizza", kcal: 430 },
-          { id: "b", title: "Cake", kcal: 300 },
-        ]}
+        data={foods}
         renderItem={({ item }) => <Item {...item} />}
         keyExtractor={(item) => item.id}
       />

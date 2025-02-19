@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import {
   ImageManipulator,
@@ -6,9 +6,12 @@ import {
   SaveFormat,
 } from "expo-image-manipulator";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFoodProvider } from "@/context/FoodContext";
 
 export default function App() {
+  const { addFood, resizeFood, analyzeFood } = useFoodProvider();
   const router = useRouter();
+  const [uuid, setUuid] = useState<string | null>(null);
 
   const { uri, width, height } = useLocalSearchParams<{
     uri: string;
@@ -17,6 +20,8 @@ export default function App() {
   }>();
 
   const handleSave = () => {
+    analyzeFood(uuid!);
+
     router.push("/");
   };
 
@@ -25,92 +30,13 @@ export default function App() {
   };
 
   const loadImage = async () => {
-    console.log("[DEVICE] Manipulating picture...");
+    const widthInt = parseInt(width);
+    const heightInt = parseInt(height);
 
-    const smallManipulator = ImageManipulator.manipulate(uri as string);
-    const largeManipulator = ImageManipulator.manipulate(uri as string);
+    const uuid = addFood({ uri, width: widthInt, height: heightInt });
 
-    const imageWidth = parseInt(width);
-    const imageHeight = parseInt(height);
-    const imageLandscape = imageWidth > imageHeight;
-
-    smallManipulator.resize({
-      width: imageLandscape ? 512 : null,
-      height: imageLandscape ? null : 512,
-    });
-
-    largeManipulator.resize({
-      width: imageLandscape ? 1440 : null,
-      height: imageLandscape ? null : 1440,
-    });
-
-    const [smallBase64, largeBase64] = await Promise.all([
-      renderToBase64(smallManipulator, true),
-      renderToBase64(largeManipulator, false),
-    ]);
-
-    console.log("[DEVICE] Picture manipulated");
-
-    fetchTitle(smallBase64);
-    fetchNutrition(largeBase64);
-  };
-
-  const renderToBase64 = async (
-    manipulator: ImageManipulatorContext,
-    compressed: boolean
-  ) => {
-    const format = SaveFormat.JPEG;
-    const base64 = true;
-    const compress = compressed ? 0.5 : 1;
-
-    const manipulatorRender = await manipulator.renderAsync();
-    const manipulatorSaved = await manipulatorRender.saveAsync({
-      format,
-      base64,
-      compress,
-    });
-
-    return manipulatorSaved.base64!;
-  };
-
-  const fetchTitle = async (image: string) => {
-    console.log("[API] Fetching title...");
-
-    const url = "https://swiftbite.app/api/fetch-title";
-    const body = JSON.stringify({ image });
-    const method = "POST";
-
-    const response = await fetch(url, { body, method });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-
-    const parsed = await response.json();
-
-    console.log("[API] Received title");
-
-    return parsed.title;
-  };
-
-  const fetchNutrition = async (image: string) => {
-    console.log("[API] Fetching nutrition...");
-
-    const url = "https://swiftbite.app/api/fetch-nutrition";
-    const body = JSON.stringify({ image });
-    const method = "POST";
-
-    const response = await fetch(url, { body, method });
-
-    if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
-    }
-
-    const parsed = await response.json();
-
-    console.log("[API] Received nutrition");
-
-    return parsed.nutrition;
+    setUuid(uuid);
+    resizeFood(uuid);
   };
 
   useEffect(() => {
