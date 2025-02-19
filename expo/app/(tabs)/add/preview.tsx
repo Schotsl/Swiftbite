@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-import {
-  ImageManipulator,
-  ImageManipulatorContext,
-  SaveFormat,
-} from "expo-image-manipulator";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useFoodProvider } from "@/context/FoodContext";
+import { FoodItem } from "@/types";
 
 export default function App() {
-  const { addFood, resizeFood, analyzeFood } = useFoodProvider();
   const router = useRouter();
-  const [uuid, setUuid] = useState<string | null>(null);
 
+  const [food, setFood] = useState<FoodItem | null>(null);
+
+  const { addFood, resizeFood, analyzeFood } = useFoodProvider();
   const { uri, width, height } = useLocalSearchParams<{
     uri: string;
     width: string;
@@ -20,7 +17,7 @@ export default function App() {
   }>();
 
   const handleSave = () => {
-    analyzeFood(uuid!);
+    analyzeFood(food!);
 
     router.push("/");
   };
@@ -33,10 +30,11 @@ export default function App() {
     const widthInt = parseInt(width);
     const heightInt = parseInt(height);
 
-    const uuid = addFood({ uri, width: widthInt, height: heightInt });
+    const food = addFood({ uri, width: widthInt, height: heightInt });
 
-    setUuid(uuid);
-    resizeFood(uuid);
+    setFood(food);
+
+    resizeFood(food);
   };
 
   useEffect(() => {

@@ -3,21 +3,23 @@ import { ImageManipulator } from "expo-image-manipulator";
 
 import * as Crypto from "expo-crypto";
 
-import { Image } from "@/types";
 import { renderToBase64 } from "@/helper";
+import { Image, FoodItemLocal, Status } from "@/types";
 import { fetchNutrition, fetchTitle } from "@/service";
+import { Estimation } from "../../types";
+import { supabase } from "@/supabase";
 
 type FoodContextType = {
-  foods: FoodItem[];
-  addFood: (image: Image) => string;
-  removeFood: (id: string) => void;
-  resizeFood: (id: string) => void;
-  analyzeFood: (id: string) => void;
+  foods: FoodItemLocal[];
+  addFood: (image: Image) => FoodItemLocal;
+  removeFood: (food: FoodItemLocal) => void;
+  resizeFood: (food: FoodItemLocal) => void;
+  analyzeFood: (food: FoodItemLocal) => void;
 };
 
 const FoodContext = createContext<FoodContextType>({
   foods: [],
-  addFood: () => "",
+  addFood: () => ({}) as FoodItemLocal,
   removeFood: () => {},
   resizeFood: () => {},
   analyzeFood: () => {},
@@ -27,28 +29,8 @@ type FoodProviderProps = {
   children: ReactNode;
 };
 
-enum Status {
-  Idle = "idle",
-  Resizing = "resizing",
-  ResizingDone = "resizing-done",
-  Analyzing = "analyzing",
-  AnalyzingDone = "analyzing-done",
-}
-
-type FoodItem = {
-  id: string;
-  image: Image;
-  status: Status;
-  pending: boolean;
-  // TODO: Rename these to resizingData and analyzingData
-  base64Small?: string;
-  base64Large?: string;
-  title?: string;
-  nutrition?: string;
-};
-
 export const FoodProvider = ({ children }: FoodProviderProps) => {
-  const [foods, setFoods] = useState<FoodItem[]>([]);
+  const [foods, setFoods] = useState<FoodItemLocal[]>([]);
 
   const addFood = (image: Image) => {
     const id = Crypto.randomUUID();
@@ -62,18 +44,19 @@ export const FoodProvider = ({ children }: FoodProviderProps) => {
     return food;
   };
 
-  const removeFood = (id: string) => {
-    setFoods((current) => current.filter((food) => food.id !== id));
+  const removeFood = (food: FoodItemLocal) => {
+    setFoods((current) =>
+      current.filter((foodNeedle) => foodNeedle.id !== food.id)
+    );
   };
 
-  const resizeFood = async (id: string) => {
-    const food = foods.find((food) => food.id === id);
-
-    if (!food) throw new Error(`Food item with id ${id} not found`);
-
+  const resizeFood = async (food: FoodItemLocal) => {
+    // Change the status to resizing
     setFoods((current) =>
-      current.map((food) =>
-        food.id === id ? { ...food, status: Status.Resizing } : food
+      current.map((foodNeedle) =>
+        food.id === foodNeedle.id
+          ? { ...foodNeedle, status: Status.Resizing }
+          : { ...foodNeedle }
       )
     );
 
@@ -96,7 +79,7 @@ export const FoodProvider = ({ children }: FoodProviderProps) => {
       height: isLandscape ? null : 1440,
     });
 
-    const [smallBase64, largeBase64] = await Promise.all([
+    const [imageBase64Small, imageBase64Large] = await Promise.all([
       renderToBase64(smallManipulator, true),
       renderToBase64(largeManipulator, false),
     ]);
@@ -104,71 +87,91 @@ export const FoodProvider = ({ children }: FoodProviderProps) => {
     console.log("[DEVICE] Picture manipulated");
 
     setFoods((current) =>
-      current.map((food) => {
-        const { id, pending } = food;
+      current.map((foodNeedle) => {
+        const { id, pending } = foodNeedle;
 
-        if (id !== id) return food;
-        if (pending) {
-          analyzeFood(id);
-        }
+        if (id !== food.id) return foodNeedle;
 
-        return {
-          ...food,
+        const updated = {
+          ...foodNeedle,
           status: Status.ResizingDone,
           pending: false,
-          base64Small: smallBase64,
-          base64Large: largeBase64,
+          imageBase64Small,
+          imageBase64Large,
         };
+
+        if (pending) {
+          analyzeFood(updated);
+        }
+
+        return updated;
       })
     );
   };
 
-  const analyzeFood = (id: string) => {
+  const analyzeFood = (food: FoodItemLocal) => {
+    // I don't love this but the user probably has the old object so we'll find the new one
+    food = foods.find((foodNeedle) => foodNeedle.id === food.id)!;
+
     // Change the status or set pending flag to true if resizing is not done
     setFoods((current) =>
-      current.map((food) =>
-        food.id === id
-          ? food.status === Status.Resizing
-            ? { ...food, pending: true }
-            : { ...food, status: Status.Analyzing }
-          : food
+      current.map((foodNeedle) =>
+        foodNeedle.id === food.id
+          ? foodNeedle.status === Status.Resizing
+            ? { ...foodNeedle, pending: true }
+            : { ...foodNeedle, status: Status.Analyzing }
+          : foodNeedle
       )
     );
 
-    const food = foods.find((food) => food.id === id);
-
-    if (!food) throw new Error(`Food item with id ${id} not found`);
-
-    fetchTitle(food.base64Small!).then((title: string) => {
+    fetchTitle(food.imageBase64Small!).then((title: string) => {
       setFoods((current) =>
-        current.map((food) => {
-          const complete = food.id === id && food.nutrition;
-          const status = complete ? Status.AnalyzingDone : food.status;
+        current.map((foodNeedle) => {
+          const complete = foodNeedle.id === food.id && foodNeedle.nutrition;
+          const status = complete ? Status.AnalyzingDone : foodNeedle.status;
 
-          return food.id === id
+          const { id, nutrition } = foodNeedle;
+
+          supabase
+            .from("food")
+            .insert({ id, title, nutrition })
+            .then(() => {
+              console.log("[Supabase] Inserted food");
+            });
+
+          return foodNeedle.id === food.id
             ? {
-                ...food,
+                ...foodNeedle,
                 title,
                 status,
               }
-            : food;
+            : foodNeedle;
         })
       );
     });
 
-    fetchNutrition(food.base64Large!).then((nutrition: string) => {
+    fetchNutrition(food.imageBase64Large!).then((nutrition: Estimation) => {
       setFoods((current) =>
-        current.map((food) => {
-          const complete = food.id === id && food.title;
-          const status = complete ? Status.AnalyzingDone : food.status;
+        current.map((foodNeedle) => {
+          const complete = foodNeedle.id === food.id && foodNeedle.title;
+          const status = complete ? Status.AnalyzingDone : foodNeedle.status;
 
-          return food.id === id
+          const { id, title } = foodNeedle;
+
+          supabase
+            .from("food")
+            .insert({ id, title, nutrition })
+            .then(() => {
+              console.log("[Supabase] Inserted food");
+            });
+
+          return foodNeedle.id === food.id
             ? {
-                ...food,
+                ...foodNeedle,
                 status,
                 nutrition,
               }
-            : food;
+            : foodNeedle;
         })
       );
     });
