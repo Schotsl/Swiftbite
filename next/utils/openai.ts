@@ -7,12 +7,17 @@ export async function fetchEstimation(url: string) {
     model: "gpt-4o",
     messages: [
       {
-        role: "user",
+        role: "system",
         content: [
           {
             type: "text",
-            text: "You are a nutritionist. Estimate the nutritional values for the food in the image.",
+            text: "You are a nutritionist. Estimate the nutritional values for the food in the image. In your response, please ensure that every property name is completely in lowercase.",
           },
+        ],
+      },
+      {
+        role: "user",
+        content: [
           {
             type: "image_url",
             image_url: {

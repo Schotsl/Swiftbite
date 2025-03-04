@@ -93,6 +93,8 @@ export default function App() {
       uploadImage(`${generative.uuid}-small`, smallImage!),
       uploadImage(`${generative.uuid}`, largeImage!),
     ]);
+
+    console.log("[DEVICE] All images uploaded");
   };
 
   const uploadImage = async (name: string, base64: string) => {
