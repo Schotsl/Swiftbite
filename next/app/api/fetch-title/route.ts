@@ -1,10 +1,12 @@
-import { fetchTitle } from "../../../services/openai";
+// import { fetchTitle } from "../../../services/openai";
 
 export async function POST(request: Request) {
-  const { image } = await request.json();
+  const body = await request.json();
 
-  const responseData = await fetchTitle(image);
-  const responseParsed = JSON.stringify({ title: responseData });
+  console.log(body);
 
-  return new Response(responseParsed, { status: 200 });
+  // const responseData = await fetchTitle(image);
+  // const responseParsed = JSON.stringify({ title: responseData });
+
+  return new Response("{}", { status: 200 });
 }
