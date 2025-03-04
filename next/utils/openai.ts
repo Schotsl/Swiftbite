@@ -1,9 +1,8 @@
 import { OpenAI } from "openai";
-import { Estimation } from "../../types";
 
 const openai = new OpenAI();
 
-export async function fetchEstimation(base64: string): Promise<Estimation> {
+export async function fetchEstimation(url: string) {
   const response = await openai.chat.completions.create({
     model: "gpt-4o",
     messages: [
@@ -12,12 +11,12 @@ export async function fetchEstimation(base64: string): Promise<Estimation> {
         content: [
           {
             type: "text",
-            text: "You are a nutritionist. Estimate the calories of the food in the image.",
+            text: "You are a nutritionist. Estimate the nutritional values for the food in the image.",
           },
           {
             type: "image_url",
             image_url: {
-              url: `data:image/jpeg;base64,${base64}`,
+              url,
             },
           },
         ],
@@ -29,75 +28,82 @@ export async function fetchEstimation(base64: string): Promise<Estimation> {
         function: {
           name: "nutritional_estimation",
           description:
-            "Returns an estimation of the nutritional values of the identified food item in the image.",
+            "Returns an estimation of the nutritional values per 100g of the identified food item in the image.",
           parameters: {
             type: "object",
             properties: {
-              calories: {
+              calcium_100g: {
                 type: "number",
-                description: "Estimated total calories in kcal",
+                description: "Estimated calcium per 100g in milligrams",
               },
-              protein: {
+              calorie_100g: {
                 type: "number",
-                description: "Estimated protein in grams",
+                description: "Estimated calories per 100g",
               },
-              fat: {
+              carbohydrate_100g: {
                 type: "number",
-                description: "Estimated fat in grams",
+                description: "Estimated carbohydrates per 100g in grams",
               },
-              carbohydrates: {
+              carbohydrate_sugar_100g: {
                 type: "number",
-                description: "Estimated carbohydrates in grams",
+                description: "Estimated sugar content per 100g in grams",
               },
-              sugars: {
+              cholesterol_100g: {
                 type: "number",
-                description: "Estimated sugar content in grams",
+                description: "Estimated cholesterol per 100g in milligrams",
               },
-              fiber: {
+              fat_100g: {
                 type: "number",
-                description: "Estimated fiber content in grams",
+                description: "Estimated total fat per 100g in grams",
               },
-              saturated_fat: {
+              fat_saturated_100g: {
                 type: "number",
-                description: "Estimated saturated fat content in grams",
+                description: "Estimated saturated fat per 100g in grams",
               },
-              unsaturated_fat: {
+              fat_trans_100g: {
                 type: "number",
-                description: "Estimated unsaturated fat content in grams",
+                description: "Estimated trans fat per 100g in grams",
               },
-              cholesterol: {
+              fat_unsaturated_100g: {
                 type: "number",
-                description: "Estimated cholesterol content in milligrams",
+                description: "Estimated unsaturated fat per 100g in grams",
               },
-              sodium: {
+              fiber_100g: {
                 type: "number",
-                description: "Estimated sodium content in milligrams",
+                description: "Estimated fiber per 100g in grams",
               },
-              potassium: {
+              iron_100g: {
                 type: "number",
-                description: "Estimated potassium content in milligrams",
+                description: "Estimated iron per 100g in milligrams",
               },
-              calcium: {
-                type: "number",
-                description: "Estimated calcium content in milligrams",
+              micros_100g: {
+                type: "object",
+                description:
+                  "Estimated micronutrients per 100g (vitamins, minerals, etc.)",
               },
-              iron: {
-                type: "number",
-                description: "Estimated iron content in milligrams",
-              },
-              weight: {
+              portion: {
                 type: "number",
                 description: "Estimated serving size in grams or milliliters",
               },
+              potassium_100g: {
+                type: "number",
+                description: "Estimated potassium per 100g in milligrams",
+              },
+              protein_100g: {
+                type: "number",
+                description: "Estimated protein per 100g in grams",
+              },
+              sodium_100g: {
+                type: "number",
+                description: "Estimated sodium per 100g in milligrams",
+              },
             },
             required: [
-              "calories",
-              "protein",
-              "fat",
-              "carbohydrates",
-              "sugars",
-              "fiber",
-              "sodium",
+              "calorie_100g",
+              "protein_100g",
+              "fat_100g",
+              "carbohydrate_100g",
+              "sodium_100g",
             ],
           },
         },
@@ -116,7 +122,7 @@ export async function fetchEstimation(base64: string): Promise<Estimation> {
   return responseParsed;
 }
 
-export async function fetchTitle(base64: string): Promise<string> {
+export async function fetchTitle(url: string) {
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
@@ -131,7 +137,7 @@ export async function fetchTitle(base64: string): Promise<string> {
           {
             type: "image_url",
             image_url: {
-              url: `data:image/jpeg;base64,${base64}`,
+              url,
             },
           },
         ],

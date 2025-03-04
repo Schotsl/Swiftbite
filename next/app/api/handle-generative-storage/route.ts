@@ -1,12 +1,72 @@
-// import { fetchTitle } from "../../../services/openai";
+import { after } from "next/server";
+import { handleError } from "@/helper";
+import { fetchTitle, fetchEstimation } from "@/utils/openai";
+
+import supabase from "@/utils/supabase";
 
 export async function POST(request: Request) {
   const body = await request.json();
 
-  console.log(body);
+  const generativeName = body.record.name;
+  const generativeUUID = generativeName.replace("-small", "");
 
-  // const responseData = await fetchTitle(image);
-  // const responseParsed = JSON.stringify({ title: responseData });
+  after(async () => {
+    const signedUrl = await fetchUrl(generativeUUID);
+
+    if (generativeName.endsWith("-small")) {
+      // We'll use the small image to figure out the title
+      const [title, ingredient] = await Promise.all([
+        fetchTitle(signedUrl),
+        fetchIngredient(generativeUUID),
+      ]);
+
+      const { error: ingredientError } = await supabase
+        .from("ingredient")
+        .update({ title })
+        .eq("uuid", ingredient);
+
+      handleError(ingredientError);
+
+      return;
+    }
+
+    // If it's the larger image we'll analyze the nutrition
+    const [estimation, ingredient] = await Promise.all([
+      fetchEstimation(signedUrl),
+      fetchIngredient(generativeUUID),
+    ]);
+
+    const { error: ingredientError } = await supabase
+      .from("ingredient")
+      .update(estimation)
+      .eq("uuid", ingredient);
+
+    handleError(ingredientError);
+
+    return;
+  });
 
   return new Response("{}", { status: 200 });
 }
+
+const fetchIngredient = async (generativeUUID: string) => {
+  const { data, error } = await supabase
+    .from("generative")
+    .select("ingredient_id")
+    .eq("uuid", generativeUUID)
+    .single();
+
+  handleError(error);
+
+  return data?.ingredient_id;
+};
+
+const fetchUrl = async (generativeUUID: string) => {
+  const { data, error } = await supabase.storage
+    .from("generative")
+    .createSignedUrl(`${generativeUUID}`, 3600);
+
+  handleError(error);
+
+  return data!.signedUrl;
+};
