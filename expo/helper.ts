@@ -2,7 +2,7 @@ import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean
+  compressed: boolean,
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -16,4 +16,12 @@ export const renderToBase64 = async (
   });
 
   return manipulatorSaved.base64!;
+};
+
+export const handleError = (error: Error | null) => {
+  if (error) {
+    console.log(error);
+
+    throw new Error(error.message);
+  }
 };

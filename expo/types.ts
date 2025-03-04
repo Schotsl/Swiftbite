@@ -1,30 +1,14 @@
-import { Estimation } from "../types";
+import { Tables } from "./database.types";
 
-export type Image = {
-  uri: string;
-  width: number;
-  height: number;
-};
+export type Ingredient = Tables<"ingredient">;
+export type Generative = Tables<"generative">;
 
-export enum Status {
-  Idle = "idle",
-  Resizing = "resizing",
-  ResizingDone = "resizing-done",
-  Analyzing = "analyzing",
-  AnalyzingDone = "analyzing-done",
-}
+export type IngredientInsert = Omit<
+  Ingredient,
+  "uuid" | "user_id" | "created_at" | "updated_at"
+>;
 
-export type FoodItem = {
-  id: string;
-  title?: string;
-  nutrition?: Estimation;
-};
-
-export type FoodItemLocal = FoodItem & {
-  status: Status;
-  pending: boolean;
-
-  image: Image;
-  imageBase64Small?: string;
-  imageBase64Large?: string;
-};
+export type GenerativeInsert = Omit<
+  Generative,
+  "uuid" | "user_id" | "created_at" | "updated_at"
+>;

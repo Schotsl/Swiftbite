@@ -1,8 +1,8 @@
-import { FoodItem } from "@/types";
+import { Image, Text, View } from "react-native";
 
-import { View, Text, Image } from "react-native";
+import { Ingredient } from "@/types";
 
-export default function Item({ nutrition, title }: FoodItem) {
+export default function Item({ calorie_100g, title }: Ingredient) {
   return (
     <View
       style={{
@@ -22,7 +22,7 @@ export default function Item({ nutrition, title }: FoodItem) {
       <View style={{ gap: 2 }}>
         <Text style={{ fontSize: 16 }}>{title ? title : "Loading..."}</Text>
         <Text style={{ fontSize: 14 }}>
-          {nutrition ? nutrition.calories : "Loading..."} kcal
+          {calorie_100g ? calorie_100g : "Loading..."} kcal
         </Text>
       </View>
     </View>

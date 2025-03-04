@@ -5,11 +5,11 @@
   "private": true,
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "types": "supabase gen types typescript --project-id 'ffbbrrfdghbvuajheulg' --schema public > database.types.ts",
+    "format": "prettier --write .",
+    "preinstall": "npm run types"
   },
   "jest": {
     "preset": "jest-expo"
@@ -17,9 +17,14 @@
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "@supabase/supabase-js": "^2.48.1",
+    "@tanstack/react-query": "^5.67.1",
+    "base64-arraybuffer": "^1.0.2",
+    "eslint-import-resolver-typescript": "^3.8.3",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "expo": "~52.0.33",
     "expo-blur": "~14.0.3",
     "expo-camera": "~16.0.16",

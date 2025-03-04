@@ -1,45 +1,116 @@
-import { useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { decode } from "base64-arraybuffer";
+import { ImageManipulator } from "expo-image-manipulator";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useFoodProvider } from "@/context/FoodContext";
-import { FoodItem } from "@/types";
+import { useCallback, useEffect, useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+
+import { handleError, renderToBase64 } from "@/helper";
+import useInsertGenerative from "@/mutations/useInsertGenerative";
+import useInsertIngredient from "@/mutations/useInsertIngredient";
+import supabase from "@/utils/supabase";
 
 export default function App() {
   const router = useRouter();
 
-  const [food, setFood] = useState<FoodItem | null>(null);
+  const [smallImage, setSmallImage] = useState<string | null>(null);
+  const [largeImage, setLargeImage] = useState<string | null>(null);
 
-  const { addFood, resizeFood, analyzeFood } = useFoodProvider();
+  const insertIngredient = useInsertIngredient();
+  const insertGenerative = useInsertGenerative();
+
   const { uri, width, height } = useLocalSearchParams<{
     uri: string;
     width: string;
     height: string;
   }>();
 
-  const handleSave = () => {
-    analyzeFood(food!);
+  const handleResize = useCallback(async () => {
+    console.log("[DEVICE] Manipulating picture...");
 
+    const smallManipulator = ImageManipulator.manipulate(uri);
+    const largeManipulator = ImageManipulator.manipulate(uri);
+
+    const isLandscape = width > height;
+
+    smallManipulator.resize({
+      width: isLandscape ? 512 : null,
+      height: isLandscape ? null : 512,
+    });
+
+    largeManipulator.resize({
+      width: isLandscape ? 1440 : null,
+      height: isLandscape ? null : 1440,
+    });
+
+    const [imageBase64Small, imageBase64Large] = await Promise.all([
+      renderToBase64(smallManipulator, true),
+      renderToBase64(largeManipulator, false),
+    ]);
+
+    setSmallImage(imageBase64Small);
+    setLargeImage(imageBase64Large);
+
+    console.log("[DEVICE] Picture manipulated");
+  }, [uri, width, height]);
+
+  useEffect(() => {
+    handleResize();
+  }, [handleResize]);
+
+  const handleSave = async () => {
     router.push("/");
+
+    const ingredient = await insertIngredient.mutateAsync({
+      type: "openfood",
+      title: null,
+      icon_id: null,
+      calcium_100g: null,
+      calorie_100g: null,
+      carbohydrate_100g: null,
+      carbohydrate_sugar_100g: null,
+      cholesterol_100g: null,
+      fat_100g: null,
+      fat_saturated_100g: null,
+      fat_trans_100g: null,
+      fat_unsaturated_100g: null,
+      fiber_100g: null,
+      iron_100g: null,
+      micros_100g: null,
+      openfood_id: null,
+      portion: null,
+      potassium_100g: null,
+      protein_100g: null,
+      sodium_100g: null,
+    });
+
+    const generative = await insertGenerative.mutateAsync({
+      type: "image",
+      content: null,
+      ingredient_id: ingredient.uuid,
+    });
+
+    await Promise.all([
+      uploadImage(`${generative.uuid}-small`, smallImage!),
+      uploadImage(`${generative.uuid}`, largeImage!),
+    ]);
+  };
+
+  const uploadImage = async (name: string, base64: string) => {
+    const content = decode(base64);
+    const contentType = "image/jpeg";
+
+    const { error } = await supabase.storage
+      .from("generative")
+      .upload(name, content, {
+        contentType,
+      });
+
+    handleError(error);
   };
 
   const handleDiscard = () => {
     router.push("/add");
   };
-
-  const loadImage = async () => {
-    const widthInt = parseInt(width);
-    const heightInt = parseInt(height);
-
-    const food = addFood({ uri, width: widthInt, height: heightInt });
-
-    setFood(food);
-
-    resizeFood(food);
-  };
-
-  useEffect(() => {
-    loadImage();
-  }, [uri, width, height]);
 
   return (
     <View style={{ flex: 1 }}>

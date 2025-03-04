@@ -1,7 +1,7 @@
-import { CameraView, CameraType } from "expo-camera";
+import { CameraType, CameraView } from "expo-camera";
+import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
-import { useRouter } from "expo-router";
 
 export default function App() {
   const router = useRouter();
