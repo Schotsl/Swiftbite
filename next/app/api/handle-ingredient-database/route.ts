@@ -53,9 +53,9 @@ export async function POST(request: Request) {
     // We'll upload the icon and update the ingredient
     await uploadIcon(uuid, blob);
     await updateIngredient(ingredientUuid, uuid);
-
-    return new Response("{}", { status: 200 });
   });
+
+  return new Response("{}", { status: 200 });
 }
 
 const updateIngredient = async (ingredient: string, icon: string) => {
