@@ -3,10 +3,10 @@ import { removeBackground } from "@/utils/background";
 import { generateIcon, normalizeTitle } from "@/utils/openai";
 import supabase from "@/utils/supabase";
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   const body = await request.json();
-
   console.log(body);
+  // const uuid = body.record.console.log(body);
 
   return new Response("{}", { status: 200 });
 
