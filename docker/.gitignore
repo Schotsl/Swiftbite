@@ -1,0 +1,11 @@
+# MacOS
+.DS_Store
+
+# Env files
+.env*
+
+# Temporary files
+.tmp
+
+# Node modules
+node_modules
