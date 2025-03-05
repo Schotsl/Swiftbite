@@ -1,8 +1,10 @@
-import { Image, Text, View } from "react-native";
+import { Image } from "expo-image";
+import { ActivityIndicator } from "react-native";
+import { Text, View } from "react-native";
 
 import { Ingredient } from "@/types";
 
-export default function Item({ calorie_100g, title }: Ingredient) {
+export default function Item({ calorie_100g, title, icon_id }: Ingredient) {
   return (
     <View
       style={{
@@ -14,12 +16,30 @@ export default function Item({ calorie_100g, title }: Ingredient) {
         borderBottomColor: "rgba(0, 0, 0, 0.1)",
       }}
     >
-      <Image
-        source={require("../assets/images/burger.png")}
-        style={{ width: 38, height: 38 }}
-      />
+      <View
+        style={{
+          width: 42,
+          height: 42,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        {icon_id ? (
+          <Image
+            source={`https://ffbbrrfdghbvuajheulg.supabase.co/storage/v1/object/public/icon/${icon_id}`}
+            contentFit="contain"
+            contentPosition="center"
+            style={{
+              width: 42,
+              height: 42,
+            }}
+          />
+        ) : (
+          <ActivityIndicator size="small" />
+        )}
+      </View>
 
-      <View style={{ gap: 2 }}>
+      <View style={{ gap: 6 }}>
         <Text style={{ fontSize: 16 }}>{title ? title : "Loading..."}</Text>
         <Text style={{ fontSize: 14 }}>
           {calorie_100g ? calorie_100g : "Loading..."} kcal

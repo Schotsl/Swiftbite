@@ -16,7 +16,10 @@ export default function Index() {
 
   // If any of the titles or calories are missing we'll keep polling
   useEffect(() => {
-    const processing = data.some((item) => !item.title || !item.calorie_100g);
+    const processing = data.some(
+      (item) => !item.title || !item.calorie_100g || !item.icon_id
+    );
+
     const interval = processing ? 500 : false;
 
     setInterval(interval);
