@@ -4,16 +4,17 @@ import { generateIcon, normalizeTitle } from "@/utils/openai";
 import supabase from "@/utils/supabase";
 import { after } from "next/server";
 
+export const maxDuration = 60;
+
 export async function POST(request: Request) {
   const body = await request.json();
 
-  return new Response("{}", { status: 200 });
-
+  const ingredientIcon = body.record.icon_id;
   const ingredientUuid = body.record.uuid;
   const ingredientTitle = body.record.title;
 
-  // If the title hasn't yet been generated we'll skip
-  if (!ingredientTitle) {
+  // If the title hasn't yet been or the icon already exists we'll skip
+  if (!ingredientTitle || ingredientIcon) {
     return new Response("{}", { status: 200 });
   }
 
