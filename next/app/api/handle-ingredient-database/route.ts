@@ -7,6 +7,8 @@ import { after } from "next/server";
 export async function POST(request: Request) {
   const body = await request.json();
 
+  return new Response("{}", { status: 200 });
+
   const ingredientUuid = body.record.uuid;
   const ingredientTitle = body.record.title;
 
