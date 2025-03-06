@@ -36,7 +36,7 @@ def generate_icon(title: str) -> bytes:
         f"prompt the text to Dall-e exactly, with no modifications: "
         f"high quality simple and minimal 3d render, feature a piece of {title}, "
         "made of plasticine, on a plain white background, perfect and simple composition, "
-        "realistic and bright color palette, rendered with octane and global illumination, "
+        "realistic, traditional and bright food color palette, rendered with octane and global illumination, "
         "ambient occlusion, ray tracing, color mapping, no to minimal shadows on the right side "
         "and a low angle from below, the {title} should take up most of the frame"
     )
