@@ -26,16 +26,16 @@ export async function POST(request: Request) {
     const iconUuid = await fetchIcon(iconTitle);
     console.log(iconUuid);
     // If the icon already exists we'll update the ingredient
-    if (iconUuid) {
-      await updateIngredient(ingredientUuid, iconUuid);
+    // if (iconUuid) {
+    //   await updateIngredient(ingredientUuid, iconUuid);
 
-      return new Response("{}", { status: 200 });
-    }
+    //   return new Response("{}", { status: 200 });
+    // }
 
-    const insertUuid = await insertIcon(iconTitle);
+    // const insertUuid = await insertIcon(iconTitle);
 
-    await generateIcon(insertUuid, iconTitle);
-    await updateIngredient(ingredientUuid, insertUuid);
+    // await generateIcon(insertUuid, iconTitle);
+    // await updateIngredient(ingredientUuid, insertUuid);
   });
 
   return new Response("{}", { status: 200 });
