@@ -4,7 +4,11 @@
   "type": "module",
   "scripts": {
     "lint": "deno lint",
-    "format": "deno fmt"
+    "format": "deno fmt",
+    "tag": "docker tag swiftbite schotsl/swiftbite:latest",
+    "push": "docker push schotsl/swiftbite:latest",
+    "build": "docker build --platform linux/amd64 -t swiftbite .",
+    "deploy": "bun run build && bun run tag && bun run push"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.1",

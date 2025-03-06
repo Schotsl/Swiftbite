@@ -9,7 +9,10 @@
     "lint": "eslint . --fix --ignore-path .gitignore",
     "types": "supabase gen types typescript --project-id 'ffbbrrfdghbvuajheulg' --schema public > database.types.ts",
     "format": "prettier --write .",
-    "preinstall": "npm run types"
+    "preinstall": "bun run types",
+    "build:internal": "eas build --platform ios --profile preview",
+    "build:production": "eas build --platform ios --profile production",
+    "build:development": "eas build --platform ios --profile development"
   },
   "jest": {
     "preset": "jest-expo"
