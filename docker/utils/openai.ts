@@ -22,7 +22,7 @@ export async function normalizeTitle(title: string) {
       {
         role: "system",
         content:
-          `You are responsible for normalizing food titles to ensure they can be matched with icons or generated as images when they don't exist. The input can be in any language, and the output should be a clear, simplified description of the food item. For example, "Quaker Cruesli cookies & cream" would become "a box of cereal," while "KFC 32 Zinger Hot Wings bucket" might be transformed into "a bucket of chicken." Keep descriptions singular—"fries" should become something like "a serving of fries" or "a packet of fries." Company-specific items like "Big Mac" should be generalized, so it would become "a hamburger.".`,
+          `You are responsible for normalizing food titles to ensure they can be matched with icons or generated as images when they don't exist. The input can be in any language, and the output should be a clear, english, simplified description of the food item. For example, "Quaker Cruesli cookies & cream" would become "a box of cereal,", "Jonge Kaas" would become "cheese", while "KFC 32 Zinger Hot Wings bucket" might be transformed into "a bucket of chicken." Keep descriptions singular—"fries" should become something like "a serving of fries" or "a packet of fries." Company-specific items like "Big Mac" should be generalized, so it would become "a hamburger."`,
       },
       {
         role: "user",

@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
   imagemagick \
   && rm -rf /var/lib/apt/lists/*
 
+RUN pip3 install --no-cache-dir --upgrade pip
 RUN pip3 install --no-cache-dir backgroundremover
 
 WORKDIR /app
