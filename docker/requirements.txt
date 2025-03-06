@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+pillow
+backgroundremover
+openai==0.28
+supabase
+python-dotenv

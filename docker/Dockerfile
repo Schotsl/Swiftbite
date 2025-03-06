@@ -1,23 +1,17 @@
-FROM oven/bun:latest
+FROM python:3.9-slim
 
-ENV TZ=Europe/London
-
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-RUN apt-get update && apt-get install -y \
-  python3 \
-  python3-pip \
+RUN apt-get update && \
+  apt-get install -y \
   imagemagick \
   && rm -rf /var/lib/apt/lists/*
-
-RUN pip3 install --no-cache-dir --upgrade pip
-RUN pip3 install --no-cache-dir backgroundremover
 
 WORKDIR /app
 
 COPY . /app
 
+RUN pip install --no-cache-dir -r requirements.txt
+RUN python load.py
+
 EXPOSE 3000
 
-RUN bun install
-
-CMD ["bun", "run", "index.ts"]
+CMD ["uvicorn", "index:app", "--host", "0.0.0.0", "--port", "3000"]
