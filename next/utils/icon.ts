@@ -16,10 +16,11 @@ export async function generateIcon(uuid: string, title: string) {
       body,
       method,
       headers,
-    },
+    }
   );
 
   if (!response.ok) {
-    throw new Error("Failed to generate icon");
+    const message = await response.text();
+    throw new Error(message);
   }
 }
