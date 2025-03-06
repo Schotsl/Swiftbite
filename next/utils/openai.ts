@@ -154,18 +154,6 @@ export async function fetchTitle(url: string) {
   return title;
 }
 
-export async function generateIcon(title: string) {
-  const image = await openai.images.generate({
-    size: "1024x1024",
-    model: "dall-e-3",
-    style: "vivid",
-    prompt: `prompt the text to Dall-e exactly, with no modifications: high quality simple and minimal 3d render, feature a piece of ${title}, made of plasticine, on a plain white background, perfect and simple composition, realistic and bright color palette, rendered with octane and global illumination, ambient occlusion, ray tracing, color mapping, no to minimal shadows on the right side and a low angle from below`,
-    response_format: "b64_json",
-  });
-
-  return image.data[0].b64_json!;
-}
-
 export async function normalizeTitle(title: string) {
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",
