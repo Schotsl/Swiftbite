@@ -54,9 +54,9 @@ def generate_icon(title: str) -> bytes:
     return response_bytes
 
 def process_with_imagemagick(uuid: str) -> None:
-    path_transparent = f"./.tmp/{uuid}-transparent.png"
-    path_trimmed = f"./.tmp/{uuid}-trimmed.png"
-    path_final = f"./.tmp/{uuid}.png"
+    path_transparent = f"./.tmp/{uuid}-transparent"
+    path_trimmed = f"./.tmp/{uuid}-trimmed"
+    path_final = f"./.tmp/{uuid}"
 
     trim_cmd = [
         "convert",
@@ -81,7 +81,7 @@ def process_with_imagemagick(uuid: str) -> None:
 
 def upload_icon(filename: str, bytes: bytes) -> None:
     storage = supabase.storage.from_("icon")
-    storage.upload(filename, bytes, {"contentType": "image/png"})
+    storage.upload(filename, bytes, {"content-type": "image/png"})
 
     print(f"Uploaded {filename} to Supabase storage.")
 
@@ -94,7 +94,7 @@ async def generate_endpoint(
     try:
         # Step 1: Generate the icon using OpenAI
         icon_bytes = generate_icon(request.title)
-        icon_path = f"./.tmp/{request.uuid}-original.png"
+        icon_path = f"./.tmp/{request.uuid}-original"
 
         with open(icon_path, "wb") as f:
             f.write(icon_bytes)
@@ -102,7 +102,7 @@ async def generate_endpoint(
         # Step 2: Remove the background using the BackgroundRemover library
         transparent_memory = remove(icon_bytes, "u2net")
         transparent_bytes = bytes(transparent_memory)
-        transparent_path = f"./.tmp/{request.uuid}-transparent.png"
+        transparent_path = f"./.tmp/{request.uuid}-transparent"
         
         with open(transparent_path, "wb") as f:
             f.write(transparent_bytes)
@@ -111,8 +111,8 @@ async def generate_endpoint(
         process_with_imagemagick(request.uuid)
 
         # Upload the final resized image
-        final_path = f"./.tmp/{request.uuid}.png"
-        trimmed_path = f"./.tmp/{request.uuid}-trimmed.png"
+        final_path = f"./.tmp/{request.uuid}"
+        trimmed_path = f"./.tmp/{request.uuid}-trimmed"
 
         with open(final_path, "rb") as f:
             upload_icon(request.uuid, f.read())
@@ -121,9 +121,9 @@ async def generate_endpoint(
             trimmed_bytes = f.read()
 
         # Upload the remaining images in the background
-        background_tasks.add_task(upload_icon, f"{request.uuid}-original.png", icon_bytes)
-        background_tasks.add_task(upload_icon, f"{request.uuid}-transparent.png", transparent_bytes)
-        background_tasks.add_task(upload_icon, f"{request.uuid}-trimmed.png", trimmed_bytes)
+        background_tasks.add_task(upload_icon, f"{request.uuid}-original", icon_bytes)
+        background_tasks.add_task(upload_icon, f"{request.uuid}-transparent", transparent_bytes)
+        background_tasks.add_task(upload_icon, f"{request.uuid}-trimmed", trimmed_bytes)
         
         background_tasks.add_task(os.remove, icon_path)
         background_tasks.add_task(os.remove, transparent_path)
