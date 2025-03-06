@@ -7,7 +7,7 @@ export async function generateIcon(uuid: string, title: string) {
   const method = "POST";
   const headers = {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${process.env.SWIFTBITE_API_KEY}`,
+    "X-Api-Key": process.env.SWIFTBITE_API_KEY!,
   };
 
   const response = await fetch(
