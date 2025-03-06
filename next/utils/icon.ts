@@ -16,7 +16,7 @@ export async function generateIcon(uuid: string, title: string) {
       body,
       method,
       headers,
-    }
+    },
   );
 
   if (!response.ok) {
