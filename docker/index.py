@@ -15,7 +15,7 @@ SUPABASE_URL=os.environ.get("SUPABASE_URL")
 SUPABASE_SERVICE_KEY=os.environ.get("SUPABASE_SERVICE_KEY")
 
 OPENAI_API_KEY=os.environ.get("OPENAI_API_KEY");
-SWIFTBITE_API_KEY=os.environ.get("API_KEY")
+SWIFTBITE_API_KEY=os.environ.get("SWIFTBITE_API_KEY")
 
 app = FastAPI()
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
