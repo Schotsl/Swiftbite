@@ -1,5 +1,5 @@
 import { handleError } from "@/helper";
-import { generateIcon } from "@/utils/icon";
+// import { generateIcon } from "@/utils/icon";
 import { normalizeTitle } from "@/utils/openai";
 import { after } from "next/server";
 
@@ -11,7 +11,7 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   const ingredientIcon = body.record.icon_id;
-  const ingredientUuid = body.record.uuid;
+  // const ingredientUuid = body.record.uuid;
   const ingredientTitle = body.record.title;
 
   // If the title hasn't yet been or the icon already exists we'll skip
@@ -41,16 +41,16 @@ export async function POST(request: Request) {
   return new Response("{}", { status: 200 });
 }
 
-const updateIngredient = async (ingredient: string, icon: string) => {
-  console.log(`[ICON] Updating ingredient with icon`);
+// const updateIngredient = async (ingredient: string, icon: string) => {
+//   console.log(`[ICON] Updating ingredient with icon`);
 
-  const { error } = await supabase
-    .from("ingredient")
-    .update({ icon_id: icon })
-    .eq("uuid", ingredient);
+//   const { error } = await supabase
+//     .from("ingredient")
+//     .update({ icon_id: icon })
+//     .eq("uuid", ingredient);
 
-  handleError(error);
-};
+//   handleError(error);
+// };
 
 const fetchIcon = async (title: string) => {
   console.log(`[ICON] Fetching icon from database`);
@@ -67,18 +67,18 @@ const fetchIcon = async (title: string) => {
   return icons[0]?.uuid;
 };
 
-const insertIcon = async (title: string) => {
-  console.log(`[ICON] Inserting icon into database`);
+// const insertIcon = async (title: string) => {
+//   console.log(`[ICON] Inserting icon into database`);
 
-  const { error, data } = await supabase
-    .from("icon")
-    .insert({
-      title,
-    })
-    .select("uuid")
-    .single();
+//   const { error, data } = await supabase
+//     .from("icon")
+//     .insert({
+//       title,
+//     })
+//     .select("uuid")
+//     .single();
 
-  handleError(error);
+//   handleError(error);
 
-  return data!.uuid as string;
-};
+//   return data!.uuid as string;
+// };
