@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     console.log(`[ICON] Normalizing title`);
     const iconTitle = await normalizeTitle(ingredientTitle);
     const iconUuid = await fetchIcon(iconTitle);
-
+    console.log(iconUuid);
     // If the icon already exists we'll update the ingredient
     if (iconUuid) {
       await updateIngredient(ingredientUuid, iconUuid);
