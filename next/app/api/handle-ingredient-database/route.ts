@@ -14,6 +14,8 @@ export async function POST(request: Request) {
   const ingredientUuid = body.record.uuid;
   const ingredientTitle = body.record.title;
 
+  console.log(body);
+
   // If the title hasn't yet been or the icon already exists we'll skip
   if (!ingredientTitle || ingredientIcon) {
     return new Response("{}", { status: 200 });
