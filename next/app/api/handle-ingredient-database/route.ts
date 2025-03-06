@@ -12,19 +12,21 @@ export async function POST(request: Request) {
 
   const ingredientIcon = body.record.icon_id;
   const ingredientUuid = body.record.uuid;
-  const ingredientTitle = body.record.title;
+
+  const ingredientTitleNew = body.record.title;
+  const ingredientTitleOld = body.old_record.title;
 
   // If the title hasn't yet been or the icon already exists we'll skip
-  if (!ingredientTitle || ingredientIcon) {
+  if (ingredientTitleNew === ingredientTitleOld || ingredientIcon) {
     return new Response("{}", { status: 200 });
   }
 
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[ICON] Normalizing title`);
-    const iconTitle = await normalizeTitle(ingredientTitle);
+    const iconTitle = await normalizeTitle(ingredientTitleNew);
     const iconUuid = await fetchIcon(iconTitle);
-    console.log(iconUuid);
+
     // If the icon already exists we'll update the ingredient
     if (iconUuid) {
       await updateIngredient(ingredientUuid, iconUuid);
