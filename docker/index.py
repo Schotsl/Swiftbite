@@ -85,7 +85,11 @@ def upload_icon(filename: str, bytes: bytes) -> None:
 
     print(f"Uploaded {filename} to Supabase storage.")
 
-@app.post("/generate")
+@app.get("/")
+async def root():
+    return {}
+
+@app.post("/generate-icon")
 async def generate_endpoint(
     request: GenerateRequest,
     background_tasks: BackgroundTasks,
