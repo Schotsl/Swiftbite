@@ -12,10 +12,10 @@ export async function POST(request: Request) {
 
   const ingredientIcon = body.record.icon_id;
   const ingredientUuid = body.record.uuid;
-
+  console.log(body);
   const ingredientTitleNew = body.record.title;
   const ingredientTitleOld = body.old_record?.title;
-
+  console.log(ingredientTitleNew, ingredientTitleOld);
   // If the title hasn't yet been or the icon already exists we'll skip
   if (ingredientTitleNew === ingredientTitleOld || ingredientIcon) {
     return new Response("{}", { status: 200 });
