@@ -6,3 +6,6 @@
 
 # Temporary files
 .tmp
+
+# Python
+__pycache__
