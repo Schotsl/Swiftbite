@@ -1,9 +1,10 @@
 {
   "expo": {
-    "name": "swiftbite",
+    "name": "Swiftbite",
     "slug": "swiftbite",
     "version": "1.0.0",
     "orientation": "portrait",
+    "description": "Swiftbite makes food tracking easy with effortless input and no hassle.",
     "icon": "./assets/images/icon.png",
     "scheme": "com.sjorsvanholst.swiftbite",
     "userInterfaceStyle": "automatic",

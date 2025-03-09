@@ -1,10 +1,13 @@
 import { Image } from "expo-image";
+import { useState } from "react";
 import { ActivityIndicator } from "react-native";
 import { Text, View } from "react-native";
 
 import { Ingredient } from "@/types";
 
 export default function Item({ calorie_100g, title, icon_id }: Ingredient) {
+  const [loaded, setLoaded] = useState(false);
+
   return (
     <View
       style={{
@@ -24,19 +27,22 @@ export default function Item({ calorie_100g, title, icon_id }: Ingredient) {
           alignItems: "center",
         }}
       >
-        {icon_id ? (
+        {icon_id && (
           <Image
             source={`https://ffbbrrfdghbvuajheulg.supabase.co/storage/v1/object/public/icon/${icon_id}`}
+            onLoad={() => setLoaded(true)}
             contentFit="contain"
             contentPosition="center"
             style={{
               width: 42,
+              zIndex: 1,
               height: 42,
+              position: "absolute",
             }}
           />
-        ) : (
-          <ActivityIndicator size="small" />
         )}
+
+        {!loaded && <ActivityIndicator size="small" />}
       </View>
 
       <View style={{ gap: 6 }}>

@@ -32,14 +32,7 @@ async def verify_api_key(x_api_key: str = Header(...)):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 def generate_icon(title: str) -> bytes:
-    prompt = (
-        f"prompt the text to Dall-e exactly, with no modifications: "
-        f"high quality simple and minimal 3d render, feature a piece of {title}, "
-        "made of plasticine, on a plain white background, perfect and simple composition, "
-        "realistic, traditional and bright food color palette, rendered with octane and global illumination, "
-        "ambient occlusion, ray tracing, color mapping, no to minimal shadows on the right side "
-        "and a low angle from below, the {title} should take up most of the frame"
-    )
+    prompt = (f"prompt the text to Dall-e exactly, with no modifications: high quality simple and minimal 3d render, feature a smiling ${title}, made of plasticine, on a plain white background, perfect and simple composition, realistic and bright color palette, rendered with octane and global illumination, ambient occlusion, ray tracing and color mapping")
 
     response = openai.Image.create(
         prompt=prompt,
@@ -54,29 +47,42 @@ def generate_icon(title: str) -> bytes:
     return response_bytes
 
 def process_with_imagemagick(uuid: str) -> None:
-    path_transparent = f"./.tmp/{uuid}-transparent"
-    path_trimmed = f"./.tmp/{uuid}-trimmed"
-    path_final = f"./.tmp/{uuid}"
+    path_transparent = f"./.tmp/{uuid}-transparent.png"
+    path_trimmed = f"./.tmp/{uuid}-trimmed.png"
+    path_feathered = f"./.tmp/{uuid}-feathered.png"
+    path_final = f"./.tmp/{uuid}.png"
 
+    # Trim the transparent areas slightly
     trim_cmd = [
         "convert",
         path_transparent,
-        "-fuzz",
-        "4%",
+        "-fuzz", "4%",
         "-trim",
         path_trimmed,
     ]
 
     subprocess.run(trim_cmd, check=True)
 
-    resize_cmd = [
+    # Create a blurred alpha mask for feathering
+    feather_cmd = [
         "convert",
         path_trimmed,
-        "-resize",
-        "128x128",
+        "( +clone -alpha extract -blur 0x8 -level 50x100% )",
+        "-compose Copy_Opacity",
+        "-composite",
+        path_feathered,
+    ]
+
+    subprocess.run(feather_cmd, check=True)
+
+    # Resize to 128x128 while preserving transparency
+    resize_cmd = [
+        "convert",
+        path_feathered,
+        "-resize", "128x128",
         path_final,
     ]
-    
+
     subprocess.run(resize_cmd, check=True)
 
 def upload_icon(filename: str, bytes: bytes) -> None:
@@ -117,6 +123,7 @@ async def generate_endpoint(
         # Upload the final resized image
         final_path = f"./.tmp/{request.uuid}"
         trimmed_path = f"./.tmp/{request.uuid}-trimmed"
+        feathered_path = f"./.tmp/{request.uuid}-feathered"
 
         with open(final_path, "rb") as f:
             upload_icon(request.uuid, f.read())
@@ -124,15 +131,20 @@ async def generate_endpoint(
         with open(trimmed_path, "rb") as f:
             trimmed_bytes = f.read()
 
+        with open(feathered_path, "rb") as f:
+            feathered_bytes = f.read()
+
         # Upload the remaining images in the background
         background_tasks.add_task(upload_icon, f"{request.uuid}-original", icon_bytes)
-        background_tasks.add_task(upload_icon, f"{request.uuid}-transparent", transparent_bytes)
         background_tasks.add_task(upload_icon, f"{request.uuid}-trimmed", trimmed_bytes)
+        background_tasks.add_task(upload_icon, f"{request.uuid}-feathered", feathered_bytes)
+        background_tasks.add_task(upload_icon, f"{request.uuid}-transparent", transparent_bytes)
         
         background_tasks.add_task(os.remove, icon_path)
-        background_tasks.add_task(os.remove, transparent_path)
-        background_tasks.add_task(os.remove, trimmed_path)
         background_tasks.add_task(os.remove, final_path)
+        background_tasks.add_task(os.remove, trimmed_path)
+        background_tasks.add_task(os.remove, feathered_path)
+        background_tasks.add_task(os.remove, transparent_path)
 
         return {};
     except Exception as e:
