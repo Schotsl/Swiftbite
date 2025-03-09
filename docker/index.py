@@ -47,10 +47,10 @@ def generate_icon(title: str) -> bytes:
     return response_bytes
 
 def process_with_imagemagick(uuid: str) -> None:
-    path_transparent = f"./.tmp/{uuid}-transparent.png"
-    path_trimmed = f"./.tmp/{uuid}-trimmed.png"
-    path_feathered = f"./.tmp/{uuid}-feathered.png"
-    path_final = f"./.tmp/{uuid}.png"
+    path_transparent = f"./.tmp/{uuid}-transparent"
+    path_trimmed = f"./.tmp/{uuid}-trimmed"
+    path_feathered = f"./.tmp/{uuid}-feathered"
+    path_final = f"./.tmp/{uuid}"
 
     # Trim the transparent areas slightly
     trim_cmd = [
@@ -67,12 +67,12 @@ def process_with_imagemagick(uuid: str) -> None:
     feather_cmd = [
         "convert",
         path_trimmed,
-        "( +clone -alpha extract -blur 0x8 -level 50x100% )",
-        "-compose Copy_Opacity",
-        "-composite",
+        "-alpha", "extract",
+        "-blur", "0x8",
+        "-level", "50x100%",
         path_feathered,
     ]
-
+    
     subprocess.run(feather_cmd, check=True)
 
     # Resize to 128x128 while preserving transparency
