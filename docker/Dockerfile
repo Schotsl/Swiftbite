@@ -1,15 +1,20 @@
 FROM python:3.9-slim
 
 RUN apt-get update && \
-  apt-get install -y \
-  imagemagick \
-  && rm -rf /var/lib/apt/lists/*
+  apt-get install -y imagemagick && \
+  rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
+# Only copy dependency file to leverage caching
+COPY requirements.txt ./
+
+# Using BuildKit cache for pip downloads
+RUN --mount=type=cache,target=/root/.cache/pip \
+  pip install --no-cache-dir -r requirements.txt
+
 COPY . /app
 
-RUN pip install --no-cache-dir -r requirements.txt
 RUN python load.py
 
 EXPOSE 3000

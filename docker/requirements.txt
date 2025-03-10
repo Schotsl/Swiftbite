@@ -5,3 +5,4 @@ backgroundremover
 openai==0.28
 supabase
 python-dotenv
+requests_toolbelt
