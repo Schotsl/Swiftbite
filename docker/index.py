@@ -51,8 +51,9 @@ def process_with_imagemagick(uuid: str) -> None:
     path_trimmed = f"./.tmp/{uuid}-trimmed"
     path_feathered = f"./.tmp/{uuid}-feathered"
     path_final = f"./.tmp/{uuid}"
+    path_mask = f"./.tmp/{uuid}-mask"
 
-    # Trim the transparent areas slightly
+    # Trim transparent areas
     trim_cmd = [
         "convert",
         path_transparent,
@@ -63,13 +64,26 @@ def process_with_imagemagick(uuid: str) -> None:
 
     subprocess.run(trim_cmd, check=True)
 
-    # Create a blurred alpha mask for feathering
-    feather_cmd = [
+    # Create a blurred alpha mask to feather the edges
+    mask_cmd = [
         "convert",
         path_trimmed,
         "-alpha", "extract",
         "-blur", "0x8",
-        "-level", "50x100%",
+        "-threshold", "50%",
+        path_mask,
+    ]
+
+    subprocess.run(mask_cmd, check=True)
+
+    # Apply the mask to create feathering while keeping transparency
+    feather_cmd = [
+        "convert",
+        path_trimmed,
+        path_mask,
+        "-alpha", "off",
+        "-compose", "Copy_Opacity",
+        "-composite",
         path_feathered,
     ]
 
@@ -121,12 +135,16 @@ async def generate_endpoint(
         process_with_imagemagick(request.uuid)
 
         # Upload the final resized image
+        mask_path = f"./.tmp/{request.uuid}-mask"
         final_path = f"./.tmp/{request.uuid}"
         trimmed_path = f"./.tmp/{request.uuid}-trimmed"
         feathered_path = f"./.tmp/{request.uuid}-feathered"
 
         with open(final_path, "rb") as f:
             upload_icon(request.uuid, f.read())
+
+        with open(mask_path, "rb") as f:
+            mask_bytes = f.read()
 
         with open(trimmed_path, "rb") as f:
             trimmed_bytes = f.read()
@@ -135,12 +153,14 @@ async def generate_endpoint(
             feathered_bytes = f.read()
 
         # Upload the remaining images in the background
+        background_tasks.add_task(upload_icon, f"{request.uuid}-mask", mask_bytes)
         background_tasks.add_task(upload_icon, f"{request.uuid}-original", icon_bytes)
         background_tasks.add_task(upload_icon, f"{request.uuid}-trimmed", trimmed_bytes)
         background_tasks.add_task(upload_icon, f"{request.uuid}-feathered", feathered_bytes)
         background_tasks.add_task(upload_icon, f"{request.uuid}-transparent", transparent_bytes)
         
         background_tasks.add_task(os.remove, icon_path)
+        background_tasks.add_task(os.remove, mask_path)
         background_tasks.add_task(os.remove, final_path)
         background_tasks.add_task(os.remove, trimmed_path)
         background_tasks.add_task(os.remove, feathered_path)
