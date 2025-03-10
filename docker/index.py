@@ -2,8 +2,10 @@ import subprocess
 import os
 import base64
 import openai
+import requests
 
 from dotenv import load_dotenv
+from requests_toolbelt.multipart.encoder import MultipartEncoder
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Header, Depends
 from pydantic import BaseModel
 from supabase import create_client
@@ -15,6 +17,7 @@ SUPABASE_URL=os.environ.get("SUPABASE_URL")
 SUPABASE_SERVICE_KEY=os.environ.get("SUPABASE_SERVICE_KEY")
 
 OPENAI_API_KEY=os.environ.get("OPENAI_API_KEY");
+STABILITY_API_KEY=os.environ.get("STABILITY_API_KEY")
 SWIFTBITE_API_KEY=os.environ.get("SWIFTBITE_API_KEY")
 
 app = FastAPI()
@@ -31,20 +34,39 @@ async def verify_api_key(x_api_key: str = Header(...)):
     if x_api_key != SWIFTBITE_API_KEY:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-def generate_icon(title: str) -> bytes:
-    prompt = (f"prompt the text to Dall-e exactly, with no modifications: high quality very simple and minimal 3d render, feature ${title}, made of plasticine, with no decorative items around the subject on a contrasting background so it can be removed easily, perfect and very simple composition, realistic and bright color palette, rendered with octane and global illumination, ambient occlusion, ray tracing and color mapping")
+def generate_icon(title: str):
+    host = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
 
-    response = openai.Image.create(
-        prompt=prompt,
-        size="1024x1024",
-        model="dall-e-3",
-        response_format="b64_json",
+    prompt = (f"High quality, very simple and minimal 3D render featuring a {title}, "
+              "crafted from plasticine on a contrasting background for easy removal. "
+              "A perfect, simple composition with a realistic, bright color palette—"
+              "rendered with Octane using global illumination, ambient occlusion, ray tracing, "
+              "and color mapping, captured from a side angle.")
+
+    multipart_data = MultipartEncoder(
+        fields={
+            "model": "sd3.5-large-turbo",
+            "prompt": prompt,
+            "aspect_ratio": "1:1",
+            "style_preset": "isometric",
+            "output_format": "png",
+            "negative_prompt": "Shadows, color indexes, decorative items around the subject like droplets, oils or random greens and from the top",
+        }
     )
 
-    response_base64 = response["data"][0]["b64_json"]
-    response_bytes = base64.b64decode(response_base64)
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": multipart_data.content_type,
+        "Authorization": f"Bearer {STABILITY_API_KEY}",
+    }
 
-    return response_bytes
+    response = requests.post(host, headers=headers, data=multipart_data)
+    response_json = response.json()
+
+    image = response_json["image"]
+    image_bytes = base64.b64decode(image)
+
+    return image_bytes
 
 def process_with_imagemagick(uuid: str) -> None:
     path_transparent = f"./.tmp/{uuid}-transparent"
@@ -69,8 +91,8 @@ def process_with_imagemagick(uuid: str) -> None:
         "convert",
         path_trimmed,
         "-alpha", "extract",
-        "-blur", "0x8",
-        "-threshold", "50%",
+        "-blur", "0x4",
+        "-threshold", "30%",
         path_mask,
     ]
 
