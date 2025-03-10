@@ -32,7 +32,7 @@ async def verify_api_key(x_api_key: str = Header(...)):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 def generate_icon(title: str) -> bytes:
-    prompt = (f"prompt the text to Dall-e exactly, with no modifications: high quality simple and minimal 3d render, feature ${title}, made of plasticine, on a plain white background, perfect and simple composition, realistic and bright color palette, rendered with octane and global illumination, ambient occlusion, ray tracing and color mapping")
+    prompt = (f"prompt the text to Dall-e exactly, with no modifications: high quality very simple and minimal 3d render, feature ${title}, made of plasticine, on a contrasting background so it can be removed easily, perfect and simple composition, realistic and bright color palette, rendered with octane and global illumination, ambient occlusion, ray tracing and color mapping")
 
     response = openai.Image.create(
         prompt=prompt,
