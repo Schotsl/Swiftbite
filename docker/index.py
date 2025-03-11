@@ -1,7 +1,6 @@
 import subprocess
 import os
 import base64
-import openai
 import requests
 import re
 
@@ -25,7 +24,6 @@ app = FastAPI()
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 os.makedirs("./.tmp", exist_ok=True)
-openai.api_key = OPENAI_API_KEY
 
 class GenerateRequest(BaseModel):
     uuid: str
@@ -38,7 +36,7 @@ async def verify_api_key(x_api_key: str = Header(...)):
 def generate_icon(title: str):
     host = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
 
-    prompt = (f"High-quality, very simple, and minimal 3D render featuring {title} with simple details (since it will be used as an icon), even lighting from every side, crafted from plasticine on an evenly lit white background that contrasts with the subject. A perfect, simple composition with a realistic, bright color palette, rendered with Octane using global illumination, ambient occlusion, ray tracing, and color mapping, captured from a eye-level / straight-on angle, shot at the same level as the subject, creating a natural, relatable perspective.")
+    prompt = (f"High-quality, very simple, and minimal 3D render featuring {title} with simple details (since it will be used as an icon), even lighting from every side, crafted from plasticine on an evenly lit white background that contrasts with the subject. A perfect, simple composition with a realistic, bright color palette, rendered with Octane using global illumination, ambient occlusion, ray tracing, and color mapping, captured from a eye-level / side angle, shot at the same level as the subject, creating a natural, relatable perspective.")
 
     multipart_data = MultipartEncoder(
         fields={
@@ -98,12 +96,6 @@ def process_with_imagemagick(uuid: str) -> None:
 
     stderr = subprocess.STDOUT
     output = subprocess.check_output(components_cmd, stderr).decode("utf-8")
-
-    # Parse the output. Lines typically look like:
-    # Objects (id: bounding-box centroid area mean-color):
-    #   1: 526x810+1+0 285.8,437.2 251979 gray(255)
-    #   0: 527x811+0+0 193.1,450.4 133515 gray(0)
-    #   2: 374x223+153+0 348.8,66.9 41903 gray(0)
 
     largest_id = None
     largest_area = 0
