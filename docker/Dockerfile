@@ -8,14 +8,16 @@ WORKDIR /app
 
 # Only copy dependency file to leverage caching
 COPY requirements.txt ./
+COPY load.png ./
+COPY load.py ./
 
 # Using BuildKit cache for pip downloads
 RUN --mount=type=cache,target=/root/.cache/pip \
   pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
-
 RUN python load.py
+
+COPY . /app
 
 EXPOSE 3000
 
