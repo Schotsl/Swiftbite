@@ -3,6 +3,7 @@ import os
 import base64
 import openai
 import requests
+import re
 
 from dotenv import load_dotenv
 from requests_toolbelt.multipart.encoder import MultipartEncoder
@@ -13,18 +14,18 @@ from backgroundremover.bg import remove
 
 load_dotenv()
 
-SUPABASE_URL=os.environ.get("SUPABASE_URL")
-SUPABASE_SERVICE_KEY=os.environ.get("SUPABASE_SERVICE_KEY")
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY")
 
-OPENAI_API_KEY=os.environ.get("OPENAI_API_KEY");
-STABILITY_API_KEY=os.environ.get("STABILITY_API_KEY")
-SWIFTBITE_API_KEY=os.environ.get("SWIFTBITE_API_KEY")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
+STABILITY_API_KEY = os.environ.get("STABILITY_API_KEY")
+SWIFTBITE_API_KEY = os.environ.get("SWIFTBITE_API_KEY")
 
 app = FastAPI()
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
 os.makedirs("./.tmp", exist_ok=True)
-openai.api_key = OPENAI_API_KEY;
+openai.api_key = OPENAI_API_KEY
 
 class GenerateRequest(BaseModel):
     uuid: str
@@ -37,11 +38,7 @@ async def verify_api_key(x_api_key: str = Header(...)):
 def generate_icon(title: str):
     host = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
 
-    prompt = (f"High quality, very simple and minimal 3D render featuring a {title}, "
-              "crafted from plasticine on a contrasting background for easy removal. "
-              "A perfect, simple composition with a realistic, bright color palette—"
-              "rendered with Octane using global illumination, ambient occlusion, ray tracing, "
-              "and color mapping, captured from a side angle.")
+    prompt = (f"High-quality, very simple, and minimal 3D render featuring a {title} with simple details (since it will be used as an icon), even lighting from every side, crafted from plasticine on an evenly lit white background that contrasts with the subject. A perfect, simple composition with a realistic, bright color palette, rendered with Octane using global illumination, ambient occlusion, ray tracing, and color mapping, captured from a side angle.")
 
     multipart_data = MultipartEncoder(
         fields={
@@ -50,8 +47,7 @@ def generate_icon(title: str):
             "aspect_ratio": "1:1",
             "style_preset": "isometric",
             "output_format": "png",
-            "negative_prompt": "Shadows, color indexes, decorative items around the subject like droplets, oils or random greens and from the top",
-        }
+            "negative_prompt": "shadows, color labels, decorative elements around the subject (droplets, beans, oils, random greens), top-down camera angle, colored background, unnecessary details"        }
     )
 
     headers = {
@@ -70,53 +66,127 @@ def generate_icon(title: str):
 
 def process_with_imagemagick(uuid: str) -> None:
     path_transparent = f"./.tmp/{uuid}-transparent"
-    path_trimmed = f"./.tmp/{uuid}-trimmed"
-    path_feathered = f"./.tmp/{uuid}-feathered"
-    path_final = f"./.tmp/{uuid}"
+
+    path_composite = f"./.tmp/{uuid}-composite"
+    path_composite_trimmed = f"./.tmp/{uuid}-composite-trimmed"
+    path_composite_trimmed_resized = f"./.tmp/{uuid}-composite-trimmed-resized"
+
     path_mask = f"./.tmp/{uuid}-mask"
+    path_mask_largest = f"./.tmp/{uuid}-mask-largest"
 
-    # Trim transparent areas
-    trim_cmd = [
-        "convert",
-        path_transparent,
-        "-fuzz", "4%",
-        "-trim",
-        path_trimmed,
-    ]
-
-    subprocess.run(trim_cmd, check=True)
-
-    # Create a blurred alpha mask to feather the edges
+    # First create a simple mask of the image from which we'll isolate the largest component and we'll trim later
     mask_cmd = [
         "convert",
-        path_trimmed,
+        path_transparent,
         "-alpha", "extract",
-        "-blur", "0x4",
-        "-threshold", "30%",
+        "-blur", "0x2",
+        "-threshold", "50%",
         path_mask,
     ]
 
     subprocess.run(mask_cmd, check=True)
 
-    # Apply the mask to create feathering while keeping transparency
-    feather_cmd = [
+    # Create a list of the components
+    components_cmd = [
         "convert",
-        path_trimmed,
         path_mask,
-        "-alpha", "off",
-        "-compose", "Copy_Opacity",
-        "-composite",
-        path_feathered,
+        "-define", "connected-components:verbose=true",
+        "-connected-components", "8",
+        "null:"
     ]
 
-    subprocess.run(feather_cmd, check=True)
+    stderr = subprocess.STDOUT
+    output = subprocess.check_output(components_cmd, stderr).decode("utf-8")
 
-    # Resize to 128x128 while preserving transparency
+    # Parse the output. Lines typically look like:
+    # Objects (id: bounding-box centroid area mean-color):
+    #   1: 526x810+1+0 285.8,437.2 251979 gray(255)
+    #   0: 527x811+0+0 193.1,450.4 133515 gray(0)
+    #   2: 374x223+153+0 348.8,66.9 41903 gray(0)
+
+    largest_id = None
+    largest_area = 0
+
+    for line in output.splitlines():
+        # Skip the first line
+        if "Objects" in line:
+            continue
+
+        # Use regex to capture area and color
+        match = re.match(r"\s+(\d+): \d+x\d+\+\d+\+\d+ (\d+\.\d+),\d+\.\d+ (\d+) (.+)", line)
+
+        if match:
+            id = int(match.group(1))
+            area = int(match.group(3))
+            color = match.group(4)
+ 
+            # Skip the background color
+            if color == "gray(0)":
+                continue
+
+            if area > largest_area:
+                largest_id = id
+                largest_area = area
+
+    if largest_area is None:
+        return
+
+    # Isolate the largest component
+    isolate_cmd = [
+        "convert",
+        path_mask,
+        "-define", f"connected-components:keep={largest_id}",
+        "-define", "connected-components:mean-color=true",
+        "-connected-components", "8",
+        path_mask_largest
+    ]
+    
+    # Log output of error if occurs
+    subprocess.run(isolate_cmd, check=True)
+
+    # Feather the edges of the mask
+    soften_cmd = [
+        "convert",
+        path_mask_largest,
+        "-morphology", "Erode", "Disk:4",
+        "-blur", "0x2",
+        path_mask_largest,
+    ]
+
+    subprocess.run(soften_cmd, check=True)
+
+    # Overlay the mask on the original image
+    composite_cmd = [
+        "convert",
+        path_transparent,
+        path_mask_largest,
+        "-compose", "copy-opacity",
+        "-composite",
+        path_composite
+    ]
+    
+    subprocess.run(composite_cmd, check=True)
+
+    # Trim transparent areas but add 8 pixel padding.
+    trim_cmd = [
+        "convert",
+        "-fuzz", "4%",
+        "-trim",
+        "-border", "8",
+        "-bordercolor", "none",
+        "+repage",
+        path_composite,
+        path_composite_trimmed
+    ]
+
+    subprocess.run(trim_cmd, check=True)
+
+    # Resize to 128x128 while preserving transparency.
     resize_cmd = [
         "convert",
-        path_feathered,
+        path_composite_trimmed,
         "-resize", "128x128",
-        path_final,
+        path_composite_trimmed_resized
     ]
 
     subprocess.run(resize_cmd, check=True)
@@ -138,57 +208,52 @@ async def generate_endpoint(
     api_key: str = Depends(verify_api_key)
 ):
     try:
-        # Step 1: Generate the icon using OpenAI
+        # Step 1: Generate the icon using Stability API.
         icon_bytes = generate_icon(request.title)
         icon_path = f"./.tmp/{request.uuid}-original"
 
         with open(icon_path, "wb") as f:
             f.write(icon_bytes)
 
-        # Step 2: Remove the background using the BackgroundRemover library
+        # Step 2: Remove the background using the BackgroundRemover library.
         transparent_memory = remove(icon_bytes, "u2net")
         transparent_bytes = bytes(transparent_memory)
         transparent_path = f"./.tmp/{request.uuid}-transparent"
-        
+
         with open(transparent_path, "wb") as f:
             f.write(transparent_bytes)
 
-        # Step 3: Process the image with ImageMagick (trim and resize)
+        # Step 3: Process the image with ImageMagick (trim, isolate largest component, feather, and resize).
         process_with_imagemagick(request.uuid)
 
-        # Upload the final resized image
-        mask_path = f"./.tmp/{request.uuid}-mask"
-        final_path = f"./.tmp/{request.uuid}"
-        trimmed_path = f"./.tmp/{request.uuid}-trimmed"
-        feathered_path = f"./.tmp/{request.uuid}-feathered"
+        # Upload the final resized image.
+        final_path = f"./.tmp/{request.uuid}-composite-trimmed-resized"
 
         with open(final_path, "rb") as f:
-            upload_icon(request.uuid, f.read())
+            final_bytes = f.read()
 
-        with open(mask_path, "rb") as f:
-            mask_bytes = f.read()
+        upload_icon(f"{request.uuid}", final_bytes)
 
-        with open(trimmed_path, "rb") as f:
-            trimmed_bytes = f.read()
-
-        with open(feathered_path, "rb") as f:
-            feathered_bytes = f.read()
-
-        # Upload the remaining images in the background
-        background_tasks.add_task(upload_icon, f"{request.uuid}-mask", mask_bytes)
+        # Upload the remaining images in the background.
         background_tasks.add_task(upload_icon, f"{request.uuid}-original", icon_bytes)
-        background_tasks.add_task(upload_icon, f"{request.uuid}-trimmed", trimmed_bytes)
-        background_tasks.add_task(upload_icon, f"{request.uuid}-feathered", feathered_bytes)
         background_tasks.add_task(upload_icon, f"{request.uuid}-transparent", transparent_bytes)
+
+        composite_path = f"./.tmp/{request.uuid}-composite"
+        composite_trimmed_path = f"./.tmp/{request.uuid}-composite-trimmed"
+
+        mask_path = f"./.tmp/{request.uuid}-mask"
+        mask_largest_path = f"./.tmp/{request.uuid}-mask-largest"
         
         background_tasks.add_task(os.remove, icon_path)
-        background_tasks.add_task(os.remove, mask_path)
         background_tasks.add_task(os.remove, final_path)
-        background_tasks.add_task(os.remove, trimmed_path)
-        background_tasks.add_task(os.remove, feathered_path)
         background_tasks.add_task(os.remove, transparent_path)
 
-        return {};
+        background_tasks.add_task(os.remove, composite_path)
+        background_tasks.add_task(os.remove, composite_trimmed_path)
+
+        background_tasks.add_task(os.remove, mask_path)
+        background_tasks.add_task(os.remove, mask_largest_path)
+
+        return {}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
