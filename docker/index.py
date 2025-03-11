@@ -38,7 +38,7 @@ async def verify_api_key(x_api_key: str = Header(...)):
 def generate_icon(title: str):
     host = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
 
-    prompt = (f"High-quality, very simple, and minimal 3D render featuring a {title} with simple details (since it will be used as an icon), even lighting from every side, crafted from plasticine on an evenly lit white background that contrasts with the subject. A perfect, simple composition with a realistic, bright color palette, rendered with Octane using global illumination, ambient occlusion, ray tracing, and color mapping, captured from a side angle.")
+    prompt = (f"High-quality, very simple, and minimal 3D render featuring {title} with simple details (since it will be used as an icon), even lighting from every side, crafted from plasticine on an evenly lit white background that contrasts with the subject. A perfect, simple composition with a realistic, bright color palette, rendered with Octane using global illumination, ambient occlusion, ray tracing, and color mapping, captured from a eye-level / straight-on angle, shot at the same level as the subject, creating a natural, relatable perspective.
 
     multipart_data = MultipartEncoder(
         fields={
@@ -47,7 +47,8 @@ def generate_icon(title: str):
             "aspect_ratio": "1:1",
             "style_preset": "isometric",
             "output_format": "png",
-            "negative_prompt": "shadows, color labels, decorative elements around the subject (droplets, beans, oils, random greens), top-down camera angle, colored background, unnecessary details"        }
+            "negative_prompt": "shadows, color labels, decorative elements around the subject (droplets, beans, oils, random greens), colored background, unnecessary details"
+        }
     )
 
     headers = {
