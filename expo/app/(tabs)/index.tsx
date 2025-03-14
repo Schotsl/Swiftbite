@@ -1,14 +1,18 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Animated, StyleSheet, View } from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
 
-import HealthCalories from "@/components/HealthCalories";
-import HealthWeight from "@/components/HealthWeight";
-import Item from "@/components/Item";
-import ingredientData from "@/queries/ingredientData";
+import HealthCalories from "../../components/HealthCalories";
+import HealthWeight from "../../components/HealthWeight";
+import Item from "../../components/Item";
+import ItemDelete from "../../components/ItemDelete";
+import useDeleteIngredient from "../../mutations/useDeleteIngredient";
+import ingredientData from "../../queries/ingredientData";
 
 export default function Index() {
   const [interval, setInterval] = useState<number | false>(1000);
+  const deleteIngredient = useDeleteIngredient();
 
   const { data } = useSuspenseQuery({
     ...ingredientData(),
@@ -26,34 +30,39 @@ export default function Index() {
     setInterval(interval);
   }, [data]);
 
+  const handleDelete = (uuid: string) => {
+    deleteIngredient.mutate(uuid);
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.statsContainer}>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: "#F9F9F9",
+      }}
+    >
+      <View
+        style={{
+          gap: 8,
+          padding: 8,
+          flexDirection: "row",
+        }}
+      >
         <HealthCalories />
         <HealthWeight />
       </View>
 
-      <FlatList
-        style={styles.list}
+      <SwipeListView
         data={data}
-        renderItem={({ item }) => <Item {...item} />}
         keyExtractor={(item) => item.uuid}
+        renderItem={({ item }) => <Item {...item} />}
+        renderHiddenItem={({ item }) => (
+          <ItemDelete onDelete={() => handleDelete(item.uuid)} />
+        )}
+        rightOpenValue={-75}
+        useNativeDriver
+        disableRightSwipe
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F9F9F9",
-  },
-  statsContainer: {
-    gap: 8,
-    padding: 8,
-    flexDirection: "row",
-  },
-  list: {
-    width: "100%",
-  },
-});

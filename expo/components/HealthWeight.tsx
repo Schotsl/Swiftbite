@@ -14,7 +14,7 @@ export default function HealthWeight() {
   // Set color based on status
   const textColor = isLoading ? "#8E8E93" : "#007AFF";
   const iconColor = isLoading ? "#8E8E93" : "#007AFF";
-  console.log(weightStatus);
+
   if (weightStatus === HealthStatus.Error) {
     return (
       <View style={styles.container}>
