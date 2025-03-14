@@ -61,6 +61,7 @@ class HealthService {
       AppleHealthKit.initHealthKit(OPTIONS, (error) => {
         if (error) {
           reject(error);
+          return;
         }
 
         resolve();
@@ -105,6 +106,7 @@ class HealthService {
       AppleHealthKit.getActiveEnergyBurned(options, (error, results) => {
         if (error) {
           reject(error);
+          return;
         }
 
         const total = results.reduce((acc, curr) => acc + curr.value, 0);
@@ -124,6 +126,7 @@ class HealthService {
       AppleHealthKit.getBasalEnergyBurned(options, (error, results) => {
         if (error) {
           reject(error);
+          return;
         }
 
         const total = results.reduce((acc, curr) => acc + curr.value, 0);
@@ -133,7 +136,7 @@ class HealthService {
     });
   }
 
-  async getLatestWeight(): Promise<number | null> {
+  async getLatestWeight(): Promise<number> {
     const options = {
       unit: "gram" as HealthUnit,
     };
@@ -142,11 +145,6 @@ class HealthService {
       AppleHealthKit.getLatestWeight(options, (error, results) => {
         if (error) {
           reject(error);
-          return;
-        }
-
-        if (!results) {
-          resolve(null);
           return;
         }
 

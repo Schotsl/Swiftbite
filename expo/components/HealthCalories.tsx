@@ -1,47 +1,14 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useEffect, useRef, useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-import HealthService from "@/service/HealthService";
-import { HealthStatus } from "@/types";
+import { useHealth } from "../context/HealthContext";
+import { HealthStatus } from "../types";
 
 export default function HealthCalories() {
-  const [status, setStatus] = useState<HealthStatus>(HealthStatus.Loading);
-  const [calories, setCalories] = useState<number | null>(null);
+  const { calories, caloriesStatus } = useHealth();
 
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    const initializeHealthKit = async () => {
-      if (Platform.OS !== "ios") {
-        setStatus(HealthStatus.Error);
-        return;
-      }
-
-      await HealthService.initHealthKit();
-
-      intervalRef.current = setInterval(async () => {
-        const calories = await HealthService.getTotalCalories();
-
-        setCalories(calories);
-        setStatus(HealthStatus.Ready);
-      }, 10000);
-    };
-
-    initializeHealthKit();
-
-    return () => {
-      if (!intervalRef.current) {
-        return;
-      }
-
-      clearInterval(intervalRef.current);
-
-      intervalRef.current = null;
-    };
-  }, []);
-
-  if (status === HealthStatus.Error) {
+  if (caloriesStatus === HealthStatus.Error) {
     return (
       <View style={styles.container}>
         <MaterialCommunityIcons name="fire-alert" size={24} color="#FF5252" />
@@ -60,8 +27,13 @@ export default function HealthCalories() {
           color="#FF9500"
           style={styles.icon}
         />
-        {status === HealthStatus.Loading ? (
-          <Text style={styles.loading}>Loading...</Text>
+        {caloriesStatus === HealthStatus.Loading ||
+        caloriesStatus === HealthStatus.Refreshing ? (
+          <Text style={styles.loading}>
+            {caloriesStatus === HealthStatus.Refreshing && calories
+              ? `${calories} kcal`
+              : "Loading..."}
+          </Text>
         ) : (
           <Text style={styles.calories}>{calories || 0} kcal</Text>
         )}

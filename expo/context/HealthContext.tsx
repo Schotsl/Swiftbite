@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, {
   createContext,
   ReactNode,
@@ -8,6 +9,10 @@ import React, {
 
 import HealthService from "../service/HealthService";
 import { HealthStatus } from "../types";
+
+// Keys for local storage
+const WEIGHT_STORAGE_KEY = "@health_weight";
+const CALORIES_STORAGE_KEY = "@health_calories";
 
 interface HealthContextType {
   weight: number | null;
@@ -34,7 +39,8 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
   children,
   interval,
 }) => {
-  const [initialized, setInitialized] = useState(false);
+  const [healthInitialized, setHealthInitialized] = useState(false);
+  const [storageInitialized, setStorageInitialized] = useState(false);
 
   const [weight, setWeight] = useState<number | null>(null);
   const [calories, setCalories] = useState<number | null>(null);
@@ -42,51 +48,83 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
   const [weightStatus, setWeightStatus] = useState(HealthStatus.Loading);
   const [caloriesStatus, setCaloriesStatus] = useState(HealthStatus.Loading);
 
-  const fetchData = async (initial = false) => {
-    setWeightStatus(initial ? HealthStatus.Refreshing : HealthStatus.Loading);
-    setCaloriesStatus(initial ? HealthStatus.Refreshing : HealthStatus.Loading);
+  const loadLocal = async () => {
+    const weight = await AsyncStorage.getItem(WEIGHT_STORAGE_KEY);
+    const calories = await AsyncStorage.getItem(CALORIES_STORAGE_KEY);
 
-    const fetchCalories = async () => {
-      const caloriesData = await HealthService.getTotalCalories();
+    if (weight) {
+      const weightParsed = parseFloat(weight);
 
-      setCalories(caloriesData);
+      setWeight(weightParsed);
+      setWeightStatus(HealthStatus.Ready);
+    }
+
+    if (calories) {
+      const caloriesParsed = parseFloat(calories);
+
+      setCalories(caloriesParsed);
       setCaloriesStatus(HealthStatus.Ready);
+    }
+
+    return weight !== null && calories !== null;
+  };
+
+  const fetchData = async (state: HealthStatus) => {
+    const fetchCalories = async () => {
+      const calories = await HealthService.getTotalCalories();
+
+      setCalories(calories);
+      setCaloriesStatus(state);
+
+      const stringified = calories.toString();
+      await AsyncStorage.setItem(CALORIES_STORAGE_KEY, stringified);
     };
 
     const fetchWeight = async () => {
-      const weightData = await HealthService.getLatestWeight();
+      const weight = await HealthService.getLatestWeight();
 
-      setWeight(weightData);
-      setWeightStatus(HealthStatus.Ready);
+      setWeight(weight);
+      setWeightStatus(state);
+
+      const stringified = weight.toString();
+      await AsyncStorage.setItem(WEIGHT_STORAGE_KEY, stringified);
     };
 
     await Promise.all([fetchCalories(), fetchWeight()]);
   };
 
   useEffect(() => {
-    if (!initialized) {
+    // If we haven't initialized the health service we can't fetch data
+    if (!healthInitialized) {
       return;
     }
 
-    // Fetch the initial data
-    fetchData(true);
+    // Instantly fetch the data and adjust the state based on the local storage
+    const instantState = storageInitialized
+      ? HealthStatus.Refreshing
+      : HealthStatus.Loading;
+
+    fetchData(instantState);
 
     // Refresh the data every interval
-    const intervalId = setInterval(() => fetchData(false), interval);
+    const intervalState = HealthStatus.Refreshing;
+    const intervalId = setInterval(() => fetchData(intervalState), interval);
 
     return () => clearInterval(intervalId);
-  }, [interval, initialized]);
+  }, [interval, healthInitialized, storageInitialized]);
 
   useEffect(() => {
-    const initializeHealthKit = async () => {
-      // Connect to Apple Health
-      await HealthService.initHealthKit();
+    const initializeHealth = async () => {
+      // Load the cache from local storage
+      const storageInitialized = await loadLocal();
+      setStorageInitialized(storageInitialized);
 
-      // Set the initial state to start fetching data
-      setInitialized(true);
+      // Initialize the health service
+      await HealthService.initHealthKit();
+      setHealthInitialized(true);
     };
 
-    initializeHealthKit();
+    initializeHealth();
   }, []);
 
   const value: HealthContextType = {
