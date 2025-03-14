@@ -14,7 +14,8 @@ export type GenerativeInsert = Omit<
 >;
 
 export enum HealthStatus {
-  Loading = "loading",
-  Error = "error",
   Ready = "ready",
+  Error = "error",
+  Loading = "loading",
+  Refreshing = "refreshing",
 }

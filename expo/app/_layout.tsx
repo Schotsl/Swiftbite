@@ -3,6 +3,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 
+import { HealthProvider } from "@/context/HealthContext";
+
 import Auth from "../components/Auth";
 import supabase from "../utils/supabase";
 
@@ -23,9 +25,11 @@ export default function RootLayout() {
 
   return session && session.user ? (
     <QueryClientProvider client={queryClient}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <HealthProvider interval={60000}>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </HealthProvider>
     </QueryClientProvider>
   ) : (
     <Auth />
