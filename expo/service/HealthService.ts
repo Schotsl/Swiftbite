@@ -1,4 +1,7 @@
-import AppleHealthKit, { HealthKitPermissions } from "react-native-health";
+import AppleHealthKit, {
+  HealthKitPermissions,
+  HealthUnit,
+} from "react-native-health";
 
 const OPTIONS = {
   permissions: {
@@ -126,6 +129,30 @@ class HealthService {
         const total = results.reduce((acc, curr) => acc + curr.value, 0);
 
         resolve(total);
+      });
+    });
+  }
+
+  async getLatestWeight(): Promise<number | null> {
+    const options = {
+      unit: "gram" as HealthUnit,
+    };
+
+    return new Promise((resolve, reject) => {
+      AppleHealthKit.getLatestWeight(options, (error, results) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+
+        if (!results) {
+          resolve(null);
+          return;
+        }
+
+        // Weight is in kg
+        const weight = results.value;
+        resolve(weight);
       });
     });
   }

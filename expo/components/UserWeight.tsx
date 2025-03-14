@@ -5,14 +5,14 @@ import { Platform, StyleSheet, Text, View } from "react-native";
 import HealthService from "@/service/HealthService";
 import { HealthStatus } from "@/types";
 
-export default function CaloriesBurned() {
+export default function UserWeight() {
   const [status, setStatus] = useState<HealthStatus>(HealthStatus.Loading);
-  const [calories, setCalories] = useState<number | null>(null);
+  const [weight, setWeight] = useState<number | null>(null);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const initializeHealthKit = async () => {
+    const fetchWeight = async () => {
       if (Platform.OS !== "ios") {
         setStatus(HealthStatus.Error);
         return;
@@ -21,14 +21,18 @@ export default function CaloriesBurned() {
       await HealthService.initHealthKit();
 
       intervalRef.current = setInterval(async () => {
-        const calories = await HealthService.getTotalCalories();
-
-        setCalories(calories);
-        setStatus(HealthStatus.Ready);
+        try {
+          const weight = await HealthService.getLatestWeight();
+          setWeight(weight);
+          setStatus(HealthStatus.Ready);
+        } catch (error) {
+          console.error("Error fetching weight:", error);
+          setStatus(HealthStatus.Error);
+        }
       }, 10000);
     };
 
-    initializeHealthKit();
+    fetchWeight();
 
     return () => {
       if (!intervalRef.current) {
@@ -36,7 +40,6 @@ export default function CaloriesBurned() {
       }
 
       clearInterval(intervalRef.current);
-
       intervalRef.current = null;
     };
   }, []);
@@ -44,20 +47,26 @@ export default function CaloriesBurned() {
   if (status === HealthStatus.Error) {
     return (
       <View style={styles.container}>
-        <MaterialCommunityIcons name="fire-alert" size={24} color="#FF5252" />
-        <Text style={styles.errorText}>Something went wrong</Text>
+        <MaterialCommunityIcons
+          name="scale-bathroom"
+          size={24}
+          color="#FF5252"
+        />
+        <Text style={styles.errorText}>Could not fetch weight data</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <MaterialCommunityIcons name="fire" size={24} color="#FF9500" />
-      <Text style={styles.title}>Calories Burned Today</Text>
+      <MaterialCommunityIcons name="scale-bathroom" size={24} color="#007AFF" />
+      <Text style={styles.title}>Current Weight</Text>
       {status === HealthStatus.Loading ? (
         <Text style={styles.loading}>Loading...</Text>
       ) : (
-        <Text style={styles.calories}>{calories || 0} kcal</Text>
+        <Text style={styles.weight}>
+          {weight ? `${weight.toFixed(1)} kg` : "No data"}
+        </Text>
       )}
     </View>
   );
@@ -86,10 +95,10 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     color: "#1C1C1E",
   },
-  calories: {
+  weight: {
     fontSize: 28,
     fontWeight: "bold",
-    color: "#FF9500",
+    color: "#007AFF",
   },
   loading: {
     fontSize: 16,

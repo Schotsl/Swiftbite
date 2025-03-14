@@ -1,10 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { FlatList } from "react-native";
-import { View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 
 import CaloriesBurned from "@/components/CaloriesBurned";
 import Item from "@/components/Item";
+import UserWeight from "@/components/UserWeight";
 import ingredientData from "@/queries/ingredientData";
 
 export default function Index() {
@@ -27,17 +27,14 @@ export default function Index() {
   }, [data]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <CaloriesBurned />
+    <View style={styles.container}>
+      <View style={styles.statsContainer}>
+        <CaloriesBurned />
+        <UserWeight />
+      </View>
 
       <FlatList
-        style={{ width: "100%" }}
+        style={styles.list}
         data={data}
         renderItem={({ item }) => <Item {...item} />}
         keyExtractor={(item) => item.uuid}
@@ -45,3 +42,17 @@ export default function Index() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F9F9F9",
+  },
+  statsContainer: {
+    paddingTop: 16,
+    paddingBottom: 8,
+  },
+  list: {
+    width: "100%",
+  },
+});
