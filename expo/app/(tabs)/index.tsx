@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 import HealthCalories from "../../components/HealthCalories";
@@ -22,7 +22,7 @@ export default function Index() {
   // If any of the titles or calories are missing we'll keep polling
   useEffect(() => {
     const processing = data.some(
-      (item) => !item.title || !item.calorie_100g || !item.icon_id
+      (item) => !item.title || !item.calorie_100g || !item.icon_id,
     );
 
     const interval = processing ? 500 : false;

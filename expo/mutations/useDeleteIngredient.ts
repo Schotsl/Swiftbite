@@ -26,7 +26,7 @@ export default function useDeleteIngredient() {
 
       // Optimistically update the UI by removing the deleted ingredient
       queryClient.setQueryData<Ingredient[]>(["ingredientData"], (old = []) =>
-        old.filter((ingredient) => ingredient.uuid !== uuid)
+        old.filter((ingredient) => ingredient.uuid !== uuid),
       );
 
       // Return context with the previous ingredients for potential rollback
@@ -36,7 +36,7 @@ export default function useDeleteIngredient() {
     onError: (error, uuid, context) => {
       queryClient.setQueryData(
         ["ingredientData"],
-        context?.previousIngredients
+        context?.previousIngredients,
       );
       console.log(`[Mutation] failed to delete ingredient`, error);
     },
