@@ -49,8 +49,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#F9F9F9",
   },
   statsContainer: {
-    paddingTop: 16,
-    paddingBottom: 8,
+    gap: 8,
+    padding: 8,
     flexDirection: "row",
   },
   list: {

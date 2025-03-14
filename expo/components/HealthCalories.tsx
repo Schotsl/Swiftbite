@@ -1,12 +1,19 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import { useHealth } from "../context/HealthContext";
 import { HealthStatus } from "../types";
 
 export default function HealthCalories() {
   const { calories, caloriesStatus } = useHealth();
+
+  const isLoading = caloriesStatus === HealthStatus.Loading;
+  const isRefreshing = caloriesStatus === HealthStatus.Refreshing;
+
+  // Set color based on status
+  const textColor = isLoading ? "#8E8E93" : "#FF9500";
+  const iconColor = isLoading ? "#8E8E93" : "#FF9500";
 
   if (caloriesStatus === HealthStatus.Error) {
     return (
@@ -19,24 +26,27 @@ export default function HealthCalories() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Calories Burned</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Calories</Text>
+        {isRefreshing && (
+          <ActivityIndicator
+            size="small"
+            color="#1C1C1E"
+            style={styles.loader}
+            hidesWhenStopped
+          />
+        )}
+      </View>
       <View style={styles.valueContainer}>
         <MaterialCommunityIcons
           name="fire"
           size={20}
-          color="#FF9500"
+          color={iconColor}
           style={styles.icon}
         />
-        {caloriesStatus === HealthStatus.Loading ||
-        caloriesStatus === HealthStatus.Refreshing ? (
-          <Text style={styles.loading}>
-            {caloriesStatus === HealthStatus.Refreshing && calories
-              ? `${calories} kcal`
-              : "Loading..."}
-          </Text>
-        ) : (
-          <Text style={styles.calories}>{calories || 0} kcal</Text>
-        )}
+        <Text style={[styles.valueText, { color: textColor }]}>
+          {isLoading ? "Loading..." : `${calories || 0} kcal`}
+        </Text>
       </View>
     </View>
   );
@@ -47,17 +57,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
-    margin: 8,
     flex: 1,
     alignItems: "flex-start",
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.1)",
   },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
   title: {
     fontSize: 16,
     fontWeight: "600",
-    marginBottom: 8,
     color: "#1C1C1E",
+  },
+  loader: {
+    marginLeft: 2,
+    transform: [{ scale: 0.7 }],
   },
   valueContainer: {
     flexDirection: "row",
@@ -67,14 +84,9 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 4,
   },
-  calories: {
+  valueText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#FF9500",
-  },
-  loading: {
-    fontSize: 16,
-    color: "#8E8E93",
   },
   errorText: {
     fontSize: 14,

@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 import { useHealth } from "../context/HealthContext";
 import { HealthStatus } from "../types";
@@ -8,6 +8,13 @@ import { HealthStatus } from "../types";
 export default function HealthWeight() {
   const { weight, weightStatus } = useHealth();
 
+  const isLoading = weightStatus === HealthStatus.Loading;
+  const isRefreshing = weightStatus === HealthStatus.Refreshing;
+
+  // Set color based on status
+  const textColor = isLoading ? "#8E8E93" : "#007AFF";
+  const iconColor = isLoading ? "#8E8E93" : "#007AFF";
+  console.log(weightStatus);
   if (weightStatus === HealthStatus.Error) {
     return (
       <View style={styles.container}>
@@ -23,26 +30,29 @@ export default function HealthWeight() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Weight</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Weight</Text>
+        {isRefreshing && (
+          <ActivityIndicator
+            size="small"
+            color="#1C1C1E"
+            style={styles.loader}
+            hidesWhenStopped
+          />
+        )}
+      </View>
       <View style={styles.valueContainer}>
         <MaterialCommunityIcons
           name="scale-bathroom"
           size={20}
-          color="#007AFF"
+          color={iconColor}
           style={styles.icon}
         />
-        {weightStatus === HealthStatus.Loading ||
-        weightStatus === HealthStatus.Refreshing ? (
-          <Text style={styles.loading}>
-            {weightStatus === HealthStatus.Refreshing && weight
-              ? `${(weight / 1000).toFixed(1)} kg`
-              : "Loading..."}
-          </Text>
-        ) : (
-          <Text style={styles.weight}>
-            {weight ? `${(weight / 1000).toFixed(1)} kg` : "No data"}
-          </Text>
-        )}
+        <Text style={[styles.valueText, { color: textColor }]}>
+          {isLoading
+            ? "Loading..."
+            : `${weight ? (weight / 1000).toFixed(1) : 0} kg`}
+        </Text>
       </View>
     </View>
   );
@@ -53,17 +63,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 16,
-    margin: 8,
+
     flex: 1,
     alignItems: "flex-start",
     borderWidth: 1,
     borderColor: "rgba(0, 0, 0, 0.1)",
   },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 8,
+  },
   title: {
     fontSize: 16,
     fontWeight: "600",
-    marginBottom: 8,
     color: "#1C1C1E",
+  },
+  loader: {
+    marginLeft: 2,
+    transform: [{ scale: 0.7 }],
   },
   valueContainer: {
     flexDirection: "row",
@@ -73,14 +91,9 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: 4,
   },
-  weight: {
+  valueText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#007AFF",
-  },
-  loading: {
-    fontSize: 16,
-    color: "#8E8E93",
   },
   errorText: {
     fontSize: 14,
