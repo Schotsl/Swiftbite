@@ -179,3 +179,62 @@ export async function normalizeTitle(title: string) {
 
   return titleLowercase;
 }
+
+export async function fetchPortionSize(url: string) {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "system",
+        content: [
+          {
+            type: "text",
+            text: "You are a nutritionist specializing in portion size estimation. Estimate the weight in grams of the food shown in the image.",
+          },
+        ],
+      },
+      {
+        role: "user",
+        content: [
+          {
+            type: "image_url",
+            image_url: {
+              url,
+            },
+          },
+        ],
+      },
+    ],
+    tools: [
+      {
+        type: "function",
+        function: {
+          name: "portion_size_estimation",
+          description:
+            "Returns an estimation of the total weight in grams of the food shown in the image.",
+          parameters: {
+            type: "object",
+            properties: {
+              portion_grams: {
+                type: "number",
+                description:
+                  "Estimated total weight in grams of the food shown",
+              },
+            },
+            required: ["portion_grams"],
+          },
+        },
+      },
+    ],
+    tool_choice: {
+      type: "function",
+      function: { name: "portion_size_estimation" },
+    },
+  });
+
+  const responseRaw =
+    response.choices[0].message.tool_calls![0].function.arguments;
+
+  const responseParsed = JSON.parse(responseRaw);
+  return responseParsed;
+}
