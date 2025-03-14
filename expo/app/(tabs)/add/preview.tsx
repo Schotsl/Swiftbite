@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 import { handleError, renderToBase64 } from "@/helper";
+import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertGenerative from "@/mutations/useInsertGenerative";
 import useInsertIngredient from "@/mutations/useInsertIngredient";
 import supabase from "@/utils/supabase";
@@ -17,6 +18,7 @@ export default function App() {
 
   const insertIngredient = useInsertIngredient();
   const insertGenerative = useInsertGenerative();
+  const insertEntry = useInsertEntry();
 
   const { uri, width, height } = useLocalSearchParams<{
     uri: string;
@@ -83,11 +85,24 @@ export default function App() {
       sodium_100g: null,
     });
 
-    const generative = await insertGenerative.mutateAsync({
+    // The actual size will be updated by the server after analysis
+    const entryPromise = insertEntry.mutateAsync({
+      type: "ingredient",
+      title: null,
+      meal_id: null,
+      ingredient_id: ingredient.uuid,
+      consumed_unit: "gram",
+      consumed_quantity: null,
+    });
+
+    const generativePromise = insertGenerative.mutateAsync({
       type: "image",
       content: null,
       ingredient_id: ingredient.uuid,
     });
+
+    // We do both requests in parallel but discard the entry
+    const [generative] = await Promise.all([generativePromise, entryPromise]);
 
     await Promise.all([
       uploadImage(`${generative.uuid}-small`, smallImage!),

@@ -1,12 +1,20 @@
 import { Image } from "expo-image";
 import { useState } from "react";
-import { ActivityIndicator } from "react-native";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
-import { Ingredient } from "@/types";
+import { EntryWithIngredient } from "@/types";
 
-export default function Item({ calorie_100g, title, icon_id }: Ingredient) {
-  const [loaded, setLoaded] = useState(false);
+export default function Item({
+  consumed_quantity,
+  consumed_unit,
+  ingredient,
+}: EntryWithIngredient) {
+  const [loadedImage, setLoadedImage] = useState(false);
+  const loadedData = ingredient.calorie_100g && consumed_quantity;
+
+  const calories = loadedData
+    ? Math.round((ingredient.calorie_100g! * consumed_quantity) / 100)
+    : null;
 
   return (
     <View
@@ -27,10 +35,10 @@ export default function Item({ calorie_100g, title, icon_id }: Ingredient) {
           alignItems: "center",
         }}
       >
-        {icon_id && (
+        {ingredient.icon_id && (
           <Image
-            source={`https://ffbbrrfdghbvuajheulg.supabase.co/storage/v1/object/public/icon/${icon_id}`}
-            onLoad={() => setLoaded(true)}
+            source={`https://ffbbrrfdghbvuajheulg.supabase.co/storage/v1/object/public/icon/${ingredient.icon_id}`}
+            onLoad={() => setLoadedImage(true)}
             contentFit="contain"
             contentPosition="center"
             style={{
@@ -42,14 +50,24 @@ export default function Item({ calorie_100g, title, icon_id }: Ingredient) {
           />
         )}
 
-        {!loaded && <ActivityIndicator size="small" />}
+        {!loadedImage && <ActivityIndicator size="small" />}
       </View>
 
-      <View style={{ gap: 6 }}>
-        <Text style={{ fontSize: 16 }}>{title ? title : "Loading..."}</Text>
-        <Text style={{ fontSize: 14 }}>
-          {calorie_100g ? calorie_100g : "Loading..."} kcal
+      <View style={{ gap: 6, flex: 1 }}>
+        <Text style={{ fontSize: 16 }}>
+          {ingredient.title ? ingredient.title : "Loading..."}
         </Text>
+
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={{ fontSize: 14 }}>
+            {loadedData ? `${calories} kcal` : "Loading..."}
+          </Text>
+
+          <Text style={{ fontSize: 14, color: "#666" }}>
+            {consumed_quantity ? consumed_quantity : "Loading..."}{" "}
+            {consumed_unit}
+          </Text>
+        </View>
       </View>
     </View>
   );

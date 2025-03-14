@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
 
+import { handleError } from "@/helper";
+
 import { Ingredient, IngredientInsert } from "../types";
 import supabase from "../utils/supabase";
 
@@ -15,7 +17,7 @@ export default function useInsertIngredient() {
         .select()
         .single();
 
-      if (error) throw error;
+      handleError(error);
 
       return data;
     },
@@ -35,9 +37,7 @@ export default function useInsertIngredient() {
         ...old,
       ]);
 
-      // Return context with the previous ingredients in case we need to roll back
       const previous = queryClient.getQueryData(["ingredientData"]);
-
       return { previous };
     },
     // If the mutation fails, roll back

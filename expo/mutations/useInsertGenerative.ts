@@ -1,5 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 
+import { handleError } from "@/helper";
+
 import { Generative, GenerativeInsert } from "../types";
 import supabase from "../utils/supabase";
 
@@ -12,9 +14,7 @@ export default function useInsertGenerative() {
         .select()
         .single();
 
-      if (error) {
-        console.log(error);
-      }
+      handleError(error);
 
       return data;
     },

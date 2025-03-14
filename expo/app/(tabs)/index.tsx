@@ -7,22 +7,27 @@ import HealthCalories from "../../components/HealthCalories";
 import HealthWeight from "../../components/HealthWeight";
 import Item from "../../components/Item";
 import ItemDelete from "../../components/ItemDelete";
-import useDeleteIngredient from "../../mutations/useDeleteIngredient";
-import ingredientData from "../../queries/ingredientData";
+import useDeleteEntry from "../../mutations/useDeleteEntry";
+import entryData from "../../queries/entryData";
 
 export default function Index() {
   const [interval, setInterval] = useState<number | false>(1000);
-  const deleteIngredient = useDeleteIngredient();
+
+  const deleteEntry = useDeleteEntry();
 
   const { data } = useSuspenseQuery({
-    ...ingredientData(),
+    ...entryData(),
     refetchInterval: interval,
   });
 
-  // If any of the titles or calories are missing we'll keep polling
+  // If any of the titles, calories, or consumed quantities are missing we'll keep polling
   useEffect(() => {
     const processing = data.some(
-      (item) => !item.title || !item.calorie_100g || !item.icon_id,
+      (entry) =>
+        !entry.ingredient?.title ||
+        !entry.ingredient?.calorie_100g ||
+        !entry.ingredient?.icon_id ||
+        !entry.consumed_quantity
     );
 
     const interval = processing ? 500 : false;
@@ -31,7 +36,7 @@ export default function Index() {
   }, [data]);
 
   const handleDelete = (uuid: string) => {
-    deleteIngredient.mutate(uuid);
+    deleteEntry.mutate(uuid);
   };
 
   return (
