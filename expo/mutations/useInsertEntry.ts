@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
 
-import { Entry, EntryInsert } from "@/types";
+import { Entry, EntryInsert, EntryWithIngredient } from "@/types";
 
 import { handleError } from "../helper";
 import supabase from "../utils/supabase";
@@ -36,9 +36,9 @@ export default function useInsertEntry() {
           ? {
               ingredient: {
                 uuid: entryInsert.ingredient_id,
-                title: "Processing...",
-                calorie_100g: null,
+                title: null,
                 icon_id: null,
+                calorie_100g: null,
               },
             }
           : {}),
