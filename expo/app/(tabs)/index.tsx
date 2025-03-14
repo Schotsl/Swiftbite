@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import { View } from "react-native";
 
+import CaloriesBurned from "@/components/CaloriesBurned";
 import Item from "@/components/Item";
 import ingredientData from "@/queries/ingredientData";
 
@@ -17,7 +18,7 @@ export default function Index() {
   // If any of the titles or calories are missing we'll keep polling
   useEffect(() => {
     const processing = data.some(
-      (item) => !item.title || !item.calorie_100g || !item.icon_id,
+      (item) => !item.title || !item.calorie_100g || !item.icon_id
     );
 
     const interval = processing ? 500 : false;
@@ -33,6 +34,8 @@ export default function Index() {
         justifyContent: "center",
       }}
     >
+      <CaloriesBurned />
+
       <FlatList
         style={{ width: "100%" }}
         data={data}

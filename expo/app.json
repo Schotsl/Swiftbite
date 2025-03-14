@@ -8,10 +8,17 @@
     "icon": "./assets/images/icon.png",
     "scheme": "com.sjorsvanholst.swiftbite",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sjorsvanholst.swiftbite"
+      "bundleIdentifier": "com.sjorsvanholst.swiftbite",
+      "infoPlist": {
+        "NSHealthShareUsageDescription": "Read health data",
+        "NSHealthUpdateUsageDescription": "Update health data",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "entitlements": {
+        "com.apple.developer.healthkit": true
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -21,6 +28,7 @@
     },
     "plugins": [
       "expo-router",
+      "react-native-health",
       [
         "expo-splash-screen",
         {

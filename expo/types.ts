@@ -12,3 +12,9 @@ export type GenerativeInsert = Omit<
   Generative,
   "uuid" | "user_id" | "created_at" | "updated_at"
 >;
+
+export enum HealthStatus {
+  Loading = "loading",
+  Error = "error",
+  Ready = "ready",
+}

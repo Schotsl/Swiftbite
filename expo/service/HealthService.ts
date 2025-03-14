@@ -1,0 +1,134 @@
+import AppleHealthKit, { HealthKitPermissions } from "react-native-health";
+
+const OPTIONS = {
+  permissions: {
+    read: [
+      "Height",
+      "Weight",
+      "DateOfBirth",
+      "BodyMassIndex",
+      "BasalEnergyBurned",
+      "ActiveEnergyBurned",
+    ],
+    write: [
+      "Biotin",
+      "Caffeine",
+      "Calcium",
+      "Carbohydrates",
+      "Chloride",
+      "Cholesterol",
+      "Copper",
+      "EnergyConsumed",
+      "FatMonounsaturated",
+      "FatPolyunsaturated",
+      "FatSaturated",
+      "FatTotal",
+      "Fiber",
+      "Folate",
+      "Iodine",
+      "Iron",
+      "Magnesium",
+      "Manganese",
+      "Molybdenum",
+      "Niacin",
+      "PantothenicAcid",
+      "Phosphorus",
+      "Potassium",
+      "Protein",
+      "Riboflavin",
+      "Selenium",
+      "Sodium",
+      "Sugar",
+      "Thiamin",
+      "VitaminA",
+      "VitaminB12",
+      "VitaminB6",
+      "VitaminC",
+      "VitaminD",
+      "VitaminE",
+      "VitaminK",
+      "Zinc",
+    ],
+  },
+} as HealthKitPermissions;
+
+class HealthService {
+  async initHealthKit(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      AppleHealthKit.initHealthKit(OPTIONS, (error) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve();
+      });
+    });
+  }
+
+  async getTotalCalories(): Promise<number> {
+    const [active, basal] = await Promise.all([
+      this.getActiveCalories(),
+      this.getBasalCalories(),
+    ]);
+
+    const caloriesSummed = active + basal;
+    const caloriesRounded = Math.round(caloriesSummed);
+
+    return caloriesRounded;
+  }
+
+  private startToday(): string {
+    const now = new Date();
+    const nowDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const nowISO = nowDate.toISOString();
+
+    return nowISO;
+  }
+
+  private endToday(): string {
+    const now = new Date();
+    const nowISO = now.toISOString();
+
+    return nowISO;
+  }
+
+  private async getActiveCalories(): Promise<number> {
+    const options = {
+      startDate: this.startToday(),
+      endDate: this.endToday(),
+    };
+
+    return new Promise((resolve, reject) => {
+      AppleHealthKit.getActiveEnergyBurned(options, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        const total = results.reduce((acc, curr) => acc + curr.value, 0);
+
+        resolve(total);
+      });
+    });
+  }
+
+  private async getBasalCalories(): Promise<number> {
+    const options = {
+      startDate: this.startToday(),
+      endDate: this.endToday(),
+    };
+
+    return new Promise((resolve, reject) => {
+      AppleHealthKit.getBasalEnergyBurned(options, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        const total = results.reduce((acc, curr) => acc + curr.value, 0);
+
+        resolve(total);
+      });
+    });
+  }
+}
+
+export default new HealthService();
