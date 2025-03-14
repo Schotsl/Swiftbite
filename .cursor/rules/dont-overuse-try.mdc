@@ -1,0 +1,9 @@
+---
+description: Code convention for writing try blocks
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+Try blocks are allowed but should be used sparingly. Do not add `try` and `catch` blocks around code unless the `catch` block does something more interactive than just logging or rethrowing the error.
+```
