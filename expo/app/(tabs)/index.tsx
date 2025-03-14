@@ -2,9 +2,9 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
-import CaloriesBurned from "@/components/CaloriesBurned";
+import HealthCalories from "@/components/HealthCalories";
+import HealthWeight from "@/components/HealthWeight";
 import Item from "@/components/Item";
-import UserWeight from "@/components/UserWeight";
 import ingredientData from "@/queries/ingredientData";
 
 export default function Index() {
@@ -29,8 +29,8 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.statsContainer}>
-        <CaloriesBurned />
-        <UserWeight />
+        <HealthCalories />
+        <HealthWeight />
       </View>
 
       <FlatList
@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     paddingTop: 16,
     paddingBottom: 8,
+    flexDirection: "row",
   },
   list: {
     width: "100%",
