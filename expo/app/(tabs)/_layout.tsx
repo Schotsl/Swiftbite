@@ -24,7 +24,7 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="add"
+        name="add/add"
         options={{
           title: "Add",
           headerShown: false,
@@ -33,7 +33,23 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
-        name="add/preview"
+        name="add/add-ai"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="add/add-barcode"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="add/add-preview"
         options={{
           href: null,
           headerShown: false,

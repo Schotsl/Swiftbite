@@ -10,7 +10,7 @@ import useInsertGenerative from "@/mutations/useInsertGenerative";
 import useInsertIngredient from "@/mutations/useInsertIngredient";
 import supabase from "@/utils/supabase";
 
-export default function App() {
+export default function AddPreview() {
   const router = useRouter();
 
   const [smallImage, setSmallImage] = useState<string | null>(null);
@@ -126,7 +126,7 @@ export default function App() {
   };
 
   const handleDiscard = () => {
-    router.push("/add");
+    router.push("/add/add");
   };
 
   return (

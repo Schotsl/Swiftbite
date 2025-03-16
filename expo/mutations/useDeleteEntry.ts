@@ -19,7 +19,7 @@ export default function useDeleteEntry() {
 
       // Optimistically update to the new value
       queryClient.setQueryData(["entryData"], (old: any[] = []) =>
-        old.filter((entry) => entry.uuid !== uuid)
+        old.filter((entry) => entry.uuid !== uuid),
       );
 
       return { previousEntries };
