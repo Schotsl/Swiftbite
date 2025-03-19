@@ -8,13 +8,21 @@ export default function BarcodeScreen() {
   const camera = useRef<CameraView>(null);
 
   const [facing, setFacing] = useState<CameraType>("back");
+  const [scanned, setScanned] = useState(false);
 
   function flipImage() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
   const handleScanned = ({ data }: { data: string }) => {
-    console.log("Scanned barcode:", data);
+    if (scanned) return;
+
+    setScanned(true);
+
+    router.push({
+      pathname: "/add/add-preview-barcode",
+      params: { barcode: data },
+    });
   };
 
   return (

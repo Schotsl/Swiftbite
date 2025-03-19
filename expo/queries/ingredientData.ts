@@ -5,14 +5,20 @@ import supabase from "@/utils/supabase";
 
 import { Ingredient } from "../types";
 
-export default function ingredientData() {
+export default function ingredientData(openfood?: string) {
   return queryOptions({
-    queryKey: ["ingredientData"],
+    queryKey: ["ingredientData", openfood],
     queryFn: async () => {
-      const { error, data } = await supabase
+      let query = supabase
         .from("ingredient")
         .select(`*`)
         .order("created_at", { ascending: false });
+
+      if (openfood) {
+        query = query.eq("openfood_id", openfood);
+      }
+
+      const { error, data } = await query;
 
       handleError(error);
 

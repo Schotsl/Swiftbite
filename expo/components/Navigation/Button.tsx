@@ -21,7 +21,7 @@ export default function NavigationButton() {
     }
 
     // Navigate to the add screen
-    router.push("/add");
+    router.push("/add/add");
   };
 
   return (
