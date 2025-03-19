@@ -33,7 +33,9 @@ export async function GET(request: Request) {
   );
 
   // Map OpenFoodFacts data to your nutrition type
-  const nutrition: Nutrition = {
+  const nutrition = {
+    title: product.product_name,
+    brand: product.brands,
     portion: nutritionPortion,
     protein_100g: roundNumber(nutriments.proteins_100g ?? 0, 2),
     calcium_100g: roundNumber(nutriments.calcium_100g ?? 0, 2),
