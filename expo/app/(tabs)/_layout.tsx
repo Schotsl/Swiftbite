@@ -49,6 +49,14 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
+        name="add/add-preview-barcode"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
         name="add/add-preview"
         options={{
           href: null,

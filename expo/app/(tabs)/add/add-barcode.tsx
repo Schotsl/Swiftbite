@@ -1,9 +1,11 @@
+import { useIsFocused } from "@react-navigation/native";
 import { CameraType, CameraView } from "expo-camera";
 import { useRouter } from "expo-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function BarcodeScreen() {
+  const focus = useIsFocused();
   const router = useRouter();
   const camera = useRef<CameraView>(null);
 
@@ -16,7 +18,6 @@ export default function BarcodeScreen() {
 
   const handleScanned = ({ data }: { data: string }) => {
     if (scanned) return;
-
     setScanned(true);
 
     router.push({
@@ -24,6 +25,17 @@ export default function BarcodeScreen() {
       params: { barcode: data },
     });
   };
+
+  // Reset the scanned state when the camera is focused again
+  useEffect(() => {
+    if (focus) {
+      setScanned(false);
+    }
+  }, [focus]);
+
+  if (!focus) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -71,12 +83,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     color: "white",
-  },
-  scanText: {
-    fontSize: 16,
-    color: "white",
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-    padding: 15,
-    borderRadius: 10,
   },
 });

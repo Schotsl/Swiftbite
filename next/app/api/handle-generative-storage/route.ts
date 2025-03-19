@@ -8,7 +8,7 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   const generativeName = body.record.name;
-  const generativeUUID = generativeName.replace("-small", "");
+  const generativeUUID = generativeName.push("-small", "");
 
   after(async () => {
     const signedUrl = await fetchUrl(generativeUUID);

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Nutrition } from "@/types";
+import { IngredientInsert } from "../../../../expo/types";
 import { roundNumber } from "@/helper";
 
 export async function GET(request: Request) {
@@ -32,26 +32,32 @@ export async function GET(request: Request) {
     nutritionFats - nutritionSaturated - nutritionTrans
   );
 
-  // Map OpenFoodFacts data to your nutrition type
   const nutrition = {
+    type: "openfood",
     title: product.product_name,
     brand: product.brands,
+    image: product.image_front_url,
     portion: nutritionPortion,
+
+    icon_id: null,
+    openfood_id: product.code,
+
+    iron_100g: roundNumber(nutriments.iron_100g ?? 0, 2),
+    fiber_100g: roundNumber(nutriments.fiber_100g ?? 0, 2),
+    sodium_100g: roundNumber(nutriments.sodium_100g ?? 0, 2),
     protein_100g: roundNumber(nutriments.proteins_100g ?? 0, 2),
     calcium_100g: roundNumber(nutriments.calcium_100g ?? 0, 2),
     calorie_100g: roundNumber(nutriments["energy-kcal_100g"] ?? 0, 2),
+    potassium_100g: roundNumber(nutriments.potassium_100g ?? 0, 2),
+    cholesterol_100g: roundNumber(nutriments.cholesterol_100g ?? 0, 2),
     carbohydrate_100g: roundNumber(nutriments.carbohydrates_100g ?? 0, 2),
     carbohydrate_sugar_100g: roundNumber(nutriments.sugars_100g ?? 0, 2),
-    cholesterol_100g: roundNumber(nutriments.cholesterol_100g ?? 0, 2),
     fat_100g: nutritionFats,
     fat_trans_100g: nutritionTrans,
     fat_saturated_100g: nutritionSaturated,
     fat_unsaturated_100g: nutritionUnsaturated,
-    fiber_100g: roundNumber(nutriments.fiber_100g ?? 0, 2),
-    iron_100g: roundNumber(nutriments.iron_100g ?? 0, 2),
     micros_100g: {},
-    sodium_100g: roundNumber(nutriments.sodium_100g ?? 0, 2),
-  };
+  } as IngredientInsert;
 
   return NextResponse.json(nutrition);
 }

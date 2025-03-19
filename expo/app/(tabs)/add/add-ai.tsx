@@ -1,11 +1,14 @@
+import { useIsFocused } from "@react-navigation/native";
 import { CameraType, CameraView } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function AddAI() {
+  const focus = useIsFocused();
   const router = useRouter();
   const camera = useRef<CameraView>(null);
+
   const [facing, setFacing] = useState<CameraType>("back");
 
   function flipImage() {
@@ -35,6 +38,10 @@ export default function AddAI() {
       params: { uri, width, height },
     });
   };
+
+  if (!focus) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
