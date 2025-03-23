@@ -14,3 +14,5 @@ export default function openfoodData(barcode: string) {
     },
   });
 }
+
+// https://search.openfoodfacts.org/search?q=coca cola&langs=nl&page_size=10&page=1

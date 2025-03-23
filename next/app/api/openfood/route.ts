@@ -6,6 +6,9 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
   const code = searchParams.get("code");
+  const lang = searchParams.get("lang");
+  const limit = searchParams.get("limit");
+  const offset = searchParams.get("offset");
 
   if (!code) {
     return NextResponse.json({ error: "Code is required" }, { status: 400 });
