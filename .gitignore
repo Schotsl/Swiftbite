@@ -1,3 +1,6 @@
 # MacOS
 .DS_Store
 *.pem
+
+# Cursor
+.cursor/mcp.json
