@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { IngredientInsert } from "../../../../expo/types";
+import { IngredientInsert } from "@/types";
 import { roundNumber } from "@/helper";
 
 // TODO: This is a temporary interface for the OpenFoodProductS
