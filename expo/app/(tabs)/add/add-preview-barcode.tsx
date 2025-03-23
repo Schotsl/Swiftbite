@@ -57,7 +57,7 @@ export default function AddPreviewBarcodeScreen() {
     { id: "3", label: "1 teaspoon (5g)", grams: 5 },
     { id: "4", label: "1/2 cup (100g)", grams: 100 },
     { id: "5", label: "1 cup (200g)", grams: 200 },
-    { id: "6", label: "Custom amount", grams: 0, isCustom: true },
+    { id: "6", label: "Custom amount", grams: 1 },
   ];
 
   const [modal, setModal] = useState(false);
@@ -96,8 +96,9 @@ export default function AddPreviewBarcodeScreen() {
     }
 
     // Calculate amount - use base amount from selected option multiplied by quantity
-    const multiplier = customAmount ? parseFloat(customAmount) : 1;
-    const amountInGrams = OPTIONS[selected].grams * multiplier;
+    console.log(typeof customAmount);
+    const amountMultiplier = customAmount ? parseFloat(customAmount) : 1;
+    const amountGrams = OPTIONS[selected].grams * amountMultiplier;
 
     // Insert an entry with the selected portion size
     await insertEntry.mutateAsync({
@@ -106,7 +107,7 @@ export default function AddPreviewBarcodeScreen() {
       meal_id: null,
       ingredient_id: savedIngredient!.uuid,
       consumed_unit: "gram",
-      consumed_quantity: amountInGrams,
+      consumed_quantity: amountGrams,
     });
 
     router.push("/");
@@ -285,13 +286,21 @@ export default function AddPreviewBarcodeScreen() {
 
       {/* Serving Size Modal */}
       <Modal
-        animationType="slide"
+        animationType="none"
         transparent={true}
         visible={modal}
         onRequestClose={() => setModal(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setModal(false)}
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={(e) => e.stopPropagation()}
+            style={styles.modalContent}
+          >
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>Select Serving Size</Text>
               <TouchableOpacity onPress={() => setModal(false)}>
@@ -310,6 +319,7 @@ export default function AddPreviewBarcodeScreen() {
                   ]}
                   onPress={() => {
                     setSelected(index);
+                    setCustomAmount("1");
                     setModal(false);
                   }}
                 >
@@ -327,8 +337,8 @@ export default function AddPreviewBarcodeScreen() {
                 </TouchableOpacity>
               )}
             />
-          </View>
-        </View>
+          </TouchableOpacity>
+        </TouchableOpacity>
       </Modal>
     </SafeAreaView>
   );
@@ -509,14 +519,16 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    justifyContent: "flex-end",
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 12,
   },
   modalContent: {
     backgroundColor: "#fff",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-    padding: 16,
+    borderRadius: 16,
+    padding: 12,
+    width: "100%",
     maxHeight: "70%",
   },
   modalHeader: {
