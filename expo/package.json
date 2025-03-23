@@ -11,6 +11,7 @@
     "format": "prettier --write .",
     "preinstall": "bun run types",
     "build:internal": "eas build --platform ios --profile preview",
+    "build:simulator": "eas build --platform ios --profile simulator",
     "build:production": "eas build --platform ios --profile production",
     "build:development": "eas build --platform ios --profile development"
   },
