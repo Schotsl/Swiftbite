@@ -88,8 +88,9 @@ export async function GET(request: Request) {
 }
 
 const mapNutrition = (product: OpenFoodProduct): IngredientInsert => {
-  const nutriments = product.nutriments;
-  const nutritionPortion = roundNumber(+nutriments.fat_100g);
+  const nutriments = product.nutriments || {};
+
+  const nutritionPortion = roundNumber(+(nutriments.fat_100g || 0));
 
   const nutritionFats = roundNumber(nutriments.fat_100g ?? 0);
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
