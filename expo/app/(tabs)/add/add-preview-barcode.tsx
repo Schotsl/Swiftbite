@@ -4,15 +4,12 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
-  FlatList,
   Image,
-  Modal,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -21,6 +18,10 @@ import useInsertEntry from "../../../mutations/useInsertEntry";
 import useInsertIngredient from "../../../mutations/useInsertIngredient";
 import ingredientData from "../../../queries/ingredientData";
 import openfoodData from "../../../queries/openfoodData";
+import Button from "../../components/Button";
+import Dropdown from "../../components/Dropdown";
+import Input from "../../components/Input";
+import Table from "../../components/Table";
 
 export default function AddPreviewBarcodeScreen() {
   const router = useRouter();
@@ -47,22 +48,43 @@ export default function AddPreviewBarcodeScreen() {
   const ingredientOpenfood = openfoodIngredients?.[0];
   const ingredient = ingredientSupabase ?? ingredientOpenfood;
 
-  const OPTIONS = [
+  const servingSizeOptions = [
     {
       id: "1",
       label: `1 serving (${ingredient?.portion}g)`,
-      grams: ingredient?.portion ?? 0,
+      value: ingredient?.portion ?? 0,
     },
-    { id: "2", label: "1 tablespoon (15g)", grams: 15 },
-    { id: "3", label: "1 teaspoon (5g)", grams: 5 },
-    { id: "4", label: "1/2 cup (100g)", grams: 100 },
-    { id: "5", label: "1 cup (200g)", grams: 200 },
-    { id: "6", label: "Custom amount", grams: 1 },
+    { id: "2", label: "1 tablespoon (15g)", value: 15 },
+    { id: "3", label: "1 teaspoon (5g)", value: 5 },
+    { id: "4", label: "1/2 cup (100g)", value: 100 },
+    { id: "5", label: "1 cup (200g)", value: 200 },
+    { id: "6", label: "Custom amount", value: 1 },
   ];
 
-  const [modal, setModal] = useState(false);
-  const [selected, setSelected] = useState(0);
+  const [selectedId, setSelectedId] = useState("1");
   const [customAmount, setCustomAmount] = useState("1");
+
+  const nutritionData = [
+    {
+      id: 1,
+      label: "Calories",
+      value: `${ingredient?.calorie_100g ?? 0} kcal`,
+    },
+    { id: 2, label: "Protein", value: `${ingredient?.protein_100g ?? 0}g` },
+    {
+      id: 3,
+      label: "Carbohydrates",
+      value: `${ingredient?.carbohydrate_100g ?? 0}g`,
+    },
+    { id: 4, label: "Fat", value: `${ingredient?.fat_100g ?? 0}g` },
+    { id: 5, label: "Fiber", value: `${ingredient?.fiber_100g ?? 0}g` },
+    {
+      id: 6,
+      label: "Sugar",
+      value: `${ingredient?.carbohydrate_sugar_100g ?? 0}g`,
+    },
+    { id: 7, label: "Sodium", value: `${ingredient?.sodium_100g ?? 0}mg` },
+  ];
 
   const handleSave = async () => {
     // Insert the ingredient if it doesn't already exist
@@ -96,9 +118,11 @@ export default function AddPreviewBarcodeScreen() {
     }
 
     // Calculate amount - use base amount from selected option multiplied by quantity
-    console.log(typeof customAmount);
+    const selectedOption = servingSizeOptions.find(
+      (option) => option.id === selectedId
+    );
     const amountMultiplier = customAmount ? parseFloat(customAmount) : 1;
-    const amountGrams = OPTIONS[selected].grams * amountMultiplier;
+    const amountGrams = (selectedOption?.value ?? 0) * amountMultiplier;
 
     // Insert an entry with the selected portion size
     await insertEntry.mutateAsync({
@@ -142,7 +166,6 @@ export default function AddPreviewBarcodeScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
         {ingredient?.image && (
-          // This entire component needs reworking since there's also no placeholder image
           <Image
             source={{ uri: ingredient?.image }}
             style={[
@@ -173,173 +196,54 @@ export default function AddPreviewBarcodeScreen() {
           <View style={styles.servingContainer}>
             <Text style={styles.sectionTitle}>Serving Size</Text>
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Size option:</Text>
-              <TouchableOpacity
-                style={styles.dropdown}
-                onPress={() => setModal(true)}
-              >
-                <Text style={styles.dropdownText}>
-                  {OPTIONS[selected].label}
-                </Text>
-                <Ionicons name="chevron-down" size={20} color="#333" />
-              </TouchableOpacity>
-            </View>
+            <Dropdown
+              label="Size option:"
+              placeholder="Select a size option"
+              options={servingSizeOptions}
+              selected={selectedId}
+              onSelect={(option: {
+                id: string;
+                label: string;
+                value: number;
+              }) => {
+                setSelectedId(option.id);
+                setCustomAmount("1");
+              }}
+            />
 
-            <View style={styles.inputGroup}>
-              <Text style={styles.inputLabel}>Quantity:</Text>
-              <TextInput
-                style={styles.quantityInput}
-                placeholder="1"
-                keyboardType="numeric"
-                value={customAmount}
-                onChangeText={setCustomAmount}
-              />
-            </View>
+            <Input
+              type="numeric"
+              label="Quantity:"
+              value={customAmount}
+              onChange={setCustomAmount}
+              placeholder="1"
+            />
           </View>
 
           {/* Nutrition Information */}
-          <View style={styles.nutritionContainer}>
-            <Text style={styles.sectionTitle}>Nutrition Information</Text>
-            <Text style={styles.nutritionSubtitle}>Based on 100g</Text>
-
-            <View style={styles.nutritionTable}>
-              <View style={styles.nutritionRow}>
-                <Text style={styles.nutritionLabel}>Calories</Text>
-                <Text style={styles.nutritionValue}>
-                  {ingredient?.calorie_100g ?? 0} kcal
-                </Text>
-              </View>
-
-              <View style={styles.nutritionRow}>
-                <Text style={styles.nutritionLabel}>Protein</Text>
-                <Text style={styles.nutritionValue}>
-                  {ingredient?.protein_100g ?? 0}g
-                </Text>
-              </View>
-
-              <View style={styles.nutritionRow}>
-                <Text style={styles.nutritionLabel}>Carbohydrates</Text>
-                <Text style={styles.nutritionValue}>
-                  {ingredient?.carbohydrate_100g ?? 0}g
-                </Text>
-              </View>
-
-              <View style={styles.nutritionRow}>
-                <Text style={styles.nutritionLabel}>Fat</Text>
-                <Text style={styles.nutritionValue}>
-                  {ingredient?.fat_100g ?? 0}g
-                </Text>
-              </View>
-
-              <View style={styles.nutritionRow}>
-                <Text style={styles.nutritionLabel}>Fiber</Text>
-                <Text style={styles.nutritionValue}>
-                  {ingredient?.fiber_100g ?? 0}g
-                </Text>
-              </View>
-
-              <View style={styles.nutritionRow}>
-                <Text style={styles.nutritionLabel}>Sugar</Text>
-                <Text style={styles.nutritionValue}>
-                  {ingredient?.carbohydrate_sugar_100g ?? 0}g
-                </Text>
-              </View>
-
-              <View style={styles.nutritionRow}>
-                <Text style={styles.nutritionLabel}>Sodium</Text>
-                <Text style={styles.nutritionValue}>
-                  {ingredient?.sodium_100g ?? 0}mg
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Dietary Information */}
-          {/* <View style={styles.dietaryContainer}>
-            <Text style={styles.sectionTitle}>Dietary Information</Text>
-            <View style={styles.tagsContainer}>
-              {ingredient.dietaryInfo.map((info, index) => (
-                <View key={index} style={styles.tag}>
-                  <Text style={styles.tagText}>{info}</Text>
-                </View>
-              ))}
-            </View>
-          </View> */}
-
-          {/* Allergens */}
-          {/* <View style={styles.allergensContainer}>
-            <Text style={styles.sectionTitle}>Allergens</Text>
-            <Text style={styles.allergenText}>
-              {ingredient.allergens.join(", ")}
-            </Text>
-          </View> */}
+          <Table
+            title="Nutrition Information"
+            subtitle="Based on 100g"
+            data={nutritionData}
+          />
         </View>
       </ScrollView>
 
-      {/* Add to Meal Button */}
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.addButton} onPress={handleSave}>
-          <Text style={styles.addButtonText}>Add to meal</Text>
-        </TouchableOpacity>
-      </View>
+      <View
+        style={{
+          padding: 16,
+          paddingBottom: 0,
 
-      {/* Serving Size Modal */}
-      <Modal
-        animationType="none"
-        transparent={true}
-        visible={modal}
-        onRequestClose={() => setModal(false)}
+          borderTopWidth: 1,
+          borderTopColor: "#eee",
+        }}
       >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setModal(false)}
-        >
-          <TouchableOpacity
-            activeOpacity={1}
-            onPress={(e) => e.stopPropagation()}
-            style={styles.modalContent}
-          >
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Select Serving Size</Text>
-              <TouchableOpacity onPress={() => setModal(false)}>
-                <Ionicons name="close" size={24} color="#333" />
-              </TouchableOpacity>
-            </View>
-
-            <FlatList
-              data={OPTIONS}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.servingOption,
-                    selected === index && styles.selectedOption,
-                  ]}
-                  onPress={() => {
-                    setSelected(index);
-                    setCustomAmount("1");
-                    setModal(false);
-                  }}
-                >
-                  <Text
-                    style={[
-                      styles.servingOptionText,
-                      selected === index && styles.selectedOptionText,
-                    ]}
-                  >
-                    {item.label}
-                  </Text>
-                  {selected === index && (
-                    <Ionicons name="checkmark" size={20} color="#fff" />
-                  )}
-                </TouchableOpacity>
-              )}
-            />
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </Modal>
+        <Button
+          onPress={handleSave}
+          title="Add to meal"
+          icon="fast-food-outline"
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -376,7 +280,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#333",
+    color: "#000",
     marginBottom: 4,
   },
   brand: {
@@ -395,174 +299,14 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   servingContainer: {
+    gap: 12,
     marginBottom: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
-    color: "#333",
-    marginBottom: 12,
-  },
-  inputGroup: {
-    marginBottom: 10,
-  },
-  inputLabel: {
-    fontSize: 16,
-    color: "#333",
-    marginBottom: 6,
-  },
-  dropdown: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 12,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    backgroundColor: "#f9f9f9",
-  },
-  dropdownText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  quantityContainer: {
-    marginTop: 10,
-    flexDirection: "column",
-  },
-  quantityLabel: {
-    fontSize: 16,
-    color: "#333",
-    marginBottom: 6,
-  },
-  quantityInput: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    backgroundColor: "#f9f9f9",
-  },
-  nutritionContainer: {
-    marginBottom: 20,
-  },
-  nutritionSubtitle: {
-    fontSize: 14,
-    color: "#666",
-    marginBottom: 12,
-    fontStyle: "italic",
-  },
-  nutritionTable: {
-    borderWidth: 1,
-    borderColor: "#eee",
-    borderRadius: 8,
-    overflow: "hidden",
-  },
-  nutritionRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    backgroundColor: "#fff",
-  },
-  nutritionLabel: {
-    fontSize: 16,
-    color: "#333",
-  },
-  nutritionValue: {
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
-  },
-  dietaryContainer: {
-    marginBottom: 20,
-  },
-  tagsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  tag: {
-    backgroundColor: "#e8f4f8",
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  tagText: {
-    color: "#0077b6",
-    fontSize: 14,
-  },
-  allergensContainer: {
-    marginBottom: 20,
-  },
-  allergenText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  buttonContainer: {
-    padding: 16,
-    backgroundColor: "#fff",
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
-  },
-  addButton: {
-    backgroundColor: "#4CAF50",
-    padding: 16,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  addButtonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 12,
-  },
-  modalContent: {
-    backgroundColor: "#fff",
-    borderRadius: 16,
-    padding: 12,
-    width: "100%",
-    maxHeight: "70%",
-  },
-  modalHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#333",
-  },
-  servingOption: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  selectedOption: {
-    backgroundColor: "#4CAF50",
-  },
-  servingOptionText: {
-    fontSize: 16,
-    color: "#333",
-  },
-  selectedOptionText: {
-    color: "#fff",
-    fontWeight: "500",
+    color: "#000",
+    // marginBottom: 12,
   },
   loadingContainer: {
     backgroundColor: "#f8f8f8",
