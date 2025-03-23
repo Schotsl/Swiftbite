@@ -2,6 +2,29 @@ import { NextResponse } from "next/server";
 import { IngredientInsert } from "../../../../expo/types";
 import { roundNumber } from "@/helper";
 
+// TODO: This is a temporary interface for the OpenFoodProductS
+interface OpenFoodProduct {
+  code: string;
+  product_name: string;
+  brands: string;
+  image_front_url: string;
+  nutriments: {
+    fat_100g: number;
+    "trans-fat_100g"?: number;
+    "saturated-fat_100g"?: number;
+    iron_100g?: number;
+    fiber_100g?: number;
+    sodium_100g?: number;
+    proteins_100g?: number;
+    calcium_100g?: number;
+    "energy-kcal_100g"?: number;
+    potassium_100g?: number;
+    cholesterol_100g?: number;
+    carbohydrates_100g?: number;
+    sugars_100g?: number;
+  };
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
@@ -64,7 +87,7 @@ export async function GET(request: Request) {
   return NextResponse.json(nutrition);
 }
 
-const mapNutrition = (product: any): IngredientInsert => {
+const mapNutrition = (product: OpenFoodProduct): IngredientInsert => {
   const nutriments = product.nutriments;
   const nutritionPortion = roundNumber(+nutriments.fat_100g);
 
