@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
-import { IngredientInsert } from "../../../../expo/types";
+import { IngredientInsert } from "../../../../../expo/types";
 import { roundNumber } from "@/helper";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+// Revalidate once every 30 days
+export const revalidate = 2592000;
 
-  const code = searchParams.get("code");
-
-  if (!code) {
-    return NextResponse.json({ error: "Code is required" }, { status: 400 });
-  }
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ code: string }> }
+) {
+  const { code } = await params;
 
   const url = `https://world.openfoodfacts.org/api/v3/product/${code}.json`;
   const response = await fetch(url);

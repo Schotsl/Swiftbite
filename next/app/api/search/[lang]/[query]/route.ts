@@ -1,40 +1,15 @@
 import { NextResponse } from "next/server";
 import { cleanSearchResults } from "@/utils/openai";
+import { OpenFoodSearch } from "@/types";
 
-// TODO: This is a temporary interface for the OpenFoodProductS
-type OpenFoodNutriments = {
-  fat_100g: number;
-  salt_100g: number;
-  fiber_100g: number;
-  sugars_100g: number;
-  sodium_100g: number;
-  calcium_100g: number;
-  proteins_100g: number;
-  carbohydrates_100g: number;
-  "trans-fat_100g": number;
-  "energy-kcal_100g": number;
-  "saturated-fat_100g": number;
-};
+// Revalidate once every 30 days
+export const revalidate = 2592000;
 
-type OpenFoodSearch = {
-  code: string;
-  brands: string;
-  product_name: string;
-  quantity: string;
-  nutriments: OpenFoodNutriments;
-  categories_tags: string[];
-};
-
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-
-  const lang = searchParams.get("lang");
-  const query = searchParams.get("query");
-
-  // If no code or query
-  if (!query) {
-    return NextResponse.json({ error: "Query is required" }, { status: 400 });
-  }
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ lang: string; query: string }> }
+) {
+  const { lang, query } = await params;
 
   // TODO: The categories_tags and nutriments are very expensive for the AI
   const fields = [
@@ -46,17 +21,16 @@ export async function GET(request: Request) {
     "categories_tags",
   ];
 
-  const base = `https://search.openfoodfacts.org/search`;
-  const joined = fields.join(",");
-  const params = new URLSearchParams();
+  const requestBase = `https://search.openfoodfacts.org/search`;
+  const requestJoined = fields.join(",");
+  const requestParams = new URLSearchParams();
 
-  if (lang) params.append("langs", lang);
+  requestParams.append("q", query);
+  requestParams.append("langs", lang);
+  requestParams.append("fields", requestJoined);
+  requestParams.append("page_size", "250");
 
-  params.append("q", query);
-  params.append("fields", joined);
-  params.append("page_size", "500");
-
-  const url = `${base}?${params.toString()}`;
+  const url = `${requestBase}?${requestParams.toString()}`;
   const response = await fetch(url);
   const data = await response.json();
 
@@ -77,9 +51,10 @@ export async function GET(request: Request) {
   }
 
   const encoder = new TextEncoder();
+  const signal = request.signal;
 
   // Process the filtered results with AI to clean and deduplicate them
-  const streamOpenAI = await cleanSearchResults(filtered);
+  const streamOpenAI = await cleanSearchResults(filtered, query, lang, signal);
   const streamResponse = new ReadableStream({
     async start(controller) {
       for await (const chunk of streamOpenAI) {
