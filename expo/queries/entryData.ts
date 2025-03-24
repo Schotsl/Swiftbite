@@ -5,9 +5,13 @@ import { EntryWithIngredient } from "@/types";
 import { handleError } from "../helper";
 import supabase from "../utils/supabase";
 
-export default function entryData() {
+type entryDataType = {
+  openfood?: string;
+};
+
+export default function entryData({ openfood }: entryDataType) {
   return queryOptions({
-    queryKey: ["entryData"],
+    queryKey: ["entryData", openfood],
     queryFn: async () => {
       const { error, data } = await supabase
         .from("entry")

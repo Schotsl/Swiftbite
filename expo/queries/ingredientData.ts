@@ -5,7 +5,11 @@ import supabase from "@/utils/supabase";
 
 import { Ingredient } from "../types";
 
-export default function ingredientData(openfood?: string) {
+type ingredientDataType = {
+  openfood?: string;
+};
+
+export default function ingredientData({ openfood }: ingredientDataType) {
   return queryOptions({
     queryKey: ["ingredientData", openfood],
     queryFn: async () => {
