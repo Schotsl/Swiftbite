@@ -1,4 +1,29 @@
 import { OpenAI } from "openai";
+import { Stream } from "openai/streaming.mjs";
+
+// OpenFoodFacts search result types
+type OpenFoodNutriments = {
+  fat_100g: number;
+  salt_100g: number;
+  fiber_100g: number;
+  sugars_100g: number;
+  sodium_100g: number;
+  calcium_100g: number;
+  proteins_100g: number;
+  carbohydrates_100g: number;
+  "trans-fat_100g": number;
+  "energy-kcal_100g": number;
+  "saturated-fat_100g": number;
+};
+
+type OpenFoodSearch = {
+  code: string;
+  brands: string;
+  product_name: string;
+  quantity: string;
+  nutriments: OpenFoodNutriments;
+  categories_tags: string[];
+};
 
 const openai = new OpenAI();
 
@@ -237,4 +262,78 @@ export async function fetchPortionSize(url: string) {
 
   const responseParsed = JSON.parse(responseRaw);
   return responseParsed;
+}
+
+export async function cleanSearchResults(
+  filteredProducts: OpenFoodSearch[]
+): Promise<Stream<OpenAI.Chat.Completions.ChatCompletionChunk>> {
+  const content = JSON.stringify(filteredProducts);
+  const stream = openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    stream: true,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a food database expert responsible for cleaning search results. Your tasks are to:\n" +
+          "1. Filter out irrelevant products with misspelled names or spam-like content\n" +
+          "2. Remove duplicate products, keeping only the highest quality version\n" +
+          "3. Discard product sets (e.g., 'Coca Cola 8 x 250ml') if individual items exist\n" +
+          "4. Ensure results are clear, high-quality, and unique\n\n" +
+          "5. Fix spelling, grammer, capitalization and punctuation\n\n" +
+          "Use the nutriments and categories data to determine quality when filtering but only return the cleaned products with code, brands, product_name, and quantity.",
+      },
+      {
+        role: "user",
+        content,
+      },
+    ],
+    tools: [
+      {
+        type: "function",
+        function: {
+          name: "return_cleaned_products",
+          description: "Returns a cleaned and filtered list of food products",
+          parameters: {
+            type: "object",
+            properties: {
+              cleaned_products: {
+                type: "array",
+                description: "Filtered, cleaned, and deduplicated products",
+                items: {
+                  type: "object",
+                  properties: {
+                    code: {
+                      type: "string",
+                      description: "Product barcode",
+                    },
+                    brands: {
+                      type: "string",
+                      description: "Product brands",
+                    },
+                    product_name: {
+                      type: "string",
+                      description: "Cleaned product name",
+                    },
+                    quantity: {
+                      type: "string",
+                      description: "Product quantity",
+                    },
+                  },
+                  required: ["code", "brands", "product_name", "quantity"],
+                },
+              },
+            },
+            required: ["cleaned_products"],
+          },
+        },
+      },
+    ],
+    tool_choice: {
+      type: "function",
+      function: { name: "return_cleaned_products" },
+    },
+  });
+
+  return stream;
 }
