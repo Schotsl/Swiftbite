@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { IngredientInsert } from "../../../../../expo/types";
 import { roundNumber } from "@/helper";
 
 // Revalidate once every 30 days
@@ -57,7 +56,7 @@ export async function GET(
     fat_saturated_100g: nutritionSaturated,
     fat_unsaturated_100g: nutritionUnsaturated,
     micros_100g: {},
-  } as IngredientInsert;
+  };
 
   return NextResponse.json(nutrition);
 }
