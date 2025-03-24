@@ -34,16 +34,15 @@ async def verify_api_key(x_api_key: str = Header(...)):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 def generate_icon(title: str):
-    host = "https://api.stability.ai/v2beta/stable-image/generate/sd3"
+    host = "https://api.stability.ai/v2beta/stable-image/generate/ultra"
 
-    prompt = (f"High-quality, very simple, and minimal 3D render featuring {title} with simple details (since it will be used as an icon), even lighting from every side, crafted from plasticine on an evenly lit white background that contrasts with the subject. A perfect, simple composition with a realistic, bright color palette, rendered with Octane using global illumination, ambient occlusion, ray tracing, and color mapping, captured from a eye-level / side angle, shot at the same level as the subject, creating a natural, relatable perspective.")
+    prompt = (f"High-quality, very simple, and minimal 3D render featuring {title}, sculpted to look like it's formed from soft, colorful modeling clay with realistic, appetizing hues. The subject has gentle, rounded edges and subtle sculpting marks, shown on a bright white background that provides even illumination from all sides. Render with Octane using global illumination, ambient occlusion, ray tracing, and color mapping to capture a convincing clay texture, while ensuring the colors evoke the real appearance of fresh food. The camera is at eye level, offering a natural, relatable perspective that highlights the handcrafted, playful feel.")
 
     multipart_data = MultipartEncoder(
         fields={
-            "model": "sd3.5-large-turbo",
             "prompt": prompt,
             "aspect_ratio": "1:1",
-            "style_preset": "isometric",
+            "style_preset": "modeling-compound",
             "output_format": "png",
             "negative_prompt": "shadows, color labels, decorative elements around the subject (droplets, beans, oils, random greens), colored background, unnecessary details"
         }
