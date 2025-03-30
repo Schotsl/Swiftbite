@@ -16,7 +16,7 @@ export const roundNumber = (number: number, precision = 2) => {
 };
 
 export const streamToResponse = <T>(
-  stream: StreamObjectResult<T[], T[], AsyncIterable<T> & ReadableStream<T>>
+  stream: StreamObjectResult<T[], T[], AsyncIterable<T> & ReadableStream<T>>,
 ): Response => {
   const { partialObjectStream } = stream;
 

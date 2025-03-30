@@ -56,7 +56,6 @@ export default function AddText() {
     setLoading(true);
 
     const fetchIngredients = async () => {
-      console.log("Let");
       if (abort.current) {
         abort.current.abort();
       }

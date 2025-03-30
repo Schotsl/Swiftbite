@@ -1,6 +1,6 @@
 import { after } from "next/server";
 import { handleError } from "@/helper";
-import { fetchTitle, fetchEstimation, fetchPortionSize } from "@/utils/openai";
+import { fetchTitle, fetchEstimation, fetchSize } from "@/utils/openai";
 
 import supabase from "@/utils/supabase";
 
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     // Then fetch AI responses and entry data in parallel
     const [estimation, portionSize, entryData] = await Promise.all([
       fetchEstimation(signedUrl),
-      fetchPortionSize(signedUrl),
+      fetchSize(signedUrl),
       fetchEntry(ingredient),
     ]);
 
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
       .from("entry")
       .update({
         consumed_unit: "gram",
-        consumed_quantity: portionSize.portion_grams,
+        consumed_quantity: portionSize,
       })
       .eq("uuid", entryData.uuid);
 
