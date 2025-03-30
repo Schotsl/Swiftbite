@@ -35,17 +35,17 @@ export default function AddPreviewBarcodeScreen() {
   const { barcode } = useLocalSearchParams<{ barcode: string }>();
 
   const { data: supabaseIngredients, isLoading: isLoadingIngredient } =
-    useQuery(ingredientData(barcode));
+    useQuery(ingredientData({ openfood: barcode }));
 
   const { data: openfoodIngredients, isLoading: isLoadingOpenfood } = useQuery(
-    openfoodData(barcode)
+    openfoodData({ barcode })
   );
 
   const loadingBackup = isLoadingOpenfood && !supabaseIngredients;
   const loading = isLoadingIngredient || loadingBackup;
 
   const ingredientSupabase = supabaseIngredients?.[0];
-  const ingredientOpenfood = openfoodIngredients?.[0];
+  const ingredientOpenfood = openfoodIngredients;
   const ingredient = ingredientSupabase ?? ingredientOpenfood;
 
   const servingSizeOptions = [

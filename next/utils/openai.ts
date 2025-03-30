@@ -1,6 +1,9 @@
 import { OpenAI } from "openai";
-import { Stream } from "openai/streaming.mjs";
 import { OpenFoodSearch } from "@/types";
+import { streamObject } from "ai";
+import { google } from "@ai-sdk/google";
+import { z } from "zod";
+
 const openai = new OpenAI();
 
 export async function fetchEstimation(url: string) {
@@ -240,93 +243,53 @@ export async function fetchPortionSize(url: string) {
   return responseParsed;
 }
 
-export async function cleanSearchResults(
-  products: OpenFoodSearch[],
+export function cleanSearchResults(
   query: string,
   language: string,
-  signal: AbortSignal
-): Promise<Stream<OpenAI.Chat.Completions.ChatCompletionChunk>> {
+  products: OpenFoodSearch[],
+  abortSignal: AbortSignal
+) {
   const json = JSON.stringify(products);
-  const stream = openai.chat.completions.create(
-    {
-      model: "gpt-4o-mini",
-      stream: true,
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a food database expert responsible for cleaning and optimizing search results. Your tasks are to:\n\n" +
-            "1. Filter out irrelevant/spam: remove products with clearly incorrect or spam-like names\n" +
-            "2. Remove duplicates: if multiple entries represent the same product, keep only the highest quality version (use nutriments / categories data to pick the best).\n" +
-            '3. Discard multi-packs: exclude product sets (e.g., "Coca-Cola 8 x 250ml") when an equivalent individual item is available.\n' +
-            "4. Maintain quality & uniqueness: ensure the final list is clear, consistent, and free of redundancy.\n" +
-            "5. Correct language & spelling: fix spelling, grammar, capitalization, and punctuation.\n" +
-            "6. Enforce relevance: Use the user's query to decide what products to keep, only include products that meaningfully match the query.\n" +
-            "7. Return clean fields: final output should only contain:\n" +
-            "   - code: product barcode or unique identifier\n" +
-            "   - brands: brand name(s)\n" +
-            "   - product_name: cleaned product name\n" +
-            "   - quantity: quantity or size descriptor\n\n" +
-            "Your goal is to produce a high-quality, consistent set of results matching the user's search terms in the specified language (unless the users query uses a different language), whenever possible.",
-        },
-        {
-          role: "user",
-          content:
-            `User query: ${query}\n` +
-            `User language: ${language}\n` +
-            `Products: ${json}\n`,
-        },
-      ],
-      tools: [
-        {
-          type: "function",
-          function: {
-            name: "return_cleaned_products",
-            description: "Returns a cleaned and filtered list of food products",
-            parameters: {
-              type: "object",
-              properties: {
-                cleaned_products: {
-                  type: "array",
-                  description: "Filtered, cleaned, and deduplicated products",
-                  items: {
-                    type: "object",
-                    properties: {
-                      code: {
-                        type: "string",
-                        description: "Product barcode",
-                      },
-                      brands: {
-                        type: "string",
-                        description: "Product brands",
-                      },
-                      product_name: {
-                        type: "string",
-                        description: "Cleaned product name",
-                      },
-                      quantity: {
-                        type: "string",
-                        description: "Product quantity",
-                      },
-                    },
-                    required: ["code", "brands", "product_name", "quantity"],
-                  },
-                },
-              },
-              required: ["cleaned_products"],
-            },
-          },
-        },
-      ],
-      tool_choice: {
-        type: "function",
-        function: { name: "return_cleaned_products" },
+  const stream = streamObject({
+    model: google("gemini-2.0-flash"),
+    output: "array",
+    schema: z.object({
+      code: z.string().describe("Product barcode or unique identifier"),
+      brands: z.string().describe("Brand name(s)"),
+      product_name: z.string().describe("Cleaned product name"),
+      quantity: z.string().describe("Quantity or size descriptor"),
+    }),
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a food database expert responsible for cleaning and optimizing search results. Your tasks are to:\n\n" +
+          "1. Filter out irrelevant/spam: remove products with clearly incorrect or spam-like names.\n\n" +
+          "2. Remove duplicates: if multiple entries represent the same product, keep only the highest quality version (use nutriments / categories data to pick the best).\n\n" +
+          '3. Discard multi-packs: exclude product sets (e.g., "Coca-Cola 8 x 250 ml") when an equivalent individual item is available.\n\n' +
+          '4. Discard unquantifiable items: remove entries with vague or non-standard quantities such as "1 piece" or similar descriptors that can\'t be accurately tracked.\n\n' +
+          "5. Maintain quality & uniqueness: ensure the final list is clear, consistent, and free of redundancy.\n\n" +
+          "6. Correct language & spelling: fix spelling, grammar, capitalization, and punctuation.\n\n" +
+          "7. Enforce relevance: use the user's query to decide what products to keep — only include products that meaningfully match the query.\n\n" +
+          '8. Standardize quantity format: ensure all quantity values are written consistently as a number followed by a **space** and then the unit label (e.g., "250 ml", "100 g").\n\n' +
+          "Return clean fields only: final output should include only code, brands, product_name, and quantity fields.\n\n\n\n" +
+          "Your goal is to produce a high-quality, consistent set of results matching the user's search terms in the specified language (unless the user's query uses a different language), whenever possible.",
       },
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: `User query: ${query}\nUser language: ${language}\nProducts: ${json}`,
+          },
+        ],
+      },
+    ],
+    onError: (error) => {
+      console.error(error);
     },
-    {
-      signal,
-    }
-  );
+    abortSignal,
+  });
 
   return stream;
 }

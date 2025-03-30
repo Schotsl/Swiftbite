@@ -6,7 +6,9 @@
   "build": {
     "simulator": {
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "distribution": "internal",
+        "developmentClient": true
       }
     },
     "development": {

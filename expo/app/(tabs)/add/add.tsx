@@ -37,6 +37,12 @@ export default function AddScreen() {
         icon="barcode"
         onPress={() => router.push("/add/add-barcode")}
       />
+
+      <Button
+        title="Search with Text"
+        icon="search"
+        onPress={() => router.push("/add/add-text")}
+      />
     </View>
   );
 }

@@ -65,6 +65,14 @@ export default function TabsLayout() {
       />
 
       <Tabs.Screen
+        name="add/add-text"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
         name="settings"
         options={{
           title: "Settings",

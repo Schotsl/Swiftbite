@@ -16,7 +16,7 @@ export default function Index() {
   const deleteEntry = useDeleteEntry();
 
   const { data } = useSuspenseQuery({
-    ...entryData(),
+    ...entryData({}),
     refetchInterval: interval,
   });
 
@@ -27,7 +27,7 @@ export default function Index() {
         !entry.ingredient?.title ||
         !entry.ingredient?.calorie_100g ||
         !entry.ingredient?.icon_id ||
-        !entry.consumed_quantity,
+        !entry.consumed_quantity
     );
 
     const interval = processing ? 500 : false;
