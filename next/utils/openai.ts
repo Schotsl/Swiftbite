@@ -1,22 +1,31 @@
-import { OpenFoodSearch } from "@/types";
+import { IngredientSearch, Nutrition, OpenFoodSearch } from "@/types";
 import { generateObject, streamObject } from "ai";
 import { openai as openaiVercel } from "@ai-sdk/openai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
 
-export async function fetchEstimation(url: string) {
+export async function fetchEstimation(url: string): Promise<Nutrition> {
   const response = await generateObject({
     model: openaiVercel("gpt-4o"),
     output: "object",
     schema: z.object({
+      fat_100g: z.number().describe("Estimated total fat per 100g in grams"),
+      calorie_100g: z.number().describe("Estimated calories per 100g"),
+      protein_100g: z.number().describe("Estimated protein per 100g in grams"),
+      portion: z
+        .number()
+        .describe("Estimated serving size in grams or milliliters"),
+      sodium_100g: z
+        .number()
+        .describe("Estimated sodium per 100g in milligrams"),
+      carbohydrate_100g: z
+        .number()
+        .describe("Estimated carbohydrates per 100g in grams"),
+
       calcium_100g: z
         .number()
         .describe("Estimated calcium per 100g in milligrams")
         .optional(),
-      calorie_100g: z.number().describe("Estimated calories per 100g"),
-      carbohydrate_100g: z
-        .number()
-        .describe("Estimated carbohydrates per 100g in grams"),
       carbohydrate_sugar_100g: z
         .number()
         .describe("Estimated sugar content per 100g in grams")
@@ -25,7 +34,6 @@ export async function fetchEstimation(url: string) {
         .number()
         .describe("Estimated cholesterol per 100g in milligrams")
         .optional(),
-      fat_100g: z.number().describe("Estimated total fat per 100g in grams"),
       fat_saturated_100g: z
         .number()
         .describe("Estimated saturated fat per 100g in grams")
@@ -46,18 +54,10 @@ export async function fetchEstimation(url: string) {
         .number()
         .describe("Estimated iron per 100g in milligrams")
         .optional(),
-      portion: z
-        .number()
-        .describe("Estimated serving size in grams or milliliters")
-        .optional(),
       potassium_100g: z
         .number()
         .describe("Estimated potassium per 100g in milligrams")
         .optional(),
-      protein_100g: z.number().describe("Estimated protein per 100g in grams"),
-      sodium_100g: z
-        .number()
-        .describe("Estimated sodium per 100g in milligrams"),
     }),
     messages: [
       {
@@ -158,18 +158,18 @@ export async function fetchSize(url: string): Promise<number> {
 export function cleanProducts(
   query: string,
   language: string,
-  products: OpenFoodSearch[],
-  abortSignal: AbortSignal,
+  ingredients: IngredientSearch[],
+  abortSignal: AbortSignal
 ) {
-  const json = JSON.stringify(products);
+  const json = JSON.stringify(ingredients);
   const stream = streamObject({
     model: google("gemini-2.0-flash"),
     output: "array",
     schema: z.object({
-      code: z.string().describe("Product barcode or unique identifier"),
-      brands: z.string().describe("Brand name(s)"),
-      product_name: z.string().describe("Cleaned product name"),
+      title: z.string().describe("Cleaned product name"),
+      brand: z.string().describe("Brand name(s)"),
       quantity: z.string().describe("Quantity or size descriptor"),
+      openfood_id: z.string().describe("Product barcode or unique identifier"),
     }),
     messages: [
       {
@@ -184,7 +184,7 @@ export function cleanProducts(
           "6. Correct language & spelling: fix spelling, grammar, capitalization, and punctuation.\n\n" +
           "7. Enforce relevance: use the user's query to decide what products to keep — only include products that meaningfully match the query.\n\n" +
           '8. Standardize quantity format: ensure all quantity values are written consistently as a number followed by a **space** and then the unit label (e.g., "250 ml", "100 g").\n\n' +
-          "Return clean fields only: final output should include only code, brands, product_name, and quantity fields.\n\n\n\n" +
+          "Return clean fields only: final output should include only title, brand, quantity and openfood_id fields.\n\n\n\n" +
           "Your goal is to produce a high-quality, consistent set of results matching the user's search terms in the specified language (unless the user's query uses a different language), whenever possible.",
       },
       {

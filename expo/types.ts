@@ -29,3 +29,10 @@ export enum HealthStatus {
   Loading = "loading",
   Refreshing = "refreshing",
 }
+
+export type IngredientSearch = {
+  title: string;
+  brand: string;
+  quantity: number;
+  openfood_id: string;
+};

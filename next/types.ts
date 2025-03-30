@@ -1,3 +1,10 @@
+export type IngredientSearch = {
+  title: string;
+  brand: string;
+  quantity: number;
+  openfood_id: string;
+};
+
 export type Nutrition = {
   calcium_100g?: number;
   calorie_100g: number;

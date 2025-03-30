@@ -15,7 +15,7 @@ import {
 } from "react-native";
 
 import openfoodData from "../../../queries/openfoodData";
-import { IngredientInsert } from "../../../types";
+import { IngredientInsert, IngredientSearch } from "../../../types";
 import Input from "../../components/Input";
 
 export default function AddText() {
@@ -25,7 +25,7 @@ export default function AddText() {
 
   const [search, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
-  const [ingredients, setIngredients] = useState<any[]>([]);
+  const [ingredients, setIngredients] = useState<IngredientSearch[]>([]);
 
   const handleInput = (text: string) => {
     setSearchText(text);
@@ -41,10 +41,10 @@ export default function AddText() {
     }, 500);
   };
 
-  const handleSelect = (ingredient: IngredientInsert) => {
+  const handleSelect = (ingredient: IngredientSearch) => {
     router.push({
       pathname: "/add/add-preview-barcode",
-      params: { barcode: ingredient.code },
+      params: { barcode: ingredient.openfood_id },
     });
   };
 
@@ -102,15 +102,15 @@ export default function AddText() {
     fetchIngredients();
   };
 
-  const renderIngredientItem = ({ item }: { item: any }) => (
+  const renderIngredientItem = ({ item }: { item: IngredientSearch }) => (
     <TouchableOpacity
       style={styles.itemContainer}
       onPress={() => handleSelect(item)}
     >
       <View style={styles.itemContent}>
         <View style={styles.itemTextContainer}>
-          <Text style={styles.itemTitle}>{item.product_name}</Text>
-          {item.brands && <Text style={styles.itemBrand}>{item.brands}</Text>}
+          <Text style={styles.itemTitle}>{item.title}</Text>
+          <Text style={styles.itemBrand}>{item.brand}</Text>
           <Text>{item.quantity}</Text>
         </View>
       </View>
