@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { validateUsage } from "./utils/usage";
-import supabase from "./utils/supabase";
-import { handleError } from "./helper";
+import { getUser } from "./utils/supabase";
 
 export async function middleware(request: NextRequest) {
   // Check calls from the Supabase database
@@ -16,25 +15,13 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check calls from the client-side
-  const authorization = request.headers.get("Authorization");
+  const user = await getUser(request);
 
-  if (!authorization) {
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const token = authorization.replace("Bearer ", "");
-
-  const { error, data } = await supabase.auth.getUser(token);
-
-  handleError(error);
-
-  const uuid = data.user?.id;
-
-  if (!uuid) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  const response = await validateUsage(uuid);
+  const response = await validateUsage(user);
 
   if (response) {
     return response;

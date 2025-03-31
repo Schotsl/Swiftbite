@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Image,
   SafeAreaView,
@@ -13,6 +14,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+
+import supabase from "@/utils/supabase";
 
 import openfoodData from "../../../queries/openfoodData";
 import { IngredientInsert, IngredientSearch } from "../../../types";
@@ -62,16 +65,30 @@ export default function AddText() {
 
       abort.current = new AbortController();
 
+      const session = await supabase.auth.getSession();
+      const bearer = session?.data.session?.access_token;
+
       const body = JSON.stringify({ query: search, lang: "nl" });
       const signal = abort.current.signal;
       const method = "POST";
-      const headers = { "Content-Type": "application/json" };
-      const response = await fetch(`http://localhost:3000/api/search`, {
+      const headers = {
+        Authorization: `Bearer ${bearer}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await fetch(`http://localhost:3000/api/ai/search`, {
         body,
         signal,
         method,
         headers,
       });
+
+      if (!response.ok) {
+        const body = await response.json();
+        const error = body.error;
+
+        Alert.alert("Error", error);
+      }
 
       if (!response.body) {
         return;

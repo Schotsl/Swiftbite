@@ -3,7 +3,7 @@ import { generateIcon } from "@/utils/icon";
 import { normalizeTitle } from "@/utils/openai";
 import { after } from "next/server";
 
-import supabase from "@/utils/supabase";
+import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
 
 export const maxDuration = 120;
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[ICON] Normalizing title`);
-    const iconTitle = await normalizeTitle(ingredientTitleNew);
+    const iconTitle = await normalizeTitle(user, ingredientTitleNew);
     const iconUuid = await fetchIcon(iconTitle);
 
     // If the icon already exists we'll update the ingredient

@@ -3,10 +3,19 @@ import { generateObject, streamObject } from "ai";
 import { openai as openaiVercel } from "@ai-sdk/openai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
+import { after } from "next/server";
+import { insertUsage } from "./usage";
+import { Enums } from "@/database.types";
 
-export async function fetchEstimation(url: string): Promise<Nutrition> {
+export async function fetchEstimation(
+  user: string,
+  url: string,
+): Promise<Nutrition> {
+  const task: Enums<"task"> = "nutrition_estimation";
+  const model = "gpt-4o";
+
   const response = await generateObject({
-    model: openaiVercel("gpt-4o"),
+    model: openaiVercel(model),
     output: "object",
     schema: z.object({
       fat_100g: z.number().describe("Estimated total fat per 100g in grams"),
@@ -72,13 +81,26 @@ export async function fetchEstimation(url: string): Promise<Nutrition> {
     ],
   });
 
-  const object = response.object;
+  const { object, usage } = response;
+
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      model,
+      usage,
+    });
+  });
+
   return object;
 }
 
-export async function fetchTitle(url: string): Promise<string> {
+export async function fetchTitle(user: string, url: string): Promise<string> {
+  const task: Enums<"task"> = "title_generation";
+  const model = "gpt-4o-mini";
+
   const response = await generateObject({
-    model: openaiVercel("gpt-4o-mini"),
+    model: openaiVercel(model),
     output: "object",
     schema: z.object({
       food_title: z.string().describe("Food title"),
@@ -96,13 +118,28 @@ export async function fetchTitle(url: string): Promise<string> {
     ],
   });
 
-  const object = response.object;
-  const title = object.food_title;
+  const { usage, object } = response;
 
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      model,
+      usage,
+    });
+  });
+
+  const title = object.food_title;
   return title;
 }
 
-export async function normalizeTitle(title: string): Promise<string> {
+export async function normalizeTitle(
+  user: string,
+  title: string,
+): Promise<string> {
+  const task: Enums<"task"> = "title_normalization";
+  const model = "gpt-4o-mini";
+
   const response = await generateObject({
     model: openaiVercel("gpt-4o-mini"),
     output: "object",
@@ -122,14 +159,27 @@ export async function normalizeTitle(title: string): Promise<string> {
     ],
   });
 
-  const object = response.object;
+  const { object, usage } = response;
+
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      model,
+      usage,
+    });
+  });
+
   const normalized = object.normalized_title;
   const normalizedLowercase = normalized.toLowerCase();
 
   return normalizedLowercase;
 }
 
-export async function fetchSize(url: string): Promise<number> {
+export async function fetchSize(user: string, url: string): Promise<number> {
+  const task: Enums<"task"> = "size_estimation";
+  const model = "gpt-4o";
+
   const response = await generateObject({
     model: openaiVercel("gpt-4o"),
     output: "object",
@@ -149,18 +199,31 @@ export async function fetchSize(url: string): Promise<number> {
     ],
   });
 
-  const object = response.object;
-  const size = object.portion_grams;
+  const { object, usage } = response;
 
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      model,
+      usage,
+    });
+  });
+
+  const size = object.portion_grams;
   return size;
 }
 
 export function cleanProducts(
+  user: string,
   query: string,
   language: string,
   ingredients: IngredientSearch[],
-  abortSignal: AbortSignal
+  abortSignal: AbortSignal,
 ) {
+  const task: Enums<"task"> = "search_normalization";
+  const model = "gemini-2.0-flash";
+
   const json = JSON.stringify(ingredients);
   const stream = streamObject({
     model: google("gemini-2.0-flash"),
@@ -198,6 +261,16 @@ export function cleanProducts(
       },
     ],
     abortSignal,
+  });
+
+  after(async () => {
+    const usage = await stream.usage;
+    await insertUsage({
+      user,
+      task,
+      model,
+      usage,
+    });
   });
 
   return stream;

@@ -1,7 +1,31 @@
 import { NextResponse } from "next/server";
 import { handleError } from "../helper";
+import { Enums } from "@/database.types";
 
-import supabase from "./supabase";
+import { supabase } from "./supabase";
+import { LanguageModelUsage } from "ai";
+
+export async function insertUsage({
+  user,
+  task,
+  model,
+  usage,
+}: {
+  user: string;
+  task: Enums<"task">;
+  model: string;
+  usage: LanguageModelUsage;
+}) {
+  const { error } = await supabase.from("usage").insert({
+    task,
+    model,
+    user_id: user,
+    input_tokens: usage.promptTokens,
+    output_tokens: usage.completionTokens,
+  });
+
+  handleError(error);
+}
 
 export async function validateUsage(user: string) {
   const now = Date.now();
@@ -33,14 +57,14 @@ export async function validateUsage(user: string) {
   const yearInput = yearResult.data?.[0]?.input_tokens || 0;
   const yearOutput = yearResult.data?.[0]?.output_tokens || 0;
 
-  if (hourInput > 1000 || hourOutput > 1000) {
+  if (hourInput > 50000 || hourOutput > 50000) {
     return NextResponse.json(
       { error: "Hourly limit exceeded" },
       { status: 429 }
     );
   }
 
-  if (yearInput > 500000 || yearOutput > 500000) {
+  if (yearInput > 1000000 || yearOutput > 1000000) {
     return NextResponse.json(
       { error: "Yearly limit exceeded" },
       { status: 429 }

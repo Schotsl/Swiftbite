@@ -1,3 +1,4 @@
+import { getUser } from "../../../../utils/supabase";
 import { NextResponse } from "next/server";
 import { cleanProducts } from "@/utils/openai";
 import { OpenFoodSearch } from "@/types";
@@ -5,6 +6,8 @@ import { streamToResponse } from "@/helper";
 
 export async function POST(request: Request) {
   const body = await request.json();
+  const user = await getUser(request);
+
   const signal = request.signal;
 
   const { query, lang } = body;
@@ -12,7 +15,7 @@ export async function POST(request: Request) {
   if (!query || !lang) {
     return NextResponse.json(
       { error: "Please provide a query and a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -51,7 +54,7 @@ export async function POST(request: Request) {
         product.nutriments &&
         product.categories_tags?.length > 0
       );
-    }
+    },
   );
 
   // Drop the categories and nutriments
@@ -69,7 +72,7 @@ export async function POST(request: Request) {
   }
 
   // Process the filtered results with AI to clean and deduplicate them
-  const result = cleanProducts(query, lang, openFoodMapped, signal);
+  const result = cleanProducts(user!, query, lang, openFoodMapped, signal);
   const response = streamToResponse(result);
 
   return response;

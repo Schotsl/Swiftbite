@@ -329,37 +329,37 @@ export type Database = {
       usage: {
         Row: {
           created_at: string;
-          entry_id: string;
           input_tokens: number;
           model: string;
           output_tokens: number;
           task: Database["public"]["Enums"]["task"];
+          user_id: string;
           uuid: string;
         };
         Insert: {
           created_at?: string;
-          entry_id: string;
           input_tokens: number;
           model: string;
           output_tokens: number;
           task: Database["public"]["Enums"]["task"];
+          user_id?: string;
           uuid?: string;
         };
         Update: {
           created_at?: string;
-          entry_id?: string;
           input_tokens?: number;
           model?: string;
           output_tokens?: number;
           task?: Database["public"]["Enums"]["task"];
+          user_id?: string;
           uuid?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "fk_usage_entry";
-            columns: ["entry_id"];
+            foreignKeyName: "usage_user_id_fkey";
+            columns: ["user_id"];
             isOneToOne: false;
-            referencedRelation: "entry";
+            referencedRelation: "user";
             referencedColumns: ["uuid"];
           },
         ];
@@ -408,10 +408,11 @@ export type Database = {
       task:
         | "icon_generation"
         | "icon_normalization"
-        | "estimation_title_generation"
-        | "estimation_nutrition_generation"
-        | "label_nutrition_generation"
-        | "description_title_generation"
+        | "title_generation"
+        | "title_normalization"
+        | "nutrition_estimation"
+        | "search_normalization"
+        | "size_estimation"
         | "description_nutrition_generation";
       unit:
         | "teaspoon"

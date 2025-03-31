@@ -2,7 +2,7 @@ import { after } from "next/server";
 import { handleError } from "@/helper";
 import { fetchTitle, fetchEstimation, fetchSize } from "@/utils/openai";
 
-import supabase from "@/utils/supabase";
+import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
 
 export async function POST(request: Request) {
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     if (generativeName.endsWith("-small")) {
       // We'll use the small image to figure out the title
       const [title, ingredient] = await Promise.all([
-        fetchTitle(signedUrl),
+        fetchTitle(user, signedUrl),
         fetchIngredient(generativeUUID),
       ]);
 
@@ -44,8 +44,8 @@ export async function POST(request: Request) {
 
     // Then fetch AI responses and entry data in parallel
     const [estimation, portionSize, entryData] = await Promise.all([
-      fetchEstimation(signedUrl),
-      fetchSize(signedUrl),
+      fetchEstimation(user, signedUrl),
+      fetchSize(user, signedUrl),
       fetchEntry(ingredient),
     ]);
 
