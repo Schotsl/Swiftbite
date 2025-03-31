@@ -18,7 +18,7 @@ export async function POST(request: Request) {
   console.log("2");
 
   const generativeName = body.record.name;
-  const generativeUUID = generativeName.push("-small", "");
+  const generativeUUID = generativeName.replace("-small", "");
   console.log("3");
 
   after(async () => {
