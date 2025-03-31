@@ -32,7 +32,14 @@ export async function validateUsage(user: string) {
   const hourTimestamp = new Date(now - 60 * 60 * 1000).toISOString();
   const yearTimestamp = new Date(now - 365 * 24 * 60 * 60 * 1000).toISOString();
 
-  const [hourResult, yearResult] = await Promise.all([
+  const [minuteResult, hourResult, yearResult] = await Promise.all([
+    supabase
+      .from("usage")
+      .select(
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
+      )
+      .eq("user_id", user)
+      .gte("created_at", new Date(now - 60 * 1000).toISOString()),
     supabase
       .from("usage")
       .select(
@@ -52,12 +59,23 @@ export async function validateUsage(user: string) {
   handleError(hourResult.error);
   handleError(yearResult.error);
 
+  const minuteInput = minuteResult.data?.[0]?.input_tokens || 0;
+  const minuteOutput = minuteResult.data?.[0]?.output_tokens || 0;
+
   const hourInput = hourResult.data?.[0]?.input_tokens || 0;
   const hourOutput = hourResult.data?.[0]?.output_tokens || 0;
+
   const yearInput = yearResult.data?.[0]?.input_tokens || 0;
   const yearOutput = yearResult.data?.[0]?.output_tokens || 0;
 
-  if (hourInput > 50000 || hourOutput > 50000) {
+  if (minuteInput > 50000 || minuteOutput > 50000) {
+    return NextResponse.json(
+      { error: "Minute limit exceeded" },
+      { status: 429 }
+    );
+  }
+
+  if (hourInput > 100000 || hourOutput > 100000) {
     return NextResponse.json(
       { error: "Hourly limit exceeded" },
       { status: 429 }

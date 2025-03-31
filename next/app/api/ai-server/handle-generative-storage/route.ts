@@ -11,36 +11,32 @@ export async function POST(request: Request) {
   const user = body.record.owner_id;
 
   const response = await validateUsage(user);
-  console.log("1");
+
   if (response) {
     return response;
   }
-  console.log("2");
 
   const generativeName = body.record.name;
   const generativeUUID = generativeName.replace("-small", "");
-  console.log("3");
 
   after(async () => {
-    console.log("4");
 
     const signedUrl = await fetchUrl(generativeUUID);
-    console.log("5");
+
     if (generativeName.endsWith("-small")) {
       // We'll use the small image to figure out the title
-      console.log("6");
       const [title, ingredient] = await Promise.all([
         fetchTitle(user, signedUrl),
         fetchIngredient(generativeUUID),
       ]);
-      console.log("7");
+
       const { error: ingredientError } = await supabase
         .from("ingredient")
         .update({ title })
         .eq("uuid", ingredient);
-      console.log("8");
+
       handleError(ingredientError);
-      console.log("9");
+
       return;
     }
 
