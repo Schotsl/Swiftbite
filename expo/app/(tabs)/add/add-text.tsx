@@ -76,7 +76,7 @@ export default function AddText() {
         "Content-Type": "application/json",
       };
 
-      const response = await fetch(`http://localhost:3000/api/ai/search`, {
+      const response = await fetch(`https://swiftbite.app/api/ai/search`, {
         body,
         signal,
         method,

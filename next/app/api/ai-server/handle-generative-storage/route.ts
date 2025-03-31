@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   // Make sure the user isn't over their usage limits
   const body = await request.json();
   const user = body.record.user_id;
-
+  console.log(body);
   const response = await validateUsage(user);
 
   if (response) {
