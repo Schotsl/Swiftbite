@@ -1,4 +1,4 @@
-import { IngredientSearch, Nutrition, OpenFoodSearch } from "@/types";
+import { IngredientSearch, Nutrition } from "@/types";
 import { generateObject, streamObject } from "ai";
 import { openai as openaiVercel } from "@ai-sdk/openai";
 import { google } from "@ai-sdk/google";
