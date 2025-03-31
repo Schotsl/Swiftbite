@@ -11,7 +11,7 @@ export const maxDuration = 120;
 export async function POST(request: Request) {
   // Make sure the user isn't over their usage limits
   const body = await request.json();
-  const user = body.record.user_id;
+  const user = body.record.owner_id;
 
   const response = await validateUsage(user);
 
