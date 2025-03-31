@@ -4,11 +4,20 @@ import { normalizeTitle } from "@/utils/openai";
 import { after } from "next/server";
 
 import supabase from "@/utils/supabase";
+import { validateUsage } from "@/utils/usage";
 
 export const maxDuration = 120;
 
 export async function POST(request: Request) {
+  // Make sure the user isn't over their usage limits
   const body = await request.json();
+  const user = body.record.user_id;
+
+  const response = await validateUsage(user);
+
+  if (response) {
+    return response;
+  }
 
   const ingredientIcon = body.record.icon_id;
   const ingredientUuid = body.record.uuid;

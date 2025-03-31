@@ -1,9 +1,21 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { validateUsage } from "./utils/usage";
 import supabase from "./utils/supabase";
 import { handleError } from "./helper";
 
 export async function middleware(request: NextRequest) {
+  // Check calls from the Supabase database
+  if (request.nextUrl.pathname.startsWith("/api/ai-server")) {
+    const secret = request.headers.get("X-Supabase-Secret");
+
+    if (secret !== process.env.SWIFTBITE_WEBHOOK_SECRET) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    return NextResponse.next();
+  }
+
+  // Check calls from the client-side
   const authorization = request.headers.get("Authorization");
 
   if (!authorization) {
@@ -12,64 +24,25 @@ export async function middleware(request: NextRequest) {
 
   const token = authorization.replace("Bearer ", "");
 
-  const { error: userError, data: userData } =
-    await supabase.auth.getUser(token);
+  const { error, data } = await supabase.auth.getUser(token);
 
-  handleError(userError);
+  handleError(error);
 
-  const uuid = userData.user?.id;
+  const uuid = data.user?.id;
 
   if (!uuid) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const now = Date.now();
-  const hourTimestamp = new Date(now - 60 * 60 * 1000).toISOString();
-  const yearTimestamp = new Date(now - 365 * 24 * 60 * 60 * 1000).toISOString();
+  const response = await validateUsage(uuid);
 
-  const [hourResult, yearResult] = await Promise.all([
-    supabase
-      .from("usage")
-      .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
-      )
-      .eq("user_id", uuid)
-      .gte("created_at", hourTimestamp),
-    supabase
-      .from("usage")
-      .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
-      )
-      .eq("user_id", uuid)
-      .gte("created_at", yearTimestamp),
-  ]);
-
-  handleError(hourResult.error);
-  handleError(yearResult.error);
-
-  const hourInput = hourResult.data?.[0]?.input_tokens || 0;
-  const hourOutput = hourResult.data?.[0]?.output_tokens || 0;
-
-  const yearInput = yearResult.data?.[0]?.input_tokens || 0;
-  const yearOutput = yearResult.data?.[0]?.output_tokens || 0;
-
-  if (hourInput > 1000 || hourOutput > 1000) {
-    return NextResponse.json(
-      { error: "Hourly limit exceeded" },
-      { status: 429 }
-    );
-  }
-
-  if (yearInput > 500000 || yearOutput > 500000) {
-    return NextResponse.json(
-      { error: "Yearly limit exceeded" },
-      { status: 429 }
-    );
+  if (response) {
+    return response;
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: "/api/ai/:path*",
+  matcher: ["/api/ai/:path*", "/api/ai-server/:path*"],
 };
