@@ -6,7 +6,6 @@ import { AppState } from "react-native";
 
 import { HealthProvider } from "@/context/HealthContext";
 
-import Auth from "../components/Auth";
 import supabase from "../utils/supabase";
 
 export default function RootLayout() {
@@ -41,7 +40,10 @@ export default function RootLayout() {
           </Stack>
         </HealthProvider>
       ) : (
-        <Auth />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack.Screen name="index" redirect />
+        </Stack>
       )}
     </QueryClientProvider>
   );
