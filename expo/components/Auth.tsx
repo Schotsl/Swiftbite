@@ -1,56 +1,45 @@
-import * as AppleAuthentication from "expo-apple-authentication";
+import { zodResolver } from "@hookform/resolvers/zod";
+// import * as AppleAuthentication from "expo-apple-authentication";
 import React, { useState } from "react";
-import {
-  Alert,
-  AppState,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { TextInput } from "react-native";
+import { useForm } from "react-hook-form";
+import { Alert, AppState, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Button from "@/app/components/Button";
 import Input from "@/app/components/Input";
 import { handleError } from "@/helper";
+import { AuthData, authSchema } from "@/schemas/auth";
 
 import supabase from "../utils/supabase";
 
 export default function Auth() {
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [password, setPassword] = useState("");
 
-  AppState.addEventListener("change", (state) => {
-    if (state === "active") {
-      supabase.auth.startAutoRefresh();
-    } else {
-      supabase.auth.stopAutoRefresh();
-    }
+  const { control, handleSubmit } = useForm<AuthData>({
+    resolver: zodResolver(authSchema),
   });
 
-  async function signInWithEmail() {
+  const signInWithEmail = async (data: AuthData) => {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+      email: data.email,
+      password: data.password,
     });
 
     handleError(error);
     setLoading(false);
-  }
+  };
 
-  async function signUpWithEmail() {
+  const signUpWithEmail = async (data: AuthData) => {
     setLoading(true);
 
     const {
       data: { session },
       error,
     } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email: data.email,
+      password: data.password,
     });
 
     handleError(error);
@@ -60,7 +49,7 @@ export default function Auth() {
     }
 
     setLoading(false);
-  }
+  };
 
   return (
     <SafeAreaView
@@ -70,12 +59,12 @@ export default function Auth() {
       }}
     >
       <View style={{ gap: 16 }}>
-        <Input value={email} onChange={setEmail} placeholder="E-mail" />
+        <Input control={control} name="email" placeholder="E-mail" />
 
         <Input
-          value={password}
+          control={control}
+          name="password"
           password={true}
-          onChange={setPassword}
           placeholder="Password"
         />
       </View>
@@ -83,18 +72,18 @@ export default function Auth() {
       <View style={{ gap: 16 }}>
         <Button
           title="Sign in"
-          onPress={() => signInWithEmail()}
+          onPress={handleSubmit(signInWithEmail)}
           disabled={loading}
           loading={loading}
         />
 
         <Button
           title="Sign up"
-          onPress={() => signUpWithEmail()}
+          onPress={handleSubmit(signUpWithEmail)}
           disabled={loading}
           loading={loading}
         />
-
+        {/* 
         <AppleAuthentication.AppleAuthenticationButton
           buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
           buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
@@ -108,15 +97,15 @@ export default function Auth() {
                 ],
               });
               // signed in
-            } catch (e) {
-              if (e.code === "ERR_REQUEST_CANCELED") {
+            } catch (e: unknown) {
+              if ((e as any).code === "ERR_REQUEST_CANCELED") {
                 // handle that the user canceled the sign-in flow
               } else {
                 // handle other errors
               }
             }
           }}
-        />
+        /> */}
       </View>
     </SafeAreaView>
   );

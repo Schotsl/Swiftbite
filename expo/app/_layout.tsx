@@ -2,6 +2,7 @@ import { Session } from "@supabase/supabase-js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
+import { AppState } from "react-native";
 
 import { HealthProvider } from "@/context/HealthContext";
 
@@ -22,6 +23,14 @@ export default function RootLayout() {
       setSession(session);
     });
   }, []);
+
+  AppState.addEventListener("change", (state) => {
+    if (state === "active") {
+      supabase.auth.startAutoRefresh();
+    } else {
+      supabase.auth.stopAutoRefresh();
+    }
+  });
 
   return session && session.user ? (
     <QueryClientProvider client={queryClient}>
