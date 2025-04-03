@@ -12,17 +12,14 @@ export default function useSignInWithEmail() {
         password,
       });
 
-      if (error) {
-        throw error;
-      }
-
+      handleError(error);
       return data;
     },
     onSuccess: () => {
       console.log(`[Mutation] signed in user`);
     },
-    onError: () => {
-      console.log(`[Mutation] failed to sign in user`);
+    onError: (error) => {
+      console.log(`[Mutation] failed to sign in user:`, error);
     },
   });
 }

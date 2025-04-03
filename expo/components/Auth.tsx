@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-// import * as AppleAuthentication from "expo-apple-authentication";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
@@ -9,33 +8,59 @@ import Button from "@/app/components/Button";
 import Input from "@/app/components/Input";
 import { AuthData, authSchema } from "@/schemas/auth";
 
+import useSignInWithApple from "../mutations/useSignInWithApple";
 import useSignInWithEmail from "../mutations/useSignInWithEmail";
 import useSignUpWithEmail from "../mutations/useSignUpWithEmail";
 
 export default function Auth() {
   const signInMutation = useSignInWithEmail();
   const signUpMutation = useSignUpWithEmail();
+  const signInWithAppleMutation = useSignInWithApple();
 
-  const isLoading = signInMutation.isPending || signUpMutation.isPending;
+  const isLoading =
+    signInMutation.isPending ||
+    signUpMutation.isPending ||
+    signInWithAppleMutation.isPending;
 
-  const { control, handleSubmit } = useForm<AuthData>({
+  const { control, handleSubmit, setError } = useForm<AuthData>({
     resolver: zodResolver(authSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
   });
 
   const handleSignIn = async (data: AuthData) => {
-    console.log(data);
-    signInMutation.mutate(data);
+    try {
+      await signInMutation.mutateAsync(data);
+    } catch (error: any) {
+      const errorMessage = error?.message;
+
+      setError("email", { type: "custom" });
+      setError("password", { type: "custom", message: errorMessage });
+    }
   };
 
   const handleSignUp = async (data: AuthData) => {
-    const result = await signUpMutation.mutateAsync(data);
+    try {
+      const result = await signUpMutation.mutateAsync(data);
 
-    if (result && !result.session) {
-      Alert.alert("Please check your inbox for email verification!");
+      if (result && !result.session) {
+        Alert.alert("Please check your inbox for email verification!");
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message;
+
+      setError("email", { type: "custom" });
+      setError("password", { type: "custom", message: errorMessage });
+    }
+  };
+
+  const handleAppleSignIn = async () => {
+    try {
+      await signInWithAppleMutation.mutateAsync();
+    } catch (error: any) {
+      setError("email", { type: "custom" });
+      setError("password", {
+        type: "custom",
+        message: error?.message || "Failed to sign in with Apple",
+      });
     }
   };
 
@@ -71,29 +96,13 @@ export default function Auth() {
           disabled={isLoading}
           loading={signUpMutation.isPending}
         />
-        {/* 
-        <AppleAuthentication.AppleAuthenticationButton
-          buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-          cornerRadius={5}
-          onPress={async () => {
-            try {
-              const credential = await AppleAuthentication.signInAsync({
-                requestedScopes: [
-                  AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-                  AppleAuthentication.AppleAuthenticationScope.EMAIL,
-                ],
-              });
-              // signed in
-            } catch (e: unknown) {
-              if ((e as any).code === "ERR_REQUEST_CANCELED") {
-                // handle that the user canceled the sign-in flow
-              } else {
-                // handle other errors
-              }
-            }
-          }}
-        /> */}
+
+        <Button
+          title="Sign in with Apple"
+          onPress={handleAppleSignIn}
+          disabled={isLoading}
+          loading={signInWithAppleMutation.isPending}
+        />
       </View>
     </SafeAreaView>
   );
