@@ -20,7 +20,6 @@ export async function POST(request: Request) {
   const generativeUUID = generativeName.replace("-small", "");
 
   after(async () => {
-
     const signedUrl = await fetchUrl(generativeUUID);
 
     if (generativeName.endsWith("-small")) {

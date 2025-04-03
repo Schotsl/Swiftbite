@@ -31,3 +31,4 @@ yarn-error.*
 
 # Supabase
 database.types.ts
+supabase/.temp
