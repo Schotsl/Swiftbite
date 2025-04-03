@@ -32,15 +32,17 @@ export default function RootLayout() {
     }
   });
 
-  return session && session.user ? (
+  return (
     <QueryClientProvider client={queryClient}>
-      <HealthProvider interval={60000}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </HealthProvider>
+      {session && session.user ? (
+        <HealthProvider interval={60000}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          </Stack>
+        </HealthProvider>
+      ) : (
+        <Auth />
+      )}
     </QueryClientProvider>
-  ) : (
-    <Auth />
   );
 }

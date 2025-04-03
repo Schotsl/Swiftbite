@@ -1,54 +1,42 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 // import * as AppleAuthentication from "expo-apple-authentication";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { Alert, AppState, StyleSheet, View } from "react-native";
+import { Alert, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import Button from "@/app/components/Button";
 import Input from "@/app/components/Input";
-import { handleError } from "@/helper";
 import { AuthData, authSchema } from "@/schemas/auth";
 
-import supabase from "../utils/supabase";
+import useSignInWithEmail from "../mutations/useSignInWithEmail";
+import useSignUpWithEmail from "../mutations/useSignUpWithEmail";
 
 export default function Auth() {
-  const [loading, setLoading] = useState(false);
+  const signInMutation = useSignInWithEmail();
+  const signUpMutation = useSignUpWithEmail();
+
+  const isLoading = signInMutation.isPending || signUpMutation.isPending;
 
   const { control, handleSubmit } = useForm<AuthData>({
     resolver: zodResolver(authSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const signInWithEmail = async (data: AuthData) => {
-    setLoading(true);
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
-    });
-
-    handleError(error);
-    setLoading(false);
+  const handleSignIn = async (data: AuthData) => {
+    console.log(data);
+    signInMutation.mutate(data);
   };
 
-  const signUpWithEmail = async (data: AuthData) => {
-    setLoading(true);
+  const handleSignUp = async (data: AuthData) => {
+    const result = await signUpMutation.mutateAsync(data);
 
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-    });
-
-    handleError(error);
-
-    if (!session) {
+    if (result && !result.session) {
       Alert.alert("Please check your inbox for email verification!");
     }
-
-    setLoading(false);
   };
 
   return (
@@ -72,16 +60,16 @@ export default function Auth() {
       <View style={{ gap: 16 }}>
         <Button
           title="Sign in"
-          onPress={handleSubmit(signInWithEmail)}
-          disabled={loading}
-          loading={loading}
+          onPress={handleSubmit(handleSignIn)}
+          disabled={isLoading}
+          loading={signInMutation.isPending}
         />
 
         <Button
           title="Sign up"
-          onPress={handleSubmit(signUpWithEmail)}
-          disabled={loading}
-          loading={loading}
+          onPress={handleSubmit(handleSignUp)}
+          disabled={isLoading}
+          loading={signUpMutation.isPending}
         />
         {/* 
         <AppleAuthentication.AppleAuthenticationButton
