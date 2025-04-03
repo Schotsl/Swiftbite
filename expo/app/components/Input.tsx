@@ -12,6 +12,7 @@ type InputProps = {
   type?: Type;
   value: string;
   label?: string;
+  password?: boolean;
   disabled?: boolean;
   placeholder: string;
 
@@ -22,6 +23,7 @@ export default function Input({
   type = "default",
   value,
   label,
+  password = false,
   disabled = false,
   placeholder,
 
@@ -36,7 +38,7 @@ export default function Input({
   };
 
   return (
-    <View style={{ marginBottom: 10 }}>
+    <View>
       {label && (
         <Text style={{ fontSize: 16, color: "#000", marginBottom: 6 }}>
           {label}
@@ -59,6 +61,7 @@ export default function Input({
         editable={!disabled}
         placeholder={placeholder}
         keyboardType={type}
+        secureTextEntry={password}
         selectTextOnFocus={!disabled}
         onChangeText={handleChange}
       />

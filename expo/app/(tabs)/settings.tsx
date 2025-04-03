@@ -1,9 +1,21 @@
 import { StyleSheet, Text, View } from "react-native";
 
+import { handleError } from "@/helper";
+import supabase from "@/utils/supabase";
+
+import Button from "../components/Button";
+
 export default function Tab() {
+  async function handleSignout() {
+    const { error } = await supabase.auth.signOut();
+
+    handleError(error);
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Tab [Home|Settings]</Text>
+      <Text>Settings</Text>
+      <Button title="Sign out" onPress={handleSignout} />
     </View>
   );
 }

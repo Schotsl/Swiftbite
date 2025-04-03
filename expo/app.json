@@ -18,6 +18,9 @@
       },
       "entitlements": {
         "com.apple.developer.healthkit": true
+      },
+      "ios": {
+        "usesAppleSignIn": true
       }
     },
     "android": {
@@ -28,6 +31,7 @@
     },
     "plugins": [
       "expo-router",
+      "expo-apple-authentication",
       "react-native-health",
       [
         "expo-splash-screen",

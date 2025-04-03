@@ -1,3 +1,4 @@
+import * as AppleAuthentication from "expo-apple-authentication";
 import React, { useState } from "react";
 import {
   Alert,
@@ -8,7 +9,10 @@ import {
   View,
 } from "react-native";
 import { TextInput } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
+import Button from "@/app/components/Button";
+import Input from "@/app/components/Input";
 import { handleError } from "@/helper";
 
 import supabase from "../utils/supabase";
@@ -59,58 +63,61 @@ export default function Auth() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <TextInput
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder="email@address.com"
-          autoCapitalize={"none"}
-          style={{ backgroundColor: "#fff" }}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TextInput
-          onChangeText={(text) => setPassword(text)}
+    <SafeAreaView
+      style={{
+        gap: 16,
+        padding: 16,
+      }}
+    >
+      <View style={{ gap: 16 }}>
+        <Input value={email} onChange={setEmail} placeholder="E-mail" />
+
+        <Input
           value={password}
-          // secureTextEntry={true}
-          autoCapitalize={"none"}
-          style={{ backgroundColor: "#fff" }}
+          password={true}
+          onChange={setPassword}
+          placeholder="Password"
         />
       </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <TouchableOpacity
-          disabled={loading}
+
+      <View style={{ gap: 16 }}>
+        <Button
+          title="Sign in"
           onPress={() => signInWithEmail()}
-          style={{ backgroundColor: "#fff", padding: 10 }}
-        >
-          <Text> Sign in</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <TouchableOpacity
           disabled={loading}
+          loading={loading}
+        />
+
+        <Button
+          title="Sign up"
           onPress={() => signUpWithEmail()}
-          style={{ backgroundColor: "#fff", padding: 10 }}
-        >
-          <Text> Sign up</Text>
-        </TouchableOpacity>
+          disabled={loading}
+          loading={loading}
+        />
+
+        <AppleAuthentication.AppleAuthenticationButton
+          buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+          buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+          cornerRadius={5}
+          onPress={async () => {
+            try {
+              const credential = await AppleAuthentication.signInAsync({
+                requestedScopes: [
+                  AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                  AppleAuthentication.AppleAuthenticationScope.EMAIL,
+                ],
+              });
+              // signed in
+            } catch (e) {
+              if (e.code === "ERR_REQUEST_CANCELED") {
+                // handle that the user canceled the sign-in flow
+              } else {
+                // handle other errors
+              }
+            }
+          }}
+        />
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
-  },
-  mt20: {
-    marginTop: 20,
-  },
-});

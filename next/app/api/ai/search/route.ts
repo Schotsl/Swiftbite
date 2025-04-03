@@ -63,7 +63,7 @@ export async function POST(request: Request) {
       title: product.product_name,
       brand: product.brands,
       quantity: product.quantity,
-      openfood_id: product.code,
+      openfood_id: product.code,w
     };
   });
 
