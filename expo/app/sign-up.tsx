@@ -5,10 +5,10 @@ import { useForm } from "react-hook-form";
 import { Alert, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import useSignUpWithEmail from "../../mutations/useSignUpWithEmail";
-import { AuthData, authSchema } from "../../schemas/auth";
-import Button from "../components/Button";
-import Input from "../components/Input";
+import useSignUpWithEmail from "../mutations/useSignUpWithEmail";
+import { AuthData, authSchema } from "../schemas/auth";
+import Button from "./components/Button";
+import Input from "./components/Input";
 
 export default function SignUpScreen() {
   const signUpMutation = useSignUpWithEmail();
@@ -73,7 +73,7 @@ export default function SignUpScreen() {
           }}
         >
           <Text>Already have an account? </Text>
-          <Link href="/(auth)/sign-in" asChild>
+          <Link href="/sign-in" asChild>
             <Text style={{ color: "#0891b2", fontWeight: "500" }}>Sign in</Text>
           </Link>
         </View>

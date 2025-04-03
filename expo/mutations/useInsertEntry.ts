@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
 
-import { Entry, EntryInsert, EntryWithIngredient } from "@/types";
+import { Entry, EntryInsert } from "@/types";
 
 import { handleError } from "../helper";
 import supabase from "../utils/supabase";

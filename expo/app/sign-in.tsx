@@ -1,15 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useRouter } from "expo-router";
+import { Link, router } from "expo-router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import useSignInWithApple from "../../mutations/useSignInWithApple";
-import useSignInWithEmail from "../../mutations/useSignInWithEmail";
-import { AuthData, authSchema } from "../../schemas/auth";
-import Button from "../components/Button";
-import Input from "../components/Input";
+import useSignInWithApple from "../mutations/useSignInWithApple";
+import useSignInWithEmail from "../mutations/useSignInWithEmail";
+import { AuthData, authSchema } from "../schemas/auth";
+import Button from "./components/Button";
+import Input from "./components/Input";
 
 export default function SignInScreen() {
   const signInMutation = useSignInWithEmail();
@@ -30,6 +30,8 @@ export default function SignInScreen() {
       setError("email", { type: "custom" });
       setError("password", { type: "custom", message: errorMessage });
     }
+
+    router.replace("/");
   };
 
   const handleAppleSignIn = async () => {
@@ -42,6 +44,8 @@ export default function SignInScreen() {
         message: error?.message || "Failed to sign in with Apple",
       });
     }
+
+    router.replace("/");
   };
 
   return (
@@ -91,7 +95,7 @@ export default function SignInScreen() {
           }}
         >
           <Text>Don't have an account? </Text>
-          <Link href="/(auth)/sign-up" asChild>
+          <Link href="/sign-up" asChild>
             <Text style={{ color: "#0891b2", fontWeight: "500" }}>Sign up</Text>
           </Link>
         </View>

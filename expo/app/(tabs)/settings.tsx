@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { handleError } from "@/helper";
@@ -6,16 +7,30 @@ import supabase from "@/utils/supabase";
 import Button from "../components/Button";
 
 export default function Tab() {
-  async function handleSignout() {
-    const { error } = await supabase.auth.signOut();
+  const [isLoading, setIsLoading] = useState(false);
 
-    handleError(error);
+  async function handleSignout() {
+    try {
+      setIsLoading(true);
+      const { error } = await supabase.auth.signOut();
+      handleError(error);
+      console.log("Signed out successfully");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
     <View style={styles.container}>
       <Text>Settings</Text>
-      <Button title="Sign out" onPress={handleSignout} />
+      <Button
+        title="Sign out"
+        onPress={handleSignout}
+        disabled={isLoading}
+        loading={isLoading}
+      />
     </View>
   );
 }

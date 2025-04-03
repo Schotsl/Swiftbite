@@ -1,12 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import { fetch } from "expo/fetch";
 import { useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
   FlatList,
-  Image,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -17,8 +15,7 @@ import {
 
 import supabase from "@/utils/supabase";
 
-import openfoodData from "../../../queries/openfoodData";
-import { IngredientInsert, IngredientSearch } from "../../../types";
+import { IngredientSearch } from "../../../types";
 import Input from "../../components/Input";
 
 export default function AddText() {

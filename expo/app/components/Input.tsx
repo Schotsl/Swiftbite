@@ -1,7 +1,7 @@
 import React from "react";
+import { Control, Controller } from "react-hook-form";
 import { Text, TextInput, View } from "react-native";
 import { ZodType } from "zod";
-import { Controller, Control } from "react-hook-form";
 
 type Type =
   | "default"
@@ -11,6 +11,7 @@ type Type =
   | "number-pad";
 
 type InputProps = {
+  name: string;
   type?: Type;
   value?: string;
   label?: string;
@@ -18,13 +19,13 @@ type InputProps = {
   disabled?: boolean;
   placeholder: string;
   error?: string;
-  name: string;
   control?: Control<any>;
   schema?: ZodType<any>;
   onChange?: (text: string) => void;
 };
 
 export default function Input({
+  name,
   type = "default",
   value,
   label,
@@ -32,7 +33,6 @@ export default function Input({
   disabled = false,
   placeholder,
   error,
-  name,
   control,
   schema,
   onChange,
