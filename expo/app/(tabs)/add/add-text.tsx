@@ -1,6 +1,8 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { fetch } from "expo/fetch";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
   Alert,
@@ -14,6 +16,7 @@ import {
 } from "react-native";
 
 import Input from "@/components/Input";
+import { SearchData, searchSchema } from "@/schemas/search";
 import { IngredientSearch } from "@/types";
 import supabase from "@/utils/supabase";
 
@@ -22,12 +25,27 @@ export default function AddText() {
   const abort = useRef<AbortController | null>(null);
   const timeout = useRef<NodeJS.Timeout | null>(null);
 
-  const [search, setSearchText] = useState("");
   const [loading, setLoading] = useState(false);
   const [ingredients, setIngredients] = useState<IngredientSearch[]>([]);
 
+  // Initialize react-hook-form with zod resolver
+  const {
+    control,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<SearchData>({
+    resolver: zodResolver(searchSchema),
+    defaultValues: {
+      query: "",
+    },
+  });
+
+  // Watch for search query changes
+  const search = watch("query");
+
   const handleInput = (text: string) => {
-    setSearchText(text);
+    setValue("query", text);
 
     // Clear previous timeout
     if (timeout.current) {
@@ -36,7 +54,9 @@ export default function AddText() {
 
     // Set new timeout
     timeout.current = setTimeout(() => {
-      handleSearch(text);
+      if (text.length >= 2) {
+        handleSearch(text);
+      }
     }, 500);
   };
 
@@ -134,10 +154,13 @@ export default function AddText() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.searchContainer}>
         <Input
+          name="query"
           type="default"
           value={search}
           placeholder="Search for food..."
           onChange={handleInput}
+          control={control}
+          error={errors.query?.message}
         />
       </View>
 
