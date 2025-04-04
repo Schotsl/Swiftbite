@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import * as AppleAuthentication from "expo-apple-authentication";
 
-import { handleError } from "../helper";
-import supabase from "../utils/supabase";
+import { handleError } from "@/helper";
+import supabase from "@/utils/supabase";
 
 export default function useSignInWithApple() {
   return useMutation({

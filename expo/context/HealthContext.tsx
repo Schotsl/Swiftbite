@@ -7,8 +7,8 @@ import React, {
   useState,
 } from "react";
 
-import HealthService from "../service/HealthService";
-import { HealthStatus } from "../types";
+import HealthService from "@/service/HealthService";
+import { HealthStatus } from "@/types";
 
 // Keys for local storage
 const WEIGHT_STORAGE_KEY = "@health_weight";

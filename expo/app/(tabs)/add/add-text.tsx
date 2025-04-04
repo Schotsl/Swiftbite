@@ -13,10 +13,9 @@ import {
   View,
 } from "react-native";
 
+import Input from "@/components/Input";
+import { IngredientSearch } from "@/types";
 import supabase from "@/utils/supabase";
-
-import { IngredientSearch } from "../../../types";
-import Input from "../../components/Input";
 
 export default function AddText() {
   const router = useRouter();

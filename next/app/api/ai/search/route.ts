@@ -1,4 +1,4 @@
-import { getUser } from "../../../../utils/supabase";
+import { getUser } from "@/utils/supabase";
 import { NextResponse } from "next/server";
 import { cleanProducts } from "@/utils/openai";
 import { OpenFoodSearch } from "@/types";
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   if (!query || !lang) {
     return NextResponse.json(
       { error: "Please provide a query and a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         product.nutriments &&
         product.categories_tags?.length > 0
       );
-    },
+    }
   );
 
   // Drop the categories and nutriments
@@ -63,7 +63,8 @@ export async function POST(request: Request) {
       title: product.product_name,
       brand: product.brands,
       quantity: product.quantity,
-      openfood_id: product.code,w
+      openfood_id: product.code,
+      w,
     };
   });
 

@@ -3,8 +3,8 @@ import * as Crypto from "expo-crypto";
 
 import { handleError } from "@/helper";
 
-import { Ingredient, IngredientInsert } from "../types";
-import supabase from "../utils/supabase";
+import { Ingredient, IngredientInsert } from "@/types";
+import supabase from "@/utils/supabase";
 
 export default function useInsertIngredient() {
   const queryClient = useQueryClient();

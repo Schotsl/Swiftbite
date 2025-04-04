@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { Text, View } from "react-native";
 
-import Button from "@/app/components/Button";
+import Button from "@/components/Button";
 
 export default function AddScreen() {
   const router = useRouter();

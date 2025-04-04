@@ -4,13 +4,13 @@ import { useForm } from "react-hook-form";
 import { Alert, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import Button from "@/app/components/Button";
-import Input from "@/app/components/Input";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
 import { AuthData, authSchema } from "@/schemas/auth";
 
-import useSignInWithApple from "../mutations/useSignInWithApple";
-import useSignInWithEmail from "../mutations/useSignInWithEmail";
-import useSignUpWithEmail from "../mutations/useSignUpWithEmail";
+import useSignInWithApple from "@/mutations/useSignInWithApple";
+import useSignInWithEmail from "@/mutations/useSignInWithEmail";
+import useSignUpWithEmail from "@/mutations/useSignUpWithEmail";
 
 export default function Auth() {
   const signInMutation = useSignInWithEmail();

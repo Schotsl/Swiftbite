@@ -3,12 +3,12 @@ import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 
-import HealthCalories from "../../components/HealthCalories";
-import HealthWeight from "../../components/HealthWeight";
-import Item from "../../components/Item";
-import ItemDelete from "../../components/ItemDelete";
-import useDeleteEntry from "../../mutations/useDeleteEntry";
-import entryData from "../../queries/entryData";
+import HealthCalories from "@/components/HealthCalories";
+import HealthWeight from "@/components/HealthWeight";
+import Item from "@/components/Item";
+import ItemDelete from "@/components/ItemDelete";
+import useDeleteEntry from "@/mutations/useDeleteEntry";
+import entryData from "@/queries/entryData";
 
 export default function Index() {
   const [interval, setInterval] = useState<number | false>(1000);
@@ -27,7 +27,7 @@ export default function Index() {
         !entry.ingredient?.title ||
         !entry.ingredient?.calorie_100g ||
         !entry.ingredient?.icon_id ||
-        !entry.consumed_quantity,
+        !entry.consumed_quantity
     );
 
     const interval = processing ? 500 : false;

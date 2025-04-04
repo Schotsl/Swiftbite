@@ -5,10 +5,11 @@ import { useForm } from "react-hook-form";
 import { Alert, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import useSignUpWithEmail from "../mutations/useSignUpWithEmail";
-import { AuthData, authSchema } from "../schemas/auth";
-import Button from "./components/Button";
-import Input from "./components/Input";
+import useSignUpWithEmail from "@/mutations/useSignUpWithEmail";
+import { AuthData, authSchema } from "@/schemas/auth";
+
+import Button from "../components/Button";
+import Input from "../components/Input";
 
 export default function SignUpScreen() {
   const signUpMutation = useSignUpWithEmail();

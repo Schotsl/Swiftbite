@@ -13,14 +13,14 @@ import {
   View,
 } from "react-native";
 
-import useInsertEntry from "../../../mutations/useInsertEntry";
-import useInsertIngredient from "../../../mutations/useInsertIngredient";
-import ingredientData from "../../../queries/ingredientData";
-import openfoodData from "../../../queries/openfoodData";
-import Button from "../../components/Button";
-import Dropdown from "../../components/Dropdown";
-import Input from "../../components/Input";
-import Table from "../../components/Table";
+import Button from "@/components/Button";
+import Dropdown from "@/components/Dropdown";
+import Input from "@/components/Input";
+import Table from "@/components/Table";
+import useInsertEntry from "@/mutations/useInsertEntry";
+import useInsertIngredient from "@/mutations/useInsertIngredient";
+import ingredientData from "@/queries/ingredientData";
+import openfoodData from "@/queries/openfoodData";
 
 export default function AddPreviewBarcodeScreen() {
   const router = useRouter();

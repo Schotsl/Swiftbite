@@ -2,8 +2,8 @@ import { queryOptions } from "@tanstack/react-query";
 
 import { EntryWithIngredient } from "@/types";
 
-import { handleError } from "../helper";
-import supabase from "../utils/supabase";
+import { handleError } from "@/helper";
+import supabase from "@/utils/supabase";
 
 type entryDataType = {
   openfood?: string;

@@ -3,7 +3,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { handleError } from "@/helper";
 import supabase from "@/utils/supabase";
 
-import { Ingredient } from "../types";
+import { Ingredient } from "@/types";
 
 type ingredientDataType = {
   openfood?: string;

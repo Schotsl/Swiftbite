@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { handleError } from "../helper";
+import { handleError } from "@/helper";
 import { Enums } from "@/database.types";
 
 import { supabase } from "./supabase";
@@ -36,21 +36,21 @@ export async function validateUsage(user: string) {
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", new Date(now - 60 * 1000).toISOString()),
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", hourTimestamp),
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", yearTimestamp),
@@ -71,21 +71,21 @@ export async function validateUsage(user: string) {
   if (minuteInput > 50000 || minuteOutput > 50000) {
     return NextResponse.json(
       { error: "Minute limit exceeded" },
-      { status: 429 },
+      { status: 429 }
     );
   }
 
   if (hourInput > 100000 || hourOutput > 100000) {
     return NextResponse.json(
       { error: "Hourly limit exceeded" },
-      { status: 429 },
+      { status: 429 }
     );
   }
 
   if (yearInput > 1000000 || yearOutput > 1000000) {
     return NextResponse.json(
       { error: "Yearly limit exceeded" },
-      { status: 429 },
+      { status: 429 }
     );
   }
 }

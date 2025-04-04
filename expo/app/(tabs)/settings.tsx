@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
+import Button from "@/components/Button";
 import { handleError } from "@/helper";
 import supabase from "@/utils/supabase";
-
-import Button from "../components/Button";
 
 export default function Tab() {
   const [isLoading, setIsLoading] = useState(false);
