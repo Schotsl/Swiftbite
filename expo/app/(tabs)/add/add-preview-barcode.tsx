@@ -1,7 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
   Image,
@@ -21,6 +23,14 @@ import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertIngredient from "@/mutations/useInsertIngredient";
 import ingredientData from "@/queries/ingredientData";
 import openfoodData from "@/queries/openfoodData";
+import { ServingData, servingSchema } from "@/schemas/serving";
+
+// Define the type for dropdown option
+type Option = {
+  id: string;
+  label: string;
+  value: number;
+};
 
 export default function AddPreviewBarcodeScreen() {
   const router = useRouter();
@@ -60,8 +70,23 @@ export default function AddPreviewBarcodeScreen() {
     { id: "6", label: "Custom amount", value: 1 },
   ];
 
-  const [selectedId, setSelectedId] = useState("1");
-  const [customAmount, setCustomAmount] = useState("1");
+  // Initialize react-hook-form with zod resolver
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<ServingData>({
+    resolver: zodResolver(servingSchema),
+    defaultValues: {
+      sizeOption: "1",
+      quantity: "1",
+    },
+  });
+
+  // Watch the current selected size option
+  const selectedSizeOption = watch("sizeOption");
 
   const nutritionData = [
     {
@@ -85,7 +110,7 @@ export default function AddPreviewBarcodeScreen() {
     { id: 7, label: "Sodium", value: `${ingredient?.sodium_100g ?? 0}mg` },
   ];
 
-  const handleSave = async () => {
+  const onSubmit = async (data: ServingData) => {
     // Insert the ingredient if it doesn't already exist
     let savedIngredient = ingredientSupabase;
 
@@ -118,9 +143,9 @@ export default function AddPreviewBarcodeScreen() {
 
     // Calculate amount - use base amount from selected option multiplied by quantity
     const selectedOption = servingSizeOptions.find(
-      (option) => option.id === selectedId
+      (option) => option.id === data.sizeOption
     );
-    const amountMultiplier = customAmount ? parseFloat(customAmount) : 1;
+    const amountMultiplier = data.quantity ? parseFloat(data.quantity) : 1;
     const amountGrams = (selectedOption?.value ?? 0) * amountMultiplier;
 
     // Insert an entry with the selected portion size
@@ -199,23 +224,19 @@ export default function AddPreviewBarcodeScreen() {
               label="Size option:"
               placeholder="Select a size option"
               options={servingSizeOptions}
-              selected={selectedId}
-              onSelect={(option: {
-                id: string;
-                label: string;
-                value: number;
-              }) => {
-                setSelectedId(option.id);
-                setCustomAmount("1");
+              selected={selectedSizeOption}
+              onSelect={(option: Option) => {
+                setValue("sizeOption", option.id);
               }}
             />
 
             <Input
+              name="quantity"
               type="numeric"
               label="Quantity:"
-              value={customAmount}
-              onChange={setCustomAmount}
               placeholder="1"
+              control={control}
+              error={errors.quantity?.message}
             />
           </View>
 
@@ -238,7 +259,7 @@ export default function AddPreviewBarcodeScreen() {
         }}
       >
         <Button
-          onPress={handleSave}
+          onPress={handleSubmit(onSubmit)}
           title="Add to meal"
           icon="fast-food-outline"
         />
