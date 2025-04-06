@@ -31,7 +31,7 @@ export async function POST(request: Request) {
   }
 
   // If the title hasn't changed we don't need to do anything
-  if (productTitleOld || productIcon) {
+  if (productTitleOld === productTitleNew) {
     return new Response("{}", { status: 200 });
   }
 
