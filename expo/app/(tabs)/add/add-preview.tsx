@@ -65,6 +65,8 @@ export default function AddPreview() {
     const ingredient = await insertIngredient.mutateAsync({
       type: "openfood",
       title: null,
+      image: null,
+      brand: null,
       icon_id: null,
       calcium_100g: null,
       calorie_100g: null,

@@ -92,12 +92,15 @@ export default function AddText() {
         "Content-Type": "application/json",
       };
 
-      const response = await fetch(`https://swiftbite.app/api/ai/search`, {
-        body,
-        signal,
-        method,
-        headers,
-      });
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search`,
+        {
+          body,
+          signal,
+          method,
+          headers,
+        }
+      );
 
       if (!response.ok) {
         const body = await response.json();
