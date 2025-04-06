@@ -1,13 +1,14 @@
 import { NextResponse } from "next/server";
 import { roundNumber } from "@/helper";
 import { ProductInsert } from "@/types";
+import { Enums } from "@/database.types";
 
 // Revalidate once every 30 days
 export const revalidate = 2592000;
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ code: string }> },
+  { params }: { params: Promise<{ code: string }> }
 ) {
   const { code } = await params;
 
@@ -23,23 +24,28 @@ export async function GET(
   const product = data.product;
   const nutriments = product.nutriments;
 
+  // TODO: This will probably fail in a lot of cases
+  const serving = roundNumber(+product.serving_quantity);
+  const servingUnit =
+    product.serving_quantity_unit === "ml" ? "milliliter" : "gram";
+
   const nutritionFats = roundNumber(nutriments.fat_100g ?? 0);
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans,
+    nutritionFats - nutritionSaturated - nutritionTrans
   );
 
   const nutrition = {
+    serving,
+    serving_unit: servingUnit,
+
     type: "openfood",
     title: product.product_name,
     brand: product.brands,
     image: product.image_front_url,
 
     openfood_id: product.code,
-
-    serving: roundNumber(+product.serving_quantity),
-    serving_unit: product.serving_quantity_unit,
 
     iron_100g: roundNumber(nutriments.iron_100g ?? 0, 2),
     fiber_100g: roundNumber(nutriments.fiber_100g ?? 0, 2),

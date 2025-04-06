@@ -13,7 +13,7 @@ import { Enums } from "@/database.types";
 
 export async function estimateNutrition(
   user: string,
-  url: string,
+  url: string
 ): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
@@ -30,7 +30,7 @@ export async function estimateNutrition(
         .describe("Estimated serving size in grams or milliliters"),
       serving_unit: z
         .string()
-        .describe("Unit for the serving size (e.g., g, ml)"),
+        .describe("Unit for the serving size (e.g., gram, milliliter)"),
       sodium_100g: z
         .number()
         .describe("Estimated sodium per 100g in milligrams"),
@@ -101,6 +101,7 @@ export async function estimateNutrition(
 
   return {
     ...object,
+
     iron_100g: object.iron_100g ?? null,
     fiber_100g: object.fiber_100g ?? null,
     calcium_100g: object.calcium_100g ?? null,
@@ -111,12 +112,14 @@ export async function estimateNutrition(
     fat_trans_100g: object.fat_trans_100g ?? null,
     fat_unsaturated_100g: object.fat_unsaturated_100g ?? null,
     carbohydrate_sugar_100g: object.carbohydrate_sugar_100g ?? null,
+
+    serving_unit: object.serving_unit as Enums<"unit">,
   };
 }
 
 export async function estimateVisuals(
   user: string,
-  url: string,
+  url: string
 ): Promise<ProductGenerativeVisuals> {
   const task: Enums<"task"> = "title_generation";
   const model = "gpt-4o-mini";
@@ -163,7 +166,7 @@ export async function estimateVisuals(
 
 export async function normalizeTitle(
   user: string,
-  title: string,
+  title: string
 ): Promise<string> {
   const task: Enums<"task"> = "title_normalization";
   const model = "gpt-4o-mini";
@@ -209,7 +212,7 @@ export function cleanProducts(
   query: string,
   language: string,
   products: ProductSearch[],
-  abortSignal: AbortSignal,
+  abortSignal: AbortSignal
 ) {
   const task: Enums<"task"> = "search_normalization";
   const model = "gemini-2.0-flash";
