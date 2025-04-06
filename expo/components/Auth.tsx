@@ -6,11 +6,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { AuthData, authSchema } from "@/schemas/auth";
-
 import useSignInWithApple from "@/mutations/useSignInWithApple";
 import useSignInWithEmail from "@/mutations/useSignInWithEmail";
 import useSignUpWithEmail from "@/mutations/useSignUpWithEmail";
+import { AuthData, authSchema } from "@/schemas/auth";
 
 export default function Auth() {
   const signInMutation = useSignInWithEmail();

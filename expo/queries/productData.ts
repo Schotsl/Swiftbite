@@ -1,19 +1,19 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { handleError } from "@/helper";
-import { Ingredient } from "@/types";
+import { Product } from "@/types";
 import supabase from "@/utils/supabase";
 
-type ingredientDataType = {
+type productDataType = {
   openfood?: string;
 };
 
-export default function ingredientData({ openfood }: ingredientDataType) {
+export default function productData({ openfood }: productDataType) {
   return queryOptions({
-    queryKey: ["ingredientData", openfood],
+    queryKey: ["productData", openfood],
     queryFn: async () => {
       let query = supabase
-        .from("ingredient")
+        .from("product")
         .select(`*`)
         .order("created_at", { ascending: false });
 
@@ -25,9 +25,9 @@ export default function ingredientData({ openfood }: ingredientDataType) {
 
       handleError(error);
 
-      console.log(`[Query] fetched ${data?.length} ingredients`);
+      console.log(`[Query] fetched ${data?.length} products`);
 
-      return data as Ingredient[];
+      return data as Product[];
     },
   });
 }

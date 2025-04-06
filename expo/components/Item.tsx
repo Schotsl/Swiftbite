@@ -2,18 +2,18 @@ import { Image } from "expo-image";
 import { useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 
-import { EntryWithIngredient } from "@/types";
+import { EntryWithProduct } from "@/types";
 
 export default function Item({
   consumed_quantity,
   consumed_unit,
-  ingredient,
-}: EntryWithIngredient) {
+  product,
+}: EntryWithProduct) {
   const [loadedImage, setLoadedImage] = useState(false);
-  const loadedData = ingredient.calorie_100g && consumed_quantity;
+  const loadedData = product.calorie_100g && consumed_quantity;
 
   const calories = loadedData
-    ? Math.round((ingredient.calorie_100g! * consumed_quantity) / 100)
+    ? Math.round((product.calorie_100g! * consumed_quantity) / 100)
     : null;
 
   return (
@@ -35,9 +35,9 @@ export default function Item({
           alignItems: "center",
         }}
       >
-        {ingredient.icon_id && (
+        {product.icon_id && (
           <Image
-            source={`https://ffbbrrfdghbvuajheulg.supabase.co/storage/v1/object/public/icon/${ingredient.icon_id}`}
+            source={`https://ffbbrrfdghbvuajheulg.supabase.co/storage/v1/object/public/icon/${product.icon_id}`}
             onLoad={() => setLoadedImage(true)}
             contentFit="contain"
             contentPosition="center"
@@ -55,7 +55,7 @@ export default function Item({
 
       <View style={{ gap: 6, flex: 1 }}>
         <Text style={{ fontSize: 16 }}>
-          {ingredient.title ? ingredient.title : "Loading..."}
+          {product.title ? product.title : "Loading..."}
         </Text>
 
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>

@@ -74,7 +74,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA "extensions";
 
 CREATE TYPE "public"."entry_type" AS ENUM (
     'meal',
-    'ingredient'
+    'product'
 );
 
 
@@ -91,7 +91,7 @@ CREATE TYPE "public"."generative_type" AS ENUM (
 ALTER TYPE "public"."generative_type" OWNER TO "postgres";
 
 
-CREATE TYPE "public"."ingredient_type" AS ENUM (
+CREATE TYPE "public"."product_type" AS ENUM (
     'label',
     'openfood',
     'estimation',
@@ -100,7 +100,7 @@ CREATE TYPE "public"."ingredient_type" AS ENUM (
 );
 
 
-ALTER TYPE "public"."ingredient_type" OWNER TO "postgres";
+ALTER TYPE "public"."product_type" OWNER TO "postgres";
 
 
 CREATE TYPE "public"."measurement" AS ENUM (
@@ -158,12 +158,12 @@ CREATE TABLE IF NOT EXISTS "public"."entry" (
     "title" character varying,
     "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "meal_id" "uuid",
-    "ingredient_id" "uuid",
+    "product_id" "uuid",
     "consumed_unit" "public"."unit" DEFAULT 'gram'::"public"."unit",
     "consumed_quantity" double precision,
     "updated_at" timestamp without time zone,
     "created_at" timestamp without time zone DEFAULT "now"() NOT NULL,
-    CONSTRAINT "chk_entry_type" CHECK (((("type" = 'meal'::"public"."entry_type") AND ("meal_id" IS NOT NULL) AND ("ingredient_id" IS NULL)) OR (("type" = 'ingredient'::"public"."entry_type") AND ("ingredient_id" IS NOT NULL) AND ("meal_id" IS NULL))))
+    CONSTRAINT "chk_entry_type" CHECK (((("type" = 'meal'::"public"."entry_type") AND ("meal_id" IS NOT NULL) AND ("product_id" IS NULL)) OR (("type" = 'product'::"public"."entry_type") AND ("product_id" IS NOT NULL) AND ("meal_id" IS NULL))))
 );
 
 
@@ -172,7 +172,7 @@ ALTER TABLE "public"."entry" OWNER TO "postgres";
 
 CREATE TABLE IF NOT EXISTS "public"."generative" (
     "uuid" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "ingredient_id" "uuid" NOT NULL,
+    "product_id" "uuid" NOT NULL,
     "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "type" "public"."generative_type",
     "content" character varying,
@@ -194,14 +194,14 @@ CREATE TABLE IF NOT EXISTS "public"."icon" (
 ALTER TABLE "public"."icon" OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "public"."ingredient" (
+CREATE TABLE IF NOT EXISTS "public"."product" (
     "uuid" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
-    "type" "public"."ingredient_type" NOT NULL,
+    "type" "public"."product_type" NOT NULL,
     "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "icon_id" "uuid",
     "openfood_id" character varying,
     "title" character varying,
-    "portion" double precision,
+    "serving" double precision,
     "calorie_100g" double precision,
     "protein_100g" double precision,
     "fat_100g" double precision,
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS "public"."ingredient" (
 );
 
 
-ALTER TABLE "public"."ingredient" OWNER TO "postgres";
+ALTER TABLE "public"."product" OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."meal" (
@@ -240,9 +240,9 @@ CREATE TABLE IF NOT EXISTS "public"."meal" (
 ALTER TABLE "public"."meal" OWNER TO "postgres";
 
 
-CREATE TABLE IF NOT EXISTS "public"."meal_ingredient" (
+CREATE TABLE IF NOT EXISTS "public"."meal_product" (
     "meal_id" "uuid" NOT NULL,
-    "ingredient_id" "uuid" NOT NULL,
+    "product_id" "uuid" NOT NULL,
     "user_id" "uuid" DEFAULT "auth"."uid"() NOT NULL,
     "quantity" double precision,
     "updated_at" timestamp without time zone,
@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS "public"."meal_ingredient" (
 );
 
 
-ALTER TABLE "public"."meal_ingredient" OWNER TO "postgres";
+ALTER TABLE "public"."meal_product" OWNER TO "postgres";
 
 
 CREATE TABLE IF NOT EXISTS "public"."usage" (
@@ -285,7 +285,7 @@ ALTER TABLE ONLY "public"."entry"
 
 
 ALTER TABLE ONLY "public"."generative"
-    ADD CONSTRAINT "generative_ingredient_id_key" UNIQUE ("ingredient_id");
+    ADD CONSTRAINT "generative_product_id_key" UNIQUE ("product_id");
 
 
 
@@ -304,13 +304,13 @@ ALTER TABLE ONLY "public"."icon"
 
 
 
-ALTER TABLE ONLY "public"."ingredient"
-    ADD CONSTRAINT "ingredient_pkey" PRIMARY KEY ("uuid");
+ALTER TABLE ONLY "public"."product"
+    ADD CONSTRAINT "product_pkey" PRIMARY KEY ("uuid");
 
 
 
-ALTER TABLE ONLY "public"."meal_ingredient"
-    ADD CONSTRAINT "meal_ingredient_pkey" PRIMARY KEY ("meal_id", "ingredient_id");
+ALTER TABLE ONLY "public"."meal_product"
+    ADD CONSTRAINT "meal_product_pkey" PRIMARY KEY ("meal_id", "product_id");
 
 
 
@@ -329,7 +329,7 @@ ALTER TABLE ONLY "public"."user"
 
 
 
-CREATE INDEX "idx_entry_ingredient_id" ON "public"."entry" USING "btree" ("ingredient_id");
+CREATE INDEX "idx_entry_product_id" ON "public"."entry" USING "btree" ("product_id");
 
 
 
@@ -345,11 +345,11 @@ CREATE INDEX "idx_icon_title" ON "public"."icon" USING "btree" ("title");
 
 
 
-CREATE INDEX "idx_ingredient_icon_id" ON "public"."ingredient" USING "btree" ("icon_id");
+CREATE INDEX "idx_product_icon_id" ON "public"."product" USING "btree" ("icon_id");
 
 
 
-CREATE INDEX "idx_ingredient_user_id" ON "public"."ingredient" USING "btree" ("user_id");
+CREATE INDEX "idx_product_user_id" ON "public"."product" USING "btree" ("user_id");
 
 
 
@@ -357,7 +357,7 @@ CREATE INDEX "idx_meal_icon_id" ON "public"."meal" USING "btree" ("icon_id");
 
 
 
-CREATE INDEX "idx_meal_ingredient_user_id" ON "public"."meal_ingredient" USING "btree" ("user_id");
+CREATE INDEX "idx_meal_product_user_id" ON "public"."meal_product" USING "btree" ("user_id");
 
 
 
@@ -369,12 +369,12 @@ CREATE OR REPLACE TRIGGER "handle_generative_database" AFTER INSERT ON "public".
 
 
 
-CREATE OR REPLACE TRIGGER "handle_ingredient_database" AFTER INSERT OR UPDATE ON "public"."ingredient" FOR EACH ROW EXECUTE FUNCTION "supabase_functions"."http_request"('https://swiftbite.app/api/ai-server/handle-ingredient-database', 'POST', '{"Content-Type":"application/json","X-Supabase-Secret":"Eup1iBCABuPVqUXQTfP8299PD5S6HEPJijwt2SKKMM59HdJu07BTMWkAbF2GgpqA"}', '{}', '10000');
+CREATE OR REPLACE TRIGGER "handle_product_database" AFTER INSERT OR UPDATE ON "public"."product" FOR EACH ROW EXECUTE FUNCTION "supabase_functions"."http_request"('https://swiftbite.app/api/ai-server/handle-product-database', 'POST', '{"Content-Type":"application/json","X-Supabase-Secret":"Eup1iBCABuPVqUXQTfP8299PD5S6HEPJijwt2SKKMM59HdJu07BTMWkAbF2GgpqA"}', '{}', '10000');
 
 
 
 ALTER TABLE ONLY "public"."entry"
-    ADD CONSTRAINT "entry_ingredient_id_fkey" FOREIGN KEY ("ingredient_id") REFERENCES "public"."ingredient"("uuid");
+    ADD CONSTRAINT "entry_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "public"."product"("uuid");
 
 
 
@@ -393,13 +393,13 @@ ALTER TABLE ONLY "public"."generative"
 
 
 
-ALTER TABLE ONLY "public"."ingredient"
-    ADD CONSTRAINT "fk_ingredient_icon" FOREIGN KEY ("icon_id") REFERENCES "public"."icon"("uuid");
+ALTER TABLE ONLY "public"."product"
+    ADD CONSTRAINT "fk_product_icon" FOREIGN KEY ("icon_id") REFERENCES "public"."icon"("uuid");
 
 
 
-ALTER TABLE ONLY "public"."ingredient"
-    ADD CONSTRAINT "fk_ingredient_user" FOREIGN KEY ("user_id") REFERENCES "public"."user"("uuid");
+ALTER TABLE ONLY "public"."product"
+    ADD CONSTRAINT "fk_product_user" FOREIGN KEY ("user_id") REFERENCES "public"."user"("uuid");
 
 
 
@@ -408,18 +408,18 @@ ALTER TABLE ONLY "public"."meal"
 
 
 
-ALTER TABLE ONLY "public"."meal_ingredient"
-    ADD CONSTRAINT "fk_meal_ingredient_ingredient" FOREIGN KEY ("ingredient_id") REFERENCES "public"."ingredient"("uuid");
+ALTER TABLE ONLY "public"."meal_product"
+    ADD CONSTRAINT "fk_meal_product_product" FOREIGN KEY ("product_id") REFERENCES "public"."product"("uuid");
 
 
 
-ALTER TABLE ONLY "public"."meal_ingredient"
-    ADD CONSTRAINT "fk_meal_ingredient_meal" FOREIGN KEY ("meal_id") REFERENCES "public"."meal"("uuid");
+ALTER TABLE ONLY "public"."meal_product"
+    ADD CONSTRAINT "fk_meal_product_meal" FOREIGN KEY ("meal_id") REFERENCES "public"."meal"("uuid");
 
 
 
-ALTER TABLE ONLY "public"."meal_ingredient"
-    ADD CONSTRAINT "fk_meal_ingredient_user" FOREIGN KEY ("user_id") REFERENCES "public"."user"("uuid");
+ALTER TABLE ONLY "public"."meal_product"
+    ADD CONSTRAINT "fk_meal_product_user" FOREIGN KEY ("user_id") REFERENCES "public"."user"("uuid");
 
 
 
@@ -429,7 +429,7 @@ ALTER TABLE ONLY "public"."meal"
 
 
 ALTER TABLE ONLY "public"."generative"
-    ADD CONSTRAINT "generative_ingredient_id_fkey" FOREIGN KEY ("ingredient_id") REFERENCES "public"."ingredient"("uuid") ON DELETE CASCADE;
+    ADD CONSTRAINT "generative_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "public"."product"("uuid") ON DELETE CASCADE;
 
 
 
@@ -438,7 +438,7 @@ ALTER TABLE ONLY "public"."usage"
 
 
 
-CREATE POLICY "Allow all operations on their own ingredient" ON "public"."ingredient" USING (("user_id" = "auth"."uid"())) WITH CHECK (("user_id" = "auth"."uid"()));
+CREATE POLICY "Allow all operations on their own product" ON "public"."product" USING (("user_id" = "auth"."uid"())) WITH CHECK (("user_id" = "auth"."uid"()));
 
 
 
@@ -446,7 +446,7 @@ CREATE POLICY "Allow all operations on their own meal" ON "public"."meal" USING 
 
 
 
-CREATE POLICY "Allow all operations on their own meal_ingredient" ON "public"."meal_ingredient" FOR SELECT USING (("user_id" = "auth"."uid"()));
+CREATE POLICY "Allow all operations on their own meal_product" ON "public"."meal_product" FOR SELECT USING (("user_id" = "auth"."uid"()));
 
 
 
@@ -487,13 +487,13 @@ ALTER TABLE "public"."generative" ENABLE ROW LEVEL SECURITY;
 ALTER TABLE "public"."icon" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."ingredient" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."product" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."meal" ENABLE ROW LEVEL SECURITY;
 
 
-ALTER TABLE "public"."meal_ingredient" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE "public"."meal_product" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."usage" ENABLE ROW LEVEL SECURITY;
@@ -727,9 +727,9 @@ GRANT ALL ON TABLE "public"."icon" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."ingredient" TO "anon";
-GRANT ALL ON TABLE "public"."ingredient" TO "authenticated";
-GRANT ALL ON TABLE "public"."ingredient" TO "service_role";
+GRANT ALL ON TABLE "public"."product" TO "anon";
+GRANT ALL ON TABLE "public"."product" TO "authenticated";
+GRANT ALL ON TABLE "public"."product" TO "service_role";
 
 
 
@@ -739,9 +739,9 @@ GRANT ALL ON TABLE "public"."meal" TO "service_role";
 
 
 
-GRANT ALL ON TABLE "public"."meal_ingredient" TO "anon";
-GRANT ALL ON TABLE "public"."meal_ingredient" TO "authenticated";
-GRANT ALL ON TABLE "public"."meal_ingredient" TO "service_role";
+GRANT ALL ON TABLE "public"."meal_product" TO "anon";
+GRANT ALL ON TABLE "public"."meal_product" TO "authenticated";
+GRANT ALL ON TABLE "public"."meal_product" TO "service_role";
 
 
 

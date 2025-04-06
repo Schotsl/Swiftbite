@@ -1,9 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
 
-import { Entry, EntryInsert } from "@/types";
-
 import { handleError } from "@/helper";
+import { Entry, EntryInsert } from "@/types";
 import supabase from "@/utils/supabase";
 
 export default function useInsertEntry() {
@@ -31,11 +30,11 @@ export default function useInsertEntry() {
         uuid: Crypto.randomUUID(),
         updated_at: null,
         created_at: new Date().toISOString(),
-        // TODO: This is a hack to get the ingredient data to display immediately
-        ...(entryInsert.type === "ingredient" && entryInsert.ingredient_id
+        // TODO: This is a hack to get the product data to display immediately
+        ...(entryInsert.type === "product" && entryInsert.product_id
           ? {
-              ingredient: {
-                uuid: entryInsert.ingredient_id,
+              product: {
+                uuid: entryInsert.product_id,
                 title: null,
                 icon_id: null,
                 calorie_100g: null,

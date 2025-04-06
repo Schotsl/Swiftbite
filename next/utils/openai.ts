@@ -1,4 +1,8 @@
-import { IngredientSearch, Nutrition } from "@/types";
+import {
+  ProductSearch,
+  ProductGenerativeNutrition,
+  ProductGenerativeVisuals,
+} from "@/types";
 import { generateObject, streamObject } from "ai";
 import { openai as openaiVercel } from "@ai-sdk/openai";
 import { google } from "@ai-sdk/google";
@@ -7,10 +11,10 @@ import { after } from "next/server";
 import { insertUsage } from "./usage";
 import { Enums } from "@/database.types";
 
-export async function fetchEstimation(
+export async function estimateNutrition(
   user: string,
   url: string,
-): Promise<Nutrition> {
+): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
 
@@ -21,9 +25,12 @@ export async function fetchEstimation(
       fat_100g: z.number().describe("Estimated total fat per 100g in grams"),
       calorie_100g: z.number().describe("Estimated calories per 100g"),
       protein_100g: z.number().describe("Estimated protein per 100g in grams"),
-      portion: z
+      serving: z
         .number()
         .describe("Estimated serving size in grams or milliliters"),
+      serving_unit: z
+        .string()
+        .describe("Unit for the serving size (e.g., g, ml)"),
       sodium_100g: z
         .number()
         .describe("Estimated sodium per 100g in milligrams"),
@@ -92,10 +99,25 @@ export async function fetchEstimation(
     });
   });
 
-  return object;
+  return {
+    ...object,
+    iron_100g: object.iron_100g ?? null,
+    fiber_100g: object.fiber_100g ?? null,
+    calcium_100g: object.calcium_100g ?? null,
+    potassium_100g: object.potassium_100g ?? null,
+    cholesterol_100g: object.cholesterol_100g ?? null,
+
+    fat_saturated_100g: object.fat_saturated_100g ?? null,
+    fat_trans_100g: object.fat_trans_100g ?? null,
+    fat_unsaturated_100g: object.fat_unsaturated_100g ?? null,
+    carbohydrate_sugar_100g: object.carbohydrate_sugar_100g ?? null,
+  };
 }
 
-export async function fetchTitle(user: string, url: string): Promise<string> {
+export async function estimateVisuals(
+  user: string,
+  url: string,
+): Promise<ProductGenerativeVisuals> {
   const task: Enums<"task"> = "title_generation";
   const model = "gpt-4o-mini";
 
@@ -103,7 +125,11 @@ export async function fetchTitle(user: string, url: string): Promise<string> {
     model: openaiVercel(model),
     output: "object",
     schema: z.object({
-      food_title: z.string().describe("Food title"),
+      title: z.string().describe("Food title"),
+      brand: z
+        .string()
+        .describe("Food brand if it can be identified")
+        .optional(),
     }),
     messages: [
       {
@@ -129,8 +155,10 @@ export async function fetchTitle(user: string, url: string): Promise<string> {
     });
   });
 
-  const title = object.food_title;
-  return title;
+  return {
+    title: object.title,
+    brand: object.brand ?? null,
+  };
 }
 
 export async function normalizeTitle(
@@ -176,55 +204,17 @@ export async function normalizeTitle(
   return normalizedLowercase;
 }
 
-export async function fetchSize(user: string, url: string): Promise<number> {
-  const task: Enums<"task"> = "size_estimation";
-  const model = "gpt-4o";
-
-  const response = await generateObject({
-    model: openaiVercel("gpt-4o"),
-    output: "object",
-    schema: z.object({
-      portion_grams: z.number().describe("Estimated total weight in grams"),
-    }),
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are a nutritionist specializing in portion size estimation. Estimate the weight in grams of the food shown in the image.",
-      },
-      {
-        role: "user",
-        content: [{ type: "image", image: new URL(url) }],
-      },
-    ],
-  });
-
-  const { object, usage } = response;
-
-  after(async () => {
-    await insertUsage({
-      user,
-      task,
-      model,
-      usage,
-    });
-  });
-
-  const size = object.portion_grams;
-  return size;
-}
-
 export function cleanProducts(
   user: string,
   query: string,
   language: string,
-  ingredients: IngredientSearch[],
+  products: ProductSearch[],
   abortSignal: AbortSignal,
 ) {
   const task: Enums<"task"> = "search_normalization";
   const model = "gemini-2.0-flash";
 
-  const json = JSON.stringify(ingredients);
+  const json = JSON.stringify(products);
   const stream = streamObject({
     model: google("gemini-2.0-flash"),
     output: "array",

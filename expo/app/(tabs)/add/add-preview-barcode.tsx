@@ -20,10 +20,11 @@ import Dropdown from "@/components/Dropdown";
 import Input from "@/components/Input";
 import Table from "@/components/Table";
 import useInsertEntry from "@/mutations/useInsertEntry";
-import useInsertIngredient from "@/mutations/useInsertIngredient";
-import ingredientData from "@/queries/ingredientData";
+import useInsertProduct from "@/mutations/useInsertProduct";
 import openfoodData from "@/queries/openfoodData";
+import productData from "@/queries/productData";
 import { ServingData, servingSchema } from "@/schemas/serving";
+import { Product } from "@/types";
 
 // Define the type for dropdown option
 type Option = {
@@ -38,30 +39,31 @@ export default function AddPreviewBarcodeScreen() {
   const [imageWidth, setImageWidth] = useState(0);
   const [imageHeight, setImageHeight] = useState(0);
 
-  const insertIngredient = useInsertIngredient();
+  const insertProduct = useInsertProduct();
   const insertEntry = useInsertEntry();
 
   const { barcode } = useLocalSearchParams<{ barcode: string }>();
 
-  const { data: supabaseIngredients, isLoading: isLoadingIngredient } =
-    useQuery(ingredientData({ openfood: barcode }));
-
-  const { data: openfoodIngredients, isLoading: isLoadingOpenfood } = useQuery(
-    openfoodData({ barcode })
+  const { data: supabaseProducts, isLoading: isLoadingProduct } = useQuery(
+    productData({ openfood: barcode }),
   );
 
-  const loadingBackup = isLoadingOpenfood && !supabaseIngredients;
-  const loading = isLoadingIngredient || loadingBackup;
+  const { data: openfoodProducts, isLoading: isLoadingOpenfood } = useQuery(
+    openfoodData({ barcode }),
+  );
 
-  const ingredientSupabase = supabaseIngredients?.[0];
-  const ingredientOpenfood = openfoodIngredients;
-  const ingredient = ingredientSupabase ?? ingredientOpenfood;
+  const loadingBackup = isLoadingOpenfood && !supabaseProducts;
+  const loading = isLoadingProduct || loadingBackup;
+
+  const productSupabase = supabaseProducts?.[0];
+  const productOpenfood = openfoodProducts;
+  const product = productSupabase ?? (productOpenfood as Product);
 
   const servingSizeOptions = [
     {
       id: "1",
-      label: `1 serving (${ingredient?.portion}g)`,
-      value: ingredient?.portion ?? 0,
+      label: `1 serving (${product?.serving}${product?.serving_unit})`,
+      value: product?.serving ?? 0,
     },
     { id: "2", label: "1 tablespoon (15g)", value: 15 },
     { id: "3", label: "1 teaspoon (5g)", value: 5 },
@@ -92,68 +94,73 @@ export default function AddPreviewBarcodeScreen() {
     {
       id: 1,
       label: "Calories",
-      value: `${ingredient?.calorie_100g ?? 0} kcal`,
+      value: `${product?.calorie_100g ?? 0} kcal`,
     },
-    { id: 2, label: "Protein", value: `${ingredient?.protein_100g ?? 0}g` },
+    { id: 2, label: "Protein", value: `${product?.protein_100g ?? 0}g` },
     {
       id: 3,
       label: "Carbohydrates",
-      value: `${ingredient?.carbohydrate_100g ?? 0}g`,
+      value: `${product?.carbohydrate_100g ?? 0}g`,
     },
-    { id: 4, label: "Fat", value: `${ingredient?.fat_100g ?? 0}g` },
-    { id: 5, label: "Fiber", value: `${ingredient?.fiber_100g ?? 0}g` },
+    { id: 4, label: "Fat", value: `${product?.fat_100g ?? 0}g` },
+    { id: 5, label: "Fiber", value: `${product?.fiber_100g ?? 0}g` },
     {
       id: 6,
       label: "Sugar",
-      value: `${ingredient?.carbohydrate_sugar_100g ?? 0}g`,
+      value: `${product?.carbohydrate_sugar_100g ?? 0}g`,
     },
-    { id: 7, label: "Sodium", value: `${ingredient?.sodium_100g ?? 0}mg` },
+    { id: 7, label: "Sodium", value: `${product?.sodium_100g ?? 0}mg` },
   ];
 
   const onSubmit = async (data: ServingData) => {
-    // Insert the ingredient if it doesn't already exist
-    let savedIngredient = ingredientSupabase;
+    // Insert the product if it doesn't already exist
+    let savedProduct = productSupabase;
 
-    if (!ingredientSupabase) {
-      savedIngredient = await insertIngredient.mutateAsync({
+    if (!productSupabase) {
+      savedProduct = await insertProduct.mutateAsync({
         type: "openfood",
-        title: ingredient?.title ?? null,
-        brand: ingredient?.brand ?? null,
-        image: ingredient?.image ?? null,
+        title: product?.title ?? null,
+        brand: product?.brand ?? null,
+        image: product?.image ?? null,
+
         icon_id: null,
-        openfood_id: ingredient?.openfood_id ?? null,
-        portion: ingredient?.portion ?? null,
-        calcium_100g: ingredient?.calcium_100g ?? null,
-        calorie_100g: ingredient?.calorie_100g ?? null,
-        carbohydrate_100g: ingredient?.carbohydrate_100g ?? null,
-        carbohydrate_sugar_100g: ingredient?.carbohydrate_sugar_100g ?? null,
-        cholesterol_100g: ingredient?.cholesterol_100g ?? null,
-        fat_100g: ingredient?.fat_100g ?? null,
-        fat_saturated_100g: ingredient?.fat_saturated_100g ?? null,
-        fat_trans_100g: ingredient?.fat_trans_100g ?? null,
-        fat_unsaturated_100g: ingredient?.fat_unsaturated_100g ?? null,
-        fiber_100g: ingredient?.fiber_100g ?? null,
-        iron_100g: ingredient?.iron_100g ?? null,
+        openfood_id: product?.openfood_id ?? null,
+
+        serving: product?.serving ?? null,
+        serving_unit: product?.serving_unit ?? null,
+
+        calcium_100g: product?.calcium_100g ?? null,
+        calorie_100g: product?.calorie_100g ?? null,
+        carbohydrate_100g: product?.carbohydrate_100g ?? null,
+        carbohydrate_sugar_100g: product?.carbohydrate_sugar_100g ?? null,
+        cholesterol_100g: product?.cholesterol_100g ?? null,
+        fat_100g: product?.fat_100g ?? null,
+        fat_saturated_100g: product?.fat_saturated_100g ?? null,
+        fat_trans_100g: product?.fat_trans_100g ?? null,
+        fat_unsaturated_100g: product?.fat_unsaturated_100g ?? null,
+        fiber_100g: product?.fiber_100g ?? null,
+        iron_100g: product?.iron_100g ?? null,
+        potassium_100g: product?.potassium_100g ?? null,
+        protein_100g: product?.protein_100g ?? null,
+        sodium_100g: product?.sodium_100g ?? null,
+
         micros_100g: null,
-        potassium_100g: ingredient?.potassium_100g ?? null,
-        protein_100g: ingredient?.protein_100g ?? null,
-        sodium_100g: ingredient?.sodium_100g ?? null,
       });
     }
 
     // Calculate amount - use base amount from selected option multiplied by quantity
     const selectedOption = servingSizeOptions.find(
-      (option) => option.id === data.sizeOption
+      (option) => option.id === data.sizeOption,
     );
     const amountMultiplier = data.quantity ? parseFloat(data.quantity) : 1;
     const amountGrams = (selectedOption?.value ?? 0) * amountMultiplier;
 
-    // Insert an entry with the selected portion size
+    // Insert an entry with the selected serving size
     await insertEntry.mutateAsync({
-      type: "ingredient",
+      type: "product",
       title: null,
       meal_id: null,
-      ingredient_id: savedIngredient!.uuid,
+      product_id: savedProduct!.uuid,
       consumed_unit: "gram",
       consumed_quantity: amountGrams,
     });
@@ -166,7 +173,7 @@ export default function AddPreviewBarcodeScreen() {
       <SafeAreaView style={[styles.safeArea, styles.loadingContainer]}>
         <View style={styles.loadingContent}>
           <ActivityIndicator size="large" color="#4CAF50" />
-          <Text style={styles.loadingText}>Fetching ingredient details...</Text>
+          <Text style={styles.loadingText}>Fetching product details...</Text>
 
           <View style={styles.skeletonContainer}>
             <View style={styles.skeletonImage} />
@@ -189,9 +196,9 @@ export default function AddPreviewBarcodeScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView style={styles.container}>
-        {ingredient?.image && (
+        {product?.image && (
           <Image
-            source={{ uri: ingredient?.image }}
+            source={{ uri: product?.image }}
             style={[
               styles.image,
               {
@@ -208,12 +215,12 @@ export default function AddPreviewBarcodeScreen() {
         )}
 
         <View style={styles.infoContainer}>
-          <Text style={styles.name}>{ingredient?.title}</Text>
-          <Text style={styles.brand}>{ingredient?.brand}</Text>
+          <Text style={styles.name}>{product?.title}</Text>
+          <Text style={styles.brand}>{product?.brand}</Text>
 
           <View style={styles.barcodeContainer}>
             <Ionicons name="barcode-outline" size={18} color="#666" />
-            <Text style={styles.barcode}>{ingredient?.openfood_id}</Text>
+            <Text style={styles.barcode}>{product?.openfood_id}</Text>
           </View>
 
           {/* Serving Size Selector */}

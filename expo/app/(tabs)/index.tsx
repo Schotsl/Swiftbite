@@ -24,10 +24,10 @@ export default function Index() {
   useEffect(() => {
     const processing = data.some(
       (entry) =>
-        !entry.ingredient?.title ||
-        !entry.ingredient?.calorie_100g ||
-        !entry.ingredient?.icon_id ||
-        !entry.consumed_quantity
+        !entry.product?.title ||
+        !entry.product?.calorie_100g ||
+        !entry.product?.icon_id ||
+        !entry.consumed_quantity,
     );
 
     const interval = processing ? 500 : false;

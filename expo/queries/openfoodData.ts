@@ -8,9 +8,9 @@ export default function openfoodData({ barcode }: openfoodDataType) {
     queryFn: async () => {
       const url = `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/barcode/${barcode}`;
       const response = await fetch(url);
-      const ingredients = await response.json();
+      const products = await response.json();
 
-      return ingredients;
+      return products;
     },
   });
 }

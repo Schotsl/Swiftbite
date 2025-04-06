@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { roundNumber } from "@/helper";
+import { ProductInsert } from "@/types";
 
 // Revalidate once every 30 days
 export const revalidate = 2592000;
@@ -22,8 +23,6 @@ export async function GET(
   const product = data.product;
   const nutriments = product.nutriments;
 
-  const nutritionPortion = roundNumber(+nutriments.fat_100g);
-
   const nutritionFats = roundNumber(nutriments.fat_100g ?? 0);
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
@@ -36,10 +35,11 @@ export async function GET(
     title: product.product_name,
     brand: product.brands,
     image: product.image_front_url,
-    portion: nutritionPortion,
 
-    icon_id: null,
     openfood_id: product.code,
+
+    serving: roundNumber(+product.serving_quantity),
+    serving_unit: product.serving_quantity_unit,
 
     iron_100g: roundNumber(nutriments.iron_100g ?? 0, 2),
     fiber_100g: roundNumber(nutriments.fiber_100g ?? 0, 2),
@@ -51,12 +51,14 @@ export async function GET(
     cholesterol_100g: roundNumber(nutriments.cholesterol_100g ?? 0, 2),
     carbohydrate_100g: roundNumber(nutriments.carbohydrates_100g ?? 0, 2),
     carbohydrate_sugar_100g: roundNumber(nutriments.sugars_100g ?? 0, 2),
+
     fat_100g: nutritionFats,
     fat_trans_100g: nutritionTrans,
     fat_saturated_100g: nutritionSaturated,
     fat_unsaturated_100g: nutritionUnsaturated,
+
     micros_100g: {},
-  };
+  } as ProductInsert;
 
   return NextResponse.json(nutrition);
 }

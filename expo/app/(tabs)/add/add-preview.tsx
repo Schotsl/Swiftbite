@@ -7,7 +7,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 import { handleError, renderToBase64 } from "@/helper";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertGenerative from "@/mutations/useInsertGenerative";
-import useInsertIngredient from "@/mutations/useInsertIngredient";
+import useInsertProduct from "@/mutations/useInsertProduct";
 import supabase from "@/utils/supabase";
 
 export default function AddPreview() {
@@ -16,7 +16,7 @@ export default function AddPreview() {
   const [smallImage, setSmallImage] = useState<string | null>(null);
   const [largeImage, setLargeImage] = useState<string | null>(null);
 
-  const insertIngredient = useInsertIngredient();
+  const insertProduct = useInsertProduct();
   const insertGenerative = useInsertGenerative();
   const insertEntry = useInsertEntry();
 
@@ -62,7 +62,7 @@ export default function AddPreview() {
   const handleSave = async () => {
     router.push("/");
 
-    const ingredient = await insertIngredient.mutateAsync({
+    const product = await insertProduct.mutateAsync({
       type: "openfood",
       title: null,
       image: null,
@@ -81,7 +81,8 @@ export default function AddPreview() {
       iron_100g: null,
       micros_100g: null,
       openfood_id: null,
-      portion: null,
+      serving: null,
+      serving_unit: null,
       potassium_100g: null,
       protein_100g: null,
       sodium_100g: null,
@@ -89,10 +90,10 @@ export default function AddPreview() {
 
     // The actual size will be updated by the server after analysis
     const entryPromise = insertEntry.mutateAsync({
-      type: "ingredient",
+      type: "product",
       title: null,
       meal_id: null,
-      ingredient_id: ingredient.uuid,
+      product_id: product.uuid,
       consumed_unit: "gram",
       consumed_quantity: null,
     });
@@ -100,7 +101,7 @@ export default function AddPreview() {
     const generativePromise = insertGenerative.mutateAsync({
       type: "image",
       content: null,
-      ingredient_id: ingredient.uuid,
+      product_id: product.uuid,
     });
 
     // We do both requests in parallel but discard the entry

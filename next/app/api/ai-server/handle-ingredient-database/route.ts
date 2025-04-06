@@ -19,36 +19,36 @@ export async function POST(request: Request) {
     return response;
   }
 
-  const ingredientIcon = body.record.icon_id;
-  const ingredientUuid = body.record.uuid;
+  const productIcon = body.record.icon_id;
+  const productUuid = body.record.uuid;
 
-  const ingredientTitleNew = body.record.title;
-  const ingredientTitleOld = body.old_record?.title;
+  const productTitleNew = body.record.title;
+  const productTitleOld = body.old_record?.title;
 
-  // If the ingredient doesn't have a title we can't do anything
-  if (!ingredientTitleNew) {
+  // If the product doesn't have a title we can't do anything
+  if (!productTitleNew) {
     return new Response("{}", { status: 200 });
   }
 
   // If the title hasn't changed we don't need to do anything
-  if (ingredientTitleOld || ingredientIcon) {
+  if (productTitleOld || productIcon) {
     return new Response("{}", { status: 200 });
   }
 
-  // If the ingredient already has an icon we don't need to
-  if (ingredientIcon) {
+  // If the product already has an icon we don't need to
+  if (productIcon) {
     return new Response("{}", { status: 200 });
   }
 
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[ICON] Normalizing title`);
-    const iconTitle = await normalizeTitle(user, ingredientTitleNew);
+    const iconTitle = await normalizeTitle(user, productTitleNew);
     const iconUuid = await fetchIcon(iconTitle);
 
-    // If the icon already exists we'll update the ingredient
+    // If the icon already exists we'll update the product
     if (iconUuid) {
-      await updateIngredient(ingredientUuid, iconUuid);
+      await updateProduct(productUuid, iconUuid);
 
       return;
     }
@@ -56,19 +56,19 @@ export async function POST(request: Request) {
     const insertUuid = await insertIcon(iconTitle);
 
     await generateIcon(insertUuid, iconTitle);
-    await updateIngredient(ingredientUuid, insertUuid);
+    await updateProduct(productUuid, insertUuid);
   });
 
   return new Response("{}", { status: 200 });
 }
 
-const updateIngredient = async (ingredient: string, icon: string) => {
-  console.log(`[ICON] Updating ingredient with icon`);
+const updateProduct = async (product: string, icon: string) => {
+  console.log(`[ICON] Updating product with icon`);
 
   const { error } = await supabase
-    .from("ingredient")
+    .from("product")
     .update({ icon_id: icon })
-    .eq("uuid", ingredient);
+    .eq("uuid", product);
 
   handleError(error);
 };

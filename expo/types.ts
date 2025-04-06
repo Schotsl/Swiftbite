@@ -1,17 +1,25 @@
 import { Tables } from "./database.types";
 
-export type Ingredient = Tables<"ingredient">;
+export type Product = Tables<"product">;
+
+export type ProductSearch = {
+  title: string;
+  brand: string;
+  quantity: number;
+  openfood_id: string;
+};
+
+export type ProductInsert = Omit<
+  Product,
+  "uuid" | "user_id" | "created_at" | "updated_at"
+>;
+
 export type Generative = Tables<"generative">;
 
 export type Entry = Tables<"entry">;
-export type EntryWithIngredient = Entry & {
-  ingredient: Ingredient;
+export type EntryWithProduct = Entry & {
+  product: Product;
 };
-
-export type IngredientInsert = Omit<
-  Ingredient,
-  "uuid" | "user_id" | "created_at" | "updated_at"
->;
 
 export type GenerativeInsert = Omit<
   Generative,
@@ -29,10 +37,3 @@ export enum HealthStatus {
   Loading = "loading",
   Refreshing = "refreshing",
 }
-
-export type IngredientSearch = {
-  title: string;
-  brand: string;
-  quantity: number;
-  openfood_id: string;
-};

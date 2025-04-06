@@ -1,8 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import { fetch } from "expo/fetch";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
   Alert,
@@ -16,36 +14,20 @@ import {
 } from "react-native";
 
 import Input from "@/components/Input";
-import { SearchData, searchSchema } from "@/schemas/search";
-import { IngredientSearch } from "@/types";
+import { ProductSearch } from "@/types";
 import supabase from "@/utils/supabase";
 
 export default function AddText() {
-  const router = useRouter();
   const abort = useRef<AbortController | null>(null);
   const timeout = useRef<NodeJS.Timeout | null>(null);
+  const router = useRouter();
 
+  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const [ingredients, setIngredients] = useState<IngredientSearch[]>([]);
-
-  // Initialize react-hook-form with zod resolver
-  const {
-    control,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<SearchData>({
-    resolver: zodResolver(searchSchema),
-    defaultValues: {
-      query: "",
-    },
-  });
-
-  // Watch for search query changes
-  const search = watch("query");
+  const [products, setProducts] = useState<ProductSearch[]>([]);
 
   const handleInput = (text: string) => {
-    setValue("query", text);
+    setQuery(text);
 
     // Clear previous timeout
     if (timeout.current) {
@@ -53,17 +35,13 @@ export default function AddText() {
     }
 
     // Set new timeout
-    timeout.current = setTimeout(() => {
-      if (text.length >= 2) {
-        handleSearch(text);
-      }
-    }, 500);
+    timeout.current = setTimeout(() => handleSearch(text), 500);
   };
 
-  const handleSelect = (ingredient: IngredientSearch) => {
+  const handleSelect = (product: ProductSearch) => {
     router.push({
       pathname: "/add/add-preview-barcode",
-      params: { barcode: ingredient.openfood_id },
+      params: { barcode: product.openfood_id },
     });
   };
 
@@ -74,7 +52,7 @@ export default function AddText() {
 
     setLoading(true);
 
-    const fetchIngredients = async () => {
+    const fetchProducts = async () => {
       if (abort.current) {
         abort.current.abort();
       }
@@ -99,7 +77,7 @@ export default function AddText() {
           signal,
           method,
           headers,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -129,16 +107,16 @@ export default function AddText() {
         const parsed = JSON.parse(decoded);
 
         if (parsed.length > 0) {
-          setIngredients(parsed);
+          setProducts(parsed);
           setLoading(false);
         }
       }
     };
 
-    fetchIngredients();
+    fetchProducts();
   };
 
-  const renderIngredientItem = ({ item }: { item: IngredientSearch }) => (
+  const renderProductItem = ({ item }: { item: ProductSearch }) => (
     <TouchableOpacity
       style={styles.itemContainer}
       onPress={() => handleSelect(item)}
@@ -159,15 +137,13 @@ export default function AddText() {
         <Input
           name="query"
           type="default"
-          value={search}
+          value={query}
           placeholder="Search for food..."
           onChange={handleInput}
-          control={control}
-          error={errors.query?.message}
         />
       </View>
 
-      {search.length < 2 ? (
+      {query.length < 2 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
             Type at least 2 characters to search
@@ -178,10 +154,10 @@ export default function AddText() {
           <ActivityIndicator size="large" color="#405cf5" />
           <Text style={styles.loadingText}>Searching...</Text>
         </View>
-      ) : ingredients && ingredients.length > 0 ? (
+      ) : products && products.length > 0 ? (
         <FlatList
-          data={ingredients}
-          renderItem={renderIngredientItem}
+          data={products}
+          renderItem={renderProductItem}
           keyExtractor={(item) => item.openfood_id || Math.random().toString()}
           contentContainerStyle={styles.listContainer}
         />

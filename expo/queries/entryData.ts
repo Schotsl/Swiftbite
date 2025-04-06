@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import { handleError } from "@/helper";
-import { EntryWithIngredient } from "@/types";
+import { EntryWithProduct } from "@/types";
 import supabase from "@/utils/supabase";
 
 type entryDataType = {
@@ -14,14 +14,14 @@ export default function entryData({ openfood }: entryDataType) {
     queryFn: async () => {
       const { error, data } = await supabase
         .from("entry")
-        .select(`*,ingredient:ingredient_id (*)`)
+        .select(`*,product:product_id (*)`)
         .order("created_at", { ascending: false });
 
       handleError(error);
 
       console.log(`[Query] fetched ${data?.length} entries`);
 
-      return data as EntryWithIngredient[];
+      return data as EntryWithProduct[];
     },
   });
 }
