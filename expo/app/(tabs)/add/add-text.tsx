@@ -41,7 +41,11 @@ export default function AddText() {
   const handleSelect = (product: ProductSearch) => {
     router.push({
       pathname: "/add/add-preview-barcode",
-      params: { barcode: product.openfood_id },
+      params: {
+        barcode: product.openfood_id,
+        overwriteTitle: product.title,
+        overwriteBrand: product.brand,
+      },
     });
   };
 
@@ -77,7 +81,7 @@ export default function AddText() {
           signal,
           method,
           headers,
-        },
+        }
       );
 
       if (!response.ok) {

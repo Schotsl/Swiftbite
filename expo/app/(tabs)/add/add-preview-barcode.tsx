@@ -42,14 +42,18 @@ export default function AddPreviewBarcodeScreen() {
   const insertProduct = useInsertProduct();
   const insertEntry = useInsertEntry();
 
-  const { barcode } = useLocalSearchParams<{ barcode: string }>();
+  const { barcode, overwriteTitle, overwriteBrand } = useLocalSearchParams<{
+    barcode: string;
+    overwriteTitle?: string;
+    overwriteBrand?: string;
+  }>();
 
   const { data: supabaseProducts, isLoading: isLoadingProduct } = useQuery(
-    productData({ openfood: barcode }),
+    productData({ openfood: barcode })
   );
 
   const { data: openfoodProducts, isLoading: isLoadingOpenfood } = useQuery(
-    openfoodData({ barcode }),
+    openfoodData({ barcode })
   );
 
   const loadingBackup = isLoadingOpenfood && !supabaseProducts;
@@ -150,7 +154,7 @@ export default function AddPreviewBarcodeScreen() {
 
     // Calculate amount - use base amount from selected option multiplied by quantity
     const selectedOption = servingSizeOptions.find(
-      (option) => option.id === data.sizeOption,
+      (option) => option.id === data.sizeOption
     );
     const amountMultiplier = data.quantity ? parseFloat(data.quantity) : 1;
     const amountGrams = (selectedOption?.value ?? 0) * amountMultiplier;
@@ -215,8 +219,8 @@ export default function AddPreviewBarcodeScreen() {
         )}
 
         <View style={styles.infoContainer}>
-          <Text style={styles.name}>{product?.title}</Text>
-          <Text style={styles.brand}>{product?.brand}</Text>
+          <Text style={styles.name}>{overwriteTitle ?? product?.title}</Text>
+          <Text style={styles.brand}>{overwriteBrand ?? product?.brand}</Text>
 
           <View style={styles.barcodeContainer}>
             <Ionicons name="barcode-outline" size={18} color="#666" />
