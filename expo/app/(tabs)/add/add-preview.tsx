@@ -94,7 +94,7 @@ export default function AddPreview() {
       title: null,
       meal_id: null,
       product_id: product.uuid,
-      consumed_unit: "gram",
+      consumed_unit: null,
       consumed_quantity: null,
     });
 

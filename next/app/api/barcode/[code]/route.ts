@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { roundNumber } from "@/helper";
 import { ProductInsert } from "@/types";
-import { Enums } from "@/database.types";
 
 // Revalidate once every 30 days
 export const revalidate = 2592000;
