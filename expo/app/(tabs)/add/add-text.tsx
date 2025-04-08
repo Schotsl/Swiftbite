@@ -45,9 +45,9 @@ export default function AddText() {
     router.replace({
       pathname: "/add/add-preview-barcode",
       params: {
-        barcode: product.openfood_id,
-        overwriteTitle: product.title,
-        overwriteBrand: product.brand,
+        title: product.title,
+        brand: product.brand,
+        quantity: product.quantity,
       },
     });
   };
@@ -76,11 +76,11 @@ export default function AddText() {
       };
 
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search?query=${search}&lang=en`,
+        `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search?query=${search}&lang=nl`,
         {
           signal,
           headers,
-        },
+        }
       );
 
       if (!response.ok) {

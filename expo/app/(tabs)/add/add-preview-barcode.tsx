@@ -44,26 +44,26 @@ export default function AddPreviewBarcodeScreen() {
   const insertProduct = useInsertProduct();
   const insertEntry = useInsertEntry();
 
-  const { barcode, overwriteTitle, overwriteBrand } = useLocalSearchParams<{
-    barcode: string;
-    overwriteTitle?: string;
-    overwriteBrand?: string;
+  const { title, brand, quantity, barcode } = useLocalSearchParams<{
+    title?: string;
+    brand?: string;
+    barcode?: string;
+    quantity?: string;
   }>();
 
-  const { data: supabaseProducts, isLoading: isLoadingProduct } = useQuery(
-    productData({ openfood: barcode }),
+  const { data: openfoodProduct, isLoading: isLoadingOpenfood } = useQuery(
+    openfoodData({ barcode, title, brand, quantity })
   );
 
-  const { data: openfoodProducts, isLoading: isLoadingOpenfood } = useQuery(
-    openfoodData({ barcode }),
-  );
+  // const loadingBackup = isLoadingOpenfood && !supabaseProducts;
+  // const loading = isLoadingProduct || loadingBackup;
 
-  const loadingBackup = isLoadingOpenfood && !supabaseProducts;
-  const loading = isLoadingProduct || loadingBackup;
+  // const productSupabase = supabaseProducts?.[0];
+  // const productOpenfood = openfoodProducts;
+  // const product = productSupabase ?? (productOpenfood as Product);
 
-  const productSupabase = supabaseProducts?.[0];
-  const productOpenfood = openfoodProducts;
-  const product = productSupabase ?? (productOpenfood as Product);
+  const product = openfoodProduct as Product;
+  const loading = isLoadingOpenfood;
 
   const servingSizeOptions = [
     {
@@ -118,46 +118,45 @@ export default function AddPreviewBarcodeScreen() {
     },
     { id: 7, label: "Sodium", value: `${product?.sodium_100g ?? 0}mg` },
   ];
-
+  console.log(product);
   const onSubmit = async (data: ServingData) => {
     // Insert the product if it doesn't already exist
-    let savedProduct = productSupabase;
+    // let savedProduct = productSupabase;
 
-    if (!productSupabase) {
-      savedProduct = await insertProduct.mutateAsync({
-        type: "openfood",
-        title: product?.title ?? null,
-        brand: product?.brand ?? null,
-        image: product?.image ?? null,
+    // if (!productSupabase) {
+    const savedProduct = await insertProduct.mutateAsync({
+      type: "openfood",
+      title: product?.title ?? null,
+      brand: product?.brand ?? null,
+      image: product?.image ?? null,
 
-        icon_id: null,
-        openfood_id: product?.openfood_id ?? null,
+      icon_id: null,
+      openfood_id: product?.openfood_id ?? null,
 
-        serving: product?.serving ?? null,
-        serving_unit: product?.serving_unit ?? null,
+      serving: product?.serving ?? null,
+      serving_unit: product?.serving_unit ?? null,
 
-        calcium_100g: product?.calcium_100g ?? null,
-        calorie_100g: product?.calorie_100g ?? null,
-        carbohydrate_100g: product?.carbohydrate_100g ?? null,
-        carbohydrate_sugar_100g: product?.carbohydrate_sugar_100g ?? null,
-        cholesterol_100g: product?.cholesterol_100g ?? null,
-        fat_100g: product?.fat_100g ?? null,
-        fat_saturated_100g: product?.fat_saturated_100g ?? null,
-        fat_trans_100g: product?.fat_trans_100g ?? null,
-        fat_unsaturated_100g: product?.fat_unsaturated_100g ?? null,
-        fiber_100g: product?.fiber_100g ?? null,
-        iron_100g: product?.iron_100g ?? null,
-        potassium_100g: product?.potassium_100g ?? null,
-        protein_100g: product?.protein_100g ?? null,
-        sodium_100g: product?.sodium_100g ?? null,
+      calcium_100g: product?.calcium_100g ?? null,
+      calorie_100g: product?.calorie_100g ?? null,
+      carbohydrate_100g: product?.carbohydrate_100g ?? null,
+      carbohydrate_sugar_100g: product?.carbohydrate_sugar_100g ?? null,
+      cholesterol_100g: product?.cholesterol_100g ?? null,
+      fat_100g: product?.fat_100g ?? null,
+      fat_saturated_100g: product?.fat_saturated_100g ?? null,
+      fat_trans_100g: product?.fat_trans_100g ?? null,
+      fat_unsaturated_100g: product?.fat_unsaturated_100g ?? null,
+      fiber_100g: product?.fiber_100g ?? null,
+      iron_100g: product?.iron_100g ?? null,
+      potassium_100g: product?.potassium_100g ?? null,
+      protein_100g: product?.protein_100g ?? null,
+      sodium_100g: product?.sodium_100g ?? null,
 
-        micros_100g: null,
-      });
-    }
+      micros_100g: null,
+    });
 
     // Calculate amount - use base amount from selected option multiplied by quantity
     const selectedOption = servingSizeOptions.find(
-      (option) => option.id === data.sizeOption,
+      (option) => option.id === data.sizeOption
     );
     const amountMultiplier = data.quantity ? parseFloat(data.quantity) : 1;
     const amountGrams = (selectedOption?.value ?? 0) * amountMultiplier;
@@ -234,8 +233,17 @@ export default function AddPreviewBarcodeScreen() {
         )}
 
         <View style={styles.infoContainer}>
-          <Text style={styles.name}>{overwriteTitle ?? product?.title}</Text>
-          <Text style={styles.brand}>{overwriteBrand ?? product?.brand}</Text>
+          {product?.estimated && (
+            <View>
+              <Ionicons name="warning-outline" size={20} color="red" />
+              <Text style={{ color: "red", marginTop: 4, marginBottom: 16 }}>
+                The nutritions have been estimated by comparing the product to
+                other products in our database.
+              </Text>
+            </View>
+          )}
+          <Text style={styles.name}>{product?.title}</Text>
+          <Text style={styles.brand}>{product?.brand}</Text>
 
           <View style={styles.barcodeContainer}>
             <Ionicons name="barcode-outline" size={18} color="#666" />

@@ -1,6 +1,6 @@
 import { Tables } from "./database.types";
 
-export type Product = Tables<"product">;
+export type Product = Tables<"product"> & { estimated?: boolean };
 
 export type ProductSearch = {
   title: string;
