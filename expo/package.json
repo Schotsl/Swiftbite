@@ -10,10 +10,10 @@
     "types": "supabase gen types typescript --project-id 'ffbbrrfdghbvuajheulg' --schema public > database.types.ts",
     "format": "prettier --write .",
     "preinstall": "bun run types",
-    "build:internal": "eas build --platform ios --profile preview",
-    "build:simulator": "eas build --platform ios --profile simulator",
-    "build:production": "eas build --platform ios --profile production",
-    "build:development": "eas build --platform ios --profile development"
+    "build:internal": "eas build --platform ios --profile preview --non-interactive",
+    "build:simulator": "eas build --platform ios --profile simulator --non-interactive",
+    "build:production": "eas build --platform ios --profile production --non-interactive",
+    "build:development": "eas build --platform ios --profile development --non-interactive"
   },
   "jest": {
     "preset": "jest-expo"
