@@ -20,7 +20,7 @@ export default function BarcodeScreen() {
     if (scanned) return;
     setScanned(true);
 
-    router.push({
+    router.replace({
       pathname: "/add/add-preview-barcode",
       params: { barcode: data },
     });

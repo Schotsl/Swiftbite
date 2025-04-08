@@ -33,7 +33,7 @@ export default function AddAI() {
 
     const { uri, width, height } = picture;
 
-    router.push({
+    router.replace({
       pathname: "/add/add-preview",
       params: { uri, width, height },
     });

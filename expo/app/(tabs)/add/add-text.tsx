@@ -39,7 +39,7 @@ export default function AddText() {
   };
 
   const handleSelect = (product: ProductSearch) => {
-    router.push({
+    router.replace({
       pathname: "/add/add-preview-barcode",
       params: {
         barcode: product.openfood_id,
@@ -77,7 +77,7 @@ export default function AddText() {
         {
           signal,
           headers,
-        },
+        }
       );
 
       if (!response.ok) {

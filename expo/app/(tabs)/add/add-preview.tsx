@@ -60,7 +60,7 @@ export default function AddPreview() {
   }, [handleResize]);
 
   const handleSave = async () => {
-    router.push("/");
+    router.replace("/");
 
     const product = await insertProduct.mutateAsync({
       type: "openfood",
@@ -129,7 +129,7 @@ export default function AddPreview() {
   };
 
   const handleDiscard = () => {
-    router.push("/add/add");
+    router.replace("/add/add");
   };
 
   return (
