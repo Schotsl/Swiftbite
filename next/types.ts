@@ -43,8 +43,17 @@ export type OpenFoodNutriments = {
 export type OpenFoodSearch = {
   code: string;
   brands: string;
-  product_name: string;
   quantity: string;
   nutriments: OpenFoodNutriments;
   categories_tags: string[];
+
+  product_name: string;
+  product_name_en: string;
+  product_name_fr: string;
+  product_name_de: string;
+  product_name_es: string;
+  product_name_it: string;
+  product_name_ja: string;
+  product_name_ko: string;
+  product_name_nl: string;
 };

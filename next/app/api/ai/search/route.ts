@@ -1,29 +1,44 @@
 import { getUser } from "@/utils/supabase";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cleanProducts } from "@/utils/openai";
 import { OpenFoodSearch } from "@/types";
 import { streamToResponse } from "@/helper";
+import { getTitle } from "@/utils/openfood";
 
-export async function POST(request: Request) {
-  const body = await request.json();
+export async function GET(request: NextRequest) {
   const user = await getUser(request);
 
-  const signal = request.signal;
+  const lang = request.nextUrl.searchParams.get("lang");
+  const query = request.nextUrl.searchParams.get("query");
 
-  const { query, lang } = body;
-
-  if (!query || !lang) {
+  if (!lang) {
     return NextResponse.json(
-      { error: "Please provide a query and a language" },
-      { status: 400 },
+      { error: "Please provide a language" },
+      { status: 400 }
+    );
+  }
+
+  if (!query) {
+    return NextResponse.json(
+      { error: "Please provide a query" },
+      { status: 400 }
     );
   }
 
   // TODO: The categories_tags and nutriments are very expensive for the AI
+  const signal = request.signal;
   const fields = [
     "code",
     "brands",
     "product_name",
+    "product_name_en",
+    "product_name_fr",
+    "product_name_de",
+    "product_name_es",
+    "product_name_it",
+    "product_name_ja",
+    "product_name_ko",
+    "product_name_nl",
     "quantity",
     "nutriments",
     "categories_tags",
@@ -49,18 +64,26 @@ export async function POST(request: Request) {
       return (
         product.code &&
         product.brands &&
-        product.product_name &&
         product.quantity &&
         product.nutriments &&
-        product.categories_tags?.length > 0
+        product.categories_tags?.length > 0 &&
+        (product.product_name ||
+          product.product_name_en ||
+          product.product_name_fr ||
+          product.product_name_de ||
+          product.product_name_es ||
+          product.product_name_it ||
+          product.product_name_ja ||
+          product.product_name_ko ||
+          product.product_name_nl)
       );
-    },
+    }
   );
 
   // Drop the categories and nutriments
   const openFoodMapped = openFoodFiltered.map((product: OpenFoodSearch) => {
     return {
-      title: product.product_name,
+      title: getTitle(product, lang),
       brand: product.brands,
       quantity: product.quantity,
       openfood_id: product.code,

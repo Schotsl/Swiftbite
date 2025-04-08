@@ -49,11 +49,11 @@ export default function AddPreviewBarcodeScreen() {
   }>();
 
   const { data: supabaseProducts, isLoading: isLoadingProduct } = useQuery(
-    productData({ openfood: barcode })
+    productData({ openfood: barcode }),
   );
 
   const { data: openfoodProducts, isLoading: isLoadingOpenfood } = useQuery(
-    openfoodData({ barcode })
+    openfoodData({ barcode }),
   );
 
   const loadingBackup = isLoadingOpenfood && !supabaseProducts;
@@ -154,7 +154,7 @@ export default function AddPreviewBarcodeScreen() {
 
     // Calculate amount - use base amount from selected option multiplied by quantity
     const selectedOption = servingSizeOptions.find(
-      (option) => option.id === data.sizeOption
+      (option) => option.id === data.sizeOption,
     );
     const amountMultiplier = data.quantity ? parseFloat(data.quantity) : 1;
     const amountGrams = (selectedOption?.value ?? 0) * amountMultiplier;

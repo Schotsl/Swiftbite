@@ -2,7 +2,7 @@ import { ProductV2 } from "@openfoodfacts/openfoodfacts-nodejs";
 import { roundNumber } from "@/helper";
 import { ProductInsert } from "@/types";
 
-function getTitle(product: ProductV2, lang: string) {
+export function getTitle(product: ProductV2, lang: string) {
   // Try preferred language-specific names first
   const preferenceKey = `product_name_${lang}`;
 

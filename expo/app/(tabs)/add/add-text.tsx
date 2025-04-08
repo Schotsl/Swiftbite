@@ -66,22 +66,18 @@ export default function AddText() {
       const session = await supabase.auth.getSession();
       const bearer = session?.data.session?.access_token;
 
-      const body = JSON.stringify({ query: search, lang: "nl" });
       const signal = abort.current.signal;
-      const method = "POST";
       const headers = {
         Authorization: `Bearer ${bearer}`,
         "Content-Type": "application/json",
       };
 
       const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search`,
+        `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search?query=${search}&lang=en`,
         {
-          body,
           signal,
-          method,
           headers,
-        }
+        },
       );
 
       if (!response.ok) {
