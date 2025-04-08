@@ -1,10 +1,10 @@
 import {
   ProductSearch,
   ProductGenerativeNutrition,
-  ProductGenerativeVisuals,
+  ProductInsert,
 } from "@/types";
-import { generateObject, streamObject } from "ai";
-import { openai as openaiVercel } from "@ai-sdk/openai";
+import { generateObject, generateText, streamObject } from "ai";
+import { openai as openai } from "@ai-sdk/openai";
 import { google } from "@ai-sdk/google";
 import { z } from "zod";
 import { after } from "next/server";
@@ -13,13 +13,13 @@ import { Enums } from "@/database.types";
 
 export async function estimateNutrition(
   user: string,
-  url: string,
+  url: string
 ): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
 
   const response = await generateObject({
-    model: openaiVercel(model),
+    model: openai(model),
     output: "object",
     schema: z.object({
       fat_100g: z.number().describe("Estimated total fat per 100g in grams"),
@@ -117,62 +117,127 @@ export async function estimateNutrition(
   };
 }
 
-export async function estimateVisuals(
+export async function searchNutritionByTitle(
   user: string,
-  url: string,
-): Promise<ProductGenerativeVisuals> {
-  const task: Enums<"task"> = "title_generation";
-  const model = "gpt-4o-mini";
+  title: string
+): Promise<ProductInsert | null> {
+  const searchModel = "gpt-4o-mini";
+  const structureModel = "gpt-4o";
 
-  const response = await generateObject({
-    model: openaiVercel(model),
+  const searchResponse = await generateText({
+    model: openai.responses(searchModel),
+    messages: [
+      {
+        role: "system",
+        content:
+          'You are a product data assistant. Use the `web_search_preview` tool to find the single best product match for the user query. Extract the product TITLE, BRAND, SERVING SIZE, and full NUTRITIONAL INFORMATION. Return this data as plain text. If no suitable match is found, return ONLY the string "NO_MATCH".',
+      },
+      {
+        role: "user",
+        content: title,
+      },
+    ],
+    tools: {
+      web_search_preview: openai.tools.webSearchPreview({
+        searchContextSize: "high",
+        userLocation: {
+          type: "approximate",
+          country: "nl",
+        },
+      }),
+    },
+  });
+
+  const nutritionText = searchResponse.text;
+
+  if (nutritionText.includes("NO_MATCH")) {
+    return null;
+  }
+
+  const structureResponse = await generateObject({
+    model: openai(structureModel),
     output: "object",
     schema: z.object({
-      title: z.string().describe("Food title"),
-      brand: z
+      title: z.string().describe("Product title"),
+      brand: z.string().describe("Product brand"),
+      fat_100g: z.number().describe("Total fat per 100g in grams"),
+      calorie_100g: z.number().describe("Calories per 100g"),
+      protein_100g: z.number().describe("Protein per 100g in grams"),
+      serving: z.number().describe("Serving size in grams or milliliters"),
+      serving_unit: z
         .string()
-        .describe("Food brand if it can be identified")
-        .optional(),
+        .describe("Unit for the serving size (e.g., gram, milliliter)"),
+      sodium_100g: z.number().describe("Sodium per 100g in milligrams"),
+      carbohydrate_100g: z.number().describe("Carbohydrates per 100g in grams"),
+      calcium_100g: z.number().describe("Calcium per 100g in milligrams"),
+      carbohydrate_sugar_100g: z
+        .number()
+        .describe("Sugar content per 100g in grams"),
+      cholesterol_100g: z
+        .number()
+        .describe("Cholesterol per 100g in milligrams"),
+      fat_saturated_100g: z
+        .number()
+        .describe("Saturated fat per 100g in grams"),
+      fat_trans_100g: z.number().describe("Trans fat per 100g in grams"),
+      fat_unsaturated_100g: z
+        .number()
+        .describe("Unsaturated fat per 100g in grams"),
+      fiber_100g: z.number().describe("Fiber per 100g in grams"),
+      iron_100g: z.number().describe("Iron per 100g in milligrams"),
+      potassium_100g: z.number().describe("Potassium per 100g in milligrams"),
     }),
     messages: [
       {
         role: "system",
         content:
-          "You are a food expert. Identify the food item in the image and provide only its name using regular capitalization.",
+          "You are a data processing assistant. Convert the provided text containing product information (title, brand, serving size, nutrition) into a structured JSON object matching the required schema. Ensure all property names are lowercase. Use 0 for missing optional values.",
       },
       {
         role: "user",
-        content: [{ type: "image", image: new URL(url) }],
+        content: nutritionText,
       },
     ],
   });
 
-  const { usage, object } = response;
-
-  after(async () => {
-    await insertUsage({
-      user,
-      task,
-      model,
-      usage,
-    });
-  });
+  const { object } = structureResponse;
 
   return {
     title: object.title,
     brand: object.brand ?? null,
+    serving: object.serving,
+    serving_unit: object.serving_unit as Enums<"unit">,
+    fat_100g: object.fat_100g,
+    calorie_100g: object.calorie_100g,
+    protein_100g: object.protein_100g,
+    sodium_100g: object.sodium_100g,
+    carbohydrate_100g: object.carbohydrate_100g,
+    iron_100g: object.iron_100g ?? null,
+    fiber_100g: object.fiber_100g ?? null,
+    calcium_100g: object.calcium_100g ?? null,
+    potassium_100g: object.potassium_100g ?? null,
+    cholesterol_100g: object.cholesterol_100g ?? null,
+    fat_saturated_100g: object.fat_saturated_100g ?? null,
+    fat_trans_100g: object.fat_trans_100g ?? null,
+    fat_unsaturated_100g: object.fat_unsaturated_100g ?? null,
+    carbohydrate_sugar_100g: object.carbohydrate_sugar_100g ?? null,
+    type: "estimation",
+    image: null,
+    icon_id: null,
+    openfood_id: null,
+    micros_100g: null,
   };
 }
 
 export async function normalizeTitle(
   user: string,
-  title: string,
+  title: string
 ): Promise<string> {
   const task: Enums<"task"> = "title_normalization";
   const model = "gpt-4o-mini";
 
   const response = await generateObject({
-    model: openaiVercel("gpt-4o-mini"),
+    model: openai("gpt-4o-mini"),
     output: "object",
     schema: z.object({
       normalized_title: z.string().describe("Normalized food title"),
@@ -212,7 +277,7 @@ export function cleanProducts(
   query: string,
   language: string,
   products: ProductSearch[],
-  abortSignal: AbortSignal,
+  abortSignal: AbortSignal
 ) {
   const task: Enums<"task"> = "search_normalization";
   const model = "gemini-2.0-flash";
