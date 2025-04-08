@@ -13,7 +13,7 @@ import { Enums } from "@/database.types";
 
 export async function estimateNutrition(
   user: string,
-  url: string
+  url: string,
 ): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
@@ -119,7 +119,7 @@ export async function estimateNutrition(
 
 export async function estimateVisuals(
   user: string,
-  url: string
+  url: string,
 ): Promise<ProductGenerativeVisuals> {
   const task: Enums<"task"> = "title_generation";
   const model = "gpt-4o-mini";
@@ -166,7 +166,7 @@ export async function estimateVisuals(
 
 export async function normalizeTitle(
   user: string,
-  title: string
+  title: string,
 ): Promise<string> {
   const task: Enums<"task"> = "title_normalization";
   const model = "gpt-4o-mini";
@@ -212,7 +212,7 @@ export function cleanProducts(
   query: string,
   language: string,
   products: ProductSearch[],
-  abortSignal: AbortSignal
+  abortSignal: AbortSignal,
 ) {
   const task: Enums<"task"> = "search_normalization";
   const model = "gemini-2.0-flash";
