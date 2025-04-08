@@ -117,11 +117,14 @@ export async function estimateNutrition(
   };
 }
 
-export async function searchNutritionByTitle(
+export async function searchProduct(
   user: string,
-  title: string
+  title: string,
+  lang: string,
+  brand: string,
+  quantity: string
 ): Promise<ProductInsert | null> {
-  const searchModel = "gpt-4o-mini";
+  const searchModel = "gpt-4o";
   const structureModel = "gpt-4o";
 
   const searchResponse = await generateText({
@@ -130,11 +133,11 @@ export async function searchNutritionByTitle(
       {
         role: "system",
         content:
-          'You are a product data assistant. Use the `web_search_preview` tool to find the single best product match for the user query. Extract the product TITLE, BRAND, SERVING SIZE, and full NUTRITIONAL INFORMATION. Return this data as plain text. If no suitable match is found, return ONLY the string "NO_MATCH".',
+          'You are a product data assistant. Use the `web_search_preview` tool to find the single best product match for the user query, don\'t forget to add search terms like "nutrition" or "voedingswaarde" based on the language. Extract the product title, brand, serving size, and full nutritional information. Return this data as plain text. If no suitable match is found, try to find similar products via web search and *approximate* the nutritional values based on those similar products. Clearly state in your text response if the nutritional values are approximated',
       },
       {
         role: "user",
-        content: title,
+        content: `title: ${title}, brand: ${brand}, quantity: ${quantity}`,
       },
     ],
     tools: {
@@ -142,13 +145,14 @@ export async function searchNutritionByTitle(
         searchContextSize: "high",
         userLocation: {
           type: "approximate",
-          country: "nl",
+          country: lang,
         },
       }),
     },
   });
 
   const nutritionText = searchResponse.text;
+  console.log(nutritionText);
 
   if (nutritionText.includes("NO_MATCH")) {
     return null;
@@ -160,6 +164,9 @@ export async function searchNutritionByTitle(
     schema: z.object({
       title: z.string().describe("Product title"),
       brand: z.string().describe("Product brand"),
+      estimated: z
+        .boolean()
+        .describe("True if nutritional values are estimated"),
       fat_100g: z.number().describe("Total fat per 100g in grams"),
       calorie_100g: z.number().describe("Calories per 100g"),
       protein_100g: z.number().describe("Protein per 100g in grams"),
@@ -201,24 +208,20 @@ export async function searchNutritionByTitle(
   });
 
   const { object } = structureResponse;
-
+  console.log(object);
   return {
-    title: object.title,
-    brand: object.brand ?? null,
-    serving: object.serving,
+    ...object,
+
     serving_unit: object.serving_unit as Enums<"unit">,
-    fat_100g: object.fat_100g,
-    calorie_100g: object.calorie_100g,
-    protein_100g: object.protein_100g,
-    sodium_100g: object.sodium_100g,
-    carbohydrate_100g: object.carbohydrate_100g,
+
     iron_100g: object.iron_100g ?? null,
     fiber_100g: object.fiber_100g ?? null,
     calcium_100g: object.calcium_100g ?? null,
     potassium_100g: object.potassium_100g ?? null,
     cholesterol_100g: object.cholesterol_100g ?? null,
-    fat_saturated_100g: object.fat_saturated_100g ?? null,
+
     fat_trans_100g: object.fat_trans_100g ?? null,
+    fat_saturated_100g: object.fat_saturated_100g ?? null,
     fat_unsaturated_100g: object.fat_unsaturated_100g ?? null,
     carbohydrate_sugar_100g: object.carbohydrate_sugar_100g ?? null,
     type: "estimation",
@@ -227,6 +230,65 @@ export async function searchNutritionByTitle(
     openfood_id: null,
     micros_100g: null,
   };
+}
+
+export async function searchProducts(
+  user: string,
+  query: string,
+  lang: string
+) {
+  const searchModel = openai.responses("gpt-4o");
+  const searchResponse = await generateText({
+    model: searchModel,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a product search assistant that gathers specific product information to pass along to another AI. Use the `web_search_preview` tool to find multiple relevant products based on the user query. If the query is broad, return diverse results. For each product found, format its details strictly as: `title: [Product Title], brand: [Product Brand], quantity: [Product Quantity with Unit]`. List each product on a new line or clearly separate them. Do not include any other information or introductory/concluding text. If you start repeating yourself, stop the response.",
+      },
+      {
+        role: "user",
+        content: query,
+      },
+    ],
+    tools: {
+      web_search_preview: openai.tools.webSearchPreview({
+        searchContextSize: "low",
+        userLocation: {
+          type: "approximate",
+          country: lang,
+        },
+      }),
+    },
+  });
+  console.log(searchResponse.text);
+  const structureModel = openai("gpt-4o");
+  const structureStream = streamObject({
+    model: structureModel,
+    output: "array",
+    schema: z.object({
+      title: z.string().describe("Product title"),
+      brand: z.string().describe("Product brand"),
+      quantity: z
+        .string()
+        .describe(
+          'Product quantity as a string including unit (e.g., "180g", "250ml")'
+        ),
+    }),
+    messages: [
+      {
+        role: "system",
+        content:
+          'You are a data processing assistant. Convert the provided plain text listing product details (formatted as `title: ..., brand: ..., quantity: ...`) into a stream of objects, each matching the required schema (title, brand, quantity as string). If the input text is empty, indicates no products were found (e.g., contains "NO_MATCH"), or cannot be reliably parsed, stream an empty array `[]` and stop.',
+      },
+      {
+        role: "user",
+        content: searchResponse.text,
+      },
+    ],
+  });
+
+  return structureStream;
 }
 
 export async function normalizeTitle(

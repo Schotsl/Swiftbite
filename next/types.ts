@@ -6,7 +6,6 @@ export type ProductSearch = {
   title: string;
   brand: string;
   quantity: number;
-  openfood_id: string;
 };
 
 export type ProductInsert = Omit<
