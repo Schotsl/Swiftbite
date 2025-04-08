@@ -26,11 +26,14 @@ export default function BarcodeScreen() {
     });
   };
 
-  // Reset the scanned state when the camera is focused again
+  // Reset the page's state when is the screen is unfocused
   useEffect(() => {
     if (focus) {
-      setScanned(false);
+      return;
     }
+
+    setFacing("back");
+    setScanned(false);
   }, [focus]);
 
   if (!focus) {

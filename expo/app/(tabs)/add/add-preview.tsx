@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import { decode } from "base64-arraybuffer";
 import { ImageManipulator } from "expo-image-manipulator";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -11,14 +12,15 @@ import useInsertProduct from "@/mutations/useInsertProduct";
 import supabase from "@/utils/supabase";
 
 export default function AddPreview() {
+  const focus = useIsFocused();
   const router = useRouter();
 
   const [smallImage, setSmallImage] = useState<string | null>(null);
   const [largeImage, setLargeImage] = useState<string | null>(null);
 
+  const insertEntry = useInsertEntry();
   const insertProduct = useInsertProduct();
   const insertGenerative = useInsertGenerative();
-  const insertEntry = useInsertEntry();
 
   const { uri, width, height } = useLocalSearchParams<{
     uri: string;
@@ -131,6 +133,16 @@ export default function AddPreview() {
   const handleDiscard = () => {
     router.replace("/add/add");
   };
+
+  // Reset the page's state when is the screen is unfocused
+  useEffect(() => {
+    if (focus) {
+      return;
+    }
+
+    setSmallImage(null);
+    setLargeImage(null);
+  }, [focus]);
 
   return (
     <View style={{ flex: 1 }}>

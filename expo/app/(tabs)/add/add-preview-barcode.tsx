@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useIsFocused } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   ActivityIndicator,
@@ -34,6 +35,7 @@ type Option = {
 };
 
 export default function AddPreviewBarcodeScreen() {
+  const focus = useIsFocused();
   const router = useRouter();
 
   const [imageWidth, setImageWidth] = useState(0);
@@ -49,11 +51,11 @@ export default function AddPreviewBarcodeScreen() {
   }>();
 
   const { data: supabaseProducts, isLoading: isLoadingProduct } = useQuery(
-    productData({ openfood: barcode })
+    productData({ openfood: barcode }),
   );
 
   const { data: openfoodProducts, isLoading: isLoadingOpenfood } = useQuery(
-    openfoodData({ barcode })
+    openfoodData({ barcode }),
   );
 
   const loadingBackup = isLoadingOpenfood && !supabaseProducts;
@@ -78,10 +80,11 @@ export default function AddPreviewBarcodeScreen() {
 
   // Initialize react-hook-form with zod resolver
   const {
-    control,
-    handleSubmit,
-    setValue,
+    reset,
     watch,
+    control,
+    setValue,
+    handleSubmit,
     formState: { errors },
   } = useForm<ServingData>({
     resolver: zodResolver(servingSchema),
@@ -154,7 +157,7 @@ export default function AddPreviewBarcodeScreen() {
 
     // Calculate amount - use base amount from selected option multiplied by quantity
     const selectedOption = servingSizeOptions.find(
-      (option) => option.id === data.sizeOption
+      (option) => option.id === data.sizeOption,
     );
     const amountMultiplier = data.quantity ? parseFloat(data.quantity) : 1;
     const amountGrams = (selectedOption?.value ?? 0) * amountMultiplier;
@@ -171,6 +174,18 @@ export default function AddPreviewBarcodeScreen() {
 
     router.replace("/");
   };
+
+  // Reset the page's state when is the screen is unfocused
+  useEffect(() => {
+    if (focus) {
+      return;
+    }
+
+    reset();
+
+    setImageWidth(0);
+    setImageHeight(0);
+  }, [focus, reset]);
 
   if (loading) {
     return (

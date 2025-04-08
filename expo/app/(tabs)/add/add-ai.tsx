@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import { CameraType, CameraView } from "expo-camera";
 import { useRouter } from "expo-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function AddAI() {
@@ -38,6 +38,15 @@ export default function AddAI() {
       params: { uri, width, height },
     });
   };
+
+  // Reset the page's state when is the screen is unfocused
+  useEffect(() => {
+    if (focus) {
+      return;
+    }
+
+    setFacing("back");
+  }, [focus]);
 
   if (!focus) {
     return null;

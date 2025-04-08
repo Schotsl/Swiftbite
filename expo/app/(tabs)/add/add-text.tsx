@@ -1,6 +1,7 @@
+import { useIsFocused } from "@react-navigation/native";
 import { fetch } from "expo/fetch";
 import { useRouter } from "expo-router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -20,6 +21,8 @@ import supabase from "@/utils/supabase";
 export default function AddText() {
   const abort = useRef<AbortController | null>(null);
   const timeout = useRef<NodeJS.Timeout | null>(null);
+
+  const focus = useIsFocused();
   const router = useRouter();
 
   const [query, setQuery] = useState("");
@@ -77,7 +80,7 @@ export default function AddText() {
         {
           signal,
           headers,
-        }
+        },
       );
 
       if (!response.ok) {
@@ -115,6 +118,17 @@ export default function AddText() {
 
     fetchProducts();
   };
+
+  // Reset the page's state when is the screen is unfocused
+  useEffect(() => {
+    if (focus) {
+      return;
+    }
+
+    setQuery("");
+    setLoading(false);
+    setProducts([]);
+  }, [focus]);
 
   const renderProductItem = ({ item }: { item: ProductSearch }) => (
     <TouchableOpacity
