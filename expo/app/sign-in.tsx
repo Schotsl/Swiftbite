@@ -32,7 +32,7 @@ export default function SignInScreen() {
       setError("password", { type: "custom", message: errorMessage });
     }
 
-    router.replace("/");
+    router.push("/");
   };
 
   const handleAppleSignIn = async () => {
@@ -46,7 +46,7 @@ export default function SignInScreen() {
       });
     }
 
-    router.replace("/");
+    router.push("/");
   };
 
   return (

@@ -62,7 +62,7 @@ export default function AddPreview() {
   }, [handleResize]);
 
   const handleSave = async () => {
-    router.replace("/");
+    router.push("/");
 
     const product = await insertProduct.mutateAsync({
       type: "openfood",
@@ -134,7 +134,7 @@ export default function AddPreview() {
   };
 
   const handleDiscard = () => {
-    router.replace("/add/add");
+    router.push("/add/add-overview");
   };
 
   // Reset the page's state when is the screen is unfocused

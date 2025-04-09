@@ -61,16 +61,14 @@ export default function RootLayout() {
     <HealthProvider interval={60000}>
       <Tabs
         screenOptions={({ route }: { route: { name: string } }) => ({
+          headerShown: false,
           tabBarActiveTintColor: "blue",
-          tabBarStyle: {
-            display: route.name.startsWith("add") ? "none" : "flex",
-          },
         })}
       >
         <Tabs.Screen
-          name="index"
+          name="add"
           options={{
-            title: "Home",
+            title: "Overview",
             tabBarIcon: ({ color }: { color: string }) => (
               <FontAwesome size={28} name="home" color={color} />
             ),
@@ -78,16 +76,7 @@ export default function RootLayout() {
         />
 
         <Tabs.Screen
-          name="add/add"
-          options={{
-            title: "Add",
-            headerShown: false,
-            tabBarButton: NavigationButton,
-          }}
-        />
-
-        <Tabs.Screen
-          name="add/add-ai"
+          name="index"
           options={{
             href: null,
             headerShown: false,
@@ -95,34 +84,9 @@ export default function RootLayout() {
         />
 
         <Tabs.Screen
-          name="add/add-barcode"
+          name="redirect"
           options={{
-            href: null,
-            headerShown: false,
-          }}
-        />
-
-        <Tabs.Screen
-          name="add/add-preview-barcode"
-          options={{
-            href: null,
-            headerShown: false,
-          }}
-        />
-
-        <Tabs.Screen
-          name="add/add-preview"
-          options={{
-            href: null,
-            headerShown: false,
-          }}
-        />
-
-        <Tabs.Screen
-          name="add/add-text"
-          options={{
-            href: null,
-            headerShown: false,
+            tabBarButton: (props) => <NavigationButton />,
           }}
         />
 

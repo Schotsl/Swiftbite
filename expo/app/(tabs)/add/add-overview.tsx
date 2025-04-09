@@ -14,6 +14,7 @@ export default function AddScreen() {
         padding: 32,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "#FFFFFF",
       }}
     >
       <Text
@@ -29,19 +30,19 @@ export default function AddScreen() {
       <Button
         title="Scan with AI"
         icon="scan"
-        onPress={() => router.replace("/add/add-ai")}
+        onPress={() => router.push("/add/add-ai")}
       />
 
       <Button
         title="Scan with Barcode"
         icon="barcode"
-        onPress={() => router.replace("/add/add-barcode")}
+        onPress={() => router.push("/add/add-barcode")}
       />
 
       <Button
         title="Search with Text"
         icon="search"
-        onPress={() => router.replace("/add/add-text")}
+        onPress={() => router.push("/add/add-text")}
       />
     </View>
   );
