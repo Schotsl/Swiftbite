@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const stream = await searchProducts(user!, query, lang);
+  const stream = await searchProducts(user!, query, lang, request.signal);
   const response = streamToResponse(stream);
 
   return response;

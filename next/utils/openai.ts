@@ -16,9 +16,16 @@ import {
   productSearchSchema,
 } from "@/schema";
 
+import searchProductCrawlerPrompt from "@/prompts/search-product-crawler";
+import searchProductStructurePrompt from "@/prompts/search-product-structure";
+
+import searchProductsCrawlerPrompt from "@/prompts/search-products-crawler";
+import searchProductsStructurePrompt from "@/prompts/search-products-structure";
+
 export async function estimateNutrition(
   user: string,
   url: string,
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
@@ -27,6 +34,7 @@ export async function estimateNutrition(
     model: openai(model),
     output: "object",
     schema: productGenerativeNutritionSchema,
+    abortSignal: signal,
     messages: [
       {
         role: "system",
@@ -56,23 +64,13 @@ export async function estimateNutrition(
 
     serving_unit: object.serving_unit as Enums<"unit">,
     quantity_unit: object.quantity_unit as Enums<"unit">,
-
-    iron_100g: object.iron_100g ?? null,
-    fiber_100g: object.fiber_100g ?? null,
-    calcium_100g: object.calcium_100g ?? null,
-    potassium_100g: object.potassium_100g ?? null,
-    cholesterol_100g: object.cholesterol_100g ?? null,
-
-    fat_saturated_100g: object.fat_saturated_100g ?? null,
-    fat_trans_100g: object.fat_trans_100g ?? null,
-    fat_unsaturated_100g: object.fat_unsaturated_100g ?? null,
-    carbohydrate_sugar_100g: object.carbohydrate_sugar_100g ?? null,
   };
 }
 
 export async function estimateVisuals(
   user: string,
   url: string,
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeVisuals> {
   const task: Enums<"task"> = "title_generation";
   const model = openai("gpt-4o-mini");
@@ -81,6 +79,7 @@ export async function estimateVisuals(
     model,
     output: "object",
     schema: productGenerativeVisualsSchema,
+    abortSignal: signal,
     messages: [
       {
         role: "system",
@@ -117,15 +116,16 @@ export async function searchProduct(
   lang: string,
   brand: string,
   quantity: string,
+  signal?: AbortSignal,
 ): Promise<ProductInsert | null> {
   const searchModel = openai.responses("gpt-4o");
   const searchResponse = await generateText({
     model: searchModel,
+    abortSignal: signal,
     messages: [
       {
         role: "system",
-        content:
-          'You are a product data assistant. Use the `web_search_preview` tool to find the single best product match for the user query, don\'t forget to add search terms like "nutrition" or "voedingswaarde" based on the language. Extract the product title, brand, serving size (be aware that quantity is the something different from the serving size, the quantity is the amount of product in the package, while the serving size is the amount of product you eat at once, often this is less than the quantity), and full nutritional information. Return this data as plain text. If no suitable match is found, try to find similar products via web search and *approximate* the nutritional values based on those similar products. Clearly state in your text response if the nutritional values are approximated',
+        content: searchProductCrawlerPrompt,
       },
       {
         role: "user",
@@ -143,16 +143,16 @@ export async function searchProduct(
     },
   });
 
-  const structureModel = openai.responses("gpt-4o");
+  const structureModel = openai.responses("gpt-4o-mini");
   const structureResponse = await generateObject({
     model: structureModel,
     output: "object",
     schema: productSchema,
+    abortSignal: signal,
     messages: [
       {
         role: "system",
-        content:
-          "You are a data processing assistant. Convert the provided text containing product information (title, brand, serving size, nutrition) into a structured JSON object matching the required schema (be aware that quantity is the something different from the serving size, the quantity is the amount of product in the package, while the serving size is the amount of product you eat at once, often this is less than the quantity). Ensure all property names are lowercase. Use 0 for missing optional values.",
+        content: searchProductStructurePrompt,
       },
       {
         role: "user",
@@ -165,22 +165,11 @@ export async function searchProduct(
   return {
     ...object,
 
-    brand: object.brand ?? null,
-
     serving_unit: object.serving_unit as Enums<"unit">,
     quantity_unit: object.quantity_unit as Enums<"unit">,
 
-    iron_100g: object.iron_100g ?? null,
-    fiber_100g: object.fiber_100g ?? null,
-    calcium_100g: object.calcium_100g ?? null,
-    potassium_100g: object.potassium_100g ?? null,
-    fat_trans_100g: object.fat_trans_100g ?? null,
-    cholesterol_100g: object.cholesterol_100g ?? null,
-    fat_saturated_100g: object.fat_saturated_100g ?? null,
-    fat_unsaturated_100g: object.fat_unsaturated_100g ?? null,
-    carbohydrate_sugar_100g: object.carbohydrate_sugar_100g ?? null,
-
     type: "estimation",
+
     image: null,
     icon_id: null,
     openfood_id: null,
@@ -192,15 +181,16 @@ export async function searchProducts(
   user: string,
   query: string,
   lang: string,
+  signal?: AbortSignal,
 ) {
   const searchModel = openai.responses("gpt-4o");
   const searchResponse = await generateText({
     model: searchModel,
+    abortSignal: signal,
     messages: [
       {
         role: "system",
-        content:
-          "You are a product search assistant that gathers specific product information to pass along to another AI. Use the `web_search_preview` tool to find multiple relevant products based on the user query. If the query is broad, return diverse results. For each product found, format its details strictly as: `title: [Product Title], brand: [Product Brand], quantity: [Product Quantity with Unit]`. List each product on a new line or clearly separate them. Do not include any other information or introductory/concluding text. If you start repeating yourself, stop the response.",
+        content: searchProductsCrawlerPrompt,
       },
       {
         role: "user",
@@ -217,17 +207,17 @@ export async function searchProducts(
       }),
     },
   });
-  console.log(searchResponse.text);
-  const structureModel = openai("gpt-4o");
+
+  const structureModel = openai("gpt-4o-mini");
   const structureStream = streamObject({
     model: structureModel,
     output: "array",
     schema: productSearchSchema,
+    abortSignal: signal,
     messages: [
       {
         role: "system",
-        content:
-          'You are a data processing assistant. Convert the provided plain text listing product details (formatted as `title: ..., brand: ..., quantity: ...`) into a stream of objects, each matching the required schema (title, brand, quantity as string). If the input text is empty, indicates no products were found (e.g., contains "NO_MATCH"), or cannot be reliably parsed, stream an empty array `[]` and stop.',
+        content: searchProductsStructurePrompt,
       },
       {
         role: "user",
@@ -242,6 +232,7 @@ export async function searchProducts(
 export async function normalizeTitle(
   user: string,
   title: string,
+  signal?: AbortSignal,
 ): Promise<string> {
   const task: Enums<"task"> = "title_normalization";
   const model = "gpt-4o-mini";
@@ -252,6 +243,7 @@ export async function normalizeTitle(
     schema: z.object({
       normalized_title: z.string().describe("Normalized food title"),
     }),
+    abortSignal: signal,
     messages: [
       {
         role: "system",

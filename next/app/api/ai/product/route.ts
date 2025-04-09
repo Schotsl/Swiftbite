@@ -38,8 +38,15 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const product = await searchProduct(user!, query, lang, brand, quantity);
-  const response = NextResponse.json(product);
+  const product = await searchProduct(
+    user!,
+    query,
+    lang,
+    brand,
+    quantity,
+    request.signal,
+  );
 
+  const response = NextResponse.json(product);
   return response;
 }

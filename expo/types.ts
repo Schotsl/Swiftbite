@@ -1,4 +1,4 @@
-import { Tables } from "./database.types";
+import { Enums, Tables } from "./database.types";
 
 export type Product = Tables<"product">;
 
@@ -6,7 +6,7 @@ export type ProductSearch = {
   title: string;
   brand: string;
   quantity: number;
-  openfood_id: string;
+  quantity_unit: Enums<"unit">;
 };
 
 export type ProductInsert = Omit<

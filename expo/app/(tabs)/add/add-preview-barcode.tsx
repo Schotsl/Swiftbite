@@ -117,7 +117,7 @@ export default function AddPreviewBarcodeScreen() {
     },
     { id: 7, label: "Sodium", value: `${product?.sodium_100g ?? 0}mg` },
   ];
-  console.log(product);
+
   const onSubmit = async (data: ServingData) => {
     // Insert the product if it doesn't already exist
     // let savedProduct = productSupabase;

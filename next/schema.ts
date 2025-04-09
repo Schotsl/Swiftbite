@@ -23,7 +23,7 @@ const nutritionSchema = z.object({
 
 export const productSchema = nutritionSchema.extend({
   title: z.string().describe("Product title"),
-  brand: z.string().describe("Product brand if available").optional(),
+  brand: z.string().describe("Product brand if available").nullable(),
   estimated: z.boolean().describe("True if nutritional values are estimated"),
 
   serving: z
@@ -63,7 +63,7 @@ export const productGenerativeNutritionSchema = productSchema.extend({
 
 export const productGenerativeVisualsSchema = z.object({
   title: z.string().describe("Product title"),
-  brand: z.string().describe("Product brand, if available").optional(),
+  brand: z.string().describe("Product brand, if available").nullable(),
 });
 
 export const productSearchSchema = z.object({

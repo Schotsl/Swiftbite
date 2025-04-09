@@ -139,7 +139,9 @@ export default function AddText() {
         <View style={styles.itemTextContainer}>
           <Text style={styles.itemTitle}>{item.title}</Text>
           <Text style={styles.itemBrand}>{item.brand}</Text>
-          <Text>{item.quantity}</Text>
+          <Text>
+            {item.quantity} {item.quantity_unit}
+          </Text>
         </View>
       </View>
     </TouchableOpacity>
@@ -172,7 +174,7 @@ export default function AddText() {
         <FlatList
           data={products}
           renderItem={renderProductItem}
-          keyExtractor={(item) => item.openfood_id || Math.random().toString()}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={styles.listContainer}
         />
       ) : (
