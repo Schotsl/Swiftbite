@@ -41,18 +41,22 @@ export function mapProduct(product: ProductV2, lang: string): ProductInsert {
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans
+    nutritionFats - nutritionSaturated - nutritionTrans,
   );
 
   return {
     serving,
     serving_unit: servingUnit,
 
+    quantity: product.quantity,
+    quantity_unit: product.quantity_unit,
+
     type: "openfood",
     title: getTitle(product, lang),
     brand: product.brands,
     image: product.image_front_url,
 
+    estimated: false,
     openfood_id: product.code,
 
     iron_100g: roundNumber(nutriments.iron_100g ?? 0, 2),
