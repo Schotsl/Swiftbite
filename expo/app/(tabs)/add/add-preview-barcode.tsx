@@ -23,7 +23,6 @@ import Table from "@/components/Table";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import openfoodData from "@/queries/openfoodData";
-import productData from "@/queries/productData";
 import { ServingData, servingSchema } from "@/schemas/serving";
 import { Product } from "@/types";
 
@@ -52,7 +51,7 @@ export default function AddPreviewBarcodeScreen() {
   }>();
 
   const { data: openfoodProduct, isLoading: isLoadingOpenfood } = useQuery(
-    openfoodData({ barcode, title, brand, quantity })
+    openfoodData({ barcode, title, brand, quantity }),
   );
 
   // const loadingBackup = isLoadingOpenfood && !supabaseProducts;
@@ -126,6 +125,10 @@ export default function AddPreviewBarcodeScreen() {
     // if (!productSupabase) {
     const savedProduct = await insertProduct.mutateAsync({
       type: "openfood",
+      estimated: product?.estimated ?? false,
+      quantity: product?.quantity ?? null,
+      quantity_unit: product?.quantity_unit ?? null,
+
       title: product?.title ?? null,
       brand: product?.brand ?? null,
       image: product?.image ?? null,
@@ -156,7 +159,7 @@ export default function AddPreviewBarcodeScreen() {
 
     // Calculate amount - use base amount from selected option multiplied by quantity
     const selectedOption = servingSizeOptions.find(
-      (option) => option.id === data.sizeOption
+      (option) => option.id === data.sizeOption,
     );
     const amountMultiplier = data.quantity ? parseFloat(data.quantity) : 1;
     const amountGrams = (selectedOption?.value ?? 0) * amountMultiplier;

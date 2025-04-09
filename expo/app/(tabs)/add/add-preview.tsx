@@ -66,6 +66,7 @@ export default function AddPreview() {
 
     const product = await insertProduct.mutateAsync({
       type: "openfood",
+      estimated: true,
       title: null,
       image: null,
       brand: null,
@@ -88,6 +89,8 @@ export default function AddPreview() {
       potassium_100g: null,
       protein_100g: null,
       sodium_100g: null,
+      quantity: null,
+      quantity_unit: null,
     });
 
     // The actual size will be updated by the server after analysis
