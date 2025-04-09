@@ -138,7 +138,7 @@ class HealthService {
 
   async getLatestWeight(): Promise<number> {
     const options = {
-      unit: "gram" as HealthUnit,
+      unit: "g" as HealthUnit,
     };
 
     return new Promise((resolve, reject) => {

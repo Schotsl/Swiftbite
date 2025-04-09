@@ -34,14 +34,13 @@ export function mapProduct(product: ProductV2, lang: string): ProductInsert {
 
   // TODO: This will probably fail in a lot of cases
   const serving = roundNumber(+product.serving_quantity);
-  const servingUnit =
-    product.serving_quantity_unit === "ml" ? "milliliter" : "gram";
+  const servingUnit = product.serving_quantity_unit;
 
   const nutritionFats = roundNumber(nutriments.fat_100g ?? 0);
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans,
+    nutritionFats - nutritionSaturated - nutritionTrans
   );
 
   return {

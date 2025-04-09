@@ -15,6 +15,7 @@ import {
 } from "react-native";
 
 import Input from "@/components/Input";
+import { Enums } from "@/database.types";
 import { ProductSearch } from "@/types";
 import supabase from "@/utils/supabase";
 
@@ -80,7 +81,7 @@ export default function AddText() {
         {
           signal,
           headers,
-        },
+        }
       );
 
       if (!response.ok) {
