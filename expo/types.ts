@@ -21,6 +21,16 @@ export type EntryWithProduct = Entry & {
   product: Product;
 };
 
+export type Meal = Tables<"meal">;
+export type MealProduct = Tables<"meal_product">;
+export type MealProductWithProduct = MealProduct & {
+  product: Product;
+};
+
+export type MealWithProduct = Meal & {
+  meal_product: MealProductWithProduct[];
+};
+
 export type GenerativeInsert = Omit<
   Generative,
   "uuid" | "user_id" | "created_at" | "updated_at"
