@@ -1,4 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { Redirect, SplashScreen, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
 import { AppState } from "react-native";
@@ -66,20 +67,30 @@ export default function RootLayout() {
         })}
       >
         <Tabs.Screen
+          name="index"
+          options={{
+            href: null,
+            headerShown: false,
+          }}
+        />
+
+        <Tabs.Screen
           name="add"
           options={{
             title: "Overview",
             tabBarIcon: ({ color }: { color: string }) => (
-              <FontAwesome size={28} name="home" color={color} />
+              <FontAwesome6 size={20} name="book" color={color} />
             ),
           }}
         />
 
         <Tabs.Screen
-          name="index"
+          name="stats"
           options={{
-            href: null,
-            headerShown: false,
+            title: "Stats",
+            tabBarIcon: ({ color }: { color: string }) => (
+              <FontAwesome6 size={20} name="chart-line" color={color} />
+            ),
           }}
         />
 
@@ -91,11 +102,25 @@ export default function RootLayout() {
         />
 
         <Tabs.Screen
-          name="settings"
+          name="automations"
           options={{
-            title: "Settings",
+            title: "Automations",
             tabBarIcon: ({ color }: { color: string }) => (
-              <FontAwesome size={28} name="cog" color={color} />
+              <FontAwesome6
+                size={20}
+                name="wand-magic-sparkles"
+                color={color}
+              />
+            ),
+          }}
+        />
+
+        <Tabs.Screen
+          name="personal"
+          options={{
+            title: "Personal",
+            tabBarIcon: ({ color }: { color: string }) => (
+              <FontAwesome6 size={20} name="circle-user" color={color} />
             ),
           }}
         />
