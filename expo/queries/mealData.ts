@@ -4,9 +4,7 @@ import { handleError } from "@/helper";
 import { MealWithProduct } from "@/types";
 import supabase from "@/utils/supabase";
 
-type mealDataType = {};
-
-export default function mealData({}: mealDataType) {
+export default function mealData() {
   return queryOptions({
     queryKey: ["mealData"],
     queryFn: async () => {

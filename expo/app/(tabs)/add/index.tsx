@@ -27,7 +27,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity
+        !entry.consumed_quantity,
     );
 
     const interval = processing ? 500 : false;

@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Slot, Stack, usePathname, useRouter } from "expo-router";
-import { View } from "react-native";
+import { Stack, useRouter } from "expo-router";
 import {
   Directions,
   Gesture,
@@ -16,7 +15,6 @@ export const unstable_settings = {
 
 export default function RootLayout() {
   const router = useRouter();
-  const pathname = usePathname();
 
   const query = new QueryClient();
 

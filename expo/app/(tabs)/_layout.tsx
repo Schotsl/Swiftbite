@@ -1,4 +1,3 @@
-import { FontAwesome } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Redirect, SplashScreen, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
