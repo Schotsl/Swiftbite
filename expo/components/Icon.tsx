@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 type IconProps = {
-  iconId: string;
+  iconId: string | null;
 };
 
 export default function Icon({ iconId }: IconProps) {

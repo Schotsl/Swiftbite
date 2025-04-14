@@ -1,8 +1,10 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { View } from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
 
-import ItemNew from "@/components/ItemNew";
+import Item from "@/components/Item";
+import ItemDelete from "@/components/ItemDelete";
 import mealData from "@/queries/mealData";
 
 export default function Tab() {
@@ -13,27 +15,34 @@ export default function Tab() {
   return (
     <View
       style={{
-        width: "100%",
-        borderWidth: 2,
+        height: "100%",
         borderColor: "#000000",
+        borderWidth: 2,
         borderLeftWidth: 0,
-        borderRightWidth: 0,
         borderBottomWidth: 0,
-        flexDirection: "column",
+        borderRightWidth: 0,
       }}
     >
-      {data.map((meal) => (
-        <Link href={`/(tabs)/automations/meal/${meal.uuid}`} key={meal.uuid}>
-          <ItemNew
-            title={meal.title}
-            subtitle={`${meal.meal_product.length} ingrediënten`}
-            iconId={meal.icon_id}
-            rightBottom={`420 kcal`}
-            subtitleIcon="bowl-food"
-            // rightBottom={`${meal.meal_product.length} ingrediënten`}
-          />
-        </Link>
-      ))}
+      <SwipeListView
+        data={data}
+        keyExtractor={(item) => item.uuid}
+        renderItem={({ item }) => {
+          return (
+            <Item
+              href={`/(tabs)/automations/meal/${item.uuid}`}
+              title={item.title}
+              subtitle={`${item.meal_product.length} ingrediënten`}
+              iconId={item.icon_id}
+              rightBottom={`420 kcal`}
+              subtitleIcon="bowl-food"
+            />
+          );
+        }}
+        renderHiddenItem={({ item }) => <ItemDelete onDelete={() => {}} />}
+        rightOpenValue={-75}
+        useNativeDriver
+        disableRightSwipe
+      />
     </View>
   );
 }

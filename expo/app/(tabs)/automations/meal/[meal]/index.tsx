@@ -6,7 +6,7 @@ import Button from "@/components/Button";
 import { Divider } from "@/components/Divider";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
-import ItemNew from "@/components/ItemNew";
+import Item from "@/components/Item";
 import Label from "@/components/Label";
 import mealData from "@/queries/mealData";
 
@@ -57,18 +57,14 @@ export default function DetailsScreen() {
                 const caloriesRounded = Math.round(calories);
 
                 return (
-                  <Link
+                  <Item
+                    small
                     href={`/(tabs)/automations/meal/${product.meal_id}/product/${product.product_id}`}
-                    key={product.product_id}
-                  >
-                    <ItemNew
-                      small
-                      border={false}
-                      title={product.product.title!}
-                      subtitle={`${caloriesRounded} kcal`}
-                      rightTop={`1 kom (100g)`}
-                    />
-                  </Link>
+                    border={false}
+                    title={product.product.title!}
+                    subtitle={`${caloriesRounded} kcal`}
+                    rightTop={`1 kom (100g)`}
+                  />
                 );
               })}
             </View>

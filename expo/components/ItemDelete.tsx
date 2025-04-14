@@ -2,18 +2,16 @@ import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 
-type SwipeableItemDeleteProps = {
+type ItemDeleteProps = {
   onDelete: () => void;
 };
 
-export default function SwipeableItemDelete({
-  onDelete,
-}: SwipeableItemDeleteProps) {
+export default function ItemDelete({ onDelete }: ItemDeleteProps) {
   return (
     <View
       style={{
-        height: "100%",
-        backgroundColor: "#FF3B30",
+        height: 75,
+        backgroundColor: "#ffb9b5",
       }}
     >
       <TouchableOpacity
@@ -25,9 +23,15 @@ export default function SwipeableItemDelete({
           position: "absolute",
           alignItems: "center",
           justifyContent: "center",
+
+          borderWidth: 2,
+          borderColor: "#000000",
+          borderTopWidth: 0,
+          borderLeftWidth: 0,
+          borderRightWidth: 0,
         }}
       >
-        <FontAwesome name="trash" size={24} color="#fff" />
+        <FontAwesome name="trash" size={24} color="#000" />
       </TouchableOpacity>
     </View>
   );
