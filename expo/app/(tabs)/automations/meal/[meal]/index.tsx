@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
 
 import Button from "@/components/Button";
@@ -8,14 +8,25 @@ import Header from "@/components/Header";
 import Input from "@/components/Input";
 import Item from "@/components/Item";
 import Label from "@/components/Label";
+import useDeleteMeal from "@/mutations/useDeleteMeal";
 import mealData from "@/queries/mealData";
 
 export default function DetailsScreen() {
+  const router = useRouter();
+
+  const deleteMeal = useDeleteMeal();
+
   const { meal: mealId } = useLocalSearchParams();
   const { data } = useSuspenseQuery({
     ...mealData(),
     select: (data) => data.find((meal) => meal.uuid === mealId),
   });
+
+  const handleDelete = (uuid: string) => {
+    deleteMeal.mutate(uuid);
+
+    router.replace("/(tabs)/automations");
+  };
 
   return (
     <View
@@ -28,7 +39,7 @@ export default function DetailsScreen() {
     >
       <Header title="Bewerk maaltijd" />
 
-      <View style={{ gap: 48 }}>
+      <View style={{ gap: 48, width: "100%" }}>
         <View style={{ gap: 32 }}>
           <Input
             name="title"
@@ -78,7 +89,7 @@ export default function DetailsScreen() {
             <Button
               title="Verwijder maaltijd"
               action="delete"
-              onPress={() => {}}
+              onPress={() => handleDelete(data!.uuid)}
             />
           </View>
         </View>

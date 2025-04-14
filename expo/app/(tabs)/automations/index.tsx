@@ -5,12 +5,18 @@ import { SwipeListView } from "react-native-swipe-list-view";
 
 import Item from "@/components/Item";
 import ItemDelete from "@/components/ItemDelete";
+import useDeleteMeal from "@/mutations/useDeleteMeal";
 import mealData from "@/queries/mealData";
 
 export default function Tab() {
+  const deleteMeal = useDeleteMeal();
   const { data } = useSuspenseQuery({
     ...mealData(),
   });
+
+  const handleDelete = (uuid: string) => {
+    deleteMeal.mutate(uuid);
+  };
 
   return (
     <View
@@ -38,7 +44,9 @@ export default function Tab() {
             />
           );
         }}
-        renderHiddenItem={({ item }) => <ItemDelete onDelete={() => {}} />}
+        renderHiddenItem={({ item }) => (
+          <ItemDelete onDelete={() => handleDelete(item.uuid)} />
+        )}
         rightOpenValue={-75}
         useNativeDriver
         disableRightSwipe
