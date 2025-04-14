@@ -10,11 +10,13 @@ import { Divider } from "@/components/Divider";
 import { EntryEditItems } from "@/components/EntryEditItems";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
+import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
 import useUpdateMealProduct from "@/mutations/useUpdateMealProduct";
 import mealData from "@/queries/mealData";
 import { ServingDataNew, servingSchemaNew } from "@/schemas/serving";
 
 export default function DetailsScreen() {
+  const deleteMealProduct = useDeleteMealProduct();
   const updateMealProduct = useUpdateMealProduct();
 
   const { meal: mealId, product: productId } = useLocalSearchParams();
@@ -25,7 +27,7 @@ export default function DetailsScreen() {
 
   // TODO: I could probably use a new query to get this specific data
   const productItem = mealItems?.meal_product.find(
-    (product) => product.product_id === productId,
+    (product) => product.product_id === productId
   )!;
 
   const { control, handleSubmit, setValue } = useForm<ServingDataNew>({
@@ -47,6 +49,18 @@ export default function DetailsScreen() {
     };
 
     await updateMealProduct.mutateAsync(object);
+
+    router.replace(`/(tabs)/automations/meal/${mealId}`);
+  };
+
+  const handleDelete = ({
+    mealId,
+    productId,
+  }: {
+    mealId: string;
+    productId: string;
+  }) => {
+    deleteMealProduct.mutate({ mealId, productId });
 
     router.replace(`/(tabs)/automations/meal/${mealId}`);
   };
@@ -101,7 +115,12 @@ export default function DetailsScreen() {
           <Button
             title="Ingrediënt verwijderen"
             action="delete"
-            onPress={() => {}}
+            onPress={() =>
+              handleDelete({
+                mealId: productItem.meal_id,
+                productId: productItem.product_id,
+              })
+            }
           />
         </View>
       </View>

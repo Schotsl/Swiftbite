@@ -59,7 +59,7 @@ export default function Input({
               {label && <Label label={label} />}
 
               <TextInput
-                value={value.toString()}
+                value={value ? value.toString() : ""}
                 style={{
                   padding: 12,
                   paddingVertical: 14,

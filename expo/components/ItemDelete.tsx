@@ -3,10 +3,14 @@ import React from "react";
 import { TouchableOpacity, View } from "react-native";
 
 type ItemDeleteProps = {
+  border?: boolean;
   onDelete: () => void;
 };
 
-export default function ItemDelete({ onDelete }: ItemDeleteProps) {
+export default function ItemDelete({
+  border = false,
+  onDelete,
+}: ItemDeleteProps) {
   return (
     <View
       style={{
@@ -24,7 +28,7 @@ export default function ItemDelete({ onDelete }: ItemDeleteProps) {
           alignItems: "center",
           justifyContent: "center",
 
-          borderWidth: 2,
+          borderWidth: border ? 2 : 0,
           borderColor: "#000000",
           borderTopWidth: 0,
           borderLeftWidth: 0,

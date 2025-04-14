@@ -36,10 +36,12 @@ export default function useDeleteMealProduct() {
           }
 
           // Filter out the product from the meal
-          return meal.meal_product.filter(
+          meal.meal_product.filter(
             (product: MealProductWithProduct) =>
               product.product_id !== productId
           );
+
+          return meal;
         })
       );
 
@@ -49,13 +51,13 @@ export default function useDeleteMealProduct() {
       // If the mutation fails, use the context returned from onMutate to roll back
       client.setQueryData(["mealData"], context?.previous);
 
-      console.log("[Mutation] failed to delete meal");
+      console.log("[Mutation] failed to delete meal_product");
     },
     onSettled: () => {
       // Always refetch after error or success
       client.invalidateQueries({ queryKey: ["mealData"] });
 
-      console.log("[Mutation] deleted meal");
+      console.log("[Mutation] deleted meal_product");
     },
   });
 }

@@ -1,20 +1,24 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 import Button from "@/components/Button";
 import { Divider } from "@/components/Divider";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import Item from "@/components/Item";
+import ItemDelete from "@/components/ItemDelete";
 import Label from "@/components/Label";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
+import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
 import mealData from "@/queries/mealData";
 
 export default function DetailsScreen() {
   const router = useRouter();
 
   const deleteMeal = useDeleteMeal();
+  const deleteMealProduct = useDeleteMealProduct();
 
   const { meal: mealId } = useLocalSearchParams();
   const { data } = useSuspenseQuery({
@@ -22,10 +26,20 @@ export default function DetailsScreen() {
     select: (data) => data.find((meal) => meal.uuid === mealId),
   });
 
-  const handleDelete = (uuid: string) => {
+  const handleMealDelete = (uuid: string) => {
     deleteMeal.mutate(uuid);
 
     router.replace("/(tabs)/automations");
+  };
+
+  const handleMealProductDelete = ({
+    mealId,
+    productId,
+  }: {
+    mealId: string;
+    productId: string;
+  }) => {
+    deleteMealProduct.mutate({ mealId, productId });
   };
 
   return (
@@ -51,7 +65,7 @@ export default function DetailsScreen() {
           <View>
             <Label label="Ingrediënten" />
 
-            <View
+            {/* <View
               style={{
                 width: "100%",
                 flexDirection: "column",
@@ -60,7 +74,7 @@ export default function DetailsScreen() {
                 borderRadius: 8,
               }}
             >
-              {data?.meal_product.map((product) => {
+              {data?.meal_product.map((product, index) => {
                 const quantity = product.quantity || 0;
                 const multiplier = product.product.calorie_100g || 0;
 
@@ -70,15 +84,66 @@ export default function DetailsScreen() {
                 return (
                   <Item
                     small
+                    key={product.product_id}
                     href={`/(tabs)/automations/meal/${product.meal_id}/product/${product.product_id}`}
-                    border={false}
+                    border={index !== data?.meal_product.length - 1}
                     title={product.product.title!}
                     subtitle={`${caloriesRounded} kcal`}
                     rightTop={`1 kom (100g)`}
                   />
                 );
               })}
-            </View>
+            </View> */}
+
+            <SwipeListView
+              style={{
+                width: "100%",
+                flexDirection: "column",
+                borderWidth: 2,
+                borderColor: "#000000",
+                borderRadius: 8,
+              }}
+              data={data?.meal_product}
+              keyExtractor={(item) => item.product_id}
+              renderItem={({ item, index }) => {
+                const length = data?.meal_product.length || 0;
+
+                const quantity = item.quantity || 0;
+                const multiplier = item.product.calorie_100g || 0;
+
+                const calories = (multiplier / 100) * quantity;
+                const caloriesRounded = Math.round(calories);
+
+                return (
+                  <Item
+                    small
+                    key={item.product_id}
+                    href={`/(tabs)/automations/meal/${item.meal_id}/product/${item.product_id}`}
+                    border={index !== length - 1}
+                    title={item.product.title!}
+                    subtitle={`${caloriesRounded} kcal`}
+                    rightTop={`1 kom (100g)`}
+                  />
+                );
+              }}
+              renderHiddenItem={({ item, index }) => {
+                const length = data?.meal_product.length || 0;
+                return (
+                  <ItemDelete
+                    border={index !== length - 1}
+                    onDelete={() =>
+                      handleMealProductDelete({
+                        mealId: item.meal_id,
+                        productId: item.product_id,
+                      })
+                    }
+                  />
+                );
+              }}
+              rightOpenValue={-75}
+              useNativeDriver
+              disableRightSwipe
+            />
           </View>
 
           <View style={{ gap: 24 }}>
@@ -89,7 +154,7 @@ export default function DetailsScreen() {
             <Button
               title="Verwijder maaltijd"
               action="delete"
-              onPress={() => handleDelete(data!.uuid)}
+              onPress={() => handleMealDelete(data!.uuid)}
             />
           </View>
         </View>
