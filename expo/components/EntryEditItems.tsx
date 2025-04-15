@@ -2,8 +2,8 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
 type EntryEditItemsProps = {
-  barcode?: string;
-  quantity?: string;
+  barcode: string | null;
+  quantity: string | null;
 };
 
 export function EntryEditItems({ barcode, quantity }: EntryEditItemsProps) {

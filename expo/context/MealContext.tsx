@@ -1,18 +1,23 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 import { MealData, ServingDataNew } from "@/schemas/serving";
-import { MealProductWithProduct, MealWithProduct } from "../types";
+import { MealProductWithProduct, MealWithProduct, Product } from "../types";
 
 import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
 import useUpdateMealProduct from "@/mutations/useUpdateMealProduct";
+import useInsertMealProduct from "@/mutations/useInsertMealProduct";
 import useUpdateMeal from "@/mutations/useUpdateMeal";
 
 type MealContextType = {
   meal: MealWithProduct | null;
 
-  // insertProduct: (productId: string, product: ProductData) => void;
   removeMealProduct: (productId: string) => void;
   updateMealProduct: (productId: string, product: ServingDataNew) => void;
+  insertMealProduct: (
+    productId: string,
+    product: ServingDataNew,
+    productObject: Product
+  ) => void;
 
   saveChanges: (meal: MealData) => Promise<void>;
 };
@@ -31,13 +36,51 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   const [meal, setMeal] = useState<MealWithProduct | null>(initialMeal);
 
   const [removedProductIds, setRemovedProductIds] = useState<string[]>([]);
+
+  const [insertedProducts, setInsertedProducts] = useState<
+    Record<string, ServingDataNew>
+  >({});
+
   const [updatedProducts, setUpdatedProducts] = useState<
     Record<string, ServingDataNew>
   >({});
 
   const updateMealMutation = useUpdateMeal();
+  const insertMealProductMutation = useInsertMealProduct();
   const updateMealProductMutation = useUpdateMealProduct();
   const deleteMealProductMutation = useDeleteMealProduct();
+
+  const insertMealProduct = (
+    productId: string,
+    product: ServingDataNew,
+    productObject: Product
+  ) => {
+    setMeal((currentMeal) => {
+      if (!currentMeal) {
+        return null;
+      }
+
+      return {
+        ...currentMeal,
+        meal_product: [
+          ...currentMeal.meal_product,
+          {
+            user_id: currentMeal.user_id,
+            meal_id: currentMeal.uuid,
+            product_id: productId,
+
+            created_at: new Date().toISOString(),
+            updated_at: null,
+
+            product: productObject,
+            quantity: product.quantity,
+          },
+        ],
+      };
+    });
+
+    setInsertedProducts((prev) => ({ ...prev, [productId]: product }));
+  };
 
   const updateMealProduct = (
     productId: string,
@@ -95,6 +138,17 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       return Promise.resolve();
     };
 
+    const insertMealProducts = Object.entries(insertedProducts);
+    const insertMealProductsPromises = insertMealProducts.map(
+      ([productId, product]) => {
+        const { quantity } = product;
+        return insertMealProductMutation.mutateAsync({
+          quantity,
+          meal_id: mealId,
+          product_id: productId,
+        });
+      }
+    );
     // Prepare the payload for the meal_product updates
     const updateMealProducts = Object.entries(updatedProducts);
     const updateMealProductsPromises = updateMealProducts.map(
@@ -125,6 +179,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
     await Promise.all([
       updateMealPromise(),
+      ...insertMealProductsPromises,
       ...updateMealProductsPromises,
       ...deleteMealProductsPromises,
     ]);
@@ -137,8 +192,11 @@ export const MealProvider: React.FC<MealProviderProps> = ({
     <MealContext.Provider
       value={{
         meal,
+
+        insertMealProduct,
         updateMealProduct,
         removeMealProduct,
+
         saveChanges,
       }}
     >

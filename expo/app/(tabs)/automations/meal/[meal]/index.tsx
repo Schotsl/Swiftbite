@@ -118,7 +118,14 @@ export default function DetailsScreen() {
           </View>
 
           <View style={{ gap: 24 }}>
-            <Button title="Voeg ingrediënt toe" onPress={() => {}} />
+            <Button
+              title="Voeg ingrediënt toe"
+              onPress={() => {
+                router.push(
+                  `/(tabs)/automations/meal/${mealId}/product/search`
+                );
+              }}
+            />
 
             <Button
               title="Wijzigingen opslaan"

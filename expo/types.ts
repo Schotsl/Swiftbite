@@ -31,6 +31,30 @@ export type MealWithProduct = Meal & {
   meal_product: MealProductWithProduct[];
 };
 
+export type MealInsert = Omit<
+  Tables<"meal">,
+  "uuid" | "user_id" | "created_at" | "updated_at"
+>;
+
+export type MealProductInsert = Omit<
+  Tables<"meal_product">,
+  "uuid" | "user_id" | "created_at" | "updated_at"
+>;
+
+export type MealProductWithProductInsert = Omit<
+  Tables<"meal_product"> & {
+    product: Product;
+  },
+  "uuid" | "user_id" | "created_at" | "updated_at"
+>;
+
+export type MealWithProductInsert = Omit<
+  Tables<"meal"> & {
+    meal_product: MealProductWithProductInsert[];
+  },
+  "uuid" | "user_id" | "created_at" | "updated_at"
+>;
+
 export type GenerativeInsert = Omit<
   Generative,
   "uuid" | "user_id" | "created_at" | "updated_at"

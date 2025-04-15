@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { router, useLocalSearchParams } from "expo-router";
 import { useForm } from "react-hook-form";
-import { Text, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 
 import Button from "@/components/Button";
 import { Divider } from "@/components/Divider";
@@ -10,41 +10,48 @@ import Header from "@/components/Header";
 import Input from "@/components/Input";
 import { useEditMeal } from "@/context/MealContext";
 import { ServingDataNew, servingSchemaNew } from "@/schemas/serving";
+import { useQuery } from "@tanstack/react-query";
+import openfoodData from "@/queries/openfoodData";
+import { Product } from "@/types";
 
 export default function DetailsScreen() {
-  const { product: productId, } = useLocalSearchParams<{ product: string }>();
+  const { insertMealProduct } = useEditMeal();
+  const {
+    meal: mealId,
+    title,
+    brand,
+    barcode,
+    quantity,
+  } = useLocalSearchParams<{
+    meal: string;
+    title?: string;
+    brand?: string;
+    barcode?: string;
+    quantity?: string;
+  }>();
 
-  const { meal, updateMealProduct, removeMealProduct } = useEditMeal();
-
-  const mealProducts = meal?.meal_product;
-  const mealProduct = mealProducts?.find(
-    (mealProduct) => mealProduct.product_id === productId
+  const { data, isLoading } = useQuery(
+    openfoodData({ barcode, title, brand, quantity })
   );
+
+  const product = data as Product;
 
   const { control, handleSubmit } = useForm<ServingDataNew>({
     resolver: zodResolver(servingSchemaNew),
     defaultValues: {
-      quantity: mealProduct?.quantity ?? 0,
+      quantity: 0,
     },
   });
 
-  const handleUpdate = async (data: ServingDataNew) => {
-    const { quantity } = data;
+  const handleInsert = (data: ServingDataNew) => {
+    insertMealProduct(product.uuid, data, product);
 
-    updateMealProduct(productId, { quantity });
-
-    if (router.canGoBack()) {
-      router.back();
-    }
+    router.replace(`/(tabs)/automations/meal/${mealId}`);
   };
 
-  const handleDelete = () => {
-    removeMealProduct(productId);
-
-    if (router.canGoBack()) {
-      router.back();
-    }
-  };
+  if (isLoading || !data) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <View
@@ -55,14 +62,13 @@ export default function DetailsScreen() {
         backgroundColor: "#fff",
       }}
     >
-      <Header
-        small
-        title={mealProduct?.product.title!}
-        content={mealProduct?.product.brand!}
-      />
+      <Header small title={product?.title!} content={product.brand!} />
 
       <View style={{ width: "100%", gap: 48 }}>
-        <EntryEditItems barcode="8710400418023" quantity="200 ml" />
+        <EntryEditItems
+          barcode={product?.openfood_id}
+          quantity={`${product?.quantity} ${product?.quantity_unit}`}
+        />
 
         <View style={{ width: "100%", gap: 16 }}>
           <Text style={{ fontSize: 16, fontWeight: "semibold" }}>Portie</Text>
@@ -85,16 +91,8 @@ export default function DetailsScreen() {
 
         <View style={{ gap: 24 }}>
           <Button
-            title="Ingrediënt bijwerken"
-            onPress={handleSubmit(handleUpdate)}
-          />
-
-          <Divider />
-
-          <Button
-            title="Ingrediënt verwijderen"
-            action="delete"
-            onPress={handleDelete}
+            title="Ingrediënt toevoegen"
+            onPress={handleSubmit(handleInsert)}
           />
         </View>
       </View>
