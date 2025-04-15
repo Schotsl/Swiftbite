@@ -5,7 +5,7 @@ import { MealProductWithProduct, MealWithProduct } from "@/types";
 import supabase from "@/utils/supabase";
 
 export default function useUpdateMealProduct() {
-  const queryClient = useQueryClient();
+  const query = useQueryClient();
 
   return useMutation({
     mutationFn: async (
@@ -27,42 +27,39 @@ export default function useUpdateMealProduct() {
     },
     onMutate: async (mealProductInsert: MealProductWithProduct) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic update
-      await queryClient.cancelQueries({ queryKey: ["mealData"] });
+      await query.cancelQueries({ queryKey: ["mealData"] });
+      const previous = query.getQueryData<MealWithProduct[]>(["mealData"]);
 
-      // Add the fake entry to the cache
-      queryClient.setQueryData<MealWithProduct[]>(
-        ["mealData"],
-        (previous = []) =>
-          previous?.map((meal) => {
-            // Ensure we have the right meal ID
-            if (meal.uuid !== mealProductInsert.meal_id) {
-              return meal;
-            }
+      const updated = previous?.map((meal) => {
+        // Ensure we have the right meal ID
+        if (meal.uuid !== mealProductInsert.meal_id) {
+          return meal;
+        }
 
-            // Replace the old product with the new one
-            meal.meal_product = meal.meal_product.map((product) => {
-              if (product.product_id !== mealProductInsert.product_id) {
-                return product;
-              }
+        // Replace the old product with the new one
+        meal.meal_product = meal.meal_product.map((product) => {
+          if (product.product_id !== mealProductInsert.product_id) {
+            return product;
+          }
 
-              return mealProductInsert;
-            });
+          return mealProductInsert;
+        });
 
-            return meal;
-          })
-      );
+        return meal;
+      });
 
-      const previous = queryClient.getQueryData(["mealData"]);
+      query.setQueryData(["mealData"], updated);
+
       return { previous };
     },
     // If the mutation fails, roll back
     onError: (error, variables, context) => {
-      queryClient.setQueryData(["mealData"], context?.previous);
+      query.setQueryData(["mealData"], context?.previous);
 
       console.log(`[Mutation] failed to update meal_product`);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["mealData"] });
+      query.invalidateQueries({ queryKey: ["mealData"] });
 
       console.log(`[Mutation] updated meal_product`);
     },

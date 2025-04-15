@@ -14,7 +14,7 @@ export const servingSchema = z.object({
       },
       {
         message: "Quantity must be a positive number",
-      },
+      }
     ),
 });
 
@@ -22,5 +22,10 @@ export const servingSchemaNew = z.object({
   quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
 });
 
+export const mealSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+});
+
 export type ServingData = z.infer<typeof servingSchema>;
 export type ServingDataNew = z.infer<typeof servingSchemaNew>;
+export type MealData = z.infer<typeof mealSchema>;

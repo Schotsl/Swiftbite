@@ -1,8 +1,10 @@
 import { View } from "react-native";
 import { Divider } from "@/components/Divider";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEditMeal } from "@/context/MealContext";
 import { SwipeListView } from "react-native-swipe-list-view";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 import Button from "@/components/Button";
 import Header from "@/components/Header";
@@ -10,14 +12,33 @@ import Input from "@/components/Input";
 import Label from "@/components/Label";
 import Item from "@/components/Item";
 import ItemDelete from "@/components/ItemDelete";
+import useDeleteMeal from "@/mutations/useDeleteMeal";
+import { MealData, mealSchema } from "@/schemas/serving";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function DetailsScreen() {
   const router = useRouter();
 
+  const deleteMeal = useDeleteMeal();
+
+  const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
   const { meal, removeMealProduct, saveChanges } = useEditMeal();
 
-  const handleSaveChanges = async () => {
-    await saveChanges();
+  const { control, handleSubmit } = useForm<MealData>({
+    resolver: zodResolver(mealSchema),
+    defaultValues: {
+      title: meal?.title || "",
+    },
+  });
+
+  const handleSave = async (data: MealData) => {
+    await saveChanges(data);
+
+    router.replace("/(tabs)/automations");
+  };
+
+  const handleDelete = async () => {
+    await deleteMeal.mutateAsync(mealId);
 
     router.replace("/(tabs)/automations");
   };
@@ -37,7 +58,7 @@ export default function DetailsScreen() {
         <View style={{ gap: 32 }}>
           <Input
             name="title"
-            value={meal?.title}
+            control={control}
             label="Titel"
             placeholder="Maaltijd titel"
           />
@@ -99,15 +120,17 @@ export default function DetailsScreen() {
           <View style={{ gap: 24 }}>
             <Button title="Voeg ingrediënt toe" onPress={() => {}} />
 
-            <Button title="Wijzigingen opslaan" onPress={handleSaveChanges} />
+            <Button
+              title="Wijzigingen opslaan"
+              onPress={handleSubmit(handleSave)}
+            />
 
             <Divider />
 
             <Button
               title="Verwijder maaltijd"
               action="delete"
-              // onPress={() => handleMealDelete(data!.uuid)}
-              onPress={() => {}}
+              onPress={handleDelete}
             />
           </View>
         </View>
