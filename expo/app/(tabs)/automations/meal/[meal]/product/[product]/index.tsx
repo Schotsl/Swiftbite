@@ -8,41 +8,42 @@ import { Divider } from "@/components/Divider";
 import { EntryEditItems } from "@/components/EntryEditItems";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
-import { useEditMeal } from "@/context/EditMealContext";
+import { useEditMeal } from "@/context/MealContext";
 import { ServingDataNew, servingSchemaNew } from "@/schemas/serving";
 
 export default function DetailsScreen() {
-  const { meal: mealId, product: productId } = useLocalSearchParams<{
-    meal: string;
-    product: string;
-  }>();
+  const { product: productId } = useLocalSearchParams<{ product: string }>();
 
-  const { meal, updateIngredientQuantity, removeIngredient } = useEditMeal();
+  const { meal, updateMealProduct, removeMealProduct } = useEditMeal();
 
-  const products = meal?.meal_product;
-  const productItem = products?.find(
-    (product) => product.product_id === productId
+  const mealProducts = meal?.meal_product;
+  const mealProduct = mealProducts?.find(
+    (mealProduct) => mealProduct.product_id === productId
   );
 
   const { control, handleSubmit } = useForm<ServingDataNew>({
     resolver: zodResolver(servingSchemaNew),
     defaultValues: {
-      quantity: productItem?.quantity ?? 0,
+      quantity: mealProduct?.quantity ?? 0,
     },
   });
 
   const handleUpdate = async (data: ServingDataNew) => {
     const { quantity } = data;
 
-    updateIngredientQuantity(productId, quantity);
+    updateMealProduct(productId, { quantity });
 
-    router.replace(`/(tabs)/automations/meal/${mealId}`);
+    if (router.canGoBack()) {
+      router.back();
+    }
   };
 
   const handleDelete = () => {
-    removeIngredient(productId);
+    removeMealProduct(productId);
 
-    router.replace(`/(tabs)/automations/meal/${mealId}`);
+    if (router.canGoBack()) {
+      router.back();
+    }
   };
 
   return (
@@ -56,8 +57,8 @@ export default function DetailsScreen() {
     >
       <Header
         small
-        title={productItem?.product.title!}
-        content={productItem?.product.brand!}
+        title={mealProduct?.product.title!}
+        content={mealProduct?.product.brand!}
       />
 
       <View style={{ width: "100%", gap: 48 }}>

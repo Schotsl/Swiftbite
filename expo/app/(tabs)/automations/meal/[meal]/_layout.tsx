@@ -2,7 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Slot, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator } from "react-native";
 
-import { EditMealProvider } from "@/context/EditMealContext";
+import { MealProvider } from "@/context/MealContext";
 import mealData from "@/queries/mealData";
 
 export default function MealLayout() {
@@ -18,8 +18,8 @@ export default function MealLayout() {
   }
 
   return (
-    <EditMealProvider initialMeal={data!}>
+    <MealProvider initialMeal={data!}>
       <Slot />
-    </EditMealProvider>
+    </MealProvider>
   );
 }

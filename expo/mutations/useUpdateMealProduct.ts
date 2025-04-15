@@ -9,7 +9,7 @@ export default function useUpdateMealProduct() {
 
   return useMutation({
     mutationFn: async (
-      mealProduct: MealProductWithProduct,
+      mealProduct: MealProductWithProduct
     ): Promise<MealProductWithProduct> => {
       const { product, ...rest } = mealProduct;
 
@@ -49,7 +49,7 @@ export default function useUpdateMealProduct() {
             });
 
             return meal;
-          }),
+          })
       );
 
       const previous = queryClient.getQueryData(["mealData"]);
@@ -59,12 +59,12 @@ export default function useUpdateMealProduct() {
     onError: (error, variables, context) => {
       queryClient.setQueryData(["mealData"], context?.previous);
 
-      console.log(`[Mutation] failed to insert entry`);
+      console.log(`[Mutation] failed to update meal_product`);
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["mealData"] });
 
-      console.log(`[Mutation] inserted entry`);
+      console.log(`[Mutation] updated meal_product`);
     },
   });
 }

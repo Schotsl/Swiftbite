@@ -1,49 +1,26 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { View } from "react-native";
+import { Divider } from "@/components/Divider";
+import { useRouter } from "expo-router";
+import { useEditMeal } from "@/context/MealContext";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 import Button from "@/components/Button";
-import { Divider } from "@/components/Divider";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
+import Label from "@/components/Label";
 import Item from "@/components/Item";
 import ItemDelete from "@/components/ItemDelete";
-import Label from "@/components/Label";
-import { useEditMeal } from "@/context/EditMealContext";
-import useDeleteMeal from "@/mutations/useDeleteMeal";
-import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
-import mealData from "@/queries/mealData";
 
 export default function DetailsScreen() {
   const router = useRouter();
 
-  const { meal, updateIngredientQuantity, removeIngredient } = useEditMeal();
+  const { meal, removeMealProduct, saveChanges } = useEditMeal();
 
-  // const deleteMeal = useDeleteMeal();
-  // const deleteMealProduct = useDeleteMealProduct();
+  const handleSaveChanges = async () => {
+    await saveChanges();
 
-  // const { meal: mealId } = useLocalSearchParams();
-  // const { data } = useSuspenseQuery({
-  //   ...mealData(),
-  //   select: (data) => data.find((meal) => meal.uuid === mealId),
-  // });
-
-  // const handleMealDelete = (uuid: string) => {
-  //   deleteMeal.mutate(uuid);
-
-  //   router.replace("/(tabs)/automations");
-  // };
-
-  // const handleMealProductDelete = ({
-  //   mealId,
-  //   productId,
-  // }: {
-  //   mealId: string;
-  //   productId: string;
-  // }) => {
-  //   deleteMealProduct.mutate({ mealId, productId });
-  // };
+    router.replace("/(tabs)/automations");
+  };
 
   return (
     <View
@@ -104,13 +81,7 @@ export default function DetailsScreen() {
                 return (
                   <ItemDelete
                     border={index !== length - 1}
-                    // onDelete={() =>
-                    //   handleMealProductDelete({
-                    //     mealId: item.meal_id,
-                    //     productId: item.product_id,
-                    //   })
-                    // }
-                    onDelete={() => {}}
+                    onDelete={() => removeMealProduct(item.product_id)}
                   />
                 );
               }}
@@ -127,6 +98,8 @@ export default function DetailsScreen() {
 
           <View style={{ gap: 24 }}>
             <Button title="Voeg ingrediënt toe" onPress={() => {}} />
+
+            <Button title="Wijzigingen opslaan" onPress={handleSaveChanges} />
 
             <Divider />
 

@@ -15,7 +15,7 @@ export default function mealData() {
 
       handleError(error);
 
-      console.log(`[Query] fetched ${data?.length} entries`);
+      console.log(`[Query] fetched ${data?.length} meal_product`);
 
       return data as MealWithProduct[];
     },

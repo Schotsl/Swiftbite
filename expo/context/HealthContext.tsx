@@ -14,26 +14,19 @@ import { HealthStatus } from "@/types";
 const WEIGHT_STORAGE_KEY = "@health_weight";
 const CALORIES_STORAGE_KEY = "@health_calories";
 
-interface HealthContextType {
+type HealthContextType = {
   weight: number | null;
   calories: number | null;
   weightStatus: HealthStatus;
   caloriesStatus: HealthStatus;
-}
+};
 
-const HealthContext = createContext<HealthContextType>({
-  weight: null,
-  calories: null,
-  weightStatus: HealthStatus.Loading,
-  caloriesStatus: HealthStatus.Loading,
-});
+const HealthContext = createContext<HealthContextType | undefined>(undefined);
 
-export const useHealth = () => useContext(HealthContext);
-
-interface HealthProviderProps {
+type HealthProviderProps = {
   children: ReactNode;
   interval: number;
-}
+};
 
 export const HealthProvider: React.FC<HealthProviderProps> = ({
   children,
@@ -144,4 +137,14 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
   return (
     <HealthContext.Provider value={value}>{children}</HealthContext.Provider>
   );
+};
+
+export const useHealth = () => {
+  const context = useContext(HealthContext);
+
+  if (context === undefined) {
+    throw new Error("useHealth must be used within an HealthProvider");
+  }
+
+  return context;
 };
