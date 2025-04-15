@@ -1,22 +1,31 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
+import * as crypto from "expo-crypto";
 import { MealData, ServingDataNew } from "@/schemas/serving";
-import { MealProductWithProduct, MealWithProduct, Product } from "../types";
+import {
+  MealProductWithProduct,
+  MealProductWithProductInsert,
+  MealWithProduct,
+  MealWithProductInsert,
+  Product,
+  ProductInsert,
+} from "../types";
 
 import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
 import useUpdateMealProduct from "@/mutations/useUpdateMealProduct";
 import useInsertMealProduct from "@/mutations/useInsertMealProduct";
 import useUpdateMeal from "@/mutations/useUpdateMeal";
+import useInsertMeal from "@/mutations/useInsertMeal";
 
 type MealContextType = {
-  meal: MealWithProduct | null;
+  meal: MealWithProduct | MealWithProductInsert;
 
   removeMealProduct: (productId: string) => void;
   updateMealProduct: (productId: string, product: ServingDataNew) => void;
   insertMealProduct: (
     productId: string,
     product: ServingDataNew,
-    productObject: Product
+    productObject: Product,
   ) => void;
 
   saveChanges: (meal: MealData) => Promise<void>;
@@ -25,18 +34,25 @@ type MealContextType = {
 const MealContext = createContext<MealContextType | undefined>(undefined);
 
 type MealProviderProps = {
+  initial?: MealWithProduct;
   children: ReactNode;
-  initialMeal: MealWithProduct;
 };
 
+const createMeal = (): MealWithProductInsert => ({
+  uuid: crypto.randomUUID(),
+  title: "",
+  meal_product: [],
+});
+
 export const MealProvider: React.FC<MealProviderProps> = ({
+  initial,
   children,
-  initialMeal,
 }) => {
-  const [meal, setMeal] = useState<MealWithProduct | null>(initialMeal);
+  const [meal, setMeal] = useState<MealWithProduct | MealWithProductInsert>(
+    initial || createMeal(),
+  );
 
   const [removedProductIds, setRemovedProductIds] = useState<string[]>([]);
-
   const [insertedProducts, setInsertedProducts] = useState<
     Record<string, ServingDataNew>
   >({});
@@ -45,6 +61,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
     Record<string, ServingDataNew>
   >({});
 
+  const insertMealMutation = useInsertMeal();
   const updateMealMutation = useUpdateMeal();
   const insertMealProductMutation = useInsertMealProduct();
   const updateMealProductMutation = useUpdateMealProduct();
@@ -53,29 +70,20 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   const insertMealProduct = (
     productId: string,
     product: ServingDataNew,
-    productObject: Product
+    productObject: ProductInsert,
   ) => {
     setMeal((currentMeal) => {
-      if (!currentMeal) {
-        return null;
-      }
+      const meal: MealProductWithProductInsert = {
+        meal_id: currentMeal.uuid!,
+        product_id: productId,
+
+        product: productObject,
+        quantity: product.quantity,
+      };
 
       return {
         ...currentMeal,
-        meal_product: [
-          ...currentMeal.meal_product,
-          {
-            user_id: currentMeal.user_id,
-            meal_id: currentMeal.uuid,
-            product_id: productId,
-
-            created_at: new Date().toISOString(),
-            updated_at: null,
-
-            product: productObject,
-            quantity: product.quantity,
-          },
-        ],
+        meal_product: [...currentMeal.meal_product, meal],
       };
     });
 
@@ -84,19 +92,15 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const updateMealProduct = (
     productId: string,
-    { quantity }: { quantity: number }
+    { quantity }: { quantity: number },
   ) => {
     setMeal((currentMeal) => {
-      if (!currentMeal) {
-        return null;
-      }
-
       return {
         ...currentMeal,
         meal_product: currentMeal.meal_product.map((mealProduct) =>
           mealProduct.product_id === productId
             ? { ...mealProduct, quantity }
-            : mealProduct
+            : mealProduct,
         ),
       };
     });
@@ -106,14 +110,10 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const removeMealProduct = (productId: string) => {
     setMeal((currentMeal) => {
-      if (!currentMeal) {
-        return null;
-      }
-
       return {
         ...currentMeal,
         meal_product: currentMeal.meal_product.filter(
-          (mealProduct) => mealProduct.product_id !== productId
+          (mealProduct) => mealProduct.product_id !== productId,
         ),
       };
     });
@@ -124,15 +124,27 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   const saveChanges = async (updatedMeal: MealData) => {
     if (!meal) return;
 
-    const mealId = meal.uuid;
+    const mealId = meal.uuid!;
+
+    if (!initial) {
+      // If the meal is new it's a Insert type
+      const mealCast = { ...meal, ...updatedMeal } as MealWithProductInsert;
+      await insertMealMutation.mutateAsync(mealCast);
+    }
 
     // Prepare the payload for the meal update
     const updateMealPromise = async () => {
+      if (!initial) {
+        return Promise.resolve();
+      }
+
       const { title } = updatedMeal;
       const { title: titleOriginal } = meal;
 
       if (title !== titleOriginal) {
-        return updateMealMutation.mutateAsync({ ...meal, title });
+        // If the meal isn't new it's a MealWithProduct
+        const mealCast = { ...meal, title } as MealWithProduct;
+        return updateMealMutation.mutateAsync(mealCast);
       }
 
       return Promise.resolve();
@@ -147,15 +159,16 @@ export const MealProvider: React.FC<MealProviderProps> = ({
           meal_id: mealId,
           product_id: productId,
         });
-      }
+      },
     );
+
     // Prepare the payload for the meal_product updates
     const updateMealProducts = Object.entries(updatedProducts);
     const updateMealProductsPromises = updateMealProducts.map(
       ([productId, product]) => {
         // Find the original product
-        const productOriginal = initialMeal.meal_product.find(
-          (product) => product.product_id === productId
+        const productOriginal = initial?.meal_product.find(
+          (product) => product.product_id === productId,
         );
 
         // If the product is not found return a resolved promise
@@ -169,12 +182,12 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
         // Update the product
         return updateMealProductMutation.mutateAsync(productUpdated);
-      }
+      },
     );
 
     // Prepare the payload for the meal_product delete
     const deleteMealProductsPromises = removedProductIds.map((productId) =>
-      deleteMealProductMutation.mutateAsync({ mealId, productId })
+      deleteMealProductMutation.mutateAsync({ mealId, productId }),
     );
 
     await Promise.all([

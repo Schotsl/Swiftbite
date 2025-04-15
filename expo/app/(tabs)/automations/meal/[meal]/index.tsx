@@ -1,10 +1,9 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { Divider } from "@/components/Divider";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEditMeal } from "@/context/MealContext";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 
 import Button from "@/components/Button";
 import Header from "@/components/Header";
@@ -24,7 +23,11 @@ export default function DetailsScreen() {
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
   const { meal, removeMealProduct, saveChanges } = useEditMeal();
 
-  const { control, handleSubmit } = useForm<MealData>({
+  const {
+    control,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<MealData>({
     resolver: zodResolver(mealSchema),
     defaultValues: {
       title: meal?.title || "",
@@ -97,6 +100,29 @@ export default function DetailsScreen() {
                   />
                 );
               }}
+              ListEmptyComponent={() => (
+                <View
+                  style={{
+                    height: 80,
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      opacity: 0.25,
+                      maxWidth: 200,
+                      textAlign: "center",
+
+                      fontSize: 14,
+                      fontWeight: "semibold",
+                    }}
+                  >
+                    Nog geen ingrediënten toegevoegd
+                  </Text>
+                </View>
+              )}
               renderHiddenItem={({ item, index }) => {
                 const length = meal?.meal_product.length || 0;
                 return (
@@ -130,6 +156,8 @@ export default function DetailsScreen() {
             <Button
               title="Wijzigingen opslaan"
               onPress={handleSubmit(handleSave)}
+              disabled={isSubmitting}
+              loading={isSubmitting}
             />
 
             <Divider />
@@ -138,6 +166,7 @@ export default function DetailsScreen() {
               title="Verwijder maaltijd"
               action="delete"
               onPress={handleDelete}
+              disabled={isSubmitting}
             />
           </View>
         </View>

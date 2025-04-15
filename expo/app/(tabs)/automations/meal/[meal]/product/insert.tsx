@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 import { ActivityIndicator, Text, View } from "react-native";
 
 import Button from "@/components/Button";
-import { Divider } from "@/components/Divider";
 import { EntryEditItems } from "@/components/EntryEditItems";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
@@ -31,7 +30,7 @@ export default function DetailsScreen() {
   }>();
 
   const { data, isLoading } = useQuery(
-    openfoodData({ barcode, title, brand, quantity })
+    openfoodData({ barcode, title, brand, quantity }),
   );
 
   const product = data as Product;

@@ -14,7 +14,7 @@ export const servingSchema = z.object({
       },
       {
         message: "Quantity must be a positive number",
-      }
+      },
     ),
 });
 

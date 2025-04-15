@@ -31,42 +31,49 @@ export default function Button({
         opacity: disabled || loading ? 0.6 : 1,
       }}
     >
-      {loading ? (
-        <ActivityIndicator size="small" color="#fff" />
-      ) : (
-        <View
+      <View
+        style={{
+          gap: 8,
+          flexDirection: "row",
+
+          alignItems: "center",
+          justifyContent: "center",
+
+          paddingVertical: 12,
+          paddingHorizontal: 32,
+
+          borderRadius: 8,
+          backgroundColor: "#fff",
+
+          borderWidth: 2,
+          borderColor: action === "delete" ? "#7C0000" : "#000",
+        }}
+      >
+        {loading ? (
+          <ActivityIndicator
+            size="small"
+            color={action === "delete" ? "#7C0000" : "#000"}
+          />
+        ) : (
+          <Ionicons
+            name={icon}
+            size={18}
+            color={action === "delete" ? "#7C0000" : "#000"}
+          />
+        )}
+
+        <Text
           style={{
-            gap: 8,
-            flexDirection: "row",
+            color: action === "delete" ? "#7C0000" : "#000",
 
-            alignItems: "center",
-            justifyContent: "center",
-
-            paddingVertical: 12,
-            paddingHorizontal: 32,
-
-            borderRadius: 8,
-            backgroundColor: "#fff",
-
-            borderWidth: 2,
-            borderColor: action === "delete" ? "#7C0000" : "#000",
+            textAlign: "center",
+            fontSize: 16,
+            fontWeight: "semibold",
           }}
         >
-          {icon && <Ionicons name={icon} size={18} color="#fff" />}
-
-          <Text
-            style={{
-              color: action === "delete" ? "#7C0000" : "#000",
-
-              textAlign: "center",
-              fontSize: 16,
-              fontWeight: "semibold",
-            }}
-          >
-            {title}
-          </Text>
-        </View>
-      )}
+          {title}
+        </Text>
+      </View>
 
       <View
         style={{

@@ -38,11 +38,11 @@ export default function useDeleteMealProduct() {
           // Filter out the product from the meal
           meal.meal_product.filter(
             (product: MealProductWithProduct) =>
-              product.product_id !== productId
+              product.product_id !== productId,
           );
 
           return meal;
-        })
+        }),
       );
 
       return { previous };

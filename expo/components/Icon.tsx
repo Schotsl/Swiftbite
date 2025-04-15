@@ -35,6 +35,8 @@ export default function Icon({ iconId }: IconProps) {
         style={{
           width: 42,
           height: 42,
+          position: "absolute",
+
           borderRadius: 42,
           borderWidth: 2,
           borderColor: "#000000",

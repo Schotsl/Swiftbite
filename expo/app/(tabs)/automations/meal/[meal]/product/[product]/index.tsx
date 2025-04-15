@@ -12,13 +12,13 @@ import { useEditMeal } from "@/context/MealContext";
 import { ServingDataNew, servingSchemaNew } from "@/schemas/serving";
 
 export default function DetailsScreen() {
-  const { product: productId, } = useLocalSearchParams<{ product: string }>();
+  const { product: productId } = useLocalSearchParams<{ product: string }>();
 
   const { meal, updateMealProduct, removeMealProduct } = useEditMeal();
 
   const mealProducts = meal?.meal_product;
   const mealProduct = mealProducts?.find(
-    (mealProduct) => mealProduct.product_id === productId
+    (mealProduct) => mealProduct.product_id === productId,
   );
 
   const { control, handleSubmit } = useForm<ServingDataNew>({

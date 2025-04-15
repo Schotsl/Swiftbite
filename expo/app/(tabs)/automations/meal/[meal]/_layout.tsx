@@ -18,7 +18,7 @@ export default function MealLayout() {
   }
 
   return (
-    <MealProvider initialMeal={data!}>
+    <MealProvider initial={data!}>
       <Slot />
     </MealProvider>
   );

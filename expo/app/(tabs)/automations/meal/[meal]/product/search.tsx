@@ -83,7 +83,7 @@ export default function AddText() {
         {
           signal,
           headers,
-        }
+        },
       );
 
       if (!response.ok) {

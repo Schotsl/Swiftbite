@@ -1,10 +1,5 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import {
-  ExternalPathString,
-  Href,
-  RelativePathString,
-  router,
-} from "expo-router";
+import { Href, router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
 import Icon from "./Icon";

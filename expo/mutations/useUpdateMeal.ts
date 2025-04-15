@@ -27,7 +27,7 @@ export default function useUpdateMeal() {
 
       const previous = query.getQueryData<MealWithProduct[]>(["mealData"]);
       const updated = previous?.map((meal) =>
-        meal.uuid === mealUpdate.uuid ? { ...meal, ...mealUpdate } : meal
+        meal.uuid === mealUpdate.uuid ? { ...meal, ...mealUpdate } : meal,
       );
 
       query.setQueryData<MealWithProduct[]>(["mealData"], updated);
