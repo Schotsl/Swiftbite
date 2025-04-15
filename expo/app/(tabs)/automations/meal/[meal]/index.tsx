@@ -10,6 +10,7 @@ import Input from "@/components/Input";
 import Item from "@/components/Item";
 import ItemDelete from "@/components/ItemDelete";
 import Label from "@/components/Label";
+import { useEditMeal } from "@/context/EditMealContext";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
 import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
 import mealData from "@/queries/mealData";
@@ -17,30 +18,32 @@ import mealData from "@/queries/mealData";
 export default function DetailsScreen() {
   const router = useRouter();
 
-  const deleteMeal = useDeleteMeal();
-  const deleteMealProduct = useDeleteMealProduct();
+  const { meal, updateIngredientQuantity, removeIngredient } = useEditMeal();
 
-  const { meal: mealId } = useLocalSearchParams();
-  const { data } = useSuspenseQuery({
-    ...mealData(),
-    select: (data) => data.find((meal) => meal.uuid === mealId),
-  });
+  // const deleteMeal = useDeleteMeal();
+  // const deleteMealProduct = useDeleteMealProduct();
 
-  const handleMealDelete = (uuid: string) => {
-    deleteMeal.mutate(uuid);
+  // const { meal: mealId } = useLocalSearchParams();
+  // const { data } = useSuspenseQuery({
+  //   ...mealData(),
+  //   select: (data) => data.find((meal) => meal.uuid === mealId),
+  // });
 
-    router.replace("/(tabs)/automations");
-  };
+  // const handleMealDelete = (uuid: string) => {
+  //   deleteMeal.mutate(uuid);
 
-  const handleMealProductDelete = ({
-    mealId,
-    productId,
-  }: {
-    mealId: string;
-    productId: string;
-  }) => {
-    deleteMealProduct.mutate({ mealId, productId });
-  };
+  //   router.replace("/(tabs)/automations");
+  // };
+
+  // const handleMealProductDelete = ({
+  //   mealId,
+  //   productId,
+  // }: {
+  //   mealId: string;
+  //   productId: string;
+  // }) => {
+  //   deleteMealProduct.mutate({ mealId, productId });
+  // };
 
   return (
     <View
@@ -57,7 +60,7 @@ export default function DetailsScreen() {
         <View style={{ gap: 32 }}>
           <Input
             name="title"
-            value={data?.title}
+            value={meal?.title}
             label="Titel"
             placeholder="Maaltijd titel"
           />
@@ -73,10 +76,10 @@ export default function DetailsScreen() {
                 borderColor: "#000000",
                 borderRadius: 8,
               }}
-              data={data?.meal_product}
+              data={meal?.meal_product}
               keyExtractor={(item) => item.product_id}
               renderItem={({ item, index }) => {
-                const length = data?.meal_product.length || 0;
+                const length = meal?.meal_product.length || 0;
 
                 const quantity = item.quantity || 0;
                 const multiplier = item.product.calorie_100g || 0;
@@ -97,16 +100,17 @@ export default function DetailsScreen() {
                 );
               }}
               renderHiddenItem={({ item, index }) => {
-                const length = data?.meal_product.length || 0;
+                const length = meal?.meal_product.length || 0;
                 return (
                   <ItemDelete
                     border={index !== length - 1}
-                    onDelete={() =>
-                      handleMealProductDelete({
-                        mealId: item.meal_id,
-                        productId: item.product_id,
-                      })
-                    }
+                    // onDelete={() =>
+                    //   handleMealProductDelete({
+                    //     mealId: item.meal_id,
+                    //     productId: item.product_id,
+                    //   })
+                    // }
+                    onDelete={() => {}}
                   />
                 );
               }}
@@ -129,7 +133,8 @@ export default function DetailsScreen() {
             <Button
               title="Verwijder maaltijd"
               action="delete"
-              onPress={() => handleMealDelete(data!.uuid)}
+              // onPress={() => handleMealDelete(data!.uuid)}
+              onPress={() => {}}
             />
           </View>
         </View>

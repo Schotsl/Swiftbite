@@ -1,7 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { router, useLocalSearchParams } from "expo-router";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 
@@ -10,57 +8,39 @@ import { Divider } from "@/components/Divider";
 import { EntryEditItems } from "@/components/EntryEditItems";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
-import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
-import useUpdateMealProduct from "@/mutations/useUpdateMealProduct";
-import mealData from "@/queries/mealData";
+import { useEditMeal } from "@/context/EditMealContext";
 import { ServingDataNew, servingSchemaNew } from "@/schemas/serving";
 
 export default function DetailsScreen() {
-  const deleteMealProduct = useDeleteMealProduct();
-  const updateMealProduct = useUpdateMealProduct();
+  const { meal: mealId, product: productId } = useLocalSearchParams<{
+    meal: string;
+    product: string;
+  }>();
 
-  const { meal: mealId, product: productId } = useLocalSearchParams();
-  const { data: mealItems } = useSuspenseQuery({
-    ...mealData(),
-    select: (data) => data.find((meal) => meal.uuid === mealId),
-  });
+  const { meal, updateIngredientQuantity, removeIngredient } = useEditMeal();
 
-  // TODO: I could probably use a new query to get this specific data
-  const productItem = mealItems?.meal_product.find(
+  const products = meal?.meal_product;
+  const productItem = products?.find(
     (product) => product.product_id === productId
-  )!;
+  );
 
-  const { control, handleSubmit, setValue } = useForm<ServingDataNew>({
+  const { control, handleSubmit } = useForm<ServingDataNew>({
     resolver: zodResolver(servingSchemaNew),
+    defaultValues: {
+      quantity: productItem?.quantity ?? 0,
+    },
   });
-
-  // TODO: This is less than ideal but it's a quick fix to get the form to work
-  useEffect(() => {
-    if (!productItem) return;
-
-    setValue("quantity", productItem.quantity ?? 0);
-  }, [productItem, setValue]);
 
   const handleUpdate = async (data: ServingDataNew) => {
     const { quantity } = data;
-    const object = {
-      ...productItem,
-      quantity,
-    };
 
-    await updateMealProduct.mutateAsync(object);
+    updateIngredientQuantity(productId, quantity);
 
     router.replace(`/(tabs)/automations/meal/${mealId}`);
   };
 
-  const handleDelete = ({
-    mealId,
-    productId,
-  }: {
-    mealId: string;
-    productId: string;
-  }) => {
-    deleteMealProduct.mutate({ mealId, productId });
+  const handleDelete = () => {
+    removeIngredient(productId);
 
     router.replace(`/(tabs)/automations/meal/${mealId}`);
   };
@@ -106,8 +86,6 @@ export default function DetailsScreen() {
           <Button
             title="Ingrediënt bijwerken"
             onPress={handleSubmit(handleUpdate)}
-            loading={updateMealProduct.isPending}
-            disabled={updateMealProduct.isPending}
           />
 
           <Divider />
@@ -115,12 +93,7 @@ export default function DetailsScreen() {
           <Button
             title="Ingrediënt verwijderen"
             action="delete"
-            onPress={() =>
-              handleDelete({
-                mealId: productItem.meal_id,
-                productId: productItem.product_id,
-              })
-            }
+            onPress={handleDelete}
           />
         </View>
       </View>
