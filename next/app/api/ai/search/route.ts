@@ -12,14 +12,14 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 

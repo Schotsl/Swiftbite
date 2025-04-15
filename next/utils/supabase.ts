@@ -3,7 +3,7 @@ import { createClient as createClientSupabase } from "@supabase/supabase-js";
 
 export const supabase = createClientSupabase(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
+  process.env.SUPABASE_SERVICE_KEY!
 );
 
 export async function getUser(request: Request) {
