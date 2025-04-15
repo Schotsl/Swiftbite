@@ -70,6 +70,11 @@ export default function Index() {
         renderHiddenItem={({ item }) => (
           <ItemDelete onDelete={() => handleDelete(item.uuid)} />
         )}
+        onRowDidOpen={(rowKey, rowMap) => {
+          setTimeout(() => {
+            rowMap[rowKey]?.closeRow();
+          }, 500);
+        }}
         rightOpenValue={-75}
         useNativeDriver
         disableRightSwipe

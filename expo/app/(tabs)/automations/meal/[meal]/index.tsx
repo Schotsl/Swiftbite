@@ -65,36 +65,6 @@ export default function DetailsScreen() {
           <View>
             <Label label="Ingrediënten" />
 
-            {/* <View
-              style={{
-                width: "100%",
-                flexDirection: "column",
-                borderWidth: 2,
-                borderColor: "#000000",
-                borderRadius: 8,
-              }}
-            >
-              {data?.meal_product.map((product, index) => {
-                const quantity = product.quantity || 0;
-                const multiplier = product.product.calorie_100g || 0;
-
-                const calories = (multiplier / 100) * quantity;
-                const caloriesRounded = Math.round(calories);
-
-                return (
-                  <Item
-                    small
-                    key={product.product_id}
-                    href={`/(tabs)/automations/meal/${product.meal_id}/product/${product.product_id}`}
-                    border={index !== data?.meal_product.length - 1}
-                    title={product.product.title!}
-                    subtitle={`${caloriesRounded} kcal`}
-                    rightTop={`1 kom (100g)`}
-                  />
-                );
-              })}
-            </View> */}
-
             <SwipeListView
               style={{
                 width: "100%",
@@ -139,6 +109,11 @@ export default function DetailsScreen() {
                     }
                   />
                 );
+              }}
+              onRowDidOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowMap[rowKey]?.closeRow();
+                }, 500);
               }}
               rightOpenValue={-75}
               useNativeDriver
