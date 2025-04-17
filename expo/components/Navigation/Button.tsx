@@ -1,15 +1,38 @@
 import Ionicons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import { TouchableOpacity } from "react-native";
+import Button from "../Button";
+import { useState } from "react";
 
 export default function NavigationButton() {
   const router = useRouter();
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const [permission, requestPermission] = useCameraPermissions();
 
   const handlePress = async () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleSearch = () => {
+    setIsOpen(false);
+
+    router.push("/add/add-text");
+  };
+
+  const handleManual = () => {
+    setIsOpen(false);
+  };
+
+  const handleEstimate = () => {
+    setIsOpen(false);
+  };
+
+  const handleCamera = async () => {
+    setIsOpen(false);
     // Ask for camera permissions if not granted
     if (!permission?.granted) {
       const response = await requestPermission();
@@ -20,29 +43,94 @@ export default function NavigationButton() {
       }
     }
 
-    // Navigate to the add screen
-    router.push("/add");
-    router.push("/add/add-overview");
+    router.push("/add/add-ai");
   };
 
   return (
-    <TouchableOpacity
-      onPress={handlePress}
-      style={{
-        top: -32,
-        left: "50%",
-        width: 62,
-        height: 62,
-        position: "absolute",
-        transform: [{ translateX: -32 }],
-        backgroundColor: "blue",
+    <View>
+      {isOpen && (
+        <View
+          style={{
+            width: 175,
+            position: "absolute",
+            bottom: 71,
+            left: "50%",
+            gap: 16,
+            transform: [{ translateX: -87.5 }],
+          }}
+        >
+          <Button
+            onPress={handleManual}
+            icon="rectangle-list"
+            title="Handmatig"
+          />
 
-        alignItems: "center",
-        borderRadius: 50,
-        justifyContent: "center",
-      }}
-    >
-      <Ionicons name="plus" size={32} color="white" />
-    </TouchableOpacity>
+          <Button
+            onPress={handleEstimate}
+            icon="wand-magic-sparkles"
+            title="Inschatting"
+          />
+
+          <Button
+            onPress={handleSearch}
+            icon="magnifying-glass"
+            title="Zoeken"
+          />
+
+          <Button onPress={handleCamera} icon="camera" title="Camera" />
+        </View>
+      )}
+      <View
+        style={{
+          top: -49,
+          left: "50%",
+          position: "absolute",
+          transform: [{ translateX: -32 }, { rotate: "45deg" }],
+
+          borderWidth: 2,
+          borderColor: "#000",
+          borderRadius: 100,
+
+          borderTopColor: "transparent",
+          borderLeftColor: "transparent",
+        }}
+      >
+        <View
+          style={{
+            borderWidth: 4,
+            borderColor: "#fff",
+            borderRadius: 100,
+
+            borderTopColor: "transparent",
+            borderLeftColor: "transparent",
+          }}
+        >
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={handlePress}
+            style={{
+              width: 62,
+              height: 62,
+              transform: [{ rotate: "45deg" }],
+
+              borderWidth: 2,
+              borderColor: "#000",
+              borderRadius: 100,
+
+              backgroundColor: "#fff",
+
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {isOpen ? (
+              <Ionicons name="close" size={28} color="#000" />
+            ) : (
+              <Ionicons name="plus" size={28} color="#000" />
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
   );
 }

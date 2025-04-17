@@ -1,11 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
 type ButtonProps = {
   onPress: () => void;
 
-  icon?: keyof typeof Ionicons.glyphMap;
+  icon?: keyof typeof FontAwesome6.glyphMap;
   title: string;
   action?: "primary" | "delete";
   loading?: boolean;
@@ -55,7 +55,7 @@ export default function Button({
             color={action === "delete" ? "#7C0000" : "#000"}
           />
         ) : (
-          <Ionicons
+          <FontAwesome6
             name={icon}
             size={18}
             color={action === "delete" ? "#7C0000" : "#000"}

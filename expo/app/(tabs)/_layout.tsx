@@ -62,7 +62,15 @@ export default function RootLayout() {
       <Tabs
         screenOptions={({ route }: { route: { name: string } }) => ({
           headerShown: false,
-          tabBarActiveTintColor: "blue",
+          tabBarActiveTintColor: "#000",
+          tabBarStyle: {
+            paddingTop: 10,
+            paddingBottom: 10,
+            paddingLeft: 12,
+            paddingRight: 12,
+            borderTopWidth: 2,
+            borderTopColor: "#000",
+          },
         })}
       >
         <Tabs.Screen
@@ -78,7 +86,12 @@ export default function RootLayout() {
           options={{
             title: "Overview",
             tabBarIcon: ({ color }: { color: string }) => (
-              <FontAwesome6 size={20} name="book" color={color} />
+              <FontAwesome6
+                size={18}
+                name="book"
+                color={color}
+                style={{ marginBottom: 4 }}
+              />
             ),
           }}
         />
@@ -88,7 +101,12 @@ export default function RootLayout() {
           options={{
             title: "Stats",
             tabBarIcon: ({ color }: { color: string }) => (
-              <FontAwesome6 size={20} name="chart-line" color={color} />
+              <FontAwesome6
+                size={18}
+                name="chart-line"
+                color={color}
+                style={{ marginBottom: 4 }}
+              />
             ),
           }}
         />
@@ -106,9 +124,10 @@ export default function RootLayout() {
             title: "Automations",
             tabBarIcon: ({ color }: { color: string }) => (
               <FontAwesome6
-                size={20}
+                size={18}
                 name="wand-magic-sparkles"
                 color={color}
+                style={{ marginBottom: 4 }}
               />
             ),
           }}
@@ -119,7 +138,12 @@ export default function RootLayout() {
           options={{
             title: "Personal",
             tabBarIcon: ({ color }: { color: string }) => (
-              <FontAwesome6 size={20} name="circle-user" color={color} />
+              <FontAwesome6
+                size={18}
+                name="circle-user"
+                color={color}
+                style={{ marginBottom: 4 }}
+              />
             ),
           }}
         />

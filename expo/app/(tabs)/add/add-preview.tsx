@@ -134,7 +134,7 @@ export default function AddPreview() {
   };
 
   const handleDiscard = () => {
-    router.push("/add/add-overview");
+    router.push("/(tabs)");
   };
 
   // Reset the page's state when is the screen is unfocused
