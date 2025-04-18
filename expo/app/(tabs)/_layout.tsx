@@ -3,7 +3,7 @@ import { Redirect, SplashScreen, Tabs } from "expo-router";
 import { useEffect, useState } from "react";
 import { AppState } from "react-native";
 
-import NavigationButton from "@/components/Navigation/Button";
+import NavigationAdd from "@/components/Navigation/Add";
 import { HealthProvider } from "@/context/HealthContext";
 import supabase from "@/utils/supabase";
 
@@ -114,7 +114,7 @@ export default function RootLayout() {
         <Tabs.Screen
           name="redirect"
           options={{
-            tabBarButton: (props) => <NavigationButton />,
+            tabBarButton: (props) => <NavigationAdd />,
           }}
         />
 
