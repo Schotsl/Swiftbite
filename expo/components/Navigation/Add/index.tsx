@@ -4,6 +4,8 @@ import { useState } from "react";
 import NavigationAddList from "./List";
 import NavigationAddInner from "./Inner";
 
+import ModalBackground from "@/components/Modal/Background";
+
 export default function NavigationAdd() {
   const [open, setOpen] = useState(false);
 
@@ -15,7 +17,7 @@ export default function NavigationAdd() {
         animationType="none"
         onRequestClose={() => setOpen(false)}
       >
-        <View style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.75)" }} />
+        <ModalBackground onPress={() => setOpen(false)} />
 
         <NavigationAddList onClose={() => setOpen(false)} />
 

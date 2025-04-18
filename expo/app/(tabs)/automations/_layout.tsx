@@ -1,17 +1,11 @@
-import { Link, Stack } from "expo-router";
-import { Text } from "react-native";
+import { Stack } from "expo-router";
 
 export default function RootLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
         gestureEnabled: true,
-        headerRight: () => (
-          <Link href="/automations/meal/insert">
-            <Text>Add</Text>
-          </Link>
-        ),
       }}
     >
       <Stack.Screen name="index" />
