@@ -2,7 +2,7 @@ import { handleError } from "@/helper";
 import { estimateNutrition, estimateVisuals } from "@/utils/openai";
 import { after } from "next/server";
 
-import { fetchGenerative, supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
 import { fetchEntry, fetchProduct } from "@/utils/supabase";
 
