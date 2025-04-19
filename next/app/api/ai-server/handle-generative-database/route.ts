@@ -2,7 +2,7 @@ import { handleError } from "@/helper";
 import { estimateNutrition, estimateVisuals } from "@/utils/openai";
 import { after } from "next/server";
 
-import { supabase } from "@/utils/supabase";
+import { fetchGenerative, supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
 import { fetchEntry, fetchProduct } from "@/utils/supabase";
 
@@ -28,10 +28,8 @@ export async function POST(request: Request) {
   }
 
   after(async () => {
-    const [productObject, entryObject] = await Promise.all([
-      fetchProduct(generativeProduct),
-      fetchEntry(generativeProduct),
-    ]);
+    const generativeObject = await fetchGenerative(generativeProduct);
+    const productObject = await fetchProduct(generativeObject.product_id);
 
     const title = productObject.title;
     const content = body.record.content;
