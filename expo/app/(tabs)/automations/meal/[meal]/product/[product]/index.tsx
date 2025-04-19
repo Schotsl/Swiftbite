@@ -18,7 +18,7 @@ export default function DetailsScreen() {
 
   const mealProducts = meal?.meal_product;
   const mealProduct = mealProducts?.find(
-    (mealProduct) => mealProduct.product_id === productId
+    (mealProduct) => mealProduct.product_id === productId,
   );
 
   const { control, handleSubmit } = useForm<ServingDataNew>({

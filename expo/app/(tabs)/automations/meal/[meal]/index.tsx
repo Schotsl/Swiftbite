@@ -148,7 +148,7 @@ export default function DetailsScreen() {
               title="Voeg ingrediënt toe"
               onPress={() => {
                 router.push(
-                  `/(tabs)/automations/meal/${mealId}/product/search`
+                  `/(tabs)/automations/meal/${mealId}/product/search`,
                 );
               }}
             />

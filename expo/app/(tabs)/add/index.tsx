@@ -1,13 +1,12 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
-import { RowMap, SwipeListView } from "react-native-swipe-list-view";
+import { View } from "react-native";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 import Item from "@/components/Item";
 import ItemDelete from "@/components/Item/Delete";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 import entryData from "@/queries/entryData";
-import Header from "@/components/Header";
 import HomeStreak from "@/components/Home/Streak";
 import HeaderTitle from "@/components/Header/Title";
 import HomeDate from "@/components/Home/Date";
@@ -15,8 +14,6 @@ import HomeCircle from "@/components/Home/Progress";
 import Progress from "@/components/Progress";
 import ItemHeader from "@/components/Item/Header";
 import { ScrollView } from "react-native-gesture-handler";
-import { rowTimeout } from "@/helper";
-import { EntryWithProduct } from "@/types";
 
 export default function Index() {
   const [interval, setInterval] = useState<number | false>(1000);
@@ -35,7 +32,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity
+        !entry.consumed_quantity,
     );
 
     const interval = processing ? 500 : false;

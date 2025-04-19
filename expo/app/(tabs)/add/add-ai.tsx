@@ -1,8 +1,12 @@
+import CameraControls from "@/components/Camera/Controls";
+import CameraSelector from "@/components/Camera/Selector";
+import CameraShortcuts from "@/components/Camera/Shortcuts";
+
 import { useIsFocused } from "@react-navigation/native";
 import { CameraType, CameraView } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function AddAI() {
   const focus = useIsFocused();
@@ -54,16 +58,20 @@ export default function AddAI() {
 
   return (
     <View style={styles.container}>
-      <CameraView ref={camera} facing={facing} style={styles.camera}>
-        <View style={styles.controls}>
-          <TouchableOpacity style={styles.button} onPress={flipImage}>
-            <Text style={styles.buttonText}>Flip Camera</Text>
-          </TouchableOpacity>
+      <CameraView
+        ref={camera}
+        facing={facing}
+        style={{
+          gap: 24,
+          flex: 1,
+          paddingBottom: 64,
+        }}
+      >
+        <CameraShortcuts />
 
-          <TouchableOpacity style={styles.button} onPress={takeImage}>
-            <Text style={styles.buttonText}>Take Photo</Text>
-          </TouchableOpacity>
-        </View>
+        <CameraSelector />
+
+        <CameraControls onFlip={flipImage} onTake={takeImage} />
       </CameraView>
     </View>
   );

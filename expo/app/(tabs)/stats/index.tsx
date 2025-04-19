@@ -1,43 +1,18 @@
-import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-import Button from "@/components/Button";
-import { handleError } from "@/helper";
-import supabase from "@/utils/supabase";
+import { Text, View } from "react-native";
 
 export default function Tab() {
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function handleSignout() {
-    try {
-      setIsLoading(true);
-      const { error } = await supabase.auth.signOut();
-      handleError(error);
-      console.log("Signed out successfully");
-    } catch (error) {
-      console.error("Error signing out:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   return (
-    <View style={styles.container}>
-      <Text>Settings</Text>
-      <Button
-        title="Sign out"
-        onPress={handleSignout}
-        disabled={isLoading}
-        loading={isLoading}
-      />
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text
+        style={{
+          fontSize: 16,
+          fontFamily: "OpenSans_400Regular",
+          maxWidth: 300,
+          textAlign: "center",
+        }}
+      >
+        This page is under construction and won't be around for a while 👷
+      </Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

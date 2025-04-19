@@ -1,5 +1,5 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Redirect, SplashScreen, Tabs } from "expo-router";
+import { Redirect, SplashScreen, Tabs, usePathname } from "expo-router";
 import { useEffect, useState } from "react";
 import { AppState } from "react-native";
 
@@ -10,6 +10,8 @@ import supabase from "@/utils/supabase";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const pathname = usePathname();
+
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<null | { user: any }>(null);
 
@@ -64,6 +66,7 @@ export default function RootLayout() {
           headerShown: false,
           tabBarActiveTintColor: "#000",
           tabBarStyle: {
+            display: pathname === "/add/add-ai" ? "none" : "flex",
             paddingTop: 10,
             paddingBottom: 10,
             paddingLeft: 12,

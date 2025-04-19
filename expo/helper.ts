@@ -3,7 +3,7 @@ import { RowMap } from "react-native-swipe-list-view";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean
+  compressed: boolean,
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
