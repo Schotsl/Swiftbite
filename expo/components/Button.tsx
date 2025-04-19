@@ -80,7 +80,7 @@ export default function Button({
 
             textAlign: "center",
             fontSize: 16,
-            fontWeight: "semibold",
+            fontFamily: "OpenSans_600SemiBold",
           }}
         >
           {title}
@@ -89,15 +89,14 @@ export default function Button({
 
       <View
         style={{
-          position: "absolute",
-
-          left: 4,
           top: 4,
-          backgroundColor: action === "delete" ? "#7C0000" : "#000",
+          left: 4,
           width: "100%",
           height: "100%",
-          borderRadius: 8,
           zIndex: -1,
+          position: "absolute",
+          borderRadius: 8,
+          backgroundColor: action === "delete" ? "#7C0000" : "#000",
         }}
       ></View>
     </TouchableOpacity>

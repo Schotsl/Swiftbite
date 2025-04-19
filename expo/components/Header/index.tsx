@@ -38,7 +38,9 @@ export default function Header({ title, small = false, content }: HeaderProps) {
       <HeaderTitle>{title}</HeaderTitle>
 
       {content && (
-        <Text style={{ fontSize: 16, fontWeight: "normal" }}>{content}</Text>
+        <Text style={{ fontSize: 16, fontFamily: "OpenSans_400Regular" }}>
+          {content}
+        </Text>
       )}
     </View>
   );

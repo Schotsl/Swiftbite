@@ -1,26 +1,40 @@
-import { useIsFocused } from "@react-navigation/native";
 import { decode } from "base64-arraybuffer";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useIsFocused } from "@react-navigation/native";
+import { ScrollView, View } from "react-native";
 import { ImageManipulator } from "expo-image-manipulator";
+import { Image as ImageType } from "@/types";
+import { handleError, renderToBase64 } from "@/helper";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
-
-import { handleError, renderToBase64 } from "@/helper";
-import useInsertEntry from "@/mutations/useInsertEntry";
-import useInsertGenerative from "@/mutations/useInsertGenerative";
-import useInsertProduct from "@/mutations/useInsertProduct";
-import supabase from "@/utils/supabase";
-import Header from "@/components/Header";
-import Button from "@/components/Button";
-import Input from "@/components/Input";
-import { useForm } from "react-hook-form";
 import { EstimationData, estimationSchema } from "@/schemas/serving";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import supabase from "@/utils/supabase";
+
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import Header from "@/components/Header";
 import EstimationImage from "@/components/Estimation/Image";
+import useInsertEntry from "@/mutations/useInsertEntry";
+import useInsertProduct from "@/mutations/useInsertProduct";
+import useInsertGenerative from "@/mutations/useInsertGenerative";
 
 export default function Add2Preview() {
+  const initialImage = useLocalSearchParams<{
+    uri: string;
+    width: string;
+    height: string;
+  }>();
+
   const focus = useIsFocused();
   const router = useRouter();
+
+  const [image, setImage] = useState<ImageType | null>({
+    ...initialImage,
+    width: parseInt(initialImage.width),
+    height: parseInt(initialImage.height),
+  });
 
   const [smallImage, setSmallImage] = useState<string | null>(null);
   const [largeImage, setLargeImage] = useState<string | null>(null);
@@ -29,26 +43,21 @@ export default function Add2Preview() {
   const insertProduct = useInsertProduct();
   const insertGenerative = useInsertGenerative();
 
-  const { uri, width, height } = useLocalSearchParams<{
-    uri: string;
-    width: string;
-    height: string;
-  }>();
-
-  const widthNumber = parseInt(width);
-  const heightNumber = parseInt(height);
-
-  const { control, handleSubmit } = useForm<EstimationData>({
+  const { control, setError, handleSubmit } = useForm<EstimationData>({
     resolver: zodResolver(estimationSchema),
   });
 
   const handleResize = useCallback(async () => {
+    if (!image) {
+      return;
+    }
+
     console.log("[DEVICE] Manipulating picture...");
 
-    const smallManipulator = ImageManipulator.manipulate(uri);
-    const largeManipulator = ImageManipulator.manipulate(uri);
+    const smallManipulator = ImageManipulator.manipulate(image.uri);
+    const largeManipulator = ImageManipulator.manipulate(image.uri);
 
-    const isLandscape = width > height;
+    const isLandscape = image.width > image.height;
 
     smallManipulator.resize({
       width: isLandscape ? 512 : null,
@@ -69,18 +78,40 @@ export default function Add2Preview() {
     setLargeImage(imageBase64Large);
 
     console.log("[DEVICE] Picture manipulated");
-  }, [uri, width, height]);
+  }, [image]);
 
   useEffect(() => {
     handleResize();
   }, [handleResize]);
 
-  const handleSave = async () => {
+  const validateSave = (data: EstimationData) => {
+    if (image) {
+      return true;
+    }
+
+    if (!data.title || data.title.trim() === "") {
+      setError("title", {
+        type: "manual",
+        message: `Een titel is verplicht als er geen afbeelding is geselecteerd`,
+      });
+
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSave = async (data: EstimationData) => {
+    // TODO: This should probably be done within ZOD
+    if (!validateSave(data)) {
+      return;
+    }
+
     router.push("/");
 
     const product = await insertProduct.mutateAsync({
       type: "openfood",
-      title: null,
+      title: data.title ?? null,
       image: null,
       brand: null,
       estimated: true,
@@ -108,10 +139,9 @@ export default function Add2Preview() {
       quantity_unit: null,
     });
 
-    // The actual size will be updated by the server after analysis
     const entryPromise = insertEntry.mutateAsync({
       type: "product",
-      title: null,
+      title: data.title ?? null,
       meal_id: null,
       product_id: product.uuid,
       consumed_unit: null,
@@ -120,11 +150,10 @@ export default function Add2Preview() {
 
     const generativePromise = insertGenerative.mutateAsync({
       type: "image",
-      content: null,
+      content: data.description ?? null,
       product_id: product.uuid,
     });
 
-    // We do both requests in parallel but discard the entry
     const [generative] = await Promise.all([generativePromise, entryPromise]);
 
     await Promise.all([
@@ -148,7 +177,6 @@ export default function Add2Preview() {
     handleError(error);
   };
 
-  // Reset the page's state when is the screen is unfocused
   useEffect(() => {
     if (focus) {
       return;
@@ -159,46 +187,48 @@ export default function Add2Preview() {
   }, [focus]);
 
   return (
-    <ScrollView
-      style={{
-        minHeight: "100%",
-      }}
-    >
+    <ScrollView>
       <View
         style={{
-          gap: 24,
           padding: 32,
-          paddingBottom: 64,
-
-          minHeight: "100%",
         }}
       >
-        <Header title="Add" />
-
-        <EstimationImage
-          image={uri}
-          width={widthNumber}
-          height={heightNumber}
+        <Header
+          title="Add"
+          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt."
         />
 
-        <Input
-          name="title"
-          label="Titel"
-          placeholder="Banaan"
-          control={control}
-        />
-        <Input
-          name="description"
-          label="Beschrijving"
-          placeholder="100g"
-          control={control}
-        />
+        <View style={{ gap: 48 }}>
+          <View style={{ gap: 24 }}>
+            <EstimationImage
+              image={image}
+              required={!!image}
+              onAdd={() => router.back()}
+              onEdit={() => router.back()}
+              onDelete={() => setImage(null)}
+            />
 
-        <Button
-          onPress={handleSubmit(handleSave)}
-          title="Product opslaan"
-          style={{ marginTop: "auto" }}
-        />
+            <Input
+              name="title"
+              label="Titel"
+              required={!image}
+              placeholder="Wrap"
+              control={control}
+            />
+
+            <Input
+              name="description"
+              label="Beschrijving"
+              content="Informatie die niet makkelijk uit de foto te halen is, is relevant, zoals bijvoorbeeld de inhoud van een wrap."
+              placeholder="Een wrap met kip, sla, tomaat, avocado..."
+              control={control}
+              required={false}
+              multiline
+            />
+          </View>
+
+          <Button title="Product opslaan" onPress={handleSubmit(handleSave)} />
+        </View>
       </View>
     </ScrollView>
   );

@@ -34,6 +34,12 @@
       "expo-apple-authentication",
       "react-native-health",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you analyze your food or barcode."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",

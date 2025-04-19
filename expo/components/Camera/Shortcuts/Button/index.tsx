@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 
@@ -14,6 +14,7 @@ export default function CameraShortcutsButton({
   iconMaterial,
   iconAwesome,
   expand = false,
+  
   onPress,
 }: CameraShortcutsButtonProps) {
   return (

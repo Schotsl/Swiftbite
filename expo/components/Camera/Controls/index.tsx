@@ -6,11 +6,13 @@ import CameraControlsSquare from "./Square";
 type CameraControlsProps = {
   onFlip: () => void;
   onTake: () => void;
+  onDocument: () => void;
 };
 
 export default function CameraControls({
   onFlip,
   onTake,
+  onDocument,
 }: CameraControlsProps) {
   return (
     <View
@@ -25,7 +27,7 @@ export default function CameraControls({
 
       <CameraControlsCircle onPress={onTake} />
 
-      <CameraControlsSquare icon="images" onPress={onTake} />
+      <CameraControlsSquare icon="images" onPress={onDocument} />
     </View>
   );
 }

@@ -8,6 +8,8 @@ import { CameraSelected } from "@/types";
 import { useEffect, useRef, useState } from "react";
 import { BarcodeSettings, CameraType, CameraView } from "expo-camera";
 
+import * as ImagePicker from "expo-image-picker";
+
 export default function AddAI() {
   const focus = useIsFocused();
   const router = useRouter();
@@ -42,14 +44,35 @@ export default function AddAI() {
     }
 
     const pathname = isBarcode ? "/add/add-barcode" : "/add/add-estimation";
-    console.log(pathname);
+
     router.push({
       pathname,
       params,
     });
   }
 
-  console.log(selected);
+  async function handleDocument() {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      mediaTypes: ["images"],
+      quality: 1,
+    });
+
+    if (result.canceled) {
+      return;
+    }
+
+    if (!result.assets || result.assets.length === 0) {
+      return;
+    }
+
+    const asset = result.assets[0];
+
+    router.push({
+      pathname: "/add/add-estimation",
+      params: { uri: asset.uri, width: asset.width, height: asset.height },
+    });
+  }
 
   // Reset the page's state when is the screen is unfocused
   useEffect(() => {
@@ -84,7 +107,11 @@ export default function AddAI() {
 
       <CameraSelector onSelect={setSelected} />
 
-      <CameraControls onFlip={handleFlip} onTake={handleImage} />
+      <CameraControls
+        onFlip={handleFlip}
+        onTake={handleImage}
+        onDocument={handleDocument}
+      />
     </CameraView>
   );
 }

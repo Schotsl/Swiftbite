@@ -9,6 +9,12 @@ export type ProductSearch = {
   quantity_unit: Enums<"unit">;
 };
 
+export type Image = {
+  uri: string;
+  width: number;
+  height: number;
+};
+
 export enum CameraSelected {
   Label = "Label",
   Barcode = "Barcode",

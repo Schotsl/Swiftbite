@@ -27,8 +27,8 @@ export const mealSchema = z.object({
 });
 
 export const estimationSchema = z.object({
-  title: z.string().nullable(),
-  description: z.string().nullable(),
+  title: z.string().optional(),
+  description: z.string().optional(),
 });
 
 export type ServingData = z.infer<typeof servingSchema>;

@@ -20,6 +20,9 @@ type InputProps = {
   password?: boolean;
   disabled?: boolean;
   placeholder: string;
+  required?: boolean;
+  multiline?: boolean;
+  content?: string;
   error?: string;
   control?: Control<any>;
   schema?: ZodType<any>;
@@ -31,12 +34,14 @@ export default function Input({
   type = "default",
   value,
   label,
+  content,
+  required = true,
   password = false,
   disabled = false,
+  multiline = false,
   placeholder,
   error,
   control,
-  schema,
   onChange,
 }: InputProps) {
   const handleChange = (text: string) => {
@@ -56,15 +61,16 @@ export default function Input({
         render={({ field: { onChange, value }, fieldState: { error } }) => {
           return (
             <View>
-              {label && <Label label={label} />}
+              {label && <Label label={label} required={required} />}
 
               <TextInput
                 value={value ? value.toString() : ""}
                 style={{
                   padding: 12,
                   paddingVertical: 14,
+
                   fontSize: 16,
-                  fontWeight: "semibold",
+                  fontFamily: "OpenSans_600SemiBold",
 
                   borderWidth: 2,
                   borderColor: error ? "#FF4141" : "#000",
@@ -72,8 +78,10 @@ export default function Input({
                   backgroundColor: "#fff",
 
                   opacity: disabled ? 0.5 : 1,
+                  minHeight: multiline ? 100 : undefined,
                 }}
                 editable={!disabled}
+                multiline={multiline}
                 placeholder={placeholder}
                 keyboardType={type}
                 secureTextEntry={password}
@@ -81,8 +89,30 @@ export default function Input({
                 onChangeText={onChange}
               />
 
+              {content && (
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "OpenSans_600SemiBold",
+
+                    color: "#000",
+                    marginTop: 8,
+                  }}
+                >
+                  {content}
+                </Text>
+              )}
+
               {error && (
-                <Text style={{ fontSize: 14, color: "#FF4141", marginTop: 4 }}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontFamily: "OpenSans_600SemiBold",
+
+                    color: "#FF4141",
+                    marginTop: 8,
+                  }}
+                >
                   {error.message}
                 </Text>
               )}
@@ -103,6 +133,7 @@ export default function Input({
         style={{
           padding: 12,
           paddingVertical: 14,
+
           fontSize: 16,
           fontWeight: "semibold",
 
@@ -112,6 +143,7 @@ export default function Input({
           backgroundColor: "#fff",
 
           opacity: disabled ? 0.5 : 1,
+          minHeight: multiline ? 100 : undefined,
         }}
         editable={!disabled}
         placeholder={placeholder}
@@ -121,9 +153,31 @@ export default function Input({
         onChangeText={handleChange}
       />
 
+      {content && (
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "OpenSans_600SemiBold",
+
+            color: "#000",
+            marginTop: 8,
+          }}
+        >
+          {content}
+        </Text>
+      )}
+
       {error && (
-        <Text style={{ fontSize: 14, color: "#FF4141", marginTop: 4 }}>
-          {error}
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "OpenSans_600SemiBold",
+
+            color: "#FF4141",
+            marginTop: 8,
+          }}
+        >
+          {error.message}
         </Text>
       )}
     </View>
