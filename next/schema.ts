@@ -21,6 +21,29 @@ const nutritionSchema = z.object({
   potassium_100g: z.number().describe("Potassium per 100g in milligrams"),
 });
 
+export const productGenerativeVisualsSchema = z.object({
+  title: z.string().describe("Product title"),
+  brand: z.string().describe("Product brand, if available").nullable(),
+});
+
+export const productGenerativeNutritionSchema = nutritionSchema.extend({
+  serving: z
+    .number()
+    .describe("Recommended serving size printed on the packaging"),
+  serving_unit: z
+    .string()
+    .describe(
+      `Unit for the recommended serving printed on the packaging (e.g., g, ml)`,
+    ),
+
+  quantity: z.number().describe("Quantity of the product in the packaging"),
+  quantity_unit: z
+    .string()
+    .describe(
+      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
+    ),
+});
+
 export const productSchema = nutritionSchema.extend({
   title: z.string().describe("Product title"),
   brand: z.string().describe("Product brand if available").nullable(),
@@ -41,29 +64,6 @@ export const productSchema = nutritionSchema.extend({
     .describe(
       `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
     ),
-});
-
-export const productGenerativeNutritionSchema = productSchema.extend({
-  serving: z
-    .number()
-    .describe("Recommended serving size printed on the packaging"),
-  serving_unit: z
-    .string()
-    .describe(
-      `Unit for the recommended serving printed on the packaging (e.g., g, ml)`,
-    ),
-
-  quantity: z.number().describe("Quantity of the product in the packaging"),
-  quantity_unit: z
-    .string()
-    .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
-    ),
-});
-
-export const productGenerativeVisualsSchema = z.object({
-  title: z.string().describe("Product title"),
-  brand: z.string().describe("Product brand, if available").nullable(),
 });
 
 export const productSearchSchema = z.object({

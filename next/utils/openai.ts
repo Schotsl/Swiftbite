@@ -29,7 +29,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
@@ -86,6 +86,8 @@ export async function estimateNutrition(
   return {
     ...object,
 
+    estimated: true,
+
     serving_unit: object.serving_unit as Enums<"unit">,
     quantity_unit: object.quantity_unit as Enums<"unit">,
   };
@@ -98,7 +100,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisuals> {
   const task: Enums<"task"> = "title_generation";
   const model = openai("gpt-4o-mini");
@@ -135,7 +137,7 @@ export async function estimateVisuals(
       {
         role: "system",
         content:
-          "You are a food expert. If a title is provided, use that title. Identify the food item based on the image and/or details provided. Provide only its name and try to identify the brand (if discernible, otherwise return null) using regular capitalization.",
+          "You are a food expert. If a title is provided, use that title. Identify the food item based on the image and/or details provided. Provide only its name and try to identify the brand (if discernible, otherwise return null) using regular capitalization, so make sure to capitalize the first letter.",
       },
       ...messages,
     ],
@@ -164,7 +166,7 @@ export async function searchProduct(
   lang: string,
   brand: string,
   quantity: string,
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductInsert | null> {
   const searchModel = openai.responses("gpt-4o");
   const searchResponse = await generateText({
@@ -229,7 +231,7 @@ export async function searchProducts(
   user: string,
   query: string,
   lang: string,
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ) {
   const searchModel = openai.responses("gpt-4o");
   const searchResponse = await generateText({
@@ -280,7 +282,7 @@ export async function searchProducts(
 export async function normalizeTitle(
   user: string,
   title: string,
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task: Enums<"task"> = "title_normalization";
   const model = "gpt-4o-mini";

@@ -22,9 +22,10 @@ export async function POST(request: Request) {
     return response;
   }
 
+  const generativeBucket = body.record.bucket_id;
+
   // Make sure it's the right bucket /generative
-  console.log("1. Bucket ID", body.record);
-  if (body.record.bucket_id !== "generative") {
+  if (generativeBucket !== "generative") {
     return new Response("{}", { status: 200 });
   }
 

@@ -30,6 +30,7 @@ export default function Add2Preview() {
   const focus = useIsFocused();
   const router = useRouter();
 
+  const [saving, setSaving] = useState(false);
   const [image, setImage] = useState<ImageType | null>({
     ...initialImage,
     width: parseInt(initialImage.width),
@@ -107,7 +108,7 @@ export default function Add2Preview() {
       return;
     }
 
-    router.push("/");
+    setSaving(true);
 
     const product = await insertProduct.mutateAsync({
       type: "openfood",
@@ -158,15 +159,15 @@ export default function Add2Preview() {
     const [generative] = await Promise.all([generativePromise, entryPromise]);
 
     if (!image) {
-      return;
+      await Promise.all([
+        uploadImage(`${generative.uuid}-small`, smallImage!),
+        uploadImage(`${generative.uuid}`, largeImage!),
+      ]);
     }
 
-    await Promise.all([
-      uploadImage(`${generative.uuid}-small`, smallImage!),
-      uploadImage(`${generative.uuid}`, largeImage!),
-    ]);
-
     console.log("[DEVICE] All images uploaded");
+
+    router.replace("/");
   };
 
   const uploadImage = async (name: string, base64: string) => {
@@ -232,7 +233,12 @@ export default function Add2Preview() {
             />
           </View>
 
-          <Button title="Product opslaan" onPress={handleSubmit(handleSave)} />
+          <Button
+            title="Product opslaan"
+            onPress={handleSubmit(handleSave)}
+            loading={saving}
+            disabled={saving}
+          />
         </View>
       </View>
     </ScrollView>
