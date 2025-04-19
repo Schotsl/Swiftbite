@@ -26,10 +26,9 @@ export async function POST(request: Request) {
   const generativeUUID = generativeName.replace("-small", "");
 
   after(async () => {
-    const [productObject, generativeObject] = await Promise.all([
-      fetchProduct(generativeUUID),
-      fetchGenerative(generativeUUID),
-    ]);
+    // TODO: This could be joined or ran in parallel
+    const generativeObject = await fetchGenerative(generativeUUID);
+    const productObject = await fetchProduct(generativeObject.product_id);
 
     // If the generative object doesn't have an image we can't do anything
     if (!generativeObject.image) {

@@ -28,11 +28,9 @@ export async function POST(request: Request) {
   }
 
   after(async () => {
-    const generativeObject = await fetchGenerative(generativeProduct);
-
     const [productObject, entryObject] = await Promise.all([
-      fetchProduct(generativeObject.product_id),
-      fetchEntry(generativeProduct.product_id),
+      fetchProduct(generativeProduct),
+      fetchEntry(generativeProduct),
     ]);
 
     const title = productObject.title;
