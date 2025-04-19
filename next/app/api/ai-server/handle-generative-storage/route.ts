@@ -22,6 +22,12 @@ export async function POST(request: Request) {
     return response;
   }
 
+  // Make sure it's the right bucket /generative
+  console.log("1. Bucket ID", body.record);
+  if (body.record.bucket_id !== "generative") {
+    return new Response("{}", { status: 200 });
+  }
+
   const generativeName = body.record.name;
   const generativeUUID = generativeName.replace("-small", "");
 
