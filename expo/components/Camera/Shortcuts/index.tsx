@@ -1,8 +1,24 @@
 import { View } from "react-native";
 
 import CameraShortcutsButton from "./Button";
+import { useRouter } from "expo-router";
 
-export default function CameraShortcuts() {
+type CameraShortcutsProps = {
+  flash: boolean;
+
+  onFlash: () => void;
+};
+
+export default function CameraShortcuts({
+  flash,
+  onFlash,
+}: CameraShortcutsProps) {
+  const router = useRouter();
+
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
     <View
       style={{
@@ -13,9 +29,18 @@ export default function CameraShortcuts() {
         justifyContent: "space-between",
       }}
     >
-      <CameraShortcutsButton icon="arrow-left" onPress={() => {}} expand />
-      <CameraShortcutsButton icon="question" onPress={() => {}} />
-      <CameraShortcutsButton icon="bolt-lightning" onPress={() => {}} />
+      <CameraShortcutsButton
+        iconAwesome="arrow-left"
+        onPress={handleBack}
+        expand
+      />
+
+      <CameraShortcutsButton iconAwesome="question" onPress={() => {}} />
+
+      <CameraShortcutsButton
+        iconMaterial={flash ? "flashlight-on" : "flashlight-off"}
+        onPress={onFlash}
+      />
     </View>
   );
 }

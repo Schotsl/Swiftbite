@@ -1,19 +1,23 @@
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 
 type CameraShortcutsButtonProps = {
-  icon?: keyof typeof FontAwesome6.glyphMap;
+  iconMaterial?: keyof typeof MaterialIcons.glyphMap;
+  iconAwesome?: keyof typeof FontAwesome6.glyphMap;
   expand?: boolean;
+
   onPress: () => void;
 };
 
 export default function CameraShortcutsButton({
-  icon,
+  iconMaterial,
+  iconAwesome,
   expand = false,
   onPress,
 }: CameraShortcutsButtonProps) {
   return (
-    <View
+    <TouchableOpacity
       style={{
         borderWidth: 2,
         borderColor: "#fff",
@@ -28,8 +32,16 @@ export default function CameraShortcutsButton({
 
         marginRight: expand ? "auto" : 0,
       }}
+      onPress={onPress}
+      activeOpacity={1}
     >
-      <FontAwesome6 name={icon} color="#fff" size={16} />
-    </View>
+      {iconMaterial && (
+        <MaterialIcons name={iconMaterial} color="#fff" size={16} />
+      )}
+
+      {iconAwesome && (
+        <FontAwesome6 name={iconAwesome} color="#fff" size={16} />
+      )}
+    </TouchableOpacity>
   );
 }

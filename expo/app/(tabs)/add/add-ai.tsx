@@ -3,7 +3,7 @@ import CameraSelector from "@/components/Camera/Selector";
 import CameraShortcuts from "@/components/Camera/Shortcuts";
 
 import { useIsFocused } from "@react-navigation/native";
-import { CameraType, CameraView } from "expo-camera";
+import { CameraType, CameraView, FlashMode } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -13,6 +13,7 @@ export default function AddAI() {
   const router = useRouter();
   const camera = useRef<CameraView>(null);
 
+  const [flash, setFlash] = useState<boolean>(false);
   const [facing, setFacing] = useState<CameraType>("back");
 
   function flipImage() {
@@ -60,6 +61,7 @@ export default function AddAI() {
     <View style={styles.container}>
       <CameraView
         ref={camera}
+        flash={flash ? "on" : "off"}
         facing={facing}
         style={{
           gap: 24,
@@ -67,7 +69,10 @@ export default function AddAI() {
           paddingBottom: 64,
         }}
       >
-        <CameraShortcuts />
+        <CameraShortcuts
+          onFlash={() => setFlash((current) => !current)}
+          flash={flash}
+        />
 
         <CameraSelector />
 
