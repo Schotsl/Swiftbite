@@ -29,7 +29,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
@@ -98,7 +98,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeVisuals> {
   const task: Enums<"task"> = "title_generation";
   const model = openai("gpt-4o-mini");
@@ -164,7 +164,7 @@ export async function searchProduct(
   lang: string,
   brand: string,
   quantity: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductInsert | null> {
   const searchModel = openai.responses("gpt-4o");
   const searchResponse = await generateText({
@@ -229,7 +229,7 @@ export async function searchProducts(
   user: string,
   query: string,
   lang: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) {
   const searchModel = openai.responses("gpt-4o");
   const searchResponse = await generateText({
@@ -280,7 +280,7 @@ export async function searchProducts(
 export async function normalizeTitle(
   user: string,
   title: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task: Enums<"task"> = "title_normalization";
   const model = "gpt-4o-mini";

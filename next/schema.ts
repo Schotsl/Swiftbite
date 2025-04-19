@@ -32,14 +32,14 @@ export const productSchema = nutritionSchema.extend({
   serving_unit: z
     .string()
     .describe(
-      `Unit for the recommended serving printed on the packaging (e.g., g, ml)`
+      `Unit for the recommended serving printed on the packaging (e.g., g, ml)`,
     ),
 
   quantity: z.number().describe("Quantity of the product in the packaging"),
   quantity_unit: z
     .string()
     .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`
+      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
     ),
 });
 
@@ -50,14 +50,14 @@ export const productGenerativeNutritionSchema = productSchema.extend({
   serving_unit: z
     .string()
     .describe(
-      `Unit for the recommended serving printed on the packaging (e.g., g, ml)`
+      `Unit for the recommended serving printed on the packaging (e.g., g, ml)`,
     ),
 
   quantity: z.number().describe("Quantity of the product in the packaging"),
   quantity_unit: z
     .string()
     .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`
+      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
     ),
 });
 
@@ -73,6 +73,6 @@ export const productSearchSchema = z.object({
   quantity_unit: z
     .string()
     .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`
+      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
     ),
 });

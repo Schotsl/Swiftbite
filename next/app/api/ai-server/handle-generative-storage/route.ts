@@ -1,10 +1,15 @@
 import { after } from "next/server";
 import { handleError } from "@/helper";
 import { estimateVisuals, estimateNutrition } from "@/utils/openai";
+import {
+  fetchUrl,
+  fetchEntry,
+  fetchProduct,
+  fetchGenerative,
+} from "@/utils/supabase";
 
 import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
-import { Tables } from "@/database.types";
 
 export async function POST(request: Request) {
   // Make sure the user isn't over their usage limits
@@ -93,56 +98,3 @@ export async function POST(request: Request) {
 
   return new Response("{}", { status: 200 });
 }
-
-// TODO: These functions could be moved to a supabase helper file
-export const fetchProduct = async (
-  generativeUUID: string
-): Promise<Tables<"product">> => {
-  const { data, error } = await supabase
-    .from("generative")
-    .select("*")
-    .eq("uuid", generativeUUID)
-    .single();
-
-  handleError(error);
-
-  return data;
-};
-
-export const fetchEntry = async (
-  productId: string
-): Promise<Tables<"entry">> => {
-  const { data, error } = await supabase
-    .from("entry")
-    .select("*")
-    .eq("product_id", productId)
-    .single();
-
-  handleError(error);
-
-  return data;
-};
-
-export const fetchUrl = async (generativeUUID: string): Promise<string> => {
-  const { data, error } = await supabase.storage
-    .from("generative")
-    .createSignedUrl(`${generativeUUID}`, 3600);
-
-  handleError(error);
-
-  return data!.signedUrl;
-};
-
-export const fetchGenerative = async (
-  generativeUUID: string
-): Promise<Tables<"generative">> => {
-  const { data, error } = await supabase
-    .from("generative")
-    .select("*")
-    .eq("uuid", generativeUUID)
-    .single();
-
-  handleError(error);
-
-  return data;
-};

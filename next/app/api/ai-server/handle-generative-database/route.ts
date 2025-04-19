@@ -4,7 +4,7 @@ import { after } from "next/server";
 
 import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
-import { fetchEntry, fetchProduct } from "../handle-generative-storage/route";
+import { fetchEntry, fetchProduct } from "@/utils/supabase";
 
 export const maxDuration = 120;
 
