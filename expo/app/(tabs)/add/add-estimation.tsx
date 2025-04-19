@@ -3,15 +3,22 @@ import { decode } from "base64-arraybuffer";
 import { ImageManipulator } from "expo-image-manipulator";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import { handleError, renderToBase64 } from "@/helper";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertGenerative from "@/mutations/useInsertGenerative";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import supabase from "@/utils/supabase";
+import Header from "@/components/Header";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+import { useForm } from "react-hook-form";
+import { EstimationData, estimationSchema } from "@/schemas/serving";
+import { zodResolver } from "@hookform/resolvers/zod";
+import EstimationImage from "@/components/Estimation/Image";
 
-export default function AddPreview() {
+export default function Add2Preview() {
   const focus = useIsFocused();
   const router = useRouter();
 
@@ -27,6 +34,13 @@ export default function AddPreview() {
     width: string;
     height: string;
   }>();
+
+  const widthNumber = parseInt(width);
+  const heightNumber = parseInt(height);
+
+  const { control, handleSubmit } = useForm<EstimationData>({
+    resolver: zodResolver(estimationSchema),
+  });
 
   const handleResize = useCallback(async () => {
     console.log("[DEVICE] Manipulating picture...");
@@ -66,10 +80,11 @@ export default function AddPreview() {
 
     const product = await insertProduct.mutateAsync({
       type: "openfood",
-      estimated: true,
       title: null,
       image: null,
       brand: null,
+      estimated: true,
+
       icon_id: null,
       calcium_100g: null,
       calorie_100g: null,
@@ -133,10 +148,6 @@ export default function AddPreview() {
     handleError(error);
   };
 
-  const handleDiscard = () => {
-    router.push("/(tabs)");
-  };
-
   // Reset the page's state when is the screen is unfocused
   useEffect(() => {
     if (focus) {
@@ -148,41 +159,47 @@ export default function AddPreview() {
   }, [focus]);
 
   return (
-    <View style={{ flex: 1 }}>
-      <Image
-        source={{ uri }}
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "absolute",
-        }}
-      />
-
+    <ScrollView
+      style={{
+        minHeight: "100%",
+      }}
+    >
       <View
         style={{
-          flex: 1,
-          margin: 64,
-          flexDirection: "row",
+          gap: 24,
+          padding: 32,
+          paddingBottom: 64,
+
+          minHeight: "100%",
         }}
       >
-        <TouchableOpacity
-          style={{ flex: 1, alignSelf: "flex-end", alignItems: "center" }}
-          onPress={handleSave}
-        >
-          <Text style={{ fontSize: 24, fontWeight: "bold", color: "white" }}>
-            Save
-          </Text>
-        </TouchableOpacity>
+        <Header title="Add" />
 
-        <TouchableOpacity
-          style={{ flex: 1, alignSelf: "flex-end", alignItems: "center" }}
-          onPress={handleDiscard}
-        >
-          <Text style={{ fontSize: 24, fontWeight: "bold", color: "white" }}>
-            Discard
-          </Text>
-        </TouchableOpacity>
+        <EstimationImage
+          image={uri}
+          width={widthNumber}
+          height={heightNumber}
+        />
+
+        <Input
+          name="title"
+          label="Titel"
+          placeholder="Banaan"
+          control={control}
+        />
+        <Input
+          name="description"
+          label="Beschrijving"
+          placeholder="100g"
+          control={control}
+        />
+
+        <Button
+          onPress={handleSubmit(handleSave)}
+          title="Product opslaan"
+          style={{ marginTop: "auto" }}
+        />
       </View>
-    </View>
+    </ScrollView>
   );
 }

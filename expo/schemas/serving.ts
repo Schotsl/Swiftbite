@@ -14,7 +14,7 @@ export const servingSchema = z.object({
       },
       {
         message: "Quantity must be a positive number",
-      },
+      }
     ),
 });
 
@@ -26,6 +26,12 @@ export const mealSchema = z.object({
   title: z.string().min(1, "Title is required"),
 });
 
+export const estimationSchema = z.object({
+  title: z.string().nullable(),
+  description: z.string().nullable(),
+});
+
 export type ServingData = z.infer<typeof servingSchema>;
 export type ServingDataNew = z.infer<typeof servingSchemaNew>;
 export type MealData = z.infer<typeof mealSchema>;
+export type EstimationData = z.infer<typeof estimationSchema>;

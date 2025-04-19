@@ -9,6 +9,12 @@ export type ProductSearch = {
   quantity_unit: Enums<"unit">;
 };
 
+export enum CameraSelected {
+  Label = "Label",
+  Barcode = "Barcode",
+  Estimation = "Estimation",
+}
+
 export type ProductInsert = Omit<
   Product,
   "uuid" | "user_id" | "created_at" | "updated_at"

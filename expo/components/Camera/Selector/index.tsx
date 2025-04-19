@@ -1,17 +1,17 @@
 import { GestureResponderEvent, useWindowDimensions, View } from "react-native";
-import CameraSelectorItem from "./Item";
 import { useState, useRef } from "react";
-import MaskedView from "@react-native-masked-view/masked-view";
 import { ScrollView } from "react-native-gesture-handler";
+import { CameraSelected } from "@/types";
+
+import MaskedView from "@react-native-masked-view/masked-view";
+import CameraSelectorItem from "./Item";
 import CameraSelectorGradient from "./Gradient";
 
-enum CameraSelected {
-  Label = "Label",
-  Barcode = "Barcode",
-  Estimation = "Estimation",
-}
+type CameraSelectorProps = {
+  onSelect: (item: CameraSelected) => void;
+};
 
-export default function CameraSelector() {
+export default function CameraSelector({ onSelect }: CameraSelectorProps) {
   const { width } = useWindowDimensions();
 
   const [isDragging, setIsDragging] = useState(false);
@@ -27,9 +27,9 @@ export default function CameraSelector() {
   const containerPadding = width / 2 - widthItem / 2;
 
   const snapPoints = {
-    [CameraSelected.Label]: widthItem * 0,
+    [CameraSelected.Estimation]: widthItem * 0,
     [CameraSelected.Barcode]: widthItem * 1,
-    [CameraSelected.Estimation]: widthItem * 2,
+    [CameraSelected.Label]: widthItem * 2,
   };
 
   const handleOverlayScroll = (event: any) => {
@@ -52,6 +52,8 @@ export default function CameraSelector() {
 
     if (closestItem !== activeItem) {
       setActiveItem(closestItem);
+
+      onSelect(closestItem);
     }
   };
 
@@ -68,9 +70,13 @@ export default function CameraSelector() {
       const leftItem = order[index - 1];
 
       if (leftItem) {
-        setActiveItem(leftItem[0] as CameraSelected);
         scrollMaskedRef.current?.scrollTo({ x: leftItem[1], animated: true });
         scrollOverlayRef.current?.scrollTo({ x: leftItem[1], animated: true });
+
+        const item = leftItem[0] as CameraSelected;
+
+        setActiveItem(item);
+        onSelect(item);
       }
     }
 
@@ -78,9 +84,13 @@ export default function CameraSelector() {
       const rightItem = order[index + 1];
 
       if (rightItem) {
-        setActiveItem(rightItem[0] as CameraSelected);
         scrollMaskedRef.current?.scrollTo({ x: rightItem[1], animated: true });
         scrollOverlayRef.current?.scrollTo({ x: rightItem[1], animated: true });
+
+        const item = rightItem[0] as CameraSelected;
+
+        setActiveItem(item);
+        onSelect(item);
       }
     }
   };

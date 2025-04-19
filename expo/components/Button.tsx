@@ -1,11 +1,19 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleProp,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 
 type ButtonProps = {
   onPress: () => void;
 
   icon?: keyof typeof FontAwesome6.glyphMap;
+  style?: StyleProp<ViewStyle>;
   title: string;
   action?: "primary" | "delete";
   loading?: boolean;
@@ -16,6 +24,7 @@ export default function Button({
   onPress,
 
   icon,
+  style,
   title,
   action = "primary",
   loading = false,
@@ -26,10 +35,13 @@ export default function Button({
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.85}
-      style={{
-        width: "100%",
-        opacity: disabled || loading ? 0.6 : 1,
-      }}
+      style={[
+        {
+          width: "100%",
+          opacity: disabled || loading ? 0.6 : 1,
+        },
+        style,
+      ]}
     >
       <View
         style={{

@@ -66,7 +66,7 @@ export default function RootLayout() {
           headerShown: false,
           tabBarActiveTintColor: "#000",
           tabBarStyle: {
-            display: pathname === "/add/add-ai" ? "none" : "flex",
+            display: pathname === "/add/add-camera" ? "none" : "flex",
             paddingTop: 10,
             paddingBottom: 10,
             paddingLeft: 12,
