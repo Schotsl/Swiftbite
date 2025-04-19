@@ -4,6 +4,7 @@ import { estimateVisuals, estimateNutrition } from "@/utils/openai";
 
 import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
+import { Tables } from "@/database.types";
 
 export async function POST(request: Request) {
   // Make sure the user isn't over their usage limits
@@ -20,39 +21,54 @@ export async function POST(request: Request) {
   const generativeUUID = generativeName.replace("-small", "");
 
   after(async () => {
-    const signedUrl = await fetchUrl(generativeUUID);
+    const [productObject, generativeObject] = await Promise.all([
+      fetchProduct(generativeUUID),
+      fetchGenerative(generativeUUID),
+    ]);
+
+    // If the generative object doesn't have an image we can't do anything
+    if (!generativeObject.image) {
+      return;
+    }
+
+    const image = await fetchUrl(generativeUUID);
+
+    const { title } = productObject;
+    const { content } = generativeObject;
+
+    const data = { image, title, content };
 
     if (generativeName.endsWith("-small")) {
       // We'll use the small image to figure out the title
-      const [visuals, product] = await Promise.all([
-        estimateVisuals(user, signedUrl),
-        fetchProduct(generativeUUID),
-      ]);
+      const visuals = await estimateVisuals(user, data);
+
+      // If the product already has a title we'll use that
+      if (productObject.title) {
+        visuals.title = productObject.title;
+      }
 
       const { error: productError } = await supabase
         .from("product")
         .update(visuals)
-        .eq("uuid", product);
+        .eq("uuid", productObject.uuid);
 
       handleError(productError);
 
       return;
     }
 
-    // First get the product ID
-    const product = await fetchProduct(generativeUUID);
-
     // Then fetch AI responses and entry data in parallel
     const [nutrition, entry] = await Promise.all([
-      estimateNutrition(user, signedUrl),
-      fetchEntry(product),
+      estimateNutrition(user, data),
+      fetchEntry(productObject.uuid),
     ]);
 
+    // TODO: These supabase updates could be run in parallel
     // Update the product with nutritional data
     const { error: productError } = await supabase
       .from("product")
       .update(nutrition)
-      .eq("uuid", product);
+      .eq("uuid", productObject.uuid);
 
     handleError(productError);
 
@@ -78,22 +94,27 @@ export async function POST(request: Request) {
   return new Response("{}", { status: 200 });
 }
 
-const fetchProduct = async (generativeUUID: string) => {
+// TODO: These functions could be moved to a supabase helper file
+export const fetchProduct = async (
+  generativeUUID: string
+): Promise<Tables<"product">> => {
   const { data, error } = await supabase
     .from("generative")
-    .select("product_id")
+    .select("*")
     .eq("uuid", generativeUUID)
     .single();
 
   handleError(error);
 
-  return data?.product_id;
+  return data;
 };
 
-const fetchEntry = async (productId: string) => {
+export const fetchEntry = async (
+  productId: string
+): Promise<Tables<"entry">> => {
   const { data, error } = await supabase
     .from("entry")
-    .select("uuid")
+    .select("*")
     .eq("product_id", productId)
     .single();
 
@@ -102,7 +123,7 @@ const fetchEntry = async (productId: string) => {
   return data;
 };
 
-const fetchUrl = async (generativeUUID: string) => {
+export const fetchUrl = async (generativeUUID: string): Promise<string> => {
   const { data, error } = await supabase.storage
     .from("generative")
     .createSignedUrl(`${generativeUUID}`, 3600);
@@ -110,4 +131,18 @@ const fetchUrl = async (generativeUUID: string) => {
   handleError(error);
 
   return data!.signedUrl;
+};
+
+export const fetchGenerative = async (
+  generativeUUID: string
+): Promise<Tables<"generative">> => {
+  const { data, error } = await supabase
+    .from("generative")
+    .select("*")
+    .eq("uuid", generativeUUID)
+    .single();
+
+  handleError(error);
+
+  return data;
 };

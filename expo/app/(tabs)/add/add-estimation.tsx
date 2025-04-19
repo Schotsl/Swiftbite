@@ -150,7 +150,8 @@ export default function Add2Preview() {
 
     const generativePromise = insertGenerative.mutateAsync({
       type: "image",
-      content: data.description ?? null,
+      image: !!image,
+      content: data.content ?? null,
       product_id: product.uuid,
     });
 
@@ -217,7 +218,7 @@ export default function Add2Preview() {
             />
 
             <Input
-              name="description"
+              name="content"
               label="Beschrijving"
               content="Informatie die niet makkelijk uit de foto te halen is, is relevant, zoals bijvoorbeeld de inhoud van een wrap."
               placeholder="Een wrap met kip, sla, tomaat, avocado..."

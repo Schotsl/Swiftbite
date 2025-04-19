@@ -3,7 +3,7 @@ import {
   ProductInsert,
   ProductGenerativeVisuals,
 } from "@/types";
-import { generateObject, generateText, streamObject } from "ai";
+import { CoreMessage, generateObject, generateText, streamObject } from "ai";
 import { openai as openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { after } from "next/server";
@@ -24,11 +24,38 @@ import searchProductsStructurePrompt from "@/prompts/search-products-structure";
 
 export async function estimateNutrition(
   user: string,
-  url: string,
+  content: {
+    image: string | null;
+    title: string | null;
+    content: string | null;
+  },
   signal?: AbortSignal
 ): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
+
+  const messages: CoreMessage[] = [];
+
+  if (content.image) {
+    messages.push({
+      role: "user",
+      content: [{ type: "image", image: new URL(content.image) }],
+    });
+  }
+
+  if (content.title) {
+    messages.push({
+      role: "user",
+      content: `Title: ${content.title}`,
+    });
+  }
+
+  if (content.content) {
+    messages.push({
+      role: "user",
+      content: `Details: ${content.content}`,
+    });
+  }
 
   const response = await generateObject({
     model: openai(model),
@@ -39,12 +66,9 @@ export async function estimateNutrition(
       {
         role: "system",
         content:
-          "You are a nutritionist. Estimate the nutritional values for the food in the image. In your response, please ensure that every property name is completely in lowercase.",
+          "You are a nutritionist. Estimate the nutritional values for the provided food item based on the image, title, and/or details. In your response, please ensure that every property name is completely in lowercase.",
       },
-      {
-        role: "user",
-        content: [{ type: "image", image: new URL(url) }],
-      },
+      ...messages,
     ],
   });
 
@@ -69,11 +93,38 @@ export async function estimateNutrition(
 
 export async function estimateVisuals(
   user: string,
-  url: string,
+  content: {
+    image: string | null;
+    title: string | null;
+    content: string | null;
+  },
   signal?: AbortSignal
 ): Promise<ProductGenerativeVisuals> {
   const task: Enums<"task"> = "title_generation";
   const model = openai("gpt-4o-mini");
+
+  const messages: CoreMessage[] = [];
+
+  if (content.image) {
+    messages.push({
+      role: "user",
+      content: [{ type: "image", image: new URL(content.image) }],
+    });
+  }
+
+  if (content.title) {
+    messages.push({
+      role: "user",
+      content: `Title: ${content.title}`,
+    });
+  }
+
+  if (content.content) {
+    messages.push({
+      role: "user",
+      content: `Details: ${content.content}`,
+    });
+  }
 
   const response = await generateObject({
     model,
@@ -84,12 +135,9 @@ export async function estimateVisuals(
       {
         role: "system",
         content:
-          "You are a food expert. Identify the food item in the image and provide only its name using regular capitalization.",
+          "You are a food expert. If a title is provided, use that title. Identify the food item based on the image and/or details provided. Provide only its name and try to identify the brand (if discernible, otherwise return null) using regular capitalization.",
       },
-      {
-        role: "user",
-        content: [{ type: "image", image: new URL(url) }],
-      },
+      ...messages,
     ],
   });
 

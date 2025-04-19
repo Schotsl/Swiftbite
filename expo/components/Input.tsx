@@ -177,7 +177,7 @@ export default function Input({
             marginTop: 8,
           }}
         >
-          {error.message}
+          {error}
         </Text>
       )}
     </View>
