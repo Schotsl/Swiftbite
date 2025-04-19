@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 
@@ -14,15 +14,46 @@ import HomeCircle from "@/components/Home/Progress";
 import Progress from "@/components/Progress";
 import ItemHeader from "@/components/Item/Header";
 import { ScrollView } from "react-native-gesture-handler";
+import { EntryWithProduct } from "@/types";
+
+// Helper function to get today's start and end ISO strings
+const getTodayRange = () => {
+  const now = new Date();
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const endOfDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    23,
+    59,
+    59,
+    999
+  );
+  return {
+    startDate: startOfDay.toISOString(),
+    endDate: endOfDay.toISOString(),
+  };
+};
 
 export default function Index() {
   const [interval, setInterval] = useState<number | false>(1000);
 
   const deleteEntry = useDeleteEntry();
 
+  // Get today's date range
+  const { startDate, endDate } = getTodayRange();
+
   const { data } = useSuspenseQuery({
     ...entryData({}),
     refetchInterval: interval,
+    select: (entries) => {
+      const start = new Date(startDate).getTime();
+      const end = new Date(endDate).getTime();
+      return entries.filter((entry) => {
+        const entryTime = new Date(entry.created_at).getTime();
+        return entryTime >= start && entryTime <= end;
+      });
+    },
   });
 
   // If any of the titles, calories, or consumed quantities are missing we'll keep polling
@@ -32,12 +63,76 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity,
+        !entry.consumed_quantity
     );
 
     const interval = processing ? 500 : false;
 
     setInterval(interval);
+  }, [data]);
+
+  const sections = useMemo(() => {
+    const sections = [
+      {
+        title: "Night",
+        subtitle: "21:00 - 06:00",
+        startHour: 21,
+        data: [] as EntryWithProduct[],
+      },
+      {
+        title: "Evening",
+        subtitle: "17:00 - 21:00",
+        startHour: 17,
+        data: [] as EntryWithProduct[],
+      },
+      {
+        title: "Afternoon",
+        subtitle: "12:00 - 17:00",
+        startHour: 12,
+        data: [] as EntryWithProduct[],
+      },
+      {
+        title: "Morning",
+        subtitle: "06:00 - 12:00",
+        startHour: 6,
+        data: [] as EntryWithProduct[],
+      },
+    ];
+
+    const currentDate = new Date();
+    const currentHour = currentDate.getHours();
+
+    // Filter sections based on the current time
+    const sectionsFiltered = sections.filter(
+      (section) => currentHour >= section.startHour
+    );
+
+    // Populate active sections with data
+    data.forEach((entry) => {
+      const entryDate = new Date(entry.created_at);
+      const entryHour = entryDate.getHours();
+
+      let targetSection;
+      
+      if (entryHour >= 6 && entryHour < 12) {
+        targetSection = sectionsFiltered.find((s) => s.title === "Morning");
+      } else if (entryHour >= 12 && entryHour < 17) {
+        targetSection = sectionsFiltered.find((s) => s.title === "Afternoon");
+      } else if (entryHour >= 17 && entryHour < 21) {
+        targetSection = sectionsFiltered.find((s) => s.title === "Evening");
+      } else {
+        targetSection = sectionsFiltered.find((s) => s.title === "Night");
+      }
+
+      if (targetSection) {
+        targetSection.data.push(entry);
+      }
+    });
+
+    // Sort the active sections chronologically for display
+    sectionsFiltered.sort((a, b) => b.startHour - a.startHour);
+
+    return sectionsFiltered;
   }, [data]);
 
   const handleDelete = (uuid: string) => {
@@ -108,11 +203,7 @@ export default function Index() {
 
       <SwipeListView
         style={{ marginBottom: -2 }}
-        sections={[
-          { title: "Morning", subtitle: "09:00 - 12:00", data: data },
-          { title: "Afternoon", subtitle: "12:00 - 15:00", data: data },
-          { title: "Evening", subtitle: "15:00 - 18:00", data: data },
-        ]}
+        sections={sections}
         renderItem={({ item }) => {
           const quantity = item.consumed_quantity || 0;
           const multiplier = item.product.calorie_100g || 0;
@@ -120,11 +211,15 @@ export default function Index() {
           const calories = (multiplier / 100) * quantity;
           const caloriesRounded = Math.round(calories);
 
+          const title = item.product.title || "Loading...";
+          const brand = item.product.brand || "No brand";
+          const subtitle = item.product.title ? brand : "Loading...";
+
           return (
             <Item
-              title={item.product.title || "Loading..."}
+              title={title}
               iconId={item.product.icon_id}
-              subtitle={item.product.brand || "Loading..."}
+              subtitle={subtitle}
               rightBottom={`${caloriesRounded} kcal`}
             />
           );

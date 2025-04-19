@@ -159,11 +159,17 @@ export default function Add2Preview() {
     const [generative] = await Promise.all([generativePromise, entryPromise]);
 
     if (!image) {
-      await Promise.all([
-        uploadImage(`${generative.uuid}-small`, smallImage!),
-        uploadImage(`${generative.uuid}`, largeImage!),
-      ]);
+      console.log("[DEVICE] No image has been selected so skipping upload");
+
+      router.replace("/");
+
+      return;
     }
+
+    await Promise.all([
+      uploadImage(`${generative.uuid}-small`, smallImage!),
+      uploadImage(`${generative.uuid}`, largeImage!),
+    ]);
 
     console.log("[DEVICE] All images uploaded");
 
