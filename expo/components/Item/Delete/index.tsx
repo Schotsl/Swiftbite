@@ -1,5 +1,6 @@
-import { FontAwesome } from "@expo/vector-icons";
 import React from "react";
+
+import { FontAwesome } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 
 type ItemDeleteProps = {

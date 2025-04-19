@@ -10,7 +10,7 @@ import Header from "@/components/Header";
 import Input from "@/components/Input";
 import Label from "@/components/Label";
 import Item from "@/components/Item";
-import ItemDelete from "@/components/ItemDelete";
+import ItemDelete from "@/components/Item/Delete";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
 import { MealData, mealSchema } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -148,7 +148,7 @@ export default function DetailsScreen() {
               title="Voeg ingrediënt toe"
               onPress={() => {
                 router.push(
-                  `/(tabs)/automations/meal/${mealId}/product/search`,
+                  `/(tabs)/automations/meal/${mealId}/product/search`
                 );
               }}
             />

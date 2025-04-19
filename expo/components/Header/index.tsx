@@ -1,6 +1,7 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
+import HeaderTitle from "./Title";
 
 type HeaderProps = {
   title: string;
@@ -34,7 +35,7 @@ export default function Header({ title, small = false, content }: HeaderProps) {
         <FontAwesome6 name="arrow-left" size={16} color="black" />
       </TouchableOpacity>
 
-      <Text style={{ fontSize: 28, fontWeight: "semibold" }}>{title}</Text>
+      <HeaderTitle>{title}</HeaderTitle>
 
       {content && (
         <Text style={{ fontSize: 16, fontWeight: "normal" }}>{content}</Text>

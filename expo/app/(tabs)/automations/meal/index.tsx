@@ -5,7 +5,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 
 import Tabs from "@/components/Tabs";
 import Item from "@/components/Item";
-import ItemDelete from "@/components/ItemDelete";
+import ItemDelete from "@/components/Item/Delete";
 
 import mealData from "@/queries/mealData";
 import useDeleteMeal from "@/mutations/useDeleteMeal";

@@ -1,8 +1,9 @@
 import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
+import { RowMap } from "react-native-swipe-list-view";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean,
+  compressed: boolean
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -24,4 +25,12 @@ export const handleError = (error: Error | null) => {
 
     throw new Error(error.message);
   }
+};
+
+export const rowTimeout = <T>(rowKey: string, rowMap: RowMap<T>) => {
+  console.log(rowKey, rowMap);
+  rowMap[rowKey]?.closeRow();
+  setTimeout(() => {
+    rowMap[rowKey]?.closeRow();
+  }, 500);
 };

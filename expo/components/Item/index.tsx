@@ -2,11 +2,12 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { Href, router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
-import Icon from "./Icon";
+import Icon from "../Icon";
 
 type NewItemProps = {
   title: string;
   subtitle: string;
+
   href?: Href;
   small?: boolean;
   border?: boolean;
@@ -65,7 +66,7 @@ export default function Item({
             <Text
               style={{
                 fontSize: 16,
-                fontWeight: "semibold",
+                fontFamily: "OpenSans_600SemiBold",
               }}
             >
               {title}
@@ -79,7 +80,7 @@ export default function Item({
               <Text
                 style={{
                   fontSize: 14,
-                  fontWeight: "regular",
+                  fontFamily: "OpenSans_400Regular",
                   color: "#545454",
                 }}
               >
@@ -98,7 +99,7 @@ export default function Item({
               style={{
                 color: "#000000",
                 fontSize: 16,
-                fontWeight: "semibold",
+                fontFamily: "OpenSans_600SemiBold",
               }}
             >
               {rightTop}
@@ -110,7 +111,7 @@ export default function Item({
               style={{
                 color: "#545454",
                 fontSize: 14,
-                fontWeight: "regular",
+                fontFamily: "OpenSans_400Regular",
               }}
             >
               {rightBottom}

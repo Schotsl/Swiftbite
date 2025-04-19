@@ -30,7 +30,7 @@ export default function DetailsScreen() {
   }>();
 
   const { data, isLoading } = useQuery(
-    openfoodData({ barcode, title, brand, quantity }),
+    openfoodData({ barcode, title, brand, quantity })
   );
 
   const product = data as Product;

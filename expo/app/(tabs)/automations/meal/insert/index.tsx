@@ -9,7 +9,7 @@ import Header from "@/components/Header";
 import Input from "@/components/Input";
 import Label from "@/components/Label";
 import Item from "@/components/Item";
-import ItemDelete from "@/components/ItemDelete";
+import ItemDelete from "@/components/Item/Delete";
 import { Divider } from "@/components/Divider";
 import { useEditMeal } from "@/context/MealContext";
 import { MealData, mealSchema } from "@/schemas/serving";
