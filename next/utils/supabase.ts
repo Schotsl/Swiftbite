@@ -48,6 +48,20 @@ export const fetchProduct = async (
   return data;
 };
 
+export const fetchProductByOpenfood = async (
+  openfoodId: string,
+): Promise<Tables<"product">> => {
+  const { data, error } = await supabase
+    .from("product")
+    .select("*")
+    .eq("openfood_id", openfoodId)
+    .single();
+
+  handleError(error);
+
+  return data;
+};
+
 export const fetchEntry = async (
   productId: string,
 ): Promise<Tables<"entry">> => {
