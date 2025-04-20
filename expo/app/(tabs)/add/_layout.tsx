@@ -12,12 +12,10 @@ export default function RootLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="add-barcode" />
-      <Stack.Screen name="add-camera" />
-
-      <Stack.Screen name="add-estimation" />
-      <Stack.Screen name="add-preview-barcode" />
       <Stack.Screen name="add-text" />
+      <Stack.Screen name="add-camera" />
+      <Stack.Screen name="add-product" />
+      <Stack.Screen name="add-estimation" />
     </Stack>
   );
 }

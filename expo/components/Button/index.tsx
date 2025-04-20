@@ -1,12 +1,12 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import {
-  ActivityIndicator,
-  StyleProp,
   Text,
-  TouchableOpacity,
   View,
+  StyleProp,
   ViewStyle,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 
 type ButtonProps = {

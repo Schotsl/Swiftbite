@@ -4,6 +4,7 @@ import { Product } from "@/types";
 import { mapProduct } from "@/utils/openfood";
 import { fetchProductByOpenfood, getUser, supabase } from "@/utils/supabase";
 import { after, NextRequest, NextResponse } from "next/server";
+import { handleError } from "@/helper";
 
 const client = new OpenFoodFacts(fetch);
 
@@ -16,14 +17,14 @@ export async function GET(request: NextRequest) {
   if (!code) {
     return NextResponse.json(
       { error: "Please provide a code" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -55,7 +56,9 @@ export async function GET(request: NextRequest) {
   };
 
   after(async () => {
-    await supabase.from("product").insert(productFinished);
+    const { error } = await supabase.from("product").insert(productFinished);
+
+    handleError(error);
   });
 
   return NextResponse.json(productFinished);

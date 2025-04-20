@@ -2,9 +2,11 @@ import CameraControls from "@/components/Camera/Controls";
 import CameraSelector from "@/components/Camera/Selector";
 import CameraShortcuts from "@/components/Camera/Shortcuts";
 
+import { Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
+import { detectBarcodes } from "react-native-barcodes-detector";
 import { useEffect, useRef, useState } from "react";
 import { BarcodeSettings, CameraType, CameraView } from "expo-camera";
 
@@ -30,7 +32,13 @@ export default function AddAI() {
   }
 
   async function handleImage() {
+    if (isBarcode) {
+      Alert.alert("We hebben geen barcode in deze afbeelding gevonden.");
+      return;
+    }
+
     console.log("[DEVICE] Handling image...");
+
     if (!camera.current) {
       return;
     }
@@ -43,7 +51,7 @@ export default function AddAI() {
       return;
     }
 
-    const pathname = isBarcode ? "/add/add-barcode" : "/add/add-estimation";
+    const pathname = isBarcode ? "/add/add-product" : "/add/add-estimation";
 
     router.push({
       pathname,
@@ -53,7 +61,6 @@ export default function AddAI() {
 
   async function handleDocument() {
     const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
       mediaTypes: ["images"],
       quality: 1,
     });
@@ -67,6 +74,26 @@ export default function AddAI() {
     }
 
     const asset = result.assets[0];
+
+    if (isBarcode) {
+      console.log("[DEVICE] Scanning barcode...");
+
+      const detected = await detectBarcodes(asset.uri, []);
+      const barcode = detected[0]?.rawValue;
+
+      if (!barcode) {
+        Alert.alert("We hebben geen barcode in deze afbeelding gevonden.");
+
+        return;
+      }
+
+      router.push({
+        pathname: "/add/add-product",
+        params: { barcode },
+      });
+
+      return;
+    }
 
     router.push({
       pathname: "/add/add-estimation",

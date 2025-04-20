@@ -1,15 +1,22 @@
-import { FontAwesome6 } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
+
 import HeaderTitle from "./Title";
+import ButtonSmall, { ButtonSmallProps } from "../Button/Small";
 
 type HeaderProps = {
   title: string;
   small?: boolean;
-  content?: string;
+  content?: string | null;
+  buttons?: ButtonSmallProps[];
 };
 
-export default function Header({ title, small = false, content }: HeaderProps) {
+export default function Header({
+  title,
+  small = false,
+  content,
+  buttons,
+}: HeaderProps) {
   return (
     <View
       style={{
@@ -18,22 +25,15 @@ export default function Header({ title, small = false, content }: HeaderProps) {
         paddingBottom: small ? 24 : 48,
       }}
     >
-      <TouchableOpacity
-        onPress={() => router.back()}
-        style={{
-          width: 36,
-          height: 36,
+      <View style={{ flexDirection: "row", gap: 12 }}>
+        <ButtonSmall
+          icon="arrow-left"
+          style={{ marginRight: "auto" }}
+          onPress={() => router.back()}
+        />
 
-          alignItems: "center",
-          justifyContent: "center",
-
-          borderRadius: 100,
-          borderColor: "#000",
-          borderWidth: 2,
-        }}
-      >
-        <FontAwesome6 name="arrow-left" size={16} color="black" />
-      </TouchableOpacity>
+        {buttons?.map((button) => <ButtonSmall {...button} />)}
+      </View>
 
       <HeaderTitle>{title}</HeaderTitle>
 

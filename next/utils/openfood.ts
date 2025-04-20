@@ -2,6 +2,21 @@ import { ProductV2 } from "@openfoodfacts/openfoodfacts-nodejs";
 import { roundNumber } from "@/helper";
 import { ProductInsert } from "@/types";
 
+// TODO: Fix this maybe using AI since it always assumes g
+export function getQuantity(product: ProductV2) {
+  const quantity = product.quantity;
+
+  if (!quantity) {
+    return { quantity: null, unit: null };
+  }
+
+  // Strip all non-numeric characters from quantity
+  const quantityUnit = product.quantity_unit || "g";
+  const quantityNumber = quantity.replace(/[^0-9]/g, "");
+
+  return { quantity: quantityNumber, unit: quantityUnit };
+}
+
 export function getTitle(product: ProductV2, lang: string) {
   // Try preferred language-specific names first
   const preferenceKey = `product_name_${lang}`;
@@ -32,6 +47,8 @@ export function getTitle(product: ProductV2, lang: string) {
 export function mapProduct(product: ProductV2, lang: string): ProductInsert {
   const { nutriments } = product;
 
+  const quantity = getQuantity(product);
+
   // TODO: This will probably fail in a lot of cases
   const serving = roundNumber(+product.serving_quantity);
   const servingUnit = product.serving_quantity_unit;
@@ -40,15 +57,15 @@ export function mapProduct(product: ProductV2, lang: string): ProductInsert {
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans,
+    nutritionFats - nutritionSaturated - nutritionTrans
   );
 
   return {
     serving,
     serving_unit: servingUnit,
 
-    quantity: product.quantity,
-    quantity_unit: product.quantity_unit,
+    quantity: quantity.quantity,
+    quantity_unit: quantity.unit,
 
     type: "openfood",
     title: getTitle(product, lang),

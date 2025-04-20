@@ -28,7 +28,6 @@ export const handleError = (error: Error | null) => {
 };
 
 export const rowTimeout = <T>(rowKey: string, rowMap: RowMap<T>) => {
-  console.log(rowKey, rowMap);
   rowMap[rowKey]?.closeRow();
   setTimeout(() => {
     rowMap[rowKey]?.closeRow();

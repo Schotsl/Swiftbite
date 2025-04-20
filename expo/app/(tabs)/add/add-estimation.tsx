@@ -21,21 +21,27 @@ import useInsertProduct from "@/mutations/useInsertProduct";
 import useInsertGenerative from "@/mutations/useInsertGenerative";
 
 export default function Add2Preview() {
-  const initialImage = useLocalSearchParams<{
-    uri: string;
-    width: string;
-    height: string;
-  }>();
-
   const focus = useIsFocused();
   const router = useRouter();
 
+  const initialImage = useLocalSearchParams<{
+    uri?: string;
+    width?: string;
+    height?: string;
+  }>();
+
+  const { uri, width, height } = initialImage;
+
   const [saving, setSaving] = useState(false);
-  const [image, setImage] = useState<ImageType | null>({
-    ...initialImage,
-    width: parseInt(initialImage.width),
-    height: parseInt(initialImage.height),
-  });
+  const [image, setImage] = useState<ImageType | null>(
+    uri && width && height
+      ? {
+          uri,
+          width: parseInt(width),
+          height: parseInt(height),
+        }
+      : null,
+  );
 
   const [smallImage, setSmallImage] = useState<string | null>(null);
   const [largeImage, setLargeImage] = useState<string | null>(null);

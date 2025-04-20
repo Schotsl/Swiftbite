@@ -43,7 +43,7 @@ export default function AddText() {
 
   const handleSelect = (product: ProductSearch) => {
     router.push({
-      pathname: "/add/add-preview-barcode",
+      pathname: "/add/add-product",
       params: {
         title: product.title,
         brand: product.brand,
@@ -80,7 +80,7 @@ export default function AddText() {
         {
           signal,
           headers,
-        },
+        }
       );
 
       if (!response.ok) {

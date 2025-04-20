@@ -1,0 +1,63 @@
+import { TouchableOpacity, View, Text } from "react-native";
+
+export type InputDropdownRadioProps = {
+  label: string;
+  selected: boolean;
+  onSelect: () => void;
+};
+
+export default function InputDropdownRadio({
+  label,
+  selected,
+
+  onSelect,
+}: InputDropdownRadioProps) {
+  return (
+    <TouchableOpacity
+      style={{
+        gap: 12,
+        padding: 16,
+        paddingVertical: 12,
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: "#000",
+
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+      onPress={onSelect}
+    >
+      <View
+        style={{
+          width: 16,
+          height: 16,
+          borderWidth: 2,
+          borderColor: "#000",
+          borderRadius: 8,
+
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {selected && (
+          <View
+            style={{
+              width: 8,
+              height: 8,
+              backgroundColor: "#000",
+              borderRadius: 4,
+            }}
+          />
+        )}
+      </View>
+      <Text
+        style={{
+          fontSize: 16,
+          fontFamily: "OpenSans_600SemiBold",
+        }}
+      >
+        {label}
+      </Text>
+    </TouchableOpacity>
+  );
+}

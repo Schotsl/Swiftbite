@@ -1,9 +1,8 @@
-import React from "react";
 import { Control, Controller } from "react-hook-form";
 import { Text, TextInput, View } from "react-native";
-import { ZodType } from "zod";
 
-import Label from "./Label";
+import React from "react";
+import InputLabel from "./Label";
 
 type Type =
   | "default"
@@ -17,15 +16,15 @@ type InputProps = {
   type?: Type;
   value?: string;
   label?: string;
+  content?: string;
+  required?: boolean;
   password?: boolean;
   disabled?: boolean;
-  placeholder: string;
-  required?: boolean;
   multiline?: boolean;
-  content?: string;
+  placeholder: string;
+
   error?: string;
   control?: Control<any>;
-  schema?: ZodType<any>;
   onChange?: (text: string) => void;
 };
 
@@ -56,24 +55,40 @@ export default function Input({
   if (control) {
     return (
       <Controller
-        control={control}
         name={name}
-        render={({ field: { onChange, value }, fieldState: { error } }) => {
+        control={control}
+        render={({ field: { onChange, value }, fieldState }) => {
+          const handleChange = (text: string) => {
+            if (disabled) {
+              return;
+            }
+
+            if (type === "numeric") {
+              const filtered = text.replace(/[^0-9]/g, "");
+
+              onChange(filtered);
+
+              return;
+            }
+
+            onChange(text);
+          };
+
           return (
             <View>
-              {label && <Label label={label} required={required} />}
+              {label && <InputLabel label={label} required={required} />}
 
               <TextInput
                 value={value ? value.toString() : ""}
                 style={{
                   padding: 12,
-                  paddingVertical: 14,
+                  paddingHorizontal: 14,
 
                   fontSize: 16,
                   fontFamily: "OpenSans_600SemiBold",
 
                   borderWidth: 2,
-                  borderColor: error ? "#FF4141" : "#000",
+                  borderColor: fieldState.error || error ? "#FF4141" : "#000",
                   borderRadius: 8,
                   backgroundColor: "#fff",
 
@@ -84,9 +99,9 @@ export default function Input({
                 multiline={multiline}
                 placeholder={placeholder}
                 keyboardType={type}
+                onChangeText={handleChange}
                 secureTextEntry={password}
                 selectTextOnFocus={!disabled}
-                onChangeText={onChange}
               />
 
               {content && (
@@ -103,7 +118,7 @@ export default function Input({
                 </Text>
               )}
 
-              {error && (
+              {(fieldState.error || error) && (
                 <Text
                   style={{
                     fontSize: 14,
@@ -113,7 +128,7 @@ export default function Input({
                     marginTop: 8,
                   }}
                 >
-                  {error.message}
+                  {fieldState.error?.message || error}
                 </Text>
               )}
             </View>
@@ -126,7 +141,7 @@ export default function Input({
   // Fallback to the standard input for non-form usage
   return (
     <View>
-      {label && <Label label={label} />}
+      {label && <InputLabel label={label} />}
 
       <TextInput
         value={value}

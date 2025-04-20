@@ -7,7 +7,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
-import Label from "@/components/Label";
+import InputLabel from "@/components/Input/Label";
 import Item from "@/components/Item";
 import ItemDelete from "@/components/Item/Delete";
 import { Divider } from "@/components/Divider";
@@ -61,7 +61,7 @@ export default function InsertMealForm() {
         />
 
         <View>
-          <Label label="Ingrediënten" />
+          <InputLabel label="Ingrediënten" />
           <SwipeListView
             style={{
               width: "100%",

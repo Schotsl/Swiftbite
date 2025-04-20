@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
-import Label from "@/components/Label";
+import InputLabel from "@/components/Input/Label";
 import Item from "@/components/Item";
 import ItemDelete from "@/components/Item/Delete";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
@@ -67,7 +67,7 @@ export default function DetailsScreen() {
           />
 
           <View>
-            <Label label="Ingrediënten" />
+            <InputLabel label="Ingrediënten" />
 
             <SwipeListView
               style={{

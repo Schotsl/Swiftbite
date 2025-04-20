@@ -1,4 +1,4 @@
-import Label from "@/components/Label";
+import InputLabel from "@/components/Input/Label";
 import EstimationImageButton from "./Button";
 
 import { Image as ImageType } from "@/types";
@@ -23,7 +23,7 @@ export default function EstimationImage({
 }: EstimationImageProps) {
   return (
     <View>
-      <Label label="Afbeelding" required={required} />
+      <InputLabel label="Afbeelding" required={required} />
 
       {image ? (
         <View

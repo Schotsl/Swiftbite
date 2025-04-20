@@ -27,7 +27,7 @@ const getTodayRange = () => {
     23,
     59,
     59,
-    999
+    999,
   );
   return {
     startDate: startOfDay.toISOString(),
@@ -63,7 +63,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity
+        !entry.consumed_quantity,
     );
 
     const interval = processing ? 500 : false;
@@ -104,7 +104,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour
+      (section) => currentHour >= section.startHour,
     );
 
     // Populate active sections with data
@@ -113,7 +113,7 @@ export default function Index() {
       const entryHour = entryDate.getHours();
 
       let targetSection;
-      
+
       if (entryHour >= 6 && entryHour < 12) {
         targetSection = sectionsFiltered.find((s) => s.title === "Morning");
       } else if (entryHour >= 12 && entryHour < 17) {

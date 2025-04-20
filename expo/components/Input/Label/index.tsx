@@ -1,11 +1,14 @@
 import { Text, View } from "react-native";
 
-type LabelProps = {
+type InputLabelProps = {
   label: string;
   required?: boolean;
 };
 
-export default function Label({ label, required = true }: LabelProps) {
+export default function InputLabel({
+  label,
+  required = true,
+}: InputLabelProps) {
   return (
     <View
       style={{

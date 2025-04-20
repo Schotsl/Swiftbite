@@ -25,6 +25,8 @@ export default function NavigationAddList({ onClose }: NavigationAddListProps) {
 
   const handleEstimate = () => {
     onClose();
+
+    router.push("/add/add-estimation");
   };
 
   const handleCamera = async () => {

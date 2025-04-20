@@ -1,7 +1,7 @@
 import { View } from "react-native";
-
-import CameraShortcutsButton from "./Button";
 import { useRouter } from "expo-router";
+
+import ButtonSmall from "@/components/Button/Small";
 
 type CameraShortcutsProps = {
   flash: boolean;
@@ -29,15 +29,27 @@ export default function CameraShortcuts({
         justifyContent: "space-between",
       }}
     >
-      <CameraShortcutsButton
-        iconAwesome="arrow-left"
+      <ButtonSmall
+        icon="arrow-left"
+        style={{
+          marginRight: "auto",
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
         onPress={handleBack}
-        expand
       />
 
-      <CameraShortcutsButton iconAwesome="question" onPress={() => {}} />
+      <ButtonSmall
+        icon="question"
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+        onPress={() => {}}
+      />
 
-      <CameraShortcutsButton
+      <ButtonSmall
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
         iconMaterial={flash ? "flashlight-on" : "flashlight-off"}
         onPress={onFlash}
       />

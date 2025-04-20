@@ -2,6 +2,7 @@ import { getUser, supabase } from "@/utils/supabase";
 import { after, NextRequest, NextResponse } from "next/server";
 import { searchProduct } from "@/utils/openai";
 import { Product } from "@/types";
+import { handleError } from "@/helper";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
@@ -14,28 +15,28 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!quantity) {
     return NextResponse.json(
       { error: "Please provide a quantity" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
     lang,
     brand,
     quantity,
-    request.signal,
+    request.signal
   );
 
   if (!productInsert) {
@@ -64,7 +65,9 @@ export async function GET(request: NextRequest) {
   };
 
   after(async () => {
-    await supabase.from("product").insert(product);
+    const { error } = await supabase.from("product").insert(product);
+
+    handleError(error);
   });
 
   const response = NextResponse.json(product);

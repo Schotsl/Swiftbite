@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const servingSchema = z.object({
-  sizeOption: z.string().min(1, "Please select a serving size"),
+  option: z.string().min(1, "Please select a serving size"),
   quantity: z
     .string()
     .min(1, "Quantity is required")
@@ -14,7 +14,7 @@ export const servingSchema = z.object({
       },
       {
         message: "Quantity must be a positive number",
-      }
+      },
     ),
 });
 
