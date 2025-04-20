@@ -17,6 +17,7 @@ export default function AddText() {
   const router = useRouter();
 
   const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState("producten");
 
   const { products, loading, error, search } = useSearch();
 
@@ -52,16 +53,18 @@ export default function AddText() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Tabs
-        value={"bruh"}
+        onSelect={(value) => setSelected(value)}
+        value={selected}
         tabs={[
-          { href: "/add/add-search", title: "Producten" },
-          { href: "/add/add-estimation", title: "Basisitems" },
-          { href: "/add/add-estimation", title: "Maaltijden" },
+          { value: "producten", title: "Producten" },
+          { value: "basisitems", title: "Basisitems" },
+          { value: "maaltijden", title: "Maaltijden" },
         ]}
       />
       <View
         style={{
           padding: 16,
+          paddingHorizontal: 32,
           borderBottomWidth: 2,
           borderBottomColor: "#000000",
         }}
@@ -69,6 +72,7 @@ export default function AddText() {
         <Input
           name="query"
           type="default"
+          icon="magnifying-glass"
           value={query}
           placeholder="Search for food..."
           onChange={handleInput}

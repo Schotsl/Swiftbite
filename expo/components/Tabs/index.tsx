@@ -4,18 +4,26 @@ import { Fragment } from "react";
 import { Pressable, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-type Tab = {
+type LinkTab = {
   href: Href;
   title: string;
 };
+
+type ActionTab = {
+  value: string;
+  title: string;
+};
+
+type Tab = LinkTab | ActionTab;
 
 type TabsProps = {
   add?: Href;
   tabs: Tab[];
   value: string;
+  onSelect?: (value: string) => void;
 };
 
-export default function Tabs({ add, tabs, value }: TabsProps) {
+export default function Tabs({ add, tabs, value, onSelect }: TabsProps) {
   return (
     <View>
       <View
@@ -39,26 +47,35 @@ export default function Tabs({ add, tabs, value }: TabsProps) {
             }}
           >
             {tabs.map((tab, index) => {
-              const isLast = tab.href === tabs[tabs.length - 1].href;
-              const isActive = value === tab.href;
+              const isLast = index === tabs.length - 1;
+              const isActive =
+                "href" in tab ? value === tab.href : value === tab.value;
+
+              const tabContent = (
+                <Text
+                  style={{
+                    fontSize: 18,
+                    fontFamily: "OpenSans_400Regular",
+
+                    textShadowColor: "#000000",
+                    textShadowOffset: { width: 0, height: 0 },
+
+                    opacity: isActive ? 1 : 0.25,
+                  }}
+                >
+                  {tab.title}
+                </Text>
+              );
 
               return (
                 <Fragment key={index}>
-                  <Link href={tab.href}>
-                    <Text
-                      style={{
-                        fontSize: 18,
-                        fontWeight: "regular",
-
-                        textShadowColor: "#000000",
-                        textShadowOffset: { width: 0, height: 0 },
-
-                        opacity: isActive ? 1 : 0.25,
-                      }}
-                    >
-                      {tab.title}
-                    </Text>
-                  </Link>
+                  {"href" in tab ? (
+                    <Link href={tab.href}>{tabContent}</Link>
+                  ) : (
+                    <Pressable onPress={() => onSelect?.(tab.value)}>
+                      {tabContent}
+                    </Pressable>
+                  )}
 
                   {!isLast && (
                     <View

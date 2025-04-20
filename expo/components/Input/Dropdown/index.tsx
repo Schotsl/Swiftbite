@@ -85,7 +85,7 @@ export default function Dropdown({
                   fontFamily: "OpenSans_600SemiBold",
 
                   padding: 12,
-                  paddingHorizontal: 14,
+                  paddingHorizontal: 16,
                 }}
               >
                 {selectedOption ? selectedOption.label : placeholder}

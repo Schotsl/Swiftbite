@@ -1,3 +1,4 @@
+import { FontAwesome6 } from "@expo/vector-icons";
 import { Control, Controller } from "react-hook-form";
 import { Text, TextInput, View } from "react-native";
 
@@ -14,6 +15,7 @@ type Type =
 type InputProps = {
   name: string;
   type?: Type;
+  icon?: keyof typeof FontAwesome6.glyphMap;
   value?: string;
   label?: string;
   content?: string;
@@ -31,6 +33,7 @@ type InputProps = {
 export default function Input({
   name,
   type = "default",
+  icon,
   value,
   label,
   content,
@@ -78,31 +81,47 @@ export default function Input({
             <View>
               {label && <InputLabel label={label} required={required} />}
 
-              <TextInput
-                value={value ? value.toString() : ""}
-                style={{
-                  padding: 12,
-                  paddingHorizontal: 14,
+              <View style={{ position: "relative" }}>
+                {icon && (
+                  <View
+                    style={{
+                      top: 16,
+                      left: 16,
+                      width: 20,
+                      height: 20,
+                      position: "absolute",
+                    }}
+                  >
+                    <FontAwesome6 name={icon} size={16} color="#000" />
+                  </View>
+                )}
 
-                  fontSize: 16,
-                  fontFamily: "OpenSans_600SemiBold",
+                <TextInput
+                  value={value ? value.toString() : ""}
+                  style={{
+                    padding: 12,
+                    paddingLeft: icon ? 40 : 16,
+                    paddingHorizontal: 16,
 
-                  borderWidth: 2,
-                  borderColor: fieldState.error || error ? "#FF4141" : "#000",
-                  borderRadius: 8,
-                  backgroundColor: "#fff",
+                    fontSize: 16,
+                    fontFamily: "OpenSans_600SemiBold",
 
-                  opacity: disabled ? 0.5 : 1,
-                  minHeight: multiline ? 100 : undefined,
-                }}
-                editable={!disabled}
-                multiline={multiline}
-                placeholder={placeholder}
-                keyboardType={type}
-                onChangeText={handleChange}
-                secureTextEntry={password}
-                selectTextOnFocus={!disabled}
-              />
+                    borderWidth: 2,
+                    borderColor: fieldState.error || error ? "#FF4141" : "#000",
+                    borderRadius: 8,
+
+                    opacity: disabled ? 0.5 : 1,
+                    minHeight: multiline ? 100 : undefined,
+                  }}
+                  editable={!disabled}
+                  multiline={multiline}
+                  placeholder={placeholder}
+                  keyboardType={type}
+                  onChangeText={handleChange}
+                  secureTextEntry={password}
+                  selectTextOnFocus={!disabled}
+                />
+              </View>
 
               {content && (
                 <Text
@@ -143,30 +162,50 @@ export default function Input({
     <View>
       {label && <InputLabel label={label} />}
 
-      <TextInput
-        value={value}
+      <View
         style={{
-          padding: 12,
-          paddingVertical: 14,
-
-          fontSize: 16,
-          fontWeight: "semibold",
-
-          borderWidth: 2,
-          borderColor: error ? "#FF4141" : "#000",
-          borderRadius: 8,
-          backgroundColor: "#fff",
-
-          opacity: disabled ? 0.5 : 1,
-          minHeight: multiline ? 100 : undefined,
+          position: "relative",
         }}
-        editable={!disabled}
-        placeholder={placeholder}
-        keyboardType={type}
-        secureTextEntry={password}
-        selectTextOnFocus={!disabled}
-        onChangeText={handleChange}
-      />
+      >
+        {icon && (
+          <View
+            style={{
+              top: 16,
+              left: 16,
+              width: 20,
+              height: 20,
+              position: "absolute",
+            }}
+          >
+            <FontAwesome6 name={icon} size={16} color="#000" />
+          </View>
+        )}
+
+        <TextInput
+          value={value}
+          style={{
+            padding: 12,
+            paddingLeft: icon ? 40 : 16,
+            paddingHorizontal: 16,
+
+            fontSize: 16,
+            fontFamily: "OpenSans_600SemiBold",
+
+            borderWidth: 2,
+            borderColor: error ? "#FF4141" : "#000",
+            borderRadius: 8,
+
+            opacity: disabled ? 0.5 : 1,
+            minHeight: multiline ? 100 : undefined,
+          }}
+          editable={!disabled}
+          placeholder={placeholder}
+          keyboardType={type}
+          secureTextEntry={password}
+          selectTextOnFocus={!disabled}
+          onChangeText={handleChange}
+        />
+      </View>
 
       {content && (
         <Text
