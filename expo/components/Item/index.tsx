@@ -4,11 +4,10 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 import Icon from "../Icon";
 
-type NewItemProps = {
+type BaseProps = {
   title: string;
   subtitle: string;
 
-  href?: Href;
   small?: boolean;
   border?: boolean;
   iconId?: string | null;
@@ -17,22 +16,42 @@ type NewItemProps = {
   subtitleIcon?: string;
 };
 
+type LinkProps = {
+  href: Href;
+  onPress?: never;
+};
+
+type ButtonProps = {
+  href?: never;
+  onPress: () => void;
+};
+
+type ItemProps = BaseProps & (LinkProps | ButtonProps);
+
 export default function Item({
-  href,
-  small = false,
-  border = true,
   title,
   subtitle,
+
+  href,
+  onPress,
+  small = false,
+  border = true,
   subtitleIcon,
   iconId,
+
   rightTop,
   rightBottom,
-}: NewItemProps) {
+}: ItemProps) {
+  const handlePress = () => {
+    if (href) {
+      router.push(href);
+    } else if (onPress) {
+      onPress();
+    }
+  };
+
   return (
-    <TouchableOpacity
-      onPress={() => href && router.push(href)}
-      activeOpacity={1}
-    >
+    <TouchableOpacity onPress={handlePress} activeOpacity={1}>
       <View
         style={{
           height: 75,

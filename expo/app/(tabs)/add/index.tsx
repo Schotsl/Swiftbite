@@ -221,6 +221,7 @@ export default function Index() {
               iconId={item.product.icon_id}
               subtitle={subtitle}
               rightBottom={`${caloriesRounded} kcal`}
+              onPress={() => {}}
             />
           );
         }}

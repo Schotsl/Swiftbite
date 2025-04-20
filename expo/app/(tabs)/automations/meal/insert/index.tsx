@@ -111,6 +111,7 @@ export default function InsertMealForm() {
                   title={item.product.title!}
                   subtitle={`${caloriesRounded} kcal`}
                   rightTop={`${quantity}g`}
+                  onPress={() => {}}
                 />
               );
             }}

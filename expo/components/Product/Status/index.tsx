@@ -3,14 +3,22 @@ import { useState, useEffect } from "react";
 
 type ProductStatusProps = {
   status: string;
+  active?: boolean;
 };
 
-export default function ProductStatus({ status }: ProductStatusProps) {
-  const [visibleDots, setVisibleDots] = useState(0);
+export default function ProductStatus({
+  status,
+  active = true,
+}: ProductStatusProps) {
+  const [dots, setDots] = useState(0);
 
   useEffect(() => {
+    if (!active) {
+      return;
+    }
+
     const intervalId = setInterval(() => {
-      setVisibleDots((previous) => {
+      setDots((previous) => {
         const dotIncreased = previous + 1;
         const dotModulo = dotIncreased % 4;
 
@@ -19,7 +27,7 @@ export default function ProductStatus({ status }: ProductStatusProps) {
     }, 500);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [active]);
 
   return (
     <View
@@ -43,7 +51,7 @@ export default function ProductStatus({ status }: ProductStatusProps) {
 
         <Text
           style={{
-            color: visibleDots > 0 ? "#000" : "transparent",
+            color: dots > 0 ? "#000" : "transparent",
             fontSize: 16,
             fontFamily: "OpenSans_400Regular",
           }}
@@ -52,7 +60,7 @@ export default function ProductStatus({ status }: ProductStatusProps) {
         </Text>
         <Text
           style={{
-            color: visibleDots > 1 ? "#000" : "transparent",
+            color: dots > 1 ? "#000" : "transparent",
             fontSize: 16,
             fontFamily: "OpenSans_400Regular",
           }}
@@ -61,7 +69,7 @@ export default function ProductStatus({ status }: ProductStatusProps) {
         </Text>
         <Text
           style={{
-            color: visibleDots > 2 ? "#000" : "transparent",
+            color: dots > 2 ? "#000" : "transparent",
             fontSize: 16,
             fontFamily: "OpenSans_400Regular",
           }}
