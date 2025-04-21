@@ -1,50 +1,7 @@
 import { ProductV2 } from "@openfoodfacts/openfoodfacts-nodejs";
 import { roundNumber } from "@/helper";
 import { ProductInsert } from "@/types";
-
-// TODO: Fix this maybe using AI since it always assumes g
-export function getQuantity(product: ProductV2) {
-  const quantity = product.quantity;
-
-  if (!quantity) {
-    return {
-      quantity_gram: null,
-      quantity_original: null,
-      quantity_original_unit: null,
-    };
-  }
-
-  // Strip all non-numeric characters from quantity
-  const quantityUnit = product.quantity_unit.toLowerCase() || "g";
-  const quantityNumber = quantity.replace(/[^0-9]/g, "");
-
-  return {
-    quantity_gram: quantityNumber,
-    quantity_original: quantityNumber,
-    quantity_original_unit: quantityUnit,
-  };
-}
-
-export function getServing(product: ProductV2) {
-  const serving = product.serving_quantity;
-
-  if (!serving) {
-    return {
-      serving_gram: null,
-      serving_original: null,
-      serving_original_unit: null,
-    };
-  }
-
-  const servingUnit = product.serving_quantity_unit;
-  const servingNumber = serving.replace(/[^0-9]/g, "");
-
-  return {
-    serving_gram: servingNumber,
-    serving_original: servingNumber,
-    serving_original_unit: servingUnit,
-  };
-}
+import { normalizeQuantity } from "./openai";
 
 export function getTitle(product: ProductV2, lang: string) {
   const preferenceKey = `product_name_${lang}`;
@@ -72,22 +29,42 @@ export function getTitle(product: ProductV2, lang: string) {
   throw new Error(`No product name found for ${product.code}`);
 }
 
-export function mapProduct(product: ProductV2, lang: string): ProductInsert {
+export async function mapProduct(
+  user: string,
+  product: ProductV2,
+  lang: string
+): Promise<ProductInsert> {
   const { nutriments } = product;
 
-  const quantity = getQuantity(product);
-  const serving = getServing(product);
+  const [quantity, serving] = await Promise.all([
+    normalizeQuantity(user, {
+      unit: product.product_quantity_unit,
+      numeric: product.product_quantity,
+      combined: product.quantity,
+    }),
+
+    normalizeQuantity(user, {
+      unit: product.serving_quantity_unit,
+      numeric: product.serving_quantity,
+      combined: product.serving_size,
+    }),
+  ]);
 
   const nutritionFats = roundNumber(nutriments.fat_100g ?? 0);
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans,
+    nutritionFats - nutritionSaturated - nutritionTrans
   );
 
   return {
-    ...quantity,
-    ...serving,
+    quantity_gram: quantity.quantity_gram,
+    quantity_original: quantity.quantity_original,
+    quantity_original_unit: quantity.quantity_original_unit,
+
+    serving_gram: serving.quantity_gram,
+    serving_original: serving.quantity_original,
+    serving_original_unit: serving.quantity_original_unit,
 
     title: getTitle(product, lang),
     brand: product.brands,

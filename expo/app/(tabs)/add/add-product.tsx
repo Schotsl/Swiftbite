@@ -34,7 +34,7 @@ export default function AddPreviewBarcodeScreen() {
   }>();
 
   const { data: product, isLoading } = useQuery(
-    openfoodData({ barcode, title, brand, quantity }),
+    openfoodData({ barcode, title, brand, quantity })
   );
 
   const { control, handleSubmit } = useForm<ServingData>({
@@ -71,7 +71,7 @@ export default function AddPreviewBarcodeScreen() {
     if (product?.quantity_original) {
       items.push({
         icon: "cube",
-        value: `${product.quantity_original}${product.quantity_original_unit}`,
+        value: `${product.quantity_original} ${product.quantity_original_unit}`,
       });
     }
 

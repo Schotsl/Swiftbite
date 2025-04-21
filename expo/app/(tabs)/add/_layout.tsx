@@ -13,7 +13,6 @@ export default function RootLayout() {
     >
       <Stack.Screen name="index" />
       <Stack.Screen name="add-search" />
-      <Stack.Screen name="add-camera" />
       <Stack.Screen name="add-product" />
       <Stack.Screen name="add-estimation" />
     </Stack>

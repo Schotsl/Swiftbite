@@ -67,11 +67,13 @@ export default function RootLayout() {
           <GestureDetector gesture={handleGesture}>
             <Stack
               screenOptions={{
+                animation: "none",
                 headerShown: false,
                 gestureEnabled: true,
               }}
             >
               <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="camera" />
               <Stack.Screen name="sign-in" />
               <Stack.Screen name="sign-up" />
             </Stack>

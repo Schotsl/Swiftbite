@@ -43,7 +43,7 @@ export default function NavigationAddList({ onClose }: NavigationAddListProps) {
 
     onClose();
 
-    router.push("/add/add-camera");
+    router.push("/camera");
   };
 
   return (

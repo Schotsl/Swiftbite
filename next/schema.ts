@@ -36,7 +36,7 @@ export const productGenerativeNutritionSchema = nutritionSchema.extend({
   serving_gram: z
     .number()
     .describe(
-      `Numeric value of the recommended serving size converted to grams`,
+      `Numeric value of the recommended serving size converted to grams`
     ),
 
   quantity_original: z
@@ -48,7 +48,7 @@ export const productGenerativeNutritionSchema = nutritionSchema.extend({
   quantity_gram: z
     .number()
     .describe(
-      `Numeric value of the total quantity in the product's packaging converted to grams`,
+      `Numeric value of the total quantity in the product's packaging converted to grams`
     ),
 });
 
@@ -59,7 +59,7 @@ export const productSchema = nutritionSchema.extend({
   estimated: z
     .boolean()
     .describe(
-      `True if nutritional values are estimated due to not being able to find the product`,
+      `True if nutritional values are estimated due to not being able to find the product`
     ),
 
   serving_original: z
@@ -71,7 +71,7 @@ export const productSchema = nutritionSchema.extend({
   serving_gram: z
     .number()
     .describe(
-      `Numeric value of the recommended serving size converted to grams`,
+      `Numeric value of the recommended serving size converted to grams`
     ),
 
   quantity_original: z
@@ -83,7 +83,7 @@ export const productSchema = nutritionSchema.extend({
   quantity_gram: z
     .number()
     .describe(
-      `Numeric value of the total quantity in the product's packaging converted to grams`,
+      `Numeric value of the total quantity in the product's packaging converted to grams`
     ),
 });
 
@@ -96,6 +96,14 @@ export const productSearchSchema = z.object({
   quantity_original_unit: z
     .string()
     .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
+      `Unit for the quantity of the product in the packaging (e.g., g, ml)`
     ),
+});
+
+export const quantitySchema = z.object({
+  quantity_original: z.number().describe("Quantity in original unit"),
+  quantity_original_unit: z
+    .string()
+    .describe("Unit of quantity in original unit"),
+  quantity_gram: z.number().describe("Quantity converted to grams"),
 });

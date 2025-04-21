@@ -10,6 +10,7 @@ import {
   productGenerativeVisualsSchema,
   productSchema,
   productSearchSchema,
+  quantitySchema,
 } from "@/schema";
 
 import {
@@ -17,6 +18,8 @@ import {
   ProductInsert,
   ProductGenerativeVisuals,
 } from "@/types";
+
+import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
 
 import searchProductCrawlerPrompt from "@/prompts/search-product-crawler";
 import searchProductStructurePrompt from "@/prompts/search-product-structure";
@@ -278,7 +281,7 @@ export async function normalizeTitle(
   const model = "gpt-4o-mini";
 
   const response = await generateObject({
-    model: openai("gpt-4o-mini"),
+    model: openai(model),
     output: "object",
     schema: z.object({
       normalized_title: z.string().describe("Normalized food title"),
@@ -312,4 +315,60 @@ export async function normalizeTitle(
   const normalizedLowercase = normalized.toLowerCase();
 
   return normalizedLowercase;
+}
+
+export async function normalizeQuantity(
+  user: string,
+  quantity: {
+    unit: string;
+    numeric: string;
+    combined: string;
+  },
+  signal?: AbortSignal
+): Promise<{
+  quantity_original: number | null;
+  quantity_original_unit: string | null;
+  quantity_gram: number | null;
+}> {
+  // If no combined or unit is provided there is no way to know the original unit
+  if (!quantity.combined && !quantity.unit) {
+    return {
+      quantity_original: null,
+      quantity_original_unit: null,
+      quantity_gram: null,
+    };
+  }
+
+  const task: Enums<"task"> = "quantity_normalization";
+  const model = "gpt-4.1-nano";
+
+  const response = await generateObject({
+    model: openai(model),
+    output: "object",
+    schema: quantitySchema,
+    abortSignal: signal,
+    messages: [
+      {
+        role: "system",
+        content: normalizeQuantityPrompt,
+      },
+      {
+        role: "user",
+        content: JSON.stringify(quantity),
+      },
+    ],
+  });
+
+  const { object, usage } = response;
+
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      model,
+      usage,
+    });
+  });
+
+  return object;
 }
