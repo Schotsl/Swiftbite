@@ -10,33 +10,46 @@ export async function GET(request: NextRequest) {
   const lang = request.nextUrl.searchParams.get("lang");
   const query = request.nextUrl.searchParams.get("query");
   const brand = request.nextUrl.searchParams.get("brand");
-  const quantity = request.nextUrl.searchParams.get("quantity");
+
+  const quantity_original =
+    request.nextUrl.searchParams.get("quantity_original");
+
+  const quantity_original_unit = request.nextUrl.searchParams.get(
+    "quantity_original_unit"
+  );
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
-  if (!quantity) {
+  if (!quantity_original) {
     return NextResponse.json(
       { error: "Please provide a quantity" },
-      { status: 400 },
+      { status: 400 }
+    );
+  }
+
+  if (!quantity_original_unit) {
+    return NextResponse.json(
+      { error: "Please provide a quantity unit" },
+      { status: 400 }
     );
   }
 
@@ -45,8 +58,9 @@ export async function GET(request: NextRequest) {
     query,
     lang,
     brand,
-    quantity,
-    request.signal,
+    quantity_original,
+    quantity_original_unit,
+    request.signal
   );
 
   if (!productInsert) {

@@ -9,11 +9,11 @@ export default function useUpdateEntry() {
 
   return useMutation({
     mutationFn: async (entry: Entry): Promise<Entry> => {
-      const { consumed_quantity } = entry;
+      const { consumed_quantity, consumed_option } = entry;
 
       const { data, error } = await supabase
         .from("entry")
-        .update({ consumed_quantity })
+        .update({ consumed_quantity, consumed_option })
         .eq("uuid", entry.uuid)
         .select()
         .single();

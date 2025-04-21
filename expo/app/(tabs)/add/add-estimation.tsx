@@ -117,10 +117,10 @@ export default function Add2Preview() {
     setSaving(true);
 
     const product = await insertProduct.mutateAsync({
-      type: "openfood",
       title: data.title ?? null,
       image: null,
       brand: null,
+      barcode: null,
       estimated: true,
 
       icon_id: null,
@@ -135,28 +135,29 @@ export default function Add2Preview() {
       fat_unsaturated_100g: null,
       fiber_100g: null,
       iron_100g: null,
-      micros_100g: null,
-      openfood_id: null,
-      serving: null,
-      serving_unit: null,
       potassium_100g: null,
       protein_100g: null,
       sodium_100g: null,
-      quantity: null,
-      quantity_unit: null,
+
+      serving_gram: null,
+      serving_original: null,
+      serving_original_unit: null,
+
+      quantity_gram: null,
+      quantity_original: null,
+      quantity_original_unit: null,
     });
 
     const entryPromise = insertEntry.mutateAsync({
-      type: "product",
       title: data.title ?? null,
       meal_id: null,
       product_id: product.uuid,
-      consumed_unit: null,
+
+      consumed_option: null,
       consumed_quantity: null,
     });
 
     const generativePromise = insertGenerative.mutateAsync({
-      type: "image",
       image: !!image,
       content: data.content ?? null,
       product_id: product.uuid,

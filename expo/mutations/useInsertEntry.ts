@@ -30,17 +30,12 @@ export default function useInsertEntry() {
         uuid: Crypto.randomUUID(),
         updated_at: null,
         created_at: new Date().toISOString(),
-        // TODO: This is a hack to get the product data to display immediately
-        ...(entryInsert.type === "product" && entryInsert.product_id
-          ? {
-              product: {
-                uuid: entryInsert.product_id,
-                title: null,
-                icon_id: null,
-                calorie_100g: null,
-              },
-            }
-          : {}),
+        product: {
+          uuid: entryInsert.product_id,
+          title: null,
+          icon_id: null,
+          calorie_100g: null,
+        },
       };
 
       // Add the fake entry to the cache

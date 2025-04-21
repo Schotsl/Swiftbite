@@ -18,7 +18,7 @@ export default function productData({ openfood }: productDataType) {
         .order("created_at", { ascending: false });
 
       if (openfood) {
-        query = query.eq("openfood_id", openfood);
+        query = query.eq("barcode", openfood);
       }
 
       const { error, data } = await query;

@@ -48,19 +48,12 @@ export default function AddPreviewBarcodeScreen() {
   const handleSave = async (data: ServingData) => {
     setSaving(true);
 
-    const option = options.find((option) => option.id === data.option)!;
-    const optionValue = parseFloat(option.value);
-
-    const amountMultiplier = parseFloat(data.quantity);
-    const amountGrams = optionValue * amountMultiplier;
-
     await insertEntry.mutateAsync({
-      type: "product",
       title: null,
       meal_id: null,
       product_id: product!.uuid,
-      consumed_unit: "g",
-      consumed_quantity: amountGrams,
+      consumed_option: data.option,
+      consumed_quantity: parseFloat(data.quantity),
     });
 
     setSaving(false);
@@ -71,14 +64,14 @@ export default function AddPreviewBarcodeScreen() {
   const info = useMemo(() => {
     const items = [];
 
-    if (product?.openfood_id) {
-      items.push({ icon: "barcode", value: product.openfood_id });
+    if (product?.barcode) {
+      items.push({ icon: "barcode", value: product.barcode });
     }
 
-    if (product?.quantity) {
+    if (product?.quantity_original) {
       items.push({
         icon: "cube",
-        value: `${product.quantity}${product.quantity_unit}`,
+        value: `${product.quantity_original}${product.quantity_original_unit}`,
       });
     }
 

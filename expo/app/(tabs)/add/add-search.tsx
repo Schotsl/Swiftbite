@@ -33,7 +33,8 @@ export default function AddText() {
       params: {
         title: product.title,
         brand: product.brand,
-        quantity: product.quantity,
+        quantity: product.quantity_original,
+        quantity_unit: product.quantity_original_unit,
       },
     });
   };
@@ -101,7 +102,7 @@ export default function AddText() {
               <Item
                 title={item.title}
                 subtitle={item.brand}
-                rightTop={`${item.quantity}${item.quantity_unit}`}
+                rightTop={`${item.quantity_original} ${item.quantity_original_unit}`}
                 onPress={() => handleSelect(item)}
               />
             );

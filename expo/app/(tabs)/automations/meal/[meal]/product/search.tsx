@@ -50,7 +50,8 @@ export default function AddText() {
         meal: mealId,
         title: product.title,
         brand: product.brand,
-        quantity: product.quantity,
+        quantity: product.quantity_original,
+        quantity_unit: product.quantity_original_unit,
       },
     });
   };
@@ -143,7 +144,7 @@ export default function AddText() {
           <Text style={styles.itemTitle}>{item.title}</Text>
           <Text style={styles.itemBrand}>{item.brand}</Text>
           <Text>
-            {item.quantity} {item.quantity_unit}
+            {item.quantity_original} {item.quantity_original_unit}
           </Text>
         </View>
       </View>

@@ -5,8 +5,8 @@ export type Product = Tables<"product">;
 export type ProductSearch = {
   title: string;
   brand: string;
-  quantity: number;
-  quantity_unit: Enums<"unit">;
+  quantity_original: number;
+  quantity_original_unit: Enums<"unit">;
 };
 
 export type Image = {

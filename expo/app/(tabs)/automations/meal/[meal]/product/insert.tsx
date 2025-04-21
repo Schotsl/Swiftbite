@@ -65,8 +65,8 @@ export default function DetailsScreen() {
 
       <View style={{ width: "100%", gap: 48 }}>
         <EntryEditItems
-          barcode={product?.openfood_id}
-          quantity={`${product?.quantity} ${product?.quantity_unit}`}
+          barcode={product?.barcode}
+          quantity={`${product?.quantity_original} ${product?.quantity_original_unit}`}
         />
 
         <View style={{ width: "100%", gap: 16 }}>
