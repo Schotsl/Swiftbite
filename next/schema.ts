@@ -27,50 +27,73 @@ export const productGenerativeVisualsSchema = z.object({
 });
 
 export const productGenerativeNutritionSchema = nutritionSchema.extend({
-  serving: z
+  serving_original: z
     .number()
-    .describe("Recommended serving size printed on the packaging"),
-  serving_unit: z
+    .describe("Numeric value of the recommended serving size"),
+  serving_original_unit: z
     .string()
+    .describe(`Unit of the recommended serving size`),
+  serving_gram: z
+    .number()
     .describe(
-      `Unit for the recommended serving printed on the packaging (e.g., g, ml)`,
+      `Numeric value of the recommended serving size converted to grams`,
     ),
 
-  quantity: z.number().describe("Quantity of the product in the packaging"),
-  quantity_unit: z
+  quantity_original: z
+    .number()
+    .describe("Numeric value of the total quantity in the product's packaging"),
+  quantity_original_unit: z
     .string()
+    .describe(`Unit of the total quantity in the product's packaging`),
+  quantity_gram: z
+    .number()
     .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
+      `Numeric value of the total quantity in the product's packaging converted to grams`,
     ),
 });
 
 export const productSchema = nutritionSchema.extend({
   title: z.string().describe("Product title"),
   brand: z.string().describe("Product brand if available").nullable(),
-  estimated: z.boolean().describe("True if nutritional values are estimated"),
-
-  serving: z
-    .number()
-    .describe("Recommended serving size printed on the packaging"),
-  serving_unit: z
-    .string()
+  barcode: z.string().describe("Product barcode if available").nullable(),
+  estimated: z
+    .boolean()
     .describe(
-      `Unit for the recommended serving printed on the packaging (e.g., g, ml)`,
+      `True if nutritional values are estimated due to not being able to find the product`,
     ),
 
-  quantity: z.number().describe("Quantity of the product in the packaging"),
-  quantity_unit: z
+  serving_original: z
+    .number()
+    .describe("Numeric value of the recommended serving size"),
+  serving_original_unit: z
     .string()
+    .describe(`Unit of the recommended serving size`),
+  serving_gram: z
+    .number()
     .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
+      `Numeric value of the recommended serving size converted to grams`,
+    ),
+
+  quantity_original: z
+    .number()
+    .describe("Numeric value of the total quantity in the product's packaging"),
+  quantity_original_unit: z
+    .string()
+    .describe(`Unit of the total quantity in the product's packaging`),
+  quantity_gram: z
+    .number()
+    .describe(
+      `Numeric value of the total quantity in the product's packaging converted to grams`,
     ),
 });
 
 export const productSearchSchema = z.object({
   title: z.string().describe("Product title"),
-  brand: z.string().describe("Product brand"),
-  quantity: z.number().describe("Quantity of the product in the packaging"),
-  quantity_unit: z
+  brand: z.string().describe("Product brand").nullable(),
+  quantity_original: z
+    .number()
+    .describe("Quantity of the product in the packaging"),
+  quantity_original_unit: z
     .string()
     .describe(
       `Unit for the quantity of the product in the packaging (e.g., g, ml)`,

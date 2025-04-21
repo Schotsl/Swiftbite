@@ -1,20 +1,22 @@
-import {
-  ProductGenerativeNutrition,
-  ProductInsert,
-  ProductGenerativeVisuals,
-} from "@/types";
-import { CoreMessage, generateObject, generateText, streamObject } from "ai";
-import { openai as openai } from "@ai-sdk/openai";
 import { z } from "zod";
 import { after } from "next/server";
-import { insertUsage } from "./usage";
 import { Enums } from "@/database.types";
+import { insertUsage } from "./usage";
+import { openai as openai } from "@ai-sdk/openai";
+import { CoreMessage, generateObject, generateText, streamObject } from "ai";
+
 import {
   productGenerativeNutritionSchema,
   productGenerativeVisualsSchema,
   productSchema,
   productSearchSchema,
 } from "@/schema";
+
+import {
+  ProductGenerativeNutrition,
+  ProductInsert,
+  ProductGenerativeVisuals,
+} from "@/types";
 
 import searchProductCrawlerPrompt from "@/prompts/search-product-crawler";
 import searchProductStructurePrompt from "@/prompts/search-product-structure";
@@ -87,9 +89,6 @@ export async function estimateNutrition(
     ...object,
 
     estimated: true,
-
-    serving_unit: object.serving_unit as Enums<"unit">,
-    quantity_unit: object.quantity_unit as Enums<"unit">,
   };
 }
 
@@ -154,10 +153,7 @@ export async function estimateVisuals(
     });
   });
 
-  return {
-    title: object.title,
-    brand: object.brand ?? null,
-  };
+  return object;
 }
 
 export async function searchProduct(
@@ -215,15 +211,8 @@ export async function searchProduct(
   return {
     ...object,
 
-    serving_unit: object.serving_unit as Enums<"unit">,
-    quantity_unit: object.quantity_unit as Enums<"unit">,
-
-    type: "estimation",
-
     image: null,
     icon_id: null,
-    openfood_id: null,
-    micros_100g: null,
   };
 }
 

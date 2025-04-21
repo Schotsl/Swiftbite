@@ -2,7 +2,7 @@ import OpenFoodFacts from "@openfoodfacts/openfoodfacts-nodejs";
 
 import { Product } from "@/types";
 import { mapProduct } from "@/utils/openfood";
-import { fetchProductByOpenfood, getUser, supabase } from "@/utils/supabase";
+import { fetchProductByBarcode, getUser, supabase } from "@/utils/supabase";
 import { after, NextRequest, NextResponse } from "next/server";
 import { handleError } from "@/helper";
 
@@ -17,20 +17,20 @@ export async function GET(request: NextRequest) {
   if (!code) {
     return NextResponse.json(
       { error: "Please provide a code" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   // Fetch product from supabase and openfood in parallel
   const [productSupabase, productOpenfood] = await Promise.all([
-    fetchProductByOpenfood(code),
+    fetchProductByBarcode(code),
     client.getProduct(code),
   ]);
 

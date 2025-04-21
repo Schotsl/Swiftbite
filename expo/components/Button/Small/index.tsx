@@ -2,6 +2,7 @@ import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity, StyleProp, ViewStyle } from "react-native";
 
 type ButtonSmallBase = {
+  color?: string;
   style?: StyleProp<ViewStyle>;
   onPress: () => void;
 };
@@ -23,6 +24,7 @@ export type ButtonSmallProps =
 export default function ButtonSmall({
   icon,
   iconMaterial,
+  color,
   style,
   onPress,
 }: ButtonSmallProps) {
@@ -38,16 +40,16 @@ export default function ButtonSmall({
           justifyContent: "center",
 
           borderRadius: 100,
-          borderColor: "#000",
+          borderColor: color || "#000",
           borderWidth: 2,
         },
         style,
       ]}
     >
-      {icon && <FontAwesome6 name={icon} size={16} color="black" />}
+      {icon && <FontAwesome6 name={icon} size={16} color={color || "#000"} />}
 
       {iconMaterial && (
-        <MaterialIcons name={iconMaterial} size={18} color="black" />
+        <MaterialIcons name={iconMaterial} size={18} color={color || "#000"} />
       )}
     </TouchableOpacity>
   );

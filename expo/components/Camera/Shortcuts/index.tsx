@@ -31,6 +31,7 @@ export default function CameraShortcuts({
     >
       <ButtonSmall
         icon="arrow-left"
+        color="#fff"
         style={{
           marginRight: "auto",
           backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -40,6 +41,7 @@ export default function CameraShortcuts({
 
       <ButtonSmall
         icon="question"
+        color="#fff"
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
@@ -47,6 +49,7 @@ export default function CameraShortcuts({
       />
 
       <ButtonSmall
+        color="#fff"
         style={{
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}

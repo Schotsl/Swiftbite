@@ -15,28 +15,28 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!quantity) {
     return NextResponse.json(
       { error: "Please provide a quantity" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
     lang,
     brand,
     quantity,
-    request.signal
+    request.signal,
   );
 
   if (!productInsert) {

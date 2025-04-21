@@ -12,7 +12,10 @@ export default function ProductInfo({ items }: ProductInfoProps) {
   return (
     <View style={{ gap: 8 }}>
       {items.map((item) => (
-        <View style={{ gap: 8, alignItems: "center", flexDirection: "row" }}>
+        <View
+          key={item.value}
+          style={{ gap: 8, alignItems: "center", flexDirection: "row" }}
+        >
           <FontAwesome6 name={item.icon} size={16} color="#404040" />
 
           <Text

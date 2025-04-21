@@ -7,18 +7,46 @@ export function getQuantity(product: ProductV2) {
   const quantity = product.quantity;
 
   if (!quantity) {
-    return { quantity: null, unit: null };
+    return {
+      quantity_gram: null,
+      quantity_original: null,
+      quantity_original_unit: null,
+    };
   }
 
   // Strip all non-numeric characters from quantity
-  const quantityUnit = product.quantity_unit || "g";
+  const quantityUnit = product.quantity_unit.toLowerCase() || "g";
   const quantityNumber = quantity.replace(/[^0-9]/g, "");
 
-  return { quantity: quantityNumber, unit: quantityUnit };
+  return {
+    quantity_gram: quantityNumber,
+    quantity_original: quantityNumber,
+    quantity_original_unit: quantityUnit,
+  };
+}
+
+export function getServing(product: ProductV2) {
+  const serving = product.serving_quantity;
+
+  if (!serving) {
+    return {
+      serving_gram: null,
+      serving_original: null,
+      serving_original_unit: null,
+    };
+  }
+
+  const servingUnit = product.serving_quantity_unit;
+  const servingNumber = serving.replace(/[^0-9]/g, "");
+
+  return {
+    serving_gram: servingNumber,
+    serving_original: servingNumber,
+    serving_original_unit: servingUnit,
+  };
 }
 
 export function getTitle(product: ProductV2, lang: string) {
-  // Try preferred language-specific names first
   const preferenceKey = `product_name_${lang}`;
 
   if (product[preferenceKey]) {
@@ -48,32 +76,24 @@ export function mapProduct(product: ProductV2, lang: string): ProductInsert {
   const { nutriments } = product;
 
   const quantity = getQuantity(product);
-
-  // TODO: This will probably fail in a lot of cases
-  const serving = roundNumber(+product.serving_quantity);
-  const servingUnit = product.serving_quantity_unit;
+  const serving = getServing(product);
 
   const nutritionFats = roundNumber(nutriments.fat_100g ?? 0);
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans
+    nutritionFats - nutritionSaturated - nutritionTrans,
   );
 
   return {
-    serving,
-    serving_unit: servingUnit,
+    ...quantity,
+    ...serving,
 
-    quantity: quantity.quantity,
-    quantity_unit: quantity.unit,
-
-    type: "openfood",
     title: getTitle(product, lang),
     brand: product.brands,
     image: product.image_front_url,
-
+    barcode: product.code,
     estimated: false,
-    openfood_id: product.code,
 
     iron_100g: roundNumber(nutriments.iron_100g ?? 0, 2),
     fiber_100g: roundNumber(nutriments.fiber_100g ?? 0, 2),
@@ -91,7 +111,6 @@ export function mapProduct(product: ProductV2, lang: string): ProductInsert {
     fat_saturated_100g: nutritionSaturated,
     fat_unsaturated_100g: nutritionUnsaturated,
 
-    micros_100g: {},
     icon_id: null,
   };
 }

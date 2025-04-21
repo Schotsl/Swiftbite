@@ -4,7 +4,8 @@ export type Product = Tables<"product">;
 export type ProductSearch = {
   title: string;
   brand: string;
-  quantity: number;
+  quantity_original: number;
+  quantity_original_unit: string;
 };
 
 export type ProductInsert = Omit<
@@ -15,11 +16,5 @@ export type ProductInsert = Omit<
 export type ProductGenerativeVisuals = { title: string; brand: string | null };
 export type ProductGenerativeNutrition = Omit<
   ProductInsert,
-  | "type"
-  | "image"
-  | "title"
-  | "brand"
-  | "icon_id"
-  | "micros_100g"
-  | "openfood_id"
+  "image" | "title" | "brand" | "icon_id" | "barcode"
 >;

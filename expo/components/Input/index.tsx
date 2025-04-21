@@ -99,6 +99,7 @@ export default function Input({
                 <TextInput
                   value={value ? value.toString() : ""}
                   style={{
+                    zIndex: 1,
                     padding: 12,
                     paddingLeft: icon ? 40 : 16,
                     paddingHorizontal: 16,
@@ -184,6 +185,7 @@ export default function Input({
         <TextInput
           value={value}
           style={{
+            zIndex: 1,
             padding: 12,
             paddingLeft: icon ? 40 : 16,
             paddingHorizontal: 16,
