@@ -4,7 +4,7 @@ import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean,
+  compressed: boolean
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -78,4 +78,23 @@ export const getOptions = (product?: Product | ProductInsert) => {
   }
 
   return options;
+};
+
+export const getToday = () => {
+  const now = new Date();
+
+  const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const endingDay = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    23,
+    59,
+    59,
+    999
+  );
+  return {
+    endDate: endingDay.toISOString(),
+    startDate: startDay.toISOString(),
+  };
 };

@@ -140,7 +140,7 @@ export default function PageProduct({
         <View>
           <Header
             title={product!.title!}
-            content={product!.brand}
+            content={product?.brand || "No brand"}
             buttons={[
               {
                 icon: "pencil",

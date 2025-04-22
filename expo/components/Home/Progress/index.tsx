@@ -13,7 +13,7 @@ export default function HomeProgress({
   burned,
   consumed,
 }: HomeProgressProps) {
-  const progress = (consumed / target) * 100;
+  const progress = consumed / target;
 
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
@@ -28,9 +28,9 @@ export default function HomeProgress({
           justifyContent: "space-between",
         }}
       >
-        <HomeProgressLabel value={100} label="consumed" />
-        <HomeProgressLabel value={100} label="remaining" />
-        <HomeProgressLabel value={100} label="burned" />
+        <HomeProgressLabel value={consumed} label="consumed" />
+        <HomeProgressLabel value={target - consumed} label="remaining" />
+        <HomeProgressLabel value={burned} label="burned" />
       </View>
 
       <HomeProgressCircle progress={progress} />

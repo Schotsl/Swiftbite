@@ -7,6 +7,7 @@ import { EntryWithProduct } from "@/types";
 import { useEffect, useMemo, useState } from "react";
 
 import ItemDelete from "@/components/Item/Delete";
+import useMacros from "@/hooks/useMacros";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 import entryData from "@/queries/entryData";
 import HomeStreak from "@/components/Home/Streak";
@@ -16,36 +17,17 @@ import HomeCircle from "@/components/Home/Progress";
 import Progress from "@/components/Progress";
 import ItemHeader from "@/components/Item/Header";
 import ItemProductWithServing from "@/components/Item/ProductWithServing";
-
-// Helper function to get today's start and end ISO strings
-const getTodayRange = () => {
-  const now = new Date();
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const endOfDay = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    23,
-    59,
-    59,
-    999,
-  );
-  return {
-    startDate: startOfDay.toISOString(),
-    endDate: endOfDay.toISOString(),
-  };
-};
+import { getToday } from "@/helper";
 
 export default function Index() {
   const router = useRouter();
+  const macros = useMacros();
 
   const [interval, setInterval] = useState<number | false>(1000);
 
   const deleteEntry = useDeleteEntry();
 
-  // Get today's date range
-  const { startDate, endDate } = getTodayRange();
-
+  const { startDate, endDate } = getToday();
   const { data } = useSuspenseQuery({
     ...entryData({}),
     refetchInterval: interval,
@@ -66,7 +48,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity,
+        !entry.consumed_quantity
     );
 
     const interval = processing ? 500 : false;
@@ -107,7 +89,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data
@@ -184,7 +166,7 @@ export default function Index() {
         </View>
 
         <View style={{ gap: 16, paddingVertical: 24 }}>
-          <HomeCircle target={1000} burned={100} consumed={100} />
+          <HomeCircle target={3200} burned={0} consumed={macros.calories} />
 
           <View
             style={{
@@ -195,9 +177,9 @@ export default function Index() {
               justifyContent: "space-between",
             }}
           >
-            <Progress label="Eiwitten" value={40} target={85} />
-            <Progress label="Carbs" value={100} target={200} />
-            <Progress label="Vetten" value={100} target={200} />
+            <Progress label="Eiwitten" value={macros.protein} target={180} />
+            <Progress label="Carbs" value={macros.carbs} target={450} />
+            <Progress label="Vetten" value={macros.fats} target={85} />
           </View>
         </View>
 
