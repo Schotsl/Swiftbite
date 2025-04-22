@@ -1,4 +1,4 @@
-import { Enums, Tables } from "./database.types";
+import { Tables } from "./database.types";
 
 export type Product = Tables<"product">;
 
