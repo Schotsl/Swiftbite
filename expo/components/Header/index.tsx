@@ -32,7 +32,9 @@ export default function Header({
           onPress={() => router.back()}
         />
 
-        {buttons?.map((button) => <ButtonSmall {...button} />)}
+        {buttons?.map((button, index) => (
+          <ButtonSmall key={index} {...button} />
+        ))}
       </View>
 
       <HeaderTitle>{title}</HeaderTitle>

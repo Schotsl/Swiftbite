@@ -17,6 +17,7 @@ import ProductInfo from "@/components/Product/Info";
 
 import Input from "@/components/Input";
 import InputDropdown from "@/components/Input/Dropdown";
+import { Option } from "@/types";
 
 export default function AddPreviewBarcodeScreen() {
   const router = useRouter();
@@ -37,10 +38,10 @@ export default function AddPreviewBarcodeScreen() {
     openfoodData({ barcode, title, brand, quantity })
   );
 
-  const { control, handleSubmit } = useForm<ServingData>({
+  const { control, handleSubmit, setValue } = useForm<ServingData>({
     resolver: zodResolver(servingSchema),
     defaultValues: {
-      option: "1",
+      option: "100-gram",
       quantity: "1",
     },
   });
@@ -78,6 +79,55 @@ export default function AddPreviewBarcodeScreen() {
     return items;
   }, [product]);
 
+  const options = useMemo(() => {
+    let options = [
+      {
+        title: "1 g",
+        value: "1-gram",
+        gram: 1,
+      },
+      {
+        title: "100 g",
+        value: "100-gram",
+        gram: 100,
+      },
+    ];
+
+    if (product?.quantity_original) {
+      options.push({
+        title: `Productinhoud (${product.quantity_original} ${product.quantity_original_unit})`,
+        value: `quantity`,
+        gram: product.quantity_original,
+      });
+
+      setValue("option", `quantity`);
+    }
+
+    if (product?.serving_original) {
+      options.push({
+        title: `Portiegrootte (${product.serving_original} ${product.serving_original_unit})`,
+        value: `serving`,
+        gram: product.serving_gram!,
+      });
+
+      setValue("option", `serving`);
+    }
+
+    if (product?.options) {
+      const productOptions = product?.options as Option[];
+
+      productOptions.forEach((productOption) => {
+        options.push({
+          title: `${productOption.title} (${productOption.gram} g)`,
+          value: productOption.value,
+          gram: productOption.gram,
+        });
+      });
+    }
+
+    return options;
+  }, [product]);
+
   if (isLoading) {
     return (
       <View style={{ padding: 32, minHeight: "100%" }}>
@@ -87,19 +137,6 @@ export default function AddPreviewBarcodeScreen() {
       </View>
     );
   }
-
-  const options = [
-    {
-      id: "1",
-      label: "1g",
-      value: "1",
-    },
-    {
-      id: "2",
-      label: "100g",
-      value: "100",
-    },
-  ];
 
   return (
     <ScrollView style={{ minHeight: "100%" }}>

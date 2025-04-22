@@ -9,6 +9,12 @@ export type ProductSearch = {
   quantity_original_unit: Enums<"unit">;
 };
 
+export type Option = {
+  gram: number;
+  value: string;
+  title: string;
+};
+
 export type Image = {
   uri: string;
   width: number;

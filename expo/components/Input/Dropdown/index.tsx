@@ -7,12 +7,6 @@ import Modal from "@/components/Modal";
 import InputLabel from "../Label";
 import InputDropdownRadio from "./Radio";
 
-type Option = {
-  id: string;
-  label: string;
-  value: string;
-};
-
 type DropdownProps = {
   name: string;
   label: string;
@@ -43,10 +37,10 @@ export default function Dropdown({
       name={name}
       control={control}
       render={({ field: { onChange, value }, fieldState }) => {
-        const selectedOption = options.find((option) => option.id === value);
+        const selectedOption = options.find((option) => option.value === value);
 
         const handleSelect = (option: Option) => {
-          onChange(option.id);
+          onChange(option.value);
           setVisible(false);
         };
 
@@ -88,7 +82,7 @@ export default function Dropdown({
                   paddingHorizontal: 16,
                 }}
               >
-                {selectedOption ? selectedOption.label : placeholder}
+                {selectedOption ? selectedOption.title : placeholder}
               </Text>
 
               <View
@@ -111,9 +105,9 @@ export default function Dropdown({
               <View style={{ gap: 16 }}>
                 {options.map((option) => (
                   <InputDropdownRadio
-                    key={option.id}
-                    label={option.label}
-                    selected={option.id === value}
+                    key={option.value}
+                    label={option.title}
+                    selected={option.value === value}
                     onSelect={() => handleSelect(option)}
                   />
                 ))}
