@@ -1,5 +1,11 @@
 import { Tables } from "./database.types";
 
+export type Option = {
+  title: string;
+  value: string;
+  gram: number;
+};
+
 export type Product = Tables<"product">;
 export type ProductSearch = {
   title: string;

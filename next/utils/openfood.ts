@@ -1,7 +1,7 @@
 import { ProductV2 } from "@openfoodfacts/openfoodfacts-nodejs";
 import { roundNumber } from "@/helper";
 import { ProductInsert } from "@/types";
-import { normalizeQuantity } from "./openai";
+import { generateOptions, normalizeQuantity } from "./openai";
 
 export function getTitle(product: ProductV2, lang: string) {
   const preferenceKey = `product_name_${lang}`;
@@ -32,11 +32,13 @@ export function getTitle(product: ProductV2, lang: string) {
 export async function mapProduct(
   user: string,
   product: ProductV2,
-  lang: string
+  lang: string,
 ): Promise<ProductInsert> {
   const { nutriments } = product;
 
-  const [quantity, serving] = await Promise.all([
+  const title = getTitle(product, lang);
+
+  const [quantity, serving, options] = await Promise.all([
     normalizeQuantity(user, {
       unit: product.product_quantity_unit,
       numeric: product.product_quantity,
@@ -48,16 +50,24 @@ export async function mapProduct(
       numeric: product.serving_quantity,
       combined: product.serving_size,
     }),
+
+    generateOptions(user, {
+      title,
+      country: lang,
+    }),
   ]);
 
   const nutritionFats = roundNumber(nutriments.fat_100g ?? 0);
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans
+    nutritionFats - nutritionSaturated - nutritionTrans,
   );
 
   return {
+    title,
+    options,
+
     quantity_gram: quantity.quantity_gram,
     quantity_original: quantity.quantity_original,
     quantity_original_unit: quantity.quantity_original_unit,
@@ -66,7 +76,6 @@ export async function mapProduct(
     serving_original: serving.quantity_original,
     serving_original_unit: serving.quantity_original_unit,
 
-    title: getTitle(product, lang),
     brand: product.brands,
     image: product.image_front_url,
     barcode: product.code,

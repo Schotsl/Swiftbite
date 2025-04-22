@@ -1,5 +1,12 @@
 import { StreamObjectResult } from "ai";
 
+export const generateSlug = (title: string) => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "-")
+    .replace(/-+/g, "-");
+};
+
 export const handleError = (error: Error | null) => {
   if (error) {
     console.log(error);

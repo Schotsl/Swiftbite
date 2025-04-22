@@ -6,6 +6,7 @@ import { openai as openai } from "@ai-sdk/openai";
 import { CoreMessage, generateObject, generateText, streamObject } from "ai";
 
 import {
+  optionSchema,
   productGenerativeNutritionSchema,
   productGenerativeVisualsSchema,
   productSchema,
@@ -17,7 +18,10 @@ import {
   ProductGenerativeNutrition,
   ProductInsert,
   ProductGenerativeVisuals,
+  Option,
 } from "@/types";
+
+import generateOptionsPrompt from "@/prompts/generate-options";
 
 import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
 
@@ -26,6 +30,7 @@ import searchProductStructurePrompt from "@/prompts/search-product-structure";
 
 import searchProductsCrawlerPrompt from "@/prompts/search-products-crawler";
 import searchProductsStructurePrompt from "@/prompts/search-products-structure";
+import { generateSlug } from "@/helper";
 
 export async function estimateNutrition(
   user: string,
@@ -34,7 +39,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeNutrition> {
   const task: Enums<"task"> = "nutrition_estimation";
   const model = "gpt-4o";
@@ -91,6 +96,7 @@ export async function estimateNutrition(
   return {
     ...object,
 
+    options: null,
     estimated: true,
   };
 }
@@ -102,7 +108,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeVisuals> {
   const task: Enums<"task"> = "title_generation";
   const model = openai("gpt-4o-mini");
@@ -166,7 +172,7 @@ export async function searchProduct(
   brand: string,
   quantity_original: string,
   quantity_original_unit: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductInsert | null> {
   const searchModel = openai.responses("gpt-4o");
   const searchResponse = await generateText({
@@ -216,6 +222,7 @@ export async function searchProduct(
     ...object,
 
     image: null,
+    options: null,
     icon_id: null,
   };
 }
@@ -224,7 +231,7 @@ export async function searchProducts(
   user: string,
   query: string,
   lang: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) {
   const searchModel = openai.responses("gpt-4o");
   const searchResponse = await generateText({
@@ -275,7 +282,7 @@ export async function searchProducts(
 export async function normalizeTitle(
   user: string,
   title: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task: Enums<"task"> = "title_normalization";
   const model = "gpt-4o-mini";
@@ -324,7 +331,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<{
   quantity_original: number | null;
   quantity_original_unit: string | null;
@@ -371,4 +378,52 @@ export async function normalizeQuantity(
   });
 
   return object;
+}
+
+export async function generateOptions(
+  user: string,
+  data: {
+    title: string;
+    country: string;
+  },
+  signal?: AbortSignal,
+): Promise<Option[]> {
+  const task: Enums<"task"> = "options_generation";
+  const model = "gpt-4.1-nano";
+
+  const response = await generateObject({
+    model: openai(model),
+    output: "array",
+    schema: optionSchema,
+    abortSignal: signal,
+    messages: [
+      {
+        role: "system",
+        content: generateOptionsPrompt,
+      },
+      {
+        role: "user",
+        content: JSON.stringify(data),
+      },
+    ],
+  });
+
+  const { object, usage } = response;
+
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      model,
+      usage,
+    });
+  });
+
+  const options = object.map((option) => ({
+    value: generateSlug(option.title),
+    title: option.title,
+    gram: option.gram,
+  }));
+
+  return options;
 }
