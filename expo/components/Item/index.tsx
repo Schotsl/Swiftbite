@@ -11,8 +11,8 @@ type BaseProps = {
   small?: boolean;
   border?: boolean;
   iconId?: string | null;
-  rightTop?: string;
-  rightBottom?: string;
+  rightTop?: string | null;
+  rightBottom?: string | null;
   subtitleIcon?: string;
 };
 
@@ -71,7 +71,6 @@ export default function Item({
             gap: 16,
             height: "100%",
             minWidth: "100%",
-
             alignItems: "center",
             flexDirection: "row",
           }}
@@ -79,9 +78,7 @@ export default function Item({
           {/* If iconId is null it's still loading the ID */}
           {typeof iconId !== "undefined" && <Icon iconId={iconId} />}
 
-          <View
-            style={{ gap: 4, height: "100%", justifyContent: "space-between" }}
-          >
+          <View style={{ height: "100%", justifyContent: "space-between" }}>
             <Text
               style={{
                 fontSize: 16,
@@ -111,7 +108,7 @@ export default function Item({
             style={{
               flex: 1,
               alignItems: "flex-end",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
             }}
           >
             <Text

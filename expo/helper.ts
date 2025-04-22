@@ -1,9 +1,10 @@
 import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
 import { RowMap } from "react-native-swipe-list-view";
+import { Option, Product } from "./types";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean,
+  compressed: boolean
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -32,4 +33,49 @@ export const rowTimeout = <T>(rowKey: string, rowMap: RowMap<T>) => {
   setTimeout(() => {
     rowMap[rowKey]?.closeRow();
   }, 500);
+};
+
+export const getOptions = (product?: Product) => {
+  let options = [
+    {
+      title: "1 g",
+      value: "1-gram",
+      gram: 1,
+    },
+    {
+      title: "100 g",
+      value: "100-gram",
+      gram: 100,
+    },
+  ];
+
+  if (product?.quantity_original) {
+    options.push({
+      title: `Productinhoud (${product.quantity_original} ${product.quantity_original_unit})`,
+      value: `quantity`,
+      gram: product.quantity_original,
+    });
+  }
+
+  if (product?.serving_original) {
+    options.push({
+      title: `Portiegrootte (${product.serving_original} ${product.serving_original_unit})`,
+      value: `serving`,
+      gram: product.serving_gram!,
+    });
+  }
+
+  if (product?.options) {
+    const productOptions = product?.options as Option[];
+
+    productOptions.forEach((productOption) => {
+      options.push({
+        title: `${productOption.title} (${productOption.gram} g)`,
+        value: productOption.value,
+        gram: productOption.gram,
+      });
+    });
+  }
+
+  return options;
 };

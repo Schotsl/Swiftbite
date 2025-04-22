@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
+import { getOptions } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
@@ -17,7 +18,6 @@ import ProductInfo from "@/components/Product/Info";
 
 import Input from "@/components/Input";
 import InputDropdown from "@/components/Input/Dropdown";
-import { Option } from "@/types";
 
 export default function AddPreviewBarcodeScreen() {
   const router = useRouter();
@@ -88,52 +88,22 @@ export default function AddPreviewBarcodeScreen() {
   }, [product]);
 
   const options = useMemo(() => {
-    let options = [
-      {
-        title: "1 g",
-        value: "1-gram",
-        gram: 1,
-      },
-      {
-        title: "100 g",
-        value: "100-gram",
-        gram: 100,
-      },
-    ];
+    const optionsObject = getOptions(product);
+    const optionsQuantity = optionsObject.find(
+      (option) => option.value === "quantity"
+    );
 
-    if (product?.quantity_original) {
-      options.push({
-        title: `Productinhoud (${product.quantity_original} ${product.quantity_original_unit})`,
-        value: `quantity`,
-        gram: product.quantity_original,
-      });
+    const optionsServing = optionsObject.find(
+      (option) => option.value === "serving"
+    );
 
-      setValue("option", `quantity`);
+    if (optionsServing) {
+      setValue("option", optionsServing.value);
+    } else if (optionsQuantity) {
+      setValue("option", optionsQuantity.value);
+    } else {
+      setValue("option", "100-gram");
     }
-
-    if (product?.serving_original) {
-      options.push({
-        title: `Portiegrootte (${product.serving_original} ${product.serving_original_unit})`,
-        value: `serving`,
-        gram: product.serving_gram!,
-      });
-
-      setValue("option", `serving`);
-    }
-
-    if (product?.options) {
-      const productOptions = product?.options as Option[];
-
-      productOptions.forEach((productOption) => {
-        options.push({
-          title: `${productOption.title} (${productOption.gram} g)`,
-          value: productOption.value,
-          gram: productOption.gram,
-        });
-      });
-    }
-
-    return options;
   }, [product, setValue]);
 
   if (isLoading) {

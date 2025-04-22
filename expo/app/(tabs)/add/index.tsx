@@ -14,7 +14,8 @@ import HomeCircle from "@/components/Home/Progress";
 import Progress from "@/components/Progress";
 import ItemHeader from "@/components/Item/Header";
 import { ScrollView } from "react-native-gesture-handler";
-import { EntryWithProduct } from "@/types";
+import { EntryWithProduct, Option } from "@/types";
+import ItemEntry from "@/components/Item/Entry";
 
 // Helper function to get today's start and end ISO strings
 const getTodayRange = () => {
@@ -27,7 +28,7 @@ const getTodayRange = () => {
     23,
     59,
     59,
-    999,
+    999
   );
   return {
     startDate: startOfDay.toISOString(),
@@ -63,7 +64,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity,
+        !entry.consumed_quantity
     );
 
     const interval = processing ? 500 : false;
@@ -104,7 +105,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data
@@ -204,27 +205,7 @@ export default function Index() {
       <SwipeListView
         style={{ marginBottom: -2 }}
         sections={sections}
-        renderItem={({ item }) => {
-          const quantity = item.consumed_quantity || 0;
-          const multiplier = item.product.calorie_100g || 0;
-
-          const calories = (multiplier / 100) * quantity;
-          const caloriesRounded = Math.round(calories);
-
-          const title = item.product.title || "Loading...";
-          const brand = item.product.brand || "No brand";
-          const subtitle = item.product.title ? brand : "Loading...";
-
-          return (
-            <Item
-              title={title}
-              iconId={item.product.icon_id}
-              subtitle={subtitle}
-              rightBottom={`${caloriesRounded} kcal`}
-              onPress={() => {}}
-            />
-          );
-        }}
+        renderItem={ItemEntry}
         renderHiddenItem={({ item }) => (
           <ItemDelete onDelete={() => handleDelete(item.uuid)} />
         )}

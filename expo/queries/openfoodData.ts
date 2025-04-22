@@ -42,7 +42,7 @@ export default function openfoodData({
       const response = await fetch(url, { headers });
       const products = await response.json();
 
-      return products;
+      return products as Product;
     },
   });
 }
