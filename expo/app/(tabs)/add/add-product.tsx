@@ -26,16 +26,24 @@ export default function AddPreviewBarcodeScreen() {
 
   const [saving, setSaving] = useState(false);
 
-  const { title, brand, quantity, barcode } = useLocalSearchParams<{
-    entry?: string;
-    title?: string;
-    brand?: string;
-    barcode?: string;
-    quantity?: string;
-  }>();
+  const { title, brand, quantity_original, quantity_original_unit, barcode } =
+    useLocalSearchParams<{
+      entry?: string;
+      title?: string;
+      brand?: string;
+      barcode?: string;
+      quantity_original?: string;
+      quantity_original_unit?: string;
+    }>();
 
   const { data: product, isLoading } = useQuery(
-    openfoodData({ barcode, title, brand, quantity })
+    openfoodData({
+      barcode,
+      title,
+      brand,
+      quantity_original,
+      quantity_original_unit,
+    })
   );
 
   const { control, handleSubmit, setValue } = useForm<ServingData>({

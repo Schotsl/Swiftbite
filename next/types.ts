@@ -16,7 +16,7 @@ export type ProductSearch = {
 
 export type ProductInsert = Omit<
   Product,
-  "uuid" | "user_id" | "created_at" | "updated_at"
+  "uuid" | "options" | "user_id" | "created_at" | "updated_at"
 >;
 
 export type ProductGenerativeVisuals = { title: string; brand: string | null };

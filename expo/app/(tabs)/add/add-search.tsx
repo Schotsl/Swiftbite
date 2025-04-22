@@ -33,8 +33,8 @@ export default function AddText() {
       params: {
         title: product.title,
         brand: product.brand,
-        quantity: product.quantity_original,
-        quantity_unit: product.quantity_original_unit,
+        quantity_original: product.quantity_original,
+        quantity_original_unit: product.quantity_original_unit,
       },
     });
   };

@@ -1,6 +1,6 @@
 import { getUser, supabase } from "@/utils/supabase";
 import { after, NextRequest, NextResponse } from "next/server";
-import { searchProduct } from "@/utils/openai";
+import { generateOptions, searchProduct } from "@/utils/openai";
 import { Product } from "@/types";
 import { handleError } from "@/helper";
 
@@ -15,53 +15,56 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit",
+    "quantity_original_unit"
   );
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!quantity_original) {
     return NextResponse.json(
-      { error: "Please provide a quantity" },
-      { status: 400 },
+      { error: "Please provide a quantity_original" },
+      { status: 400 }
     );
   }
 
   if (!quantity_original_unit) {
     return NextResponse.json(
-      { error: "Please provide a quantity unit" },
-      { status: 400 },
+      { error: "Please provide a quantity_original_unit" },
+      { status: 400 }
     );
   }
 
-  const productInsert = await searchProduct(
-    user!,
-    query,
-    lang,
-    brand,
-    quantity_original,
-    quantity_original_unit,
-    request.signal,
-  );
+  const [productOptions, productInsert] = await Promise.all([
+    generateOptions(user!, { title: query, country: lang }),
+    searchProduct(
+      user!,
+      query,
+      lang,
+      brand,
+      quantity_original,
+      quantity_original_unit,
+      request.signal
+    ),
+  ]);
 
   if (!productInsert) {
     return NextResponse.json({ error: "No product found" }, { status: 404 });
@@ -69,6 +72,7 @@ export async function GET(request: NextRequest) {
 
   const product: Product = {
     uuid: crypto.randomUUID(),
+    options: productOptions,
 
     user_id: user!,
 
