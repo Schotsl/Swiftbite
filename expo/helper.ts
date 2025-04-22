@@ -1,10 +1,10 @@
-import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
 import { RowMap } from "react-native-swipe-list-view";
-import { Option, Product } from "./types";
+import { Option, Product, ProductInsert } from "./types";
+import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean
+  compressed: boolean,
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -35,7 +35,7 @@ export const rowTimeout = <T>(rowKey: string, rowMap: RowMap<T>) => {
   }, 500);
 };
 
-export const getOptions = (product?: Product) => {
+export const getOptions = (product?: Product | ProductInsert) => {
   let options = [
     {
       title: "1 g",

@@ -2,24 +2,7 @@ import { z } from "zod";
 
 export const servingSchema = z.object({
   option: z.string().min(1, "Please select a serving size"),
-  quantity: z
-    .string()
-    .min(1, "Quantity is required")
-    .refine(
-      (val) => {
-        const number = parseFloat(val);
-        const numberPositive = number > 0;
-
-        return numberPositive;
-      },
-      {
-        message: "Quantity must be a positive number",
-      },
-    ),
-});
-
-export const servingSchemaNew = z.object({
-  quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
+  quantity: z.number().min(1, "Quantity is required"),
 });
 
 export const mealSchema = z.object({
@@ -31,7 +14,10 @@ export const estimationSchema = z.object({
   content: z.string().optional(),
 });
 
-export type ServingData = z.infer<typeof servingSchema>;
-export type ServingDataNew = z.infer<typeof servingSchemaNew>;
 export type MealData = z.infer<typeof mealSchema>;
 export type EstimationData = z.infer<typeof estimationSchema>;
+
+export type ServingInput = z.infer<typeof servingSchema>;
+export type ServingData = z.infer<typeof servingSchema> & {
+  gram: number;
+};

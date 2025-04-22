@@ -121,6 +121,7 @@ export default function Add2Preview() {
       image: null,
       brand: null,
       barcode: null,
+      options: null,
       estimated: true,
 
       icon_id: null,
@@ -149,10 +150,9 @@ export default function Add2Preview() {
     });
 
     const entryPromise = insertEntry.mutateAsync({
-      title: data.title ?? null,
       meal_id: null,
       product_id: product.uuid,
-
+      consumed_gram: null,
       consumed_option: null,
       consumed_quantity: null,
     });

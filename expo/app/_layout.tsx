@@ -7,6 +7,7 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useFonts } from "@expo-google-fonts/open-sans/useFonts";
@@ -62,6 +63,8 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "left", "top"]}>
+      <StatusBar style="light" />
+
       <QueryClientProvider client={query}>
         <GestureHandlerRootView>
           <GestureDetector gesture={handleGesture}>

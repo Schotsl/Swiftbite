@@ -1,9 +1,11 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
 import { View } from "react-native";
+import { useRouter } from "expo-router";
+import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { EntryWithProduct } from "@/types";
+import { useEffect, useMemo, useState } from "react";
 
-import Item from "@/components/Item";
 import ItemDelete from "@/components/Item/Delete";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 import entryData from "@/queries/entryData";
@@ -13,9 +15,7 @@ import HomeDate from "@/components/Home/Date";
 import HomeCircle from "@/components/Home/Progress";
 import Progress from "@/components/Progress";
 import ItemHeader from "@/components/Item/Header";
-import { ScrollView } from "react-native-gesture-handler";
-import { EntryWithProduct, Option } from "@/types";
-import ItemEntry from "@/components/Item/Entry";
+import ItemProductWithServing from "@/components/Item/ProductWithServing";
 
 // Helper function to get today's start and end ISO strings
 const getTodayRange = () => {
@@ -28,7 +28,7 @@ const getTodayRange = () => {
     23,
     59,
     59,
-    999
+    999,
   );
   return {
     startDate: startOfDay.toISOString(),
@@ -37,6 +37,8 @@ const getTodayRange = () => {
 };
 
 export default function Index() {
+  const router = useRouter();
+
   const [interval, setInterval] = useState<number | false>(1000);
 
   const deleteEntry = useDeleteEntry();
@@ -64,7 +66,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity
+        !entry.consumed_quantity,
     );
 
     const interval = processing ? 500 : false;
@@ -105,7 +107,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour
+      (section) => currentHour >= section.startHour,
     );
 
     // Populate active sections with data
@@ -205,7 +207,28 @@ export default function Index() {
       <SwipeListView
         style={{ marginBottom: -2 }}
         sections={sections}
-        renderItem={ItemEntry}
+        renderItem={({ item }) => {
+          const serving = {
+            gram: item.consumed_gram!,
+            option: item.consumed_option!,
+            quantity: item.consumed_quantity!,
+          };
+
+          return (
+            <ItemProductWithServing
+              product={item.product}
+              serving={serving}
+              onPress={() => {
+                router.push({
+                  pathname: "/(tabs)/add/add-product",
+                  params: {
+                    entry: item.uuid,
+                  },
+                });
+              }}
+            />
+          );
+        }}
         renderHiddenItem={({ item }) => (
           <ItemDelete onDelete={() => handleDelete(item.uuid)} />
         )}

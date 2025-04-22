@@ -1,19 +1,19 @@
-import { Text, View } from "react-native";
 import { Divider } from "@/components/Divider";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useForm } from "react-hook-form";
+import { Text, View } from "react-native";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditMeal } from "@/context/MealContext";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { useForm } from "react-hook-form";
+import { MealData, mealSchema } from "@/schemas/serving";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 import Button from "@/components/Button";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import InputLabel from "@/components/Input/Label";
-import Item from "@/components/Item";
 import ItemDelete from "@/components/Item/Delete";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
-import { MealData, mealSchema } from "@/schemas/serving";
-import { zodResolver } from "@hookform/resolvers/zod";
+import ItemProductWithServing from "@/components/Item/ProductWithServing";
 
 export default function DetailsScreen() {
   const router = useRouter();
@@ -81,22 +81,27 @@ export default function DetailsScreen() {
               keyExtractor={(item) => item.product_id}
               renderItem={({ item, index }) => {
                 const length = meal?.meal_product.length || 0;
-
-                const quantity = item.quantity || 0;
-                const multiplier = item.product.calorie_100g || 0;
-
-                const calories = (multiplier / 100) * quantity;
-                const caloriesRounded = Math.round(calories);
+                const serving = {
+                  gram: item.selected_gram!,
+                  option: item.selected_option!,
+                  quantity: item.selected_quantity!,
+                };
 
                 return (
-                  <Item
-                    small
-                    key={item.product_id}
-                    href={`/(tabs)/automations/meal/${item.meal_id}/product/${item.product_id}`}
+                  <ItemProductWithServing
+                    icon={false}
                     border={index !== length - 1}
-                    title={item.product.title!}
-                    subtitle={`${caloriesRounded} kcal`}
-                    rightTop={`1 kom (100g)`}
+                    product={item.product}
+                    serving={serving}
+                    onPress={() => {
+                      router.push({
+                        pathname: `/(tabs)/automations/meal/[meal]/product`,
+                        params: {
+                          meal: item.meal_id,
+                          product: item.product_id,
+                        },
+                      });
+                    }}
                   />
                 );
               }}
@@ -147,9 +152,7 @@ export default function DetailsScreen() {
             <Button
               title="Voeg ingrediënt toe"
               onPress={() => {
-                router.push(
-                  `/(tabs)/automations/meal/${mealId}/product/search`,
-                );
+                router.push(`/(tabs)/automations/meal/${mealId}/search`);
               }}
             />
 

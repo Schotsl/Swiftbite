@@ -45,7 +45,6 @@ export default function Tab() {
             <Item
               href={`/(tabs)/automations/meal/${item.uuid}`}
               title={item.title}
-              iconId={item.icon_id}
               subtitle={`${item.meal_product.length} ingrediënten`}
               rightBottom={`420 kcal`}
               subtitleIcon="bowl-food"

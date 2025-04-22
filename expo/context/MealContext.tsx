@@ -1,7 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from "react";
 
 import * as crypto from "expo-crypto";
-import { MealData, ServingDataNew } from "@/schemas/serving";
+import { MealData, ServingData } from "@/schemas/serving";
 import {
   MealProductWithProduct,
   MealProductWithProductInsert,
@@ -21,10 +21,10 @@ type MealContextType = {
   meal: MealWithProduct | MealWithProductInsert;
 
   removeMealProduct: (productId: string) => void;
-  updateMealProduct: (productId: string, product: ServingDataNew) => void;
+  updateMealProduct: (productId: string, serving: ServingData) => void;
   insertMealProduct: (
     productId: string,
-    product: ServingDataNew,
+    serving: ServingData,
     productObject: Product,
   ) => void;
 
@@ -54,11 +54,11 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const [removedProductIds, setRemovedProductIds] = useState<string[]>([]);
   const [insertedProducts, setInsertedProducts] = useState<
-    Record<string, ServingDataNew>
+    Record<string, ServingData>
   >({});
 
   const [updatedProducts, setUpdatedProducts] = useState<
-    Record<string, ServingDataNew>
+    Record<string, ServingData>
   >({});
 
   const insertMealMutation = useInsertMeal();
@@ -69,7 +69,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const insertMealProduct = (
     productId: string,
-    product: ServingDataNew,
+    serving: ServingData,
     productObject: ProductInsert,
   ) => {
     setMeal((currentMeal) => {
@@ -78,7 +78,9 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         product_id: productId,
 
         product: productObject,
-        quantity: product.quantity,
+        selected_gram: serving.gram,
+        selected_option: serving.option,
+        selected_quantity: serving.quantity,
       };
 
       return {
@@ -87,25 +89,22 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       };
     });
 
-    setInsertedProducts((prev) => ({ ...prev, [productId]: product }));
+    setInsertedProducts((prev) => ({ ...prev, [productId]: serving }));
   };
 
-  const updateMealProduct = (
-    productId: string,
-    { quantity }: { quantity: number },
-  ) => {
+  const updateMealProduct = (productId: string, serving: ServingData) => {
     setMeal((currentMeal) => {
       return {
         ...currentMeal,
         meal_product: currentMeal.meal_product.map((mealProduct) =>
           mealProduct.product_id === productId
-            ? { ...mealProduct, quantity }
+            ? { ...mealProduct, ...serving }
             : mealProduct,
         ),
       };
     });
 
-    setUpdatedProducts((prev) => ({ ...prev, [productId]: { quantity } }));
+    setUpdatedProducts((prev) => ({ ...prev, [productId]: serving }));
   };
 
   const removeMealProduct = (productId: string) => {
@@ -153,11 +152,13 @@ export const MealProvider: React.FC<MealProviderProps> = ({
     const insertMealProducts = Object.entries(insertedProducts);
     const insertMealProductsPromises = insertMealProducts.map(
       ([productId, product]) => {
-        const { quantity } = product;
         return insertMealProductMutation.mutateAsync({
-          quantity,
           meal_id: mealId,
           product_id: productId,
+
+          selected_gram: product.gram,
+          selected_option: product.option,
+          selected_quantity: product.quantity,
         });
       },
     );
@@ -177,7 +178,9 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         // Create a payload with the original product and the updated quantity
         const productUpdated: MealProductWithProduct = {
           ...productOriginal,
-          quantity: product.quantity,
+          selected_gram: product.gram,
+          selected_option: product.option,
+          selected_quantity: product.quantity,
         };
 
         // Update the product

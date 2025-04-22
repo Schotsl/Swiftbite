@@ -6,7 +6,7 @@ export type ProductSearch = {
   title: string;
   brand: string;
   quantity_original: number;
-  quantity_original_unit: Enums<"unit">;
+  quantity_original_unit: string;
 };
 
 export type Option = {

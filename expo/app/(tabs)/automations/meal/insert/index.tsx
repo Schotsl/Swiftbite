@@ -97,11 +97,11 @@ export default function InsertMealForm() {
               </View>
             )}
             renderItem={({ item, index }) => {
-              const length = meal?.meal_product.length || 0;
-              const quantity = item.quantity || 0;
-              const multiplier = item.product.calorie_100g || 0;
-              const calories = (multiplier / 100) * quantity;
-              const caloriesRounded = Math.round(calories);
+              const gram = item.selected_gram || 0;
+              const calories = item.product.calorie_100g || 0;
+
+              const caloriesCalculated = (calories / 100) * gram;
+              const caloriesRounded = Math.round(caloriesCalculated);
 
               return (
                 <Item
@@ -110,7 +110,7 @@ export default function InsertMealForm() {
                   border={index !== length - 1}
                   title={item.product.title!}
                   subtitle={`${caloriesRounded} kcal`}
-                  rightTop={`${quantity}g`}
+                  rightTop={`${gram}g`}
                   onPress={() => {}}
                 />
               );
