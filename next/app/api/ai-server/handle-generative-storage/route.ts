@@ -88,13 +88,15 @@ export async function POST(request: Request) {
       return;
     }
 
+    console.log(nutrition);
+
     // Update the entry with the estimated serving size
     const { error: entryUpdateError } = await supabase
       .from("entry")
       .update({
-        consumed_gram: nutrition.serving_gram,
-        consumed_quantity: nutrition.serving_original,
-        consumed_quantity_unit: nutrition.serving_original_unit,
+        consumed_gram: nutrition.quantity_gram,
+        consumed_quantity: nutrition.quantity_original,
+        consumed_quantity_unit: nutrition.quantity_original_unit,
       })
       .eq("uuid", entry.uuid);
 
