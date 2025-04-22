@@ -73,6 +73,9 @@ export default function RootLayout() {
                 animation: "none",
                 headerShown: false,
                 gestureEnabled: true,
+                contentStyle: {
+                  backgroundColor: "#FFFFFF",
+                },
               }}
             >
               <Stack.Screen name="(tabs)" />
