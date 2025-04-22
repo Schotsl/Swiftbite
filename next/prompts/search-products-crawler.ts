@@ -6,6 +6,8 @@ If a search result describes a multi-pack (e.g., "24 x 330ml Coca Cola Zero Vani
 Format the details for each selected single product strictly as \`title: [Product Title], brand: [Product Brand], quantity: [Single Unit Quantity including Unit]\`. Do not add descriptive terms like 'can', 'bottle', or 'pack' to the \`title\` unless they are part of the official product name. For example, if the product is 'Coca Cola', the title should be 'Coca Cola', not 'Coca Cola can'. Present all found products inline as a single block of text, separating each complete product entry from the next using only the separator \` | \` (space, pipe, space). For example: \`title: Product A, brand: Brand X, quantity: 100g | title: Product B, brand: Brand Y, quantity: 250ml\`.
 
 Include *only* the formatted single-product information separated by \` | \`. Ensure each unique single product (based on title, brand, and quantity) is listed only once; remove any duplicates. Absolutely no introductory text, concluding text, explanations, or apologies should be added. If the search yields no relevant single-item products after applying these rules, return an empty response. Stop generating output if you reach the 8-product limit or if you run out of unique relevant products to list.
+
+If the user asks for a product that you're certain of it existence, you can just return the product details without searching the web. So an example might be Coca-Cola, you can just return the product details without searching the web since you can list 8 Coca-Cola products from memory.
 `;
 
 export default promptContent;
