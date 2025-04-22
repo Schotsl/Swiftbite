@@ -66,8 +66,8 @@ export async function POST(request: Request) {
       .from("entry")
       .update({
         consumed_gram: nutrition.serving_gram,
-        consumed_quantity: nutrition.serving_original,
-        consumed_quantity_unit: nutrition.serving_original_unit,
+        consumed_quantity: 1,
+        consumed_option: "quantity",
       })
       .eq("uuid", entryObject.uuid);
 
