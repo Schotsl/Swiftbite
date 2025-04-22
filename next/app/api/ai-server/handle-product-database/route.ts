@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[ICON] Normalizing title`);
-    const iconTitle = await normalizeTitle(user, productTitleNew);
+    const iconTitle = await normalizeTitle(user, { title: productTitleNew });
     const iconUuid = await fetchIcon(iconTitle);
 
     // If the icon already exists we'll update the product
