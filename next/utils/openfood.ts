@@ -32,7 +32,7 @@ export function getTitle(product: ProductV2, lang: string) {
 export async function mapProduct(
   user: string,
   product: ProductV2,
-  lang: string
+  lang: string,
 ): Promise<ProductInsert & { options: Option[] }> {
   const { nutriments } = product;
 
@@ -52,8 +52,8 @@ export async function mapProduct(
     }),
 
     generateOptions(user, {
+      lang,
       title,
-      country: lang,
     }),
   ]);
 
@@ -61,7 +61,7 @@ export async function mapProduct(
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans
+    nutritionFats - nutritionSaturated - nutritionTrans,
   );
 
   return {

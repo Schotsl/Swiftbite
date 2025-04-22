@@ -8,61 +8,57 @@ export async function GET(request: NextRequest) {
   const user = await getUser(request);
 
   const lang = request.nextUrl.searchParams.get("lang");
-  const query = request.nextUrl.searchParams.get("query");
+  const title = request.nextUrl.searchParams.get("title");
   const brand = request.nextUrl.searchParams.get("brand");
 
   const quantity_original =
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit"
+    "quantity_original_unit",
   );
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
-  if (!query) {
+  if (!title) {
     return NextResponse.json(
-      { error: "Please provide a query" },
-      { status: 400 }
+      { error: "Please provide a title" },
+      { status: 400 },
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!quantity_original) {
     return NextResponse.json(
       { error: "Please provide a quantity_original" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!quantity_original_unit) {
     return NextResponse.json(
       { error: "Please provide a quantity_original_unit" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   const [productOptions, productInsert] = await Promise.all([
-    generateOptions(user!, { title: query, country: lang }),
+    generateOptions(user!, { title, lang }),
     searchProduct(
       user!,
-      query,
-      lang,
-      brand,
-      quantity_original,
-      quantity_original_unit,
-      request.signal
+      { title, lang, brand, quantity_original, quantity_original_unit },
+      request.signal,
     ),
   ]);
 

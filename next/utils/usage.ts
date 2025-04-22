@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { handleError } from "@/helper";
-import { Enums } from "@/database.types";
 
 import { supabase } from "./supabase";
 import { LanguageModelUsage } from "ai";
@@ -10,15 +9,18 @@ export async function insertUsage({
   task,
   model,
   usage,
+  search,
 }: {
   user: string;
-  task: Enums<"task">;
+  task: string;
   model: string;
   usage: LanguageModelUsage;
+  search?: "low" | "med" | "high";
 }) {
   const { error } = await supabase.from("usage").insert({
     task,
     model,
+    search,
     user_id: user,
     input_tokens: usage.promptTokens,
     output_tokens: usage.completionTokens,

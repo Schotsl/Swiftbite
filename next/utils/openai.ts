@@ -22,48 +22,49 @@ import {
 } from "@/types";
 
 import generateOptionsPrompt from "@/prompts/generate-options";
-
 import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
-
+import normalizeTitlePrompt from "@/prompts/normalize-title";
 import searchProductCrawlerPrompt from "@/prompts/search-product-crawler";
 import searchProductStructurePrompt from "@/prompts/search-product-structure";
-
 import searchProductsCrawlerPrompt from "@/prompts/search-products-crawler";
 import searchProductsStructurePrompt from "@/prompts/search-products-structure";
+import estimateVisualPrompt from "@/prompts/estimate-visual";
+import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
+
 import { generateSlug } from "@/helper";
 
 export async function estimateNutrition(
   user: string,
-  content: {
+  data: {
     image: string | null;
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeNutrition> {
-  const task: Enums<"task"> = "nutrition_estimation";
+  const task = "estimate-nutrition";
   const model = "gpt-4o";
 
   const messages: CoreMessage[] = [];
 
-  if (content.image) {
+  if (data.image) {
     messages.push({
       role: "user",
-      content: [{ type: "image", image: new URL(content.image) }],
+      content: [{ type: "image", image: new URL(data.image) }],
     });
   }
 
-  if (content.title) {
+  if (data.title) {
     messages.push({
       role: "user",
-      content: `Title: ${content.title}`,
+      content: `Title: ${data.title}`,
     });
   }
 
-  if (content.content) {
+  if (data.content) {
     messages.push({
       role: "user",
-      content: `Details: ${content.content}`,
+      content: `Details: ${data.content}`,
     });
   }
 
@@ -75,8 +76,7 @@ export async function estimateNutrition(
     messages: [
       {
         role: "system",
-        content:
-          "You are a nutritionist. Estimate the nutritional values for the provided food item based on the image, title, and/or details. In your response, please ensure that every property name is completely in lowercase.",
+        content: estimateNutritionPrompt,
       },
       ...messages,
     ],
@@ -102,36 +102,36 @@ export async function estimateNutrition(
 
 export async function estimateVisuals(
   user: string,
-  content: {
+  data: {
     image: string | null;
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeVisuals> {
-  const task: Enums<"task"> = "title_generation";
+  const task = "estimate-visuals";
   const model = openai("gpt-4o-mini");
 
   const messages: CoreMessage[] = [];
 
-  if (content.image) {
+  if (data.image) {
     messages.push({
       role: "user",
-      content: [{ type: "image", image: new URL(content.image) }],
+      content: [{ type: "image", image: new URL(data.image) }],
     });
   }
 
-  if (content.title) {
+  if (data.title) {
     messages.push({
       role: "user",
-      content: `Title: ${content.title}`,
+      content: `Title: ${data.title}`,
     });
   }
 
-  if (content.content) {
+  if (data.content) {
     messages.push({
       role: "user",
-      content: `Details: ${content.content}`,
+      content: `Details: ${data.content}`,
     });
   }
 
@@ -143,8 +143,7 @@ export async function estimateVisuals(
     messages: [
       {
         role: "system",
-        content:
-          "You are a food expert. If a title is provided, use that title. Identify the food item based on the image and/or details provided. Provide only its name and try to identify the brand (if discernible, otherwise return null) using regular capitalization, so make sure to capitalize the first letter.",
+        content: estimateVisualPrompt,
       },
       ...messages,
     ],
@@ -166,14 +165,18 @@ export async function estimateVisuals(
 
 export async function searchProduct(
   user: string,
-  title: string,
-  lang: string,
-  brand: string,
-  quantity_original: string,
-  quantity_original_unit: string,
-  signal?: AbortSignal
+  data: {
+    lang: string;
+    brand: string;
+    title: string;
+    quantity_original: string;
+    quantity_original_unit: string;
+  },
+  signal?: AbortSignal,
 ): Promise<ProductInsert | null> {
+  const searchTask = "search-product";
   const searchModel = openai.responses("gpt-4.1-mini");
+
   const searchResponse = await generateText({
     model: searchModel,
     abortSignal: signal,
@@ -184,7 +187,7 @@ export async function searchProduct(
       },
       {
         role: "user",
-        content: `title: ${title}, brand: ${brand}, quantity: ${quantity_original} ${quantity_original_unit}`,
+        content: JSON.stringify(data),
       },
     ],
     tools: {
@@ -192,13 +195,15 @@ export async function searchProduct(
         searchContextSize: "low",
         userLocation: {
           type: "approximate",
-          country: lang,
+          country: data.lang,
         },
       }),
     },
   });
 
-  const structureModel = openai.responses("gpt-4o-mini");
+  const structureTask = "search-product-structure";
+  const structureModel = openai.responses("gpt-4.1-nano");
+
   const structureResponse = await generateObject({
     model: structureModel,
     output: "object",
@@ -216,6 +221,24 @@ export async function searchProduct(
     ],
   });
 
+  after(async () => {
+    await Promise.all([
+      insertUsage({
+        user,
+        task: searchTask,
+        model: searchModel.modelId,
+        usage: searchResponse.usage,
+      }),
+
+      insertUsage({
+        user,
+        task: structureTask,
+        model: structureModel.modelId,
+        usage: structureResponse.usage,
+      }),
+    ]);
+  });
+
   const { object } = structureResponse;
   return {
     ...object,
@@ -227,11 +250,15 @@ export async function searchProduct(
 
 export async function searchProducts(
   user: string,
-  query: string,
-  lang: string,
-  signal?: AbortSignal
+  data: {
+    query: string;
+    lang: string;
+  },
+  signal?: AbortSignal,
 ) {
+  const searchTask = "search-products";
   const searchModel = openai.responses("gpt-4.1-mini");
+
   const searchResponse = await generateText({
     model: searchModel,
     abortSignal: signal,
@@ -242,7 +269,7 @@ export async function searchProducts(
       },
       {
         role: "user",
-        content: query,
+        content: JSON.stringify(data),
       },
     ],
     tools: {
@@ -250,13 +277,15 @@ export async function searchProducts(
         searchContextSize: "low",
         userLocation: {
           type: "approximate",
-          country: lang,
+          country: data.lang,
         },
       }),
     },
   });
 
+  const structureTask = "search-products-structure";
   const structureModel = openai("gpt-4.1-nano");
+
   const structureStream = streamObject({
     model: structureModel,
     output: "array",
@@ -274,15 +303,38 @@ export async function searchProducts(
     ],
   });
 
+  after(async () => {
+    // Wait for the stream to finish
+    const usage = await structureStream.usage;
+
+    await Promise.all([
+      insertUsage({
+        user,
+        task: searchTask,
+        model: searchModel.modelId,
+        usage: searchResponse.usage,
+      }),
+
+      insertUsage({
+        user,
+        task: structureTask,
+        model: structureModel.modelId,
+        usage: usage,
+      }),
+    ]);
+  });
+
   return structureStream;
 }
 
 export async function normalizeTitle(
   user: string,
-  title: string,
-  signal?: AbortSignal
+  data: {
+    title: string;
+  },
+  signal?: AbortSignal,
 ): Promise<string> {
-  const task: Enums<"task"> = "title_normalization";
+  const task = "normalize-title";
   const model = "gpt-4.1-mini";
 
   const response = await generateObject({
@@ -295,12 +347,11 @@ export async function normalizeTitle(
     messages: [
       {
         role: "system",
-        content:
-          "You are responsible for normalizing food titles so they can be matched with icons or generated as images when they don't exist. The input may be in any language and is typically a short food title such as 'spaghetti carbonada' or 'Spaghetti aglio e olio'. The output should be a clear, simplified description of the food item. For example, 'Quaker Cruesli cookies & cream' becomes 'a box of cereal', and 'KFC 32 Zinger Hot Wings bucket' becomes 'a bucket of chicken'. Keep descriptions singular—'fries' should become something like 'a serving of fries' or 'a packet of fries'. Company-specific items like 'Big Mac' should be generalized to 'a hamburger'\n\nAdditionally, when the food is served in a container (such as a bowl, bucket, or plate) or is traditionally presented with culturally specific tableware, include that container in the description rendered in color to ensure contrast with a white background. For example, if cereal is traditionally served in a bowl, the output should be 'a colored bowl of cereal', and if the food is served in a bucket, it should be 'a colored bucket filled with chicken'. For items that are traditionally served on a plate—such as spaghetti—simplify the input to a description like 'a colored plate of spaghetti'. For items that are normally consumed without container details (such as a sport drink or a hamburger), simply describe the food item without adding container details.\n\nFor other complex descriptors—such as 'isometric sport drink'—remove extraneous adjectives so that the description remains clear (for example, 'a sport drink'). This approach ensures that the final description is straightforward and generic, and that any container traditionally associated with the food is rendered with non-white tableware.",
+        content: normalizeTitlePrompt,
       },
       {
         role: "user",
-        content: title,
+        content: data.title,
       },
     ],
   });
@@ -324,19 +375,19 @@ export async function normalizeTitle(
 
 export async function normalizeQuantity(
   user: string,
-  quantity: {
+  data: {
     unit: string;
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<{
   quantity_original: number | null;
   quantity_original_unit: string | null;
   quantity_gram: number | null;
 }> {
   // If no combined or unit is provided there is no way to know the original unit
-  if (!quantity.combined && !quantity.unit) {
+  if (!data.combined && !data.unit) {
     return {
       quantity_original: null,
       quantity_original_unit: null,
@@ -344,7 +395,7 @@ export async function normalizeQuantity(
     };
   }
 
-  const task: Enums<"task"> = "quantity_normalization";
+  const task = "normalize-quantity";
   const model = "gpt-4.1-nano";
 
   const response = await generateObject({
@@ -359,7 +410,7 @@ export async function normalizeQuantity(
       },
       {
         role: "user",
-        content: JSON.stringify(quantity),
+        content: JSON.stringify(data),
       },
     ],
   });
@@ -381,12 +432,12 @@ export async function normalizeQuantity(
 export async function generateOptions(
   user: string,
   data: {
+    lang: string;
     title: string;
-    country: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<Option[]> {
-  const task: Enums<"task"> = "options_generation";
+  const task = "generate-options";
   const model = "gpt-4.1-nano";
 
   const response = await generateObject({

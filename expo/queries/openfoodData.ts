@@ -37,7 +37,7 @@ export default function openfoodData({
 
       const url = barcode
         ? `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/barcode?code=${barcode}&lang=nl`
-        : `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/product?query=${title}&lang=nl&brand=${brand}&quantity_original=${quantity_original}&quantity_original_unit=${quantity_original_unit}`;
+        : `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/product?title=${title}&lang=nl&brand=${brand}&quantity_original=${quantity_original}&quantity_original_unit=${quantity_original_unit}`;
 
       const response = await fetch(url, { headers });
       const products = await response.json();
