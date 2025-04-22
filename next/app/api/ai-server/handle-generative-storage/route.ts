@@ -94,9 +94,9 @@ export async function POST(request: Request) {
     const { error: entryUpdateError } = await supabase
       .from("entry")
       .update({
-        consumed_gram: nutrition.quantity_gram,
-        consumed_quantity: nutrition.quantity_original,
-        consumed_quantity_unit: nutrition.quantity_original_unit,
+        consumed_gram: nutrition.serving_gram,
+        consumed_quantity: 1,
+        consumed_option: "quantity",
       })
       .eq("uuid", entry.uuid);
 
