@@ -1,3 +1,4 @@
+import { Option } from "@/types";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Control, Controller } from "react-hook-form";

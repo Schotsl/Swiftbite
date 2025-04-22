@@ -134,7 +134,7 @@ export default function AddPreviewBarcodeScreen() {
     }
 
     return options;
-  }, [product]);
+  }, [product, setValue]);
 
   if (isLoading) {
     return (

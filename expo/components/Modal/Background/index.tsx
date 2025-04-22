@@ -9,7 +9,7 @@ export default function ModalBackground({ onPress }: ModalBackgroundProps) {
     <TouchableOpacity
       style={{ flex: 1, backgroundColor: "rgba(0, 0, 0, 0.75)" }}
       onPress={onPress}
-      activeOpacity={1}
+      activeOpacity={0}
     />
   );
 }

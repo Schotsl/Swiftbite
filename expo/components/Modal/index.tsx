@@ -1,6 +1,6 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Fragment, ReactNode } from "react";
+import { Fragment, ReactNode, useState } from "react";
 import { Modal as ReactModal } from "react-native";
 
 import Button from "@/components/Button";
@@ -34,6 +34,8 @@ export default function Modal({
   onClose,
   onButton,
 }: ModalProps) {
+  const [height, setHeight] = useState(0);
+
   return (
     <Fragment>
       <ReactModal
@@ -41,72 +43,71 @@ export default function Modal({
         transparent={true}
         animationType="none"
         onRequestClose={onClose}
+        style={{}}
       >
         <ModalBackground onPress={onClose} />
 
         <View
+          onLayout={(event) => {
+            const { height } = event.nativeEvent.layout;
+
+            setHeight(height);
+          }}
           style={{
-            top: 32,
+            top: "50%",
             left: 32,
             right: 32,
-            bottom: 32,
-
             position: "absolute",
-            alignItems: "center",
-            justifyContent: "center",
+            transform: [{ translateY: -height / 2 }],
+
+            padding: 24,
+            paddingBottom: button ? 24 : 32,
+
+            minHeight: 100,
+            borderRadius: 16,
+            backgroundColor: "white",
           }}
         >
           <View
             style={{
-              padding: 24,
-              paddingBottom: button ? 24 : 32,
+              marginBottom: 32,
+              paddingBottom: 24,
+              borderBottomWidth: 1,
+              borderColor: "#A6A6A6",
 
-              minWidth: "100%",
-              minHeight: 100,
-
-              borderRadius: 16,
-              backgroundColor: "white",
+              alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "space-between",
             }}
           >
-            <View
+            <Text
               style={{
-                marginBottom: 32,
-                paddingBottom: 24,
-                borderBottomWidth: 1,
-                borderColor: "#A6A6A6",
-
-                alignItems: "center",
-                flexDirection: "row",
-                justifyContent: "space-between",
+                fontSize: 22,
+                fontFamily: "OpenSans_600SemiBold",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 22,
-                  fontFamily: "OpenSans_600SemiBold",
-                }}
-              >
-                {title}
-              </Text>
+              {title}
+            </Text>
 
+            <TouchableOpacity onPress={onClose}>
               <FontAwesome6 name="xmark" size={22} color="#000" />
-            </View>
-
-            {children}
-
-            {button && (
-              <View
-                style={{
-                  marginTop: 32,
-
-                  borderTopWidth: 1,
-                  borderColor: "#A6A6A6",
-                }}
-              >
-                <Button title={button} onPress={onButton} />
-              </View>
-            )}
+            </TouchableOpacity>
           </View>
+
+          {children}
+
+          {button && (
+            <View
+              style={{
+                marginTop: 32,
+
+                borderTopWidth: 1,
+                borderColor: "#A6A6A6",
+              }}
+            >
+              <Button title={button} onPress={onButton} />
+            </View>
+          )}
         </View>
       </ReactModal>
     </Fragment>
