@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const servingSchema = z.object({
   option: z.string().min(1, "Please select a serving size"),
-  quantity: z.number().min(1, "Quantity is required"),
+  quantity: z.coerce.number().min(1, "Quantity is required"),
 });
 
 export const mealSchema = z.object({

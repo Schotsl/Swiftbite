@@ -3,6 +3,7 @@ import { Href, router } from "expo-router";
 import { Text, TouchableOpacity, View } from "react-native";
 
 import Icon from "../Icon";
+import { useState } from "react";
 
 type BaseProps = {
   title: string;
@@ -42,6 +43,13 @@ export default function Item({
   rightTop,
   rightBottom,
 }: ItemProps) {
+  const [width, setWidth] = useState(0);
+
+  const gap = 16;
+  const right = 75;
+  const padding = small ? 20 : 32;
+  const remaining = width - right - gap - padding * 2;
+
   const handlePress = () => {
     if (href) {
       router.push(href);
@@ -53,13 +61,18 @@ export default function Item({
   return (
     <TouchableOpacity onPress={handlePress} activeOpacity={1}>
       <View
+        onLayout={(event) => {
+          const { width } = event.nativeEvent.layout;
+
+          setWidth(width);
+        }}
         style={{
           height: 75,
           minWidth: "100%",
           borderWidth: border ? 2 : 0,
           flexDirection: "column",
           paddingVertical: 16,
-          paddingHorizontal: small ? 16 : 32,
+          paddingHorizontal: padding,
           borderTopWidth: 0,
           borderLeftWidth: 0,
           borderRightWidth: 0,
@@ -68,7 +81,7 @@ export default function Item({
       >
         <View
           style={{
-            gap: 16,
+            gap,
             height: "100%",
             minWidth: "100%",
             alignItems: "center",
@@ -78,12 +91,19 @@ export default function Item({
           {/* If iconId is null it's still loading the ID */}
           {typeof iconId !== "undefined" && <Icon iconId={iconId} />}
 
-          <View style={{ height: "100%", justifyContent: "space-between" }}>
+          <View
+            style={{
+              height: "100%",
+              maxWidth: remaining,
+              justifyContent: "space-between",
+            }}
+          >
             <Text
               style={{
                 fontSize: 16,
                 fontFamily: "OpenSans_600SemiBold",
               }}
+              numberOfLines={1}
             >
               {title}
             </Text>
@@ -111,14 +131,17 @@ export default function Item({
                   fontSize: 14,
                   fontFamily: "OpenSans_400Regular",
                 }}
+                numberOfLines={1}
               >
                 {subtitle}
               </Text>
             </View>
           </View>
+
           <View
             style={{
               flex: 1,
+              minWidth: right,
               alignItems: "flex-end",
               justifyContent: "space-between",
             }}
@@ -129,6 +152,7 @@ export default function Item({
                 fontSize: 16,
                 fontFamily: "OpenSans_600SemiBold",
               }}
+              numberOfLines={1}
             >
               {rightTop}
             </Text>
@@ -141,6 +165,7 @@ export default function Item({
                 fontSize: 14,
                 fontFamily: "OpenSans_400Regular",
               }}
+              numberOfLines={1}
             >
               {rightBottom}
             </Text>

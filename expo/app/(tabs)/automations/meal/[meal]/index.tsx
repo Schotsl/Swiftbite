@@ -100,6 +100,7 @@ export default function DetailsScreen() {
                 return (
                   <ItemProductWithServing
                     icon={false}
+                    small={true}
                     border={index !== length - 1}
                     product={item.product}
                     serving={serving}

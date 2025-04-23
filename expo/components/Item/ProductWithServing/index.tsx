@@ -6,6 +6,7 @@ import { Product, ProductInsert } from "@/types";
 
 type ItemProductWithServingProps = {
   icon?: boolean;
+  small?: boolean;
   border?: boolean;
   product: Product | ProductInsert;
   serving: ServingData;
@@ -14,6 +15,7 @@ type ItemProductWithServingProps = {
 
 export default function ItemProductWithServing({
   icon = true,
+  small = false,
   border = true,
   product,
   serving,
@@ -28,6 +30,7 @@ export default function ItemProductWithServing({
   return (
     <Item
       title={title}
+      small={small}
       border={border}
       iconId={icon ? product.icon_id : undefined}
       subtitle={subtitle}

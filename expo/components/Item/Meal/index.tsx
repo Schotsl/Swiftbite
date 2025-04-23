@@ -18,6 +18,7 @@ export default function ItemMeal({
 
   onPress,
 }: ItemMealProps) {
+  const length = meal.meal_product.length;
   const macros = getMacrosFromMeal(meal);
 
   return (
@@ -25,7 +26,7 @@ export default function ItemMeal({
       title={meal.title}
       border={border}
       iconId={icon ? meal.icon_id : undefined}
-      subtitle={"No brand"}
+      subtitle={`${length} ${length === 1 ? "ingrediënt" : "ingrediënten"}`}
       subtitleIcon="bowl-food"
       rightTop={macros.calories ? `${macros.calories} kcal` : null}
       rightBottom={macros.gram ? `${macros.gram} g` : null}
