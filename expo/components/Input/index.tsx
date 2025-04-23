@@ -1,6 +1,12 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Control, Controller } from "react-hook-form";
-import { Text, TextInput, View } from "react-native";
+import {
+  View,
+  Text,
+  Keyboard,
+  TextInput,
+  TouchableWithoutFeedback,
+} from "react-native";
 
 import React from "react";
 import InputLabel from "./Label";
@@ -96,32 +102,35 @@ export default function Input({
                   </View>
                 )}
 
-                <TextInput
-                  value={value ? value.toString() : ""}
-                  style={{
-                    zIndex: 1,
-                    padding: 12,
-                    paddingLeft: icon ? 40 : 16,
-                    paddingHorizontal: 16,
+                <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                  <TextInput
+                    value={value ? value.toString() : ""}
+                    style={{
+                      zIndex: 1,
+                      padding: 12,
+                      paddingLeft: icon ? 40 : 16,
+                      paddingHorizontal: 16,
 
-                    fontSize: 16,
-                    fontFamily: "OpenSans_600SemiBold",
+                      fontSize: 16,
+                      fontFamily: "OpenSans_600SemiBold",
 
-                    borderWidth: 2,
-                    borderColor: fieldState.error || error ? "#FF4141" : "#000",
-                    borderRadius: 8,
+                      borderWidth: 2,
+                      borderColor:
+                        fieldState.error || error ? "#FF4141" : "#000",
+                      borderRadius: 8,
 
-                    opacity: disabled ? 0.5 : 1,
-                    minHeight: multiline ? 100 : undefined,
-                  }}
-                  editable={!disabled}
-                  multiline={multiline}
-                  placeholder={placeholder}
-                  keyboardType={type}
-                  onChangeText={handleChange}
-                  secureTextEntry={password}
-                  selectTextOnFocus={!disabled}
-                />
+                      opacity: disabled ? 0.5 : 1,
+                      minHeight: multiline ? 100 : undefined,
+                    }}
+                    editable={!disabled}
+                    multiline={multiline}
+                    placeholder={placeholder}
+                    keyboardType={type}
+                    onChangeText={handleChange}
+                    secureTextEntry={password}
+                    selectTextOnFocus={!disabled}
+                  />
+                </TouchableWithoutFeedback>
               </View>
 
               {content && (
