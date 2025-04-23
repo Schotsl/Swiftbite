@@ -56,9 +56,9 @@ export default function PageSearch({
         onSelect={(value) => setSelected(value)}
         value={selected}
         tabs={[
-          { value: "meals", title: "Maaltijden" },
-          { value: "basics", title: "Basisitems" },
           { value: "products", title: "Producten" },
+          { value: "basics", title: "Basisitems" },
+          { value: "meals", title: "Maaltijden" },
         ]}
       />
       <View
