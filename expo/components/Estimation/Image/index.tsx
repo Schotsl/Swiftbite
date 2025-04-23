@@ -21,6 +21,9 @@ export default function EstimationImage({
   onEdit,
   onDelete,
 }: EstimationImageProps) {
+  const imageAspect = image ? image.width / image.height : 1;
+  const imageAspectCapped = Math.max(imageAspect, 4 / 5);
+
   return (
     <View>
       <InputLabel label="Afbeelding" required={required} />
@@ -32,11 +35,12 @@ export default function EstimationImage({
             height: 150,
             position: "relative",
 
+            overflow: "hidden",
             borderWidth: 2,
             borderColor: "#000",
             borderRadius: 8,
 
-            aspectRatio: image.width / image.height,
+            aspectRatio: imageAspectCapped,
           }}
         >
           <View
@@ -57,6 +61,7 @@ export default function EstimationImage({
 
           <Image
             source={{ uri: image.uri }}
+            resizeMode="cover"
             style={{
               width: "100%",
               height: "100%",
