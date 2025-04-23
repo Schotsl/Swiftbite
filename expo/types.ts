@@ -36,7 +36,8 @@ export type Generative = Tables<"generative">;
 
 export type Entry = Tables<"entry">;
 export type EntryWithProduct = Entry & {
-  product: Product;
+  product?: Product;
+  meal?: MealWithProduct;
 };
 
 export type Meal = Tables<"meal">;

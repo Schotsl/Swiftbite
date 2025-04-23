@@ -14,14 +14,18 @@ export default function entryData({ openfood }: entryDataType) {
     queryFn: async () => {
       const { error, data } = await supabase
         .from("entry")
-        .select(`*,product:product_id (*)`)
+        .select(
+          `*,product:product_id (*),meal:meal_id (*,meal_product (*,product (*))))`,
+        )
         .order("created_at", { ascending: false });
 
       handleError(error);
 
-      console.log(`[Query] fetched ${data?.length} entries`);
+      // For some reason the Supabase parser give a error type but it works fine otherwise
+      const dataUnknown = data as unknown;
+      const dataParsed = dataUnknown as EntryWithProduct[];
 
-      return data as EntryWithProduct[];
+      return dataParsed;
     },
   });
 }

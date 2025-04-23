@@ -88,16 +88,28 @@ export default function Item({
               {title}
             </Text>
 
-            <View style={{ flexDirection: "row", gap: 6 }}>
+            <View
+              style={{
+                gap: 6,
+                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+              }}
+            >
               {subtitleIcon && (
-                <FontAwesome6 name={subtitleIcon} size={14} color="#545454" />
+                <FontAwesome6
+                  name={subtitleIcon}
+                  size={12}
+                  style={{ opacity: 0.75 }}
+                  color="#545454"
+                />
               )}
 
               <Text
                 style={{
+                  color: "#545454",
                   fontSize: 14,
                   fontFamily: "OpenSans_400Regular",
-                  color: "#545454",
                 }}
               >
                 {subtitle}

@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { getToday } from "@/helper";
+import { getMacrosFromMeal, getMacrosFromProduct, getToday } from "@/helper";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import entryData from "../queries/entryData";
+import { useMemo } from "react";
 
 export default function useDailyMacros() {
   const { startDate, endDate } = getToday();
@@ -10,38 +10,57 @@ export default function useDailyMacros() {
   const { data: entries } = useSuspenseQuery({
     ...entryData({}),
     select: (entries) => {
-      const start = new Date(startDate).getTime();
       const end = new Date(endDate).getTime();
+      const start = new Date(startDate).getTime();
+
       return entries.filter((entry) => {
-        const entryTime = new Date(entry.created_at).getTime();
+        const entryDate = new Date(entry.created_at);
+        const entryTime = entryDate.getTime();
+
         return entryTime >= start && entryTime <= end;
       });
     },
   });
 
   const totals = useMemo(() => {
-    let fats = 0;
-    let carbs = 0;
-    let protein = 0;
-    let calories = 0;
+    const macros = entries.map((entry) => {
+      const { product, meal } = entry;
 
-    entries.forEach((entry) => {
-      if (entry.product && entry.consumed_gram) {
-        const multiplier = entry.consumed_gram / 100;
+      if (product) {
+        const serving = {
+          gram: entry.consumed_gram!,
+          option: entry.consumed_option!,
+          quantity: entry.consumed_quantity!,
+        };
 
-        fats += (entry.product.fat_100g || 0) * multiplier;
-        carbs += (entry.product.carbohydrate_100g || 0) * multiplier;
-        protein += (entry.product.protein_100g || 0) * multiplier;
-        calories += (entry.product.calorie_100g || 0) * multiplier;
+        return getMacrosFromProduct(product, serving);
       }
+
+      if (meal) {
+        return getMacrosFromMeal(meal);
+      }
+
+      return {
+        fat: 0,
+        gram: 0,
+        carbs: 0,
+        protein: 0,
+        calories: 0,
+      };
     });
 
-    return {
-      fats: Math.round(fats),
-      carbs: Math.round(carbs),
-      protein: Math.round(protein),
-      calories: Math.round(calories),
-    };
+    return macros.reduce(
+      (acc, macro) => {
+        return {
+          fat: acc.fat + macro.fat,
+          gram: acc.gram + macro.gram,
+          carbs: acc.carbs + macro.carbs,
+          protein: acc.protein + macro.protein,
+          calories: acc.calories + macro.calories,
+        };
+      },
+      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 },
+    );
   }, [entries]);
 
   return totals;

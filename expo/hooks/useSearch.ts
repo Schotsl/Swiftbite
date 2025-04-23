@@ -16,7 +16,7 @@ export function useSearch() {
     setProducts([]);
     setLoading(true);
 
-    if (search.length < 2) {
+    if (search.length < 3) {
       setLoading(false);
 
       return;

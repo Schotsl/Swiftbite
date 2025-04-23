@@ -30,7 +30,7 @@ export default function InsertMealForm() {
   });
 
   const handleSave = async (data: MealData) => {
-    await saveChanges(data);
+    await saveChanges();
 
     router.replace("/(tabs)/automations");
   };

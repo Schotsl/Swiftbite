@@ -1,4 +1,5 @@
 import { View } from "react-native";
+import { getToday } from "@/helper";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -6,18 +7,20 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { EntryWithProduct } from "@/types";
 import { useEffect, useMemo, useState } from "react";
 
-import ItemDelete from "@/components/Item/Delete";
+import entryData from "@/queries/entryData";
 import useMacros from "@/hooks/useMacros";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
-import entryData from "@/queries/entryData";
+
 import HomeStreak from "@/components/Home/Streak";
 import HeaderTitle from "@/components/Header/Title";
 import HomeDate from "@/components/Home/Date";
 import HomeCircle from "@/components/Home/Progress";
 import Progress from "@/components/Progress";
+
+import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";
+import ItemDelete from "@/components/Item/Delete";
 import ItemProductWithServing from "@/components/Item/ProductWithServing";
-import { getToday } from "@/helper";
 
 export default function Index() {
   const router = useRouter();
@@ -48,7 +51,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity,
+        !entry.consumed_quantity
     );
 
     const interval = processing ? 500 : false;
@@ -89,7 +92,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data
@@ -179,7 +182,7 @@ export default function Index() {
           >
             <Progress label="Eiwitten" value={macros.protein} target={180} />
             <Progress label="Carbs" value={macros.carbs} target={450} />
-            <Progress label="Vetten" value={macros.fats} target={85} />
+            <Progress label="Vetten" value={macros.fat} target={85} />
           </View>
         </View>
 
@@ -196,7 +199,7 @@ export default function Index() {
             quantity: item.consumed_quantity!,
           };
 
-          return (
+          return item.product ? (
             <ItemProductWithServing
               product={item.product}
               serving={serving}
@@ -209,6 +212,8 @@ export default function Index() {
                 });
               }}
             />
+          ) : (
+            <ItemMeal meal={item.meal!} onPress={() => {}} />
           );
         }}
         renderHiddenItem={({ item }) => (

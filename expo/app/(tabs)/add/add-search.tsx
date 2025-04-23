@@ -1,17 +1,39 @@
 import { useRouter } from "expo-router";
-import { ProductSearch } from "@/types";
+import { Meal, ProductSearch } from "@/types";
 
 import PageSearch from "@/components/Page/Search";
+import useInsertEntry from "@/mutations/useInsertEntry";
 
 export default function AddText() {
   const router = useRouter();
 
-  const handleSelect = (item: ProductSearch) => {
+  const insertEntry = useInsertEntry();
+
+  const handleProductSelect = (product: ProductSearch) => {
     router.push({
       pathname: "/add/add-product",
-      params: item,
+      params: product,
     });
   };
 
-  return <PageSearch onSelect={handleSelect} />;
+  const handleMealSelect = (meal: Meal) => {
+    insertEntry.mutateAsync({
+      meal_id: meal.uuid,
+      product_id: null,
+      consumed_gram: null,
+      consumed_quantity: null,
+      consumed_option: null,
+    });
+
+    router.push({
+      pathname: "/(tabs)/add",
+    });
+  };
+
+  return (
+    <PageSearch
+      onMealSelect={handleMealSelect}
+      onProductSelect={handleProductSelect}
+    />
+  );
 }

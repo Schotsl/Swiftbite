@@ -1,31 +1,40 @@
-import { useSearch } from "@/hooks/useSearch";
 import { useIsFocused } from "@react-navigation/native";
-import { ProductSearch } from "@/types";
+import { Meal, ProductSearch } from "@/types";
+import { SafeAreaView, View } from "react-native";
 import { useEffect, useRef, useState } from "react";
-import { FlatList, SafeAreaView, View } from "react-native";
 
 import Tabs from "@/components/Tabs";
-import Item from "@/components/Item";
 import Input from "@/components/Input";
-import ProductStatus from "@/components/Product/Status";
+import PageSearchProduct from "./Product";
+import PageSearchMeal from "./Meal";
 
 type PageSearchProps = {
-  onSelect: (product: ProductSearch) => void;
+  onMealSelect: (meal: Meal) => void;
+  onProductSelect: (product: ProductSearch) => void;
 };
 
-export default function PageSearch({ onSelect }: PageSearchProps) {
+export default function PageSearch({
+  onMealSelect,
+  onProductSelect,
+}: PageSearchProps) {
   const focus = useIsFocused();
   const timeout = useRef<NodeJS.Timeout | null>(null);
 
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState("producten");
+  const [selected, setSelected] = useState("products");
 
-  const { products, loading, error, search } = useSearch();
+  const [query, setQuery] = useState("");
+  const [queryTimed, setQueryTimed] = useState("");
 
   const handleInput = (text: string) => {
     setQuery(text);
 
-    timeout.current = setTimeout(() => search(text), 500);
+    if (selected === "meals") {
+      setQueryTimed(text);
+
+      return;
+    }
+
+    timeout.current = setTimeout(() => setQueryTimed(text), 500);
   };
 
   useEffect(() => {
@@ -34,6 +43,7 @@ export default function PageSearch({ onSelect }: PageSearchProps) {
     }
 
     setQuery("");
+    setQueryTimed("");
 
     if (timeout.current) {
       clearTimeout(timeout.current);
@@ -46,9 +56,9 @@ export default function PageSearch({ onSelect }: PageSearchProps) {
         onSelect={(value) => setSelected(value)}
         value={selected}
         tabs={[
-          { value: "producten", title: "Producten" },
-          { value: "basisitems", title: "Basisitems" },
-          { value: "maaltijden", title: "Maaltijden" },
+          { value: "meals", title: "Maaltijden" },
+          { value: "basics", title: "Basisitems" },
+          { value: "products", title: "Producten" },
         ]}
       />
       <View
@@ -69,39 +79,12 @@ export default function PageSearch({ onSelect }: PageSearchProps) {
         />
       </View>
 
-      {loading ? (
-        <ProductStatus
-          status={
-            "🕵️ We zijn het hele internet aan het zoeken naar jou product"
-          }
-        />
-      ) : error ? (
-        <ProductStatus
-          active={false}
-          status={
-            "😔 Er is iets mis gegaan tijdens het zoeken naar jou product"
-          }
-        />
-      ) : products.length > 0 ? (
-        <FlatList
-          data={products}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => {
-            return (
-              <Item
-                title={item.title}
-                subtitle={item.brand}
-                rightTop={`${item.quantity_original} ${item.quantity_original_unit}`}
-                onPress={() => onSelect(item)}
-              />
-            );
-          }}
-        />
-      ) : (
-        <ProductStatus
-          active={false}
-          status={"🥳 Start met zoeken door minimaal twee letters te typen"}
-        />
+      {selected === "products" && (
+        <PageSearchProduct query={queryTimed} onSelect={onProductSelect} />
+      )}
+
+      {selected === "meals" && (
+        <PageSearchMeal query={queryTimed} onSelect={onMealSelect} />
       )}
     </SafeAreaView>
   );

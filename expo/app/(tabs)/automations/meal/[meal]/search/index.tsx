@@ -8,7 +8,7 @@ export default function AddText() {
 
   const { meal } = useLocalSearchParams<{ meal: string }>();
 
-  const handleSelect = (item: ProductSearch) => {
+  const handleProductSelect = (item: ProductSearch) => {
     router.push({
       pathname: `/(tabs)/automations/meal/[meal]/product`,
       params: {
@@ -18,5 +18,7 @@ export default function AddText() {
     });
   };
 
-  return <PageSearch onSelect={handleSelect} />;
+  return (
+    <PageSearch onProductSelect={handleProductSelect} onMealSelect={() => {}} />
+  );
 }

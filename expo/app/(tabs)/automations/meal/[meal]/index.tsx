@@ -14,6 +14,7 @@ import InputLabel from "@/components/Input/Label";
 import ItemDelete from "@/components/Item/Delete";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
 import ItemProductWithServing from "@/components/Item/ProductWithServing";
+import { useEffect } from "react";
 
 export default function DetailsScreen() {
   const router = useRouter();
@@ -21,9 +22,10 @@ export default function DetailsScreen() {
   const deleteMeal = useDeleteMeal();
 
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
-  const { meal, removeMealProduct, saveChanges } = useEditMeal();
+  const { meal, removeMealProduct, updateTitle, saveChanges } = useEditMeal();
 
   const {
+    watch,
     control,
     handleSubmit,
     formState: { isSubmitting },
@@ -34,8 +36,16 @@ export default function DetailsScreen() {
     },
   });
 
-  const handleSave = async (data: MealData) => {
-    await saveChanges(data);
+  // Keep the local context in sync with the form
+  const title = watch("title");
+
+  // TODO: I should check this with David since it causes a recursive update
+  useEffect(() => {
+    updateTitle(title);
+  }, [title]);
+
+  const handleSave = async () => {
+    await saveChanges();
 
     router.replace("/(tabs)/automations");
   };
