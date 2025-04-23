@@ -8,6 +8,10 @@ import Input from "@/components/Input";
 import PageSearchProduct from "./Product";
 import PageSearchMeal from "./Meal";
 
+import { useForm } from "react-hook-form";
+import { SearchData, searchSchema } from "@/schemas/search";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 enum Type {
   MEALS = "meals",
   BASICS = "basics",
@@ -31,11 +35,25 @@ export default function PageSearch({
 
   const [selected, setSelected] = useState(Type.PRODUCTS);
 
-  const handleInput = (text: string) => {
-    setQuery(text);
+  const { control, watch } = useForm<SearchData>({
+    resolver: zodResolver(searchSchema),
+  });
 
-    timeout.current = setTimeout(() => setQueryTimed(text), 1000);
-  };
+  const queryWatched = watch("query");
+
+  useEffect(() => {
+    if (!queryWatched) {
+      return;
+    }
+
+    if (queryWatched === query) {
+      return;
+    }
+
+    setQuery(queryWatched);
+
+    timeout.current = setTimeout(() => setQueryTimed(queryWatched), 1000);
+  }, [query, queryWatched]);
 
   useEffect(() => {
     if (focus) {
@@ -51,7 +69,7 @@ export default function PageSearch({
   }, [focus]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Tabs
         onSelect={(value) => setSelected(value as Type)}
         value={selected}
@@ -61,6 +79,7 @@ export default function PageSearch({
           { value: Type.MEALS, title: "Maaltijden" },
         ]}
       />
+
       <View
         style={{
           padding: 16,
@@ -71,11 +90,9 @@ export default function PageSearch({
       >
         <Input
           name="query"
-          type="default"
           icon="magnifying-glass"
-          value={query}
-          placeholder="Search for food..."
-          onChange={handleInput}
+          control={control}
+          placeholder="Zoek naar een product..."
         />
       </View>
 
@@ -90,6 +107,6 @@ export default function PageSearch({
       {selected === Type.MEALS && (
         <PageSearchMeal query={query} onSelect={onMealSelect} />
       )}
-    </SafeAreaView>
+    </View>
   );
 }

@@ -63,7 +63,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "left", "top"]}>
-      <StatusBar style="dark" />
+      <StatusBar backgroundColor="#FFFFFF" style="dark" />
 
       <QueryClientProvider client={query}>
         <GestureHandlerRootView>

@@ -33,7 +33,6 @@ export default function ProductStatus({
     <View
       style={{
         flex: 1,
-        marginTop: -48,
         alignItems: "center",
         justifyContent: "center",
       }}
@@ -41,6 +40,7 @@ export default function ProductStatus({
       <Text
         style={{
           maxWidth: 250,
+          marginTop: -48,
           textAlign: "center",
 
           fontSize: 16,

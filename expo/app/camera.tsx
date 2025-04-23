@@ -8,7 +8,12 @@ import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
 import { detectBarcodes } from "react-native-barcodes-detector";
 import { useEffect, useRef, useState } from "react";
-import { BarcodeSettings, CameraType, CameraView } from "expo-camera";
+import {
+  BarcodeScanningResult,
+  BarcodeSettings,
+  CameraType,
+  CameraView,
+} from "expo-camera";
 
 import * as ImagePicker from "expo-image-picker";
 
@@ -32,8 +37,17 @@ export default function AddAI() {
     setFlash((current) => !current);
   }
 
-  async function handleImage(manual: boolean) {
-    if (manual && isBarcode) {
+  async function handleBarcode(data: BarcodeScanningResult) {
+    const barcode = data.data;
+
+    router.push({
+      pathname: "/add/add-product",
+      params: { barcode },
+    });
+  }
+
+  async function handleImage() {
+    if (isBarcode) {
       Alert.alert("We hebben geen barcode in deze afbeelding gevonden.");
 
       return;
@@ -59,7 +73,7 @@ export default function AddAI() {
       return;
     }
 
-    const pathname = isBarcode ? "/add/add-product" : "/add/add-estimation";
+    const pathname = "/add/add-estimation";
 
     router.push({
       pathname,
@@ -133,14 +147,14 @@ export default function AddAI() {
       flash={flash ? "on" : "off"}
       ratio="4:3"
       facing={facing}
-      onBarcodeScanned={() => {
+      barcodeScannerSettings={isBarcode ? barcodeSetting : undefined}
+      onBarcodeScanned={(data) => {
         if (!isBarcode) {
           return;
         }
 
-        handleImage(false);
+        handleBarcode(data);
       }}
-      barcodeScannerSettings={isBarcode ? barcodeSetting : undefined}
       style={{
         gap: 24,
         flex: 1,
@@ -153,7 +167,7 @@ export default function AddAI() {
 
       <CameraControls
         onFlip={handleFlip}
-        onTake={() => handleImage(true)}
+        onTake={handleImage}
         onDocument={handleDocument}
       />
     </CameraView>
