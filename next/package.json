@@ -18,20 +18,24 @@
     "@supabase/supabase-js": "^2.49.1",
     "ai": "^4.2.8",
     "eslint-config-prettier": "^10.0.2",
-    "next": "15.1.6",
+    "next": "15.3.1",
     "prettier": "^3.5.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "supabase": "^2.22.4",
     "zod": "^3.24.2"
   },
   "devDependencies": {
     "typescript": "^5",
     "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
     "eslint": "^9",
-    "eslint-config-next": "15.1.6",
+    "eslint-config-next": "15.3.1",
     "@eslint/eslintrc": "^3"
+  },
+  "overrides": {
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2"
   }
 }
