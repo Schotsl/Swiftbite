@@ -40,7 +40,7 @@ export default function Add2Preview() {
           width: parseInt(width),
           height: parseInt(height),
         }
-      : null,
+      : null
   );
 
   const [smallImage, setSmallImage] = useState<string | null>(null);
@@ -213,8 +213,8 @@ export default function Add2Preview() {
         }}
       >
         <Header
-          title="Add"
-          content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  tempor incididunt."
+          title="Inschatting"
+          content="Voeg hieronder een titel of afbeelding toe (minimaal één vereist) en een optionele beschrijving om een AI-inschatting van je maaltijd te maken."
         />
 
         <View style={{ gap: 48 }}>
@@ -222,8 +222,9 @@ export default function Add2Preview() {
             <EstimationImage
               image={image}
               required={!!image}
-              onAdd={() => router.back()}
-              onEdit={() => router.back()}
+              // TODO: This should be done with a parameter storing the title or content
+              onAdd={() => router.push("/camera")}
+              onEdit={() => router.push("/camera")}
               onDelete={() => setImage(null)}
             />
 
