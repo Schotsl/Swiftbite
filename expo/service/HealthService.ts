@@ -76,9 +76,7 @@ class HealthService {
     ]);
 
     const caloriesSummed = active + basal;
-    const caloriesRounded = Math.round(caloriesSummed);
-
-    return caloriesRounded;
+    return caloriesSummed;
   }
 
   private startToday(): string {
@@ -110,8 +108,9 @@ class HealthService {
         }
 
         const total = results.reduce((acc, curr) => acc + curr.value, 0);
+        const totalRounded = Math.round(total);
 
-        resolve(total);
+        resolve(totalRounded);
       });
     });
   }
@@ -130,8 +129,9 @@ class HealthService {
         }
 
         const total = results.reduce((acc, curr) => acc + curr.value, 0);
+        const totalRounded = Math.round(total);
 
-        resolve(total);
+        resolve(totalRounded);
       });
     });
   }
