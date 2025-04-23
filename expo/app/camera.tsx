@@ -20,6 +20,7 @@ export default function AddAI() {
   const [flash, setFlash] = useState<boolean>(false);
   const [facing, setFacing] = useState<CameraType>("back");
   const [selected, setSelected] = useState(CameraSelected.Barcode);
+  const [processing, setProcessing] = useState<boolean>(false);
 
   const isBarcode = selected === CameraSelected.Barcode;
 
@@ -32,10 +33,11 @@ export default function AddAI() {
   }
 
   async function handleImage() {
-    if (isBarcode) {
-      Alert.alert("We hebben geen barcode in deze afbeelding gevonden.");
+    if (processing) {
       return;
     }
+
+    setProcessing(true);
 
     console.log("[DEVICE] Handling image...");
 
@@ -57,6 +59,8 @@ export default function AddAI() {
       pathname,
       params,
     });
+
+    setProcessing(false);
   }
 
   async function handleDocument() {
