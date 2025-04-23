@@ -32,7 +32,13 @@ export default function AddAI() {
     setFlash((current) => !current);
   }
 
-  async function handleImage() {
+  async function handleImage(manual: boolean) {
+    if (manual && isBarcode) {
+      Alert.alert("We hebben geen barcode in deze afbeelding gevonden.");
+
+      return;
+    }
+
     if (processing) {
       return;
     }
@@ -127,7 +133,13 @@ export default function AddAI() {
       flash={flash ? "on" : "off"}
       ratio="4:3"
       facing={facing}
-      onBarcodeScanned={isBarcode ? handleImage : undefined}
+      onBarcodeScanned={() => {
+        if (!isBarcode) {
+          return;
+        }
+
+        handleImage(false);
+      }}
       barcodeScannerSettings={isBarcode ? barcodeSetting : undefined}
       style={{
         gap: 24,
@@ -141,7 +153,7 @@ export default function AddAI() {
 
       <CameraControls
         onFlip={handleFlip}
-        onTake={handleImage}
+        onTake={() => handleImage(true)}
         onDocument={handleDocument}
       />
     </CameraView>
