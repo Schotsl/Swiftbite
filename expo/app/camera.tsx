@@ -125,6 +125,7 @@ export default function AddAI() {
     <CameraView
       ref={camera}
       flash={flash ? "on" : "off"}
+      ratio="4:3"
       facing={facing}
       onBarcodeScanned={isBarcode ? handleImage : undefined}
       barcodeScannerSettings={isBarcode ? barcodeSetting : undefined}
