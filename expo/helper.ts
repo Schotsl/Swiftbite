@@ -5,7 +5,7 @@ import { MealWithProduct, Option, Product, ProductInsert } from "./types";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean
+  compressed: boolean,
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -92,7 +92,7 @@ export const getToday = () => {
     23,
     59,
     59,
-    999
+    999,
   );
   return {
     endDate: endingDay.toISOString(),
@@ -103,7 +103,7 @@ export const getToday = () => {
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true
+  rounded = true,
 ): {
   fat: number;
   gram: number;
@@ -164,7 +164,7 @@ export function getMacrosFromMeal(meal: MealWithProduct): {
       carbs: 0,
       protein: 0,
       calories: 0,
-    }
+    },
   );
 
   return macros;

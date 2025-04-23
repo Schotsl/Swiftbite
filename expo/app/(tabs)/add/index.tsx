@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { getToday } from "@/helper";
 import { useRouter } from "expo-router";
+
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -8,23 +9,20 @@ import { EntryWithProduct } from "@/types";
 import { useEffect, useMemo, useState } from "react";
 
 import entryData from "@/queries/entryData";
-import useMacros from "@/hooks/useMacros";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 
 import HomeStreak from "@/components/Home/Streak";
 import HeaderTitle from "@/components/Header/Title";
 import HomeDate from "@/components/Home/Date";
-import HomeCircle from "@/components/Home/Progress";
-import Progress from "@/components/Progress";
 
 import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";
 import ItemDelete from "@/components/Item/Delete";
 import ItemProductWithServing from "@/components/Item/ProductWithServing";
+import HomeMacros from "@/components/Home/Macros";
 
 export default function Index() {
   const router = useRouter();
-  const macros = useMacros();
 
   const [interval, setInterval] = useState<number | false>(1000);
 
@@ -51,7 +49,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity
+        !entry.consumed_quantity,
     );
 
     const interval = processing ? 500 : false;
@@ -92,7 +90,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour
+      (section) => currentHour >= section.startHour,
     );
 
     // Populate active sections with data
@@ -168,23 +166,7 @@ export default function Index() {
           <HomeDate type="normal" date={31} weekday="S" />
         </View>
 
-        <View style={{ gap: 16, paddingVertical: 24 }}>
-          <HomeCircle target={3200} burned={0} consumed={macros.calories} />
-
-          <View
-            style={{
-              gap: 16,
-              width: "100%",
-
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Progress label="Eiwitten" value={macros.protein} target={180} />
-            <Progress label="Carbs" value={macros.carbs} target={450} />
-            <Progress label="Vetten" value={macros.fat} target={85} />
-          </View>
-        </View>
+        <HomeMacros />
 
         <HeaderTitle>Logs</HeaderTitle>
       </View>

@@ -96,7 +96,7 @@ class HealthService {
     return nowISO;
   }
 
-  private async getActiveCalories(): Promise<number> {
+  public async getActiveCalories(): Promise<number> {
     const options = {
       startDate: this.startToday(),
       endDate: this.endToday(),

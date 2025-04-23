@@ -1,12 +1,12 @@
 import { View } from "react-native";
 
-type HomeProgressCircleProps = {
+type HomeMacrosProgressCircleProps = {
   progress: number;
 };
 
-export default function HomeProgressCircle({
+export default function HomeMacrosProgressCircle({
   progress,
-}: HomeProgressCircleProps) {
+}: HomeMacrosProgressCircleProps) {
   const degrees = progress * 230 + 20;
 
   return (

@@ -1,14 +1,14 @@
 import { View, Text } from "react-native";
 
-type HomeProgressLabelProps = {
+type HomeMacrosProgressLabelProps = {
   value: number;
   label: string;
 };
 
-export default function HomeProgressLabel({
+export default function HomeMacrosProgressLabel({
   value,
   label,
-}: HomeProgressLabelProps) {
+}: HomeMacrosProgressLabelProps) {
   return (
     <View
       style={{

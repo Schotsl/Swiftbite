@@ -1,25 +1,26 @@
 import { View } from "react-native";
+
 import HomeProgressCircle from "./Circle";
 import HomeProgressLabel from "./Label";
 
-type HomeProgressProps = {
+type HomeMacrosProgressProps = {
   target: number;
   burned: number;
   consumed: number;
 };
 
-export default function HomeProgress({
+export default function HomeMacrosProgress({
   target,
   burned,
   consumed,
-}: HomeProgressProps) {
+}: HomeMacrosProgressProps) {
   const progress = consumed / target;
 
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
       <View
         style={{
-          top: 22,
+          top: 24,
           width: "100%",
           zIndex: 1,
           position: "absolute",

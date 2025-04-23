@@ -13,10 +13,14 @@ import { HealthStatus } from "@/types";
 // Keys for local storage
 const WEIGHT_STORAGE_KEY = "@health_weight";
 const CALORIES_STORAGE_KEY = "@health_calories";
+const ACTIVE_CALORIES_STORAGE_KEY = "@health_active_calories";
 
 type HealthContextType = {
   weight: number | null;
+  active: number | null;
   calories: number | null;
+
+  activeStatus: HealthStatus;
   weightStatus: HealthStatus;
   caloriesStatus: HealthStatus;
 };
@@ -36,13 +40,16 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
   const [storageInitialized, setStorageInitialized] = useState(false);
 
   const [weight, setWeight] = useState<number | null>(null);
+  const [active, setActive] = useState<number | null>(null);
   const [calories, setCalories] = useState<number | null>(null);
 
   const [weightStatus, setWeightStatus] = useState(HealthStatus.Loading);
+  const [activeStatus, setActiveStatus] = useState(HealthStatus.Loading);
   const [caloriesStatus, setCaloriesStatus] = useState(HealthStatus.Loading);
 
   const loadLocal = async () => {
     const weight = await AsyncStorage.getItem(WEIGHT_STORAGE_KEY);
+    const active = await AsyncStorage.getItem(ACTIVE_CALORIES_STORAGE_KEY);
     const calories = await AsyncStorage.getItem(CALORIES_STORAGE_KEY);
 
     if (weight) {
@@ -52,6 +59,13 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       setWeightStatus(HealthStatus.Ready);
     }
 
+    if (active) {
+      const activeParsed = parseFloat(active);
+
+      setActive(activeParsed);
+      setActiveStatus(HealthStatus.Ready);
+    }
+
     if (calories) {
       const caloriesParsed = parseFloat(calories);
 
@@ -59,7 +73,7 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       setCaloriesStatus(HealthStatus.Ready);
     }
 
-    return weight !== null && calories !== null;
+    return weight !== null && calories !== null && active !== null;
   };
 
   const fetchData = async (state: HealthStatus) => {
@@ -78,6 +92,16 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       await AsyncStorage.setItem(CALORIES_STORAGE_KEY, stringified);
     };
 
+    const fetchActive = async () => {
+      const active = await HealthService.getActiveCalories();
+
+      setActive(active);
+      setActiveStatus(HealthStatus.Ready);
+
+      const stringified = active.toString();
+      await AsyncStorage.setItem(ACTIVE_CALORIES_STORAGE_KEY, stringified);
+    };
+
     const fetchWeight = async () => {
       const weight = await HealthService.getLatestWeight();
 
@@ -90,7 +114,7 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       await AsyncStorage.setItem(WEIGHT_STORAGE_KEY, stringified);
     };
 
-    await Promise.all([fetchCalories(), fetchWeight()]);
+    await Promise.all([fetchCalories(), fetchWeight(), fetchActive()]);
   };
 
   useEffect(() => {
@@ -129,8 +153,11 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
 
   const value: HealthContextType = {
     weight,
+    active,
     calories,
+
     weightStatus,
+    activeStatus,
     caloriesStatus,
   };
 
