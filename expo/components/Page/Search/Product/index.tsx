@@ -8,24 +8,27 @@ import ProductStatus from "@/components/Product/Status";
 
 type PageSearchProps = {
   query: string;
+  loading?: boolean;
 
   onSelect: (product: ProductSearch) => void;
 };
 
 export default function PageSearchProduct({
   query,
+  loading: loadingOverwrite,
+
   onSelect,
 }: PageSearchProps) {
-  const { error, search, loading, products } = useSearch();
+  const { error, search, loading, products, overloaded } = useSearch();
 
   const isEmpty = products.length === 0;
-  const isSearchable = query.length > 2;
+  const isSearchable = query.length >= 4;
 
   useEffect(() => {
     search(query);
   }, [query, search]);
 
-  if (loading) {
+  if (loading || loadingOverwrite) {
     return (
       <ProductStatus status="🕵️ We zijn het hele internet aan het zoeken naar jou product" />
     );
@@ -36,6 +39,15 @@ export default function PageSearchProduct({
       <ProductStatus
         active={false}
         status="😔 Er is iets mis gegaan tijdens het zoeken naar jou product"
+      />
+    );
+  }
+
+  if (overloaded) {
+    return (
+      <ProductStatus
+        active={false}
+        status="😲 Je hebt je dagelijkse zoek limiet overschreden"
       />
     );
   }
@@ -71,7 +83,7 @@ export default function PageSearchProduct({
   return (
     <ProductStatus
       active={false}
-      status={"🥳 Start met zoeken door minimaal twee letters te typen"}
+      status={"🥳 Start met zoeken door minimaal 4 letters te typen"}
     />
   );
 }

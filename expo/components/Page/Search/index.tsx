@@ -8,6 +8,12 @@ import Input from "@/components/Input";
 import PageSearchProduct from "./Product";
 import PageSearchMeal from "./Meal";
 
+enum Type {
+  MEALS = "meals",
+  BASICS = "basics",
+  PRODUCTS = "products",
+}
+
 type PageSearchProps = {
   onMealSelect: (meal: Meal) => void;
   onProductSelect: (product: ProductSearch) => void;
@@ -20,21 +26,15 @@ export default function PageSearch({
   const focus = useIsFocused();
   const timeout = useRef<NodeJS.Timeout | null>(null);
 
-  const [selected, setSelected] = useState("products");
-
   const [query, setQuery] = useState("");
   const [queryTimed, setQueryTimed] = useState("");
+
+  const [selected, setSelected] = useState(Type.PRODUCTS);
 
   const handleInput = (text: string) => {
     setQuery(text);
 
-    if (selected === "meals") {
-      setQueryTimed(text);
-
-      return;
-    }
-
-    timeout.current = setTimeout(() => setQueryTimed(text), 500);
+    timeout.current = setTimeout(() => setQueryTimed(text), 1000);
   };
 
   useEffect(() => {
@@ -53,12 +53,12 @@ export default function PageSearch({
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Tabs
-        onSelect={(value) => setSelected(value)}
+        onSelect={(value) => setSelected(value as Type)}
         value={selected}
         tabs={[
-          { value: "products", title: "Producten" },
-          { value: "basics", title: "Basisitems" },
-          { value: "meals", title: "Maaltijden" },
+          { value: Type.PRODUCTS, title: "Producten" },
+          { value: Type.BASICS, title: "Basisitems" },
+          { value: Type.MEALS, title: "Maaltijden" },
         ]}
       />
       <View
@@ -79,12 +79,16 @@ export default function PageSearch({
         />
       </View>
 
-      {selected === "products" && (
-        <PageSearchProduct query={queryTimed} onSelect={onProductSelect} />
+      {selected === Type.PRODUCTS && (
+        <PageSearchProduct
+          query={queryTimed}
+          loading={queryTimed !== query}
+          onSelect={onProductSelect}
+        />
       )}
 
-      {selected === "meals" && (
-        <PageSearchMeal query={queryTimed} onSelect={onMealSelect} />
+      {selected === Type.MEALS && (
+        <PageSearchMeal query={query} onSelect={onMealSelect} />
       )}
     </SafeAreaView>
   );

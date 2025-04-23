@@ -170,13 +170,9 @@ export default function Input({
   // Fallback to the standard input for non-form usage
   return (
     <View>
-      {label && <InputLabel label={label} />}
+      {label && <InputLabel label={label} required={required} />}
 
-      <View
-        style={{
-          position: "relative",
-        }}
-      >
+      <View style={{ position: "relative" }}>
         {icon && (
           <View
             style={{
@@ -191,31 +187,33 @@ export default function Input({
           </View>
         )}
 
-        <TextInput
-          value={value}
-          style={{
-            zIndex: 1,
-            padding: 12,
-            paddingLeft: icon ? 40 : 16,
-            paddingHorizontal: 16,
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <TextInput
+            value={value}
+            style={{
+              zIndex: 1,
+              padding: 12,
+              paddingLeft: icon ? 40 : 16,
+              paddingHorizontal: 16,
 
-            fontSize: 16,
-            fontFamily: "OpenSans_600SemiBold",
+              fontSize: 16,
+              fontFamily: "OpenSans_600SemiBold",
 
-            borderWidth: 2,
-            borderColor: error ? "#FF4141" : "#000",
-            borderRadius: 8,
+              borderWidth: 2,
+              borderColor: error ? "#FF4141" : "#000",
+              borderRadius: 8,
 
-            opacity: disabled ? 0.5 : 1,
-            minHeight: multiline ? 100 : undefined,
-          }}
-          editable={!disabled}
-          placeholder={placeholder}
-          keyboardType={type}
-          secureTextEntry={password}
-          selectTextOnFocus={!disabled}
-          onChangeText={handleChange}
-        />
+              opacity: disabled ? 0.5 : 1,
+              minHeight: multiline ? 100 : undefined,
+            }}
+            editable={!disabled}
+            placeholder={placeholder}
+            keyboardType={type}
+            secureTextEntry={password}
+            selectTextOnFocus={!disabled}
+            onChangeText={handleChange}
+          />
+        </TouchableWithoutFeedback>
       </View>
 
       {content && (

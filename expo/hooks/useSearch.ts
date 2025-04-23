@@ -10,13 +10,15 @@ export function useSearch() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<ProductSearch[]>([]);
+  const [overloaded, setOverloaded] = useState(false);
 
   const search = useCallback(async (search: string, lang: string = "nl") => {
     setError(false);
     setProducts([]);
     setLoading(true);
+    setOverloaded(false);
 
-    if (search.length < 3) {
+    if (search.length < 4) {
       setLoading(false);
 
       return;
@@ -46,10 +48,18 @@ export function useSearch() {
       {
         signal,
         headers,
-      },
+      }
     );
 
-    if (!response.body) {
+    if (response.status === 429) {
+      setProducts([]);
+      setLoading(false);
+      setOverloaded(true);
+
+      return;
+    }
+
+    if (!response.body || response.status !== 200) {
       setError(true);
       setProducts([]);
       setLoading(false);
@@ -80,7 +90,7 @@ export function useSearch() {
   }, []);
 
   return useMemo(
-    () => ({ error, search, products, loading }),
-    [error, search, products, loading],
+    () => ({ error, search, products, loading, overloaded }),
+    [error, search, products, loading, overloaded]
   );
 }

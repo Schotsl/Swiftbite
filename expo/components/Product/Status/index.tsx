@@ -1,5 +1,5 @@
 import { Text, View } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 
 type ProductStatusProps = {
   status: string;
@@ -49,33 +49,37 @@ export default function ProductStatus({
       >
         {status}
 
-        <Text
-          style={{
-            color: dots > 0 ? "#000" : "transparent",
-            fontSize: 16,
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
-          .
-        </Text>
-        <Text
-          style={{
-            color: dots > 1 ? "#000" : "transparent",
-            fontSize: 16,
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
-          .
-        </Text>
-        <Text
-          style={{
-            color: dots > 2 ? "#000" : "transparent",
-            fontSize: 16,
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
-          .
-        </Text>
+        {active && (
+          <Fragment>
+            <Text
+              style={{
+                color: dots > 0 ? "#000" : "transparent",
+                fontSize: 16,
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+              .
+            </Text>
+            <Text
+              style={{
+                color: dots > 1 ? "#000" : "transparent",
+                fontSize: 16,
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+              .
+            </Text>
+            <Text
+              style={{
+                color: dots > 2 ? "#000" : "transparent",
+                fontSize: 16,
+                fontFamily: "OpenSans_400Regular",
+              }}
+            >
+              .
+            </Text>
+          </Fragment>
+        )}
       </Text>
     </View>
   );

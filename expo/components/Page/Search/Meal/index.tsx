@@ -8,11 +8,17 @@ import ProductStatus from "@/components/Product/Status";
 
 type PageSearchProps = {
   query: string;
+  loading?: boolean;
 
   onSelect: (meal: Meal) => void;
 };
 
-export default function PageSearchMeal({ query, onSelect }: PageSearchProps) {
+export default function PageSearchMeal({
+  query,
+  loading: loadingOverwrite,
+
+  onSelect,
+}: PageSearchProps) {
   const queryLower = query.toLowerCase();
 
   const { data, isError, isLoading } = useSuspenseQuery({
@@ -28,7 +34,7 @@ export default function PageSearchMeal({ query, onSelect }: PageSearchProps) {
 
   const isEmpty = data?.length === 0;
 
-  if (isLoading) {
+  if (isLoading || loadingOverwrite) {
     return (
       <ProductStatus status="🕵️ We zijn het hele internet aan het zoeken naar jou product" />
     );
