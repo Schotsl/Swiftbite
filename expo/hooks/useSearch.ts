@@ -43,12 +43,14 @@ export function useSearch() {
       "Content-Type": "application/json",
     };
 
+    console.log("[SEARCH] Submitting very expensive request");
+
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search?query=${encodeURIComponent(search)}&lang=${lang}`,
       {
         signal,
         headers,
-      },
+      }
     );
 
     if (response.status === 429) {
@@ -91,6 +93,6 @@ export function useSearch() {
 
   return useMemo(
     () => ({ error, search, products, loading, overloaded }),
-    [error, search, products, loading, overloaded],
+    [error, search, products, loading, overloaded]
   );
 }

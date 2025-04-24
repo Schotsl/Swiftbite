@@ -1,6 +1,6 @@
+import { View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Meal, ProductSearch } from "@/types";
-import { SafeAreaView, View } from "react-native";
 import { useEffect, useRef, useState } from "react";
 
 import Tabs from "@/components/Tabs";
@@ -50,9 +50,21 @@ export default function PageSearch({
       return;
     }
 
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+
     setQuery(queryWatched);
 
     timeout.current = setTimeout(() => setQueryTimed(queryWatched), 1000);
+
+    return () => {
+      if (!timeout.current) {
+        return;
+      }
+
+      clearTimeout(timeout.current);
+    };
   }, [query, queryWatched]);
 
   useEffect(() => {
@@ -63,9 +75,11 @@ export default function PageSearch({
     setQuery("");
     setQueryTimed("");
 
-    if (timeout.current) {
-      clearTimeout(timeout.current);
+    if (!timeout.current) {
+      return;
     }
+
+    clearTimeout(timeout.current);
   }, [focus]);
 
   return (
