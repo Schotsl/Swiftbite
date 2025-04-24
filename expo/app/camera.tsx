@@ -1,8 +1,9 @@
+import CameraVision from "@/components/Camera/Vision";
 import CameraControls from "@/components/Camera/Controls";
 import CameraSelector from "@/components/Camera/Selector";
 import CameraShortcuts from "@/components/Camera/Shortcuts";
 
-import { Alert } from "react-native";
+import { Alert, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
@@ -28,6 +29,7 @@ export default function AddAI() {
   const [processing, setProcessing] = useState<boolean>(false);
 
   const isBarcode = selected === CameraSelected.Barcode;
+  const isEstimation = selected === CameraSelected.Estimation;
 
   function handleFlip() {
     setFacing((current) => (current === "back" ? "front" : "back"));
@@ -163,13 +165,17 @@ export default function AddAI() {
     >
       <CameraShortcuts onFlash={handleFlash} flash={flash} />
 
-      <CameraSelector onSelect={setSelected} />
+      {isEstimation && <CameraVision camera={camera} />}
 
-      <CameraControls
-        onFlip={handleFlip}
-        onTake={handleImage}
-        onDocument={handleDocument}
-      />
+      <View style={{ marginTop: "auto", gap: 24 }}>
+        <CameraSelector onSelect={setSelected} />
+
+        <CameraControls
+          onFlip={handleFlip}
+          onTake={handleImage}
+          onDocument={handleDocument}
+        />
+      </View>
     </CameraView>
   );
 }

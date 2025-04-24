@@ -96,7 +96,7 @@ export default function CameraSelector({ onSelect }: CameraSelectorProps) {
   };
 
   return (
-    <View style={{ height: 60, width: width, marginTop: "auto" }}>
+    <View style={{ height: 60, width: width }}>
       <MaskedView
         style={{
           width: width,

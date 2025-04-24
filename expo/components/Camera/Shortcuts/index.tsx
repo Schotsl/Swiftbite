@@ -24,7 +24,8 @@ export default function CameraShortcuts({
       style={{
         gap: 16,
         width: "100%",
-        padding: 64,
+        paddingHorizontal: 32,
+        paddingTop: 72,
         flexDirection: "row",
         justifyContent: "space-between",
       }}
@@ -37,15 +38,6 @@ export default function CameraShortcuts({
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
         onPress={handleBack}
-      />
-
-      <ButtonSmall
-        icon="question"
-        color="#fff"
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-        }}
-        onPress={() => {}}
       />
 
       <ButtonSmall
