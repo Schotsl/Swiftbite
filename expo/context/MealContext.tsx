@@ -27,7 +27,7 @@ type MealContextType = {
   insertMealProduct: (
     productId: string,
     serving: ServingData,
-    productObject: Product,
+    productObject: Product
   ) => void;
 
   saveChanges: () => Promise<void>;
@@ -44,6 +44,7 @@ const createMeal = (): MealWithProductInsert => ({
   uuid: crypto.randomUUID(),
   title: "",
   meal_product: [],
+  ingredients: [],
 });
 
 export const MealProvider: React.FC<MealProviderProps> = ({
@@ -80,7 +81,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         meal_product: currentMeal.meal_product.map((mealProduct) =>
           mealProduct.product_id === productId
             ? { ...mealProduct, ...serving }
-            : mealProduct,
+            : mealProduct
         ),
       };
     });
@@ -91,7 +92,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   const insertMealProduct = (
     productId: string,
     serving: ServingData,
-    productObject: ProductInsert,
+    productObject: ProductInsert
   ) => {
     setMeal((currentMeal) => {
       const meal: MealProductWithProductInsert = {
@@ -118,7 +119,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       return {
         ...currentMeal,
         meal_product: currentMeal.meal_product.filter(
-          (mealProduct) => mealProduct.product_id !== productId,
+          (mealProduct) => mealProduct.product_id !== productId
         ),
       };
     });
@@ -132,8 +133,16 @@ export const MealProvider: React.FC<MealProviderProps> = ({
     const mealId = meal.uuid!;
 
     if (!initial) {
-      // If the meal is new it's a Insert type
-      await insertMealMutation.mutateAsync(meal);
+      const products = meal.meal_product;
+      const ingredients = products.map((mealProduct) => {
+        const product = mealProduct.product;
+        const title = product.title!;
+
+        return title;
+      });
+
+      // TODO: This is very hacky but this way the LLM knows the ingredients on creation
+      await insertMealMutation.mutateAsync({ ...meal, ingredients });
     }
 
     // Prepare the payload for the meal update
@@ -165,7 +174,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
           selected_option: product.option,
           selected_quantity: product.quantity,
         });
-      },
+      }
     );
 
     // Prepare the payload for the meal_product updates
@@ -174,7 +183,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       ([productId, product]) => {
         // Find the original product
         const productOriginal = initial?.meal_product.find(
-          (product) => product.product_id === productId,
+          (product) => product.product_id === productId
         );
 
         // If the product is not found return a resolved promise
@@ -190,12 +199,12 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
         // Update the product
         return updateMealProductMutation.mutateAsync(productUpdated);
-      },
+      }
     );
 
     // Prepare the payload for the meal_product delete
     const deleteMealProductsPromises = removedProductIds.map((productId) =>
-      deleteMealProductMutation.mutateAsync({ mealId, productId }),
+      deleteMealProductMutation.mutateAsync({ mealId, productId })
     );
 
     await Promise.all([

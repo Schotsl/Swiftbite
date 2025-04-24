@@ -12,8 +12,15 @@ import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
 
 export async function POST(request: Request) {
-  // Make sure the user isn't over their usage limits
   const body = await request.json();
+  const bucket = body.record.bucket_id;
+
+  // Make sure it's the right bucket /generative
+  if (bucket !== "generative") {
+    return new Response("{}", { status: 200 });
+  }
+
+  // Make sure the user isn't over their usage limits
   const user = body.record.owner_id;
 
   const response = await validateUsage(user);
@@ -21,15 +28,6 @@ export async function POST(request: Request) {
   if (response) {
     return response;
   }
-
-  const generativeBucket = body.record.bucket_id;
-
-  // Make sure it's the right bucket /generative
-  if (generativeBucket !== "generative") {
-    return new Response("{}", { status: 200 });
-  }
-
-  console.log(body.record);
 
   const generativeName = body.record.name;
   const generativeUUID = generativeName.replace("-small", "");

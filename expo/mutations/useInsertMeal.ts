@@ -11,10 +11,10 @@ export default function useInsertMeal() {
 
   return useMutation({
     mutationFn: async (mealInsert: MealInsert): Promise<Meal> => {
-      const { title, uuid } = mealInsert;
+      const { uuid, title, ingredients } = mealInsert;
       const { data, error } = await supabase
         .from("meal")
-        .insert({ title, uuid })
+        .insert({ uuid, title, ingredients })
         .select()
         .single();
 
