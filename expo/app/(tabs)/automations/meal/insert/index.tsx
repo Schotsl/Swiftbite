@@ -36,7 +36,7 @@ export default function InsertMealForm() {
   };
 
   const handleAddIngredient = () => {
-    router.push(`/(tabs)/automations/meal/${meal?.uuid}/product/search`);
+    router.push(`/(tabs)/automations/meal/${meal?.uuid}/search`);
   };
 
   return (

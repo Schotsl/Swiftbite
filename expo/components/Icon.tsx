@@ -19,7 +19,7 @@ export default function Icon({ iconId }: IconProps) {
       }}
     >
       <Image
-        source={`https://ffbbrrfdghbvuajheulg.supabase.co/storage/v1/object/public/icon/${iconId}`}
+        source={`https://ffbbrrfdghbvuajheulg.supabase.co/storage/v1/object/public/icon/${iconId}-256`}
         onLoad={() => setLoadedImage(true)}
         contentFit="contain"
         contentPosition="center"

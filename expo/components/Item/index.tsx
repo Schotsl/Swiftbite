@@ -46,9 +46,10 @@ export default function Item({
   const [width, setWidth] = useState(0);
 
   const gap = 16;
+  const icon = iconId ? 42 + 16 : 0;
   const right = 75;
   const padding = small ? 20 : 32;
-  const remaining = width - right - gap - padding * 2;
+  const remaining = width - right - gap - icon - padding * 2;
 
   const handlePress = () => {
     if (href) {
