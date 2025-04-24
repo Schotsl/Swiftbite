@@ -11,10 +11,12 @@
     "format": "prettier --write .",
     "preinstall": "bun run types",
     "postinstall": "find ./node_modules/react-native-reanimated-skeleton -type f -exec sed -i '' -e 's/import LinearGradient/import { LinearGradient }/g' -e 's/react-native-linear-gradient/expo-linear-gradient/g' {} +",
-    "build:internal": "eas build --platform ios --profile preview --non-interactive",
-    "build:simulator": "eas build --platform ios --profile simulator --non-interactive",
-    "build:production": "eas build --platform ios --profile production --non-interactive",
-    "build:development": "eas build --platform ios --profile development --non-interactive"
+    "build:prebuild": "expo prebuild",
+    "build:pod-install": "bunx pod-install",
+    "build:internal": "eas build --platform ios --profile preview --non-interactive --local",
+    "build:simulator": "eas build --platform ios --profile simulator --non-interactive --local",
+    "build:production": "eas build --platform ios --profile production --non-interactive --local",
+    "build:development": "eas build --platform ios --profile development --non-interactive --local"
   },
   "jest": {
     "preset": "jest-expo"
@@ -48,7 +50,6 @@
     "expo-linking": "~7.0.5",
     "expo-router": "~4.0.20",
     "expo-splash-screen": "~0.29.24",
-    "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.2",
     "expo-system-ui": "~4.0.9",
     "expo-web-browser": "~14.0.2",

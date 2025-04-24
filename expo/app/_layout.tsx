@@ -62,30 +62,26 @@ export default function RootLayout() {
     .onEnd(() => runOnJS(handleBack)());
 
   return (
-    <SafeAreaView style={{ flex: 1 }} edges={["right", "left", "top"]}>
-      <StatusBar backgroundColor="#FFFFFF" style="dark" />
-
-      <QueryClientProvider client={query}>
-        <GestureHandlerRootView>
-          <GestureDetector gesture={handleGesture}>
-            <Stack
-              screenOptions={{
-                animation: "none",
-                headerShown: false,
-                gestureEnabled: true,
-                contentStyle: {
-                  backgroundColor: "#FFFFFF",
-                },
-              }}
-            >
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="camera" />
-              <Stack.Screen name="sign-in" />
-              <Stack.Screen name="sign-up" />
-            </Stack>
-          </GestureDetector>
-        </GestureHandlerRootView>
-      </QueryClientProvider>
-    </SafeAreaView>
+    <QueryClientProvider client={query}>
+      <GestureHandlerRootView>
+        <GestureDetector gesture={handleGesture}>
+          <Stack
+            screenOptions={{
+              animation: "none",
+              headerShown: false,
+              gestureEnabled: true,
+              contentStyle: {
+                backgroundColor: "#FFFFFF",
+              },
+            }}
+          >
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="camera" />
+            <Stack.Screen name="sign-in" />
+            <Stack.Screen name="sign-up" />
+          </Stack>
+        </GestureDetector>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 }

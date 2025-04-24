@@ -35,14 +35,7 @@ export default function SignUpScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        gap: 16,
-        flex: 1,
-        padding: 16,
-        backgroundColor: "white",
-      }}
-    >
+    <SafeAreaView style={{ flex: 1 }} edges={["right", "left", "top"]}>
       <View style={{ flex: 1, justifyContent: "center", gap: 16 }}>
         <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16 }}>
           Create Account

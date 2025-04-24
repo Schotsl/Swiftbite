@@ -10,11 +10,12 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
+      "userInterfaceStyle": "light",
       "bundleIdentifier": "com.sjorsvanholst.swiftbite",
       "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
         "NSHealthShareUsageDescription": "Read health data",
-        "NSHealthUpdateUsageDescription": "Update health data",
-        "ITSAppUsesNonExemptEncryption": false
+        "NSHealthUpdateUsageDescription": "Update health data"
       },
       "entitlements": {
         "com.apple.developer.healthkit": true
@@ -27,7 +28,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#d0d0d0"
-      }
+      },
+      "package": "com.sjorsvanholst.swiftbite"
     },
     "plugins": [
       "expo-router",

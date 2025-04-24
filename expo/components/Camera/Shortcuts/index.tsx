@@ -24,7 +24,7 @@ export default function CameraShortcuts({
       style={{
         gap: 16,
         width: "100%",
-        padding: 32,
+        padding: 64,
         flexDirection: "row",
         justifyContent: "space-between",
       }}
