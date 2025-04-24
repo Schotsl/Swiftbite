@@ -4,7 +4,7 @@ import { createClient as createClientSupabase } from "@supabase/supabase-js";
 
 export const supabase = createClientSupabase(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
+  process.env.SUPABASE_SERVICE_KEY!,
 );
 
 export async function getUser(request: Request) {
@@ -35,7 +35,7 @@ export const fetchUrl = async (generativeUUID: string): Promise<string> => {
 };
 
 export const fetchProduct = async (
-  productUUID: string
+  productUUID: string,
 ): Promise<Tables<"product">> => {
   const { data, error } = await supabase
     .from("product")
@@ -49,7 +49,7 @@ export const fetchProduct = async (
 };
 
 export const fetchProductByBarcode = async (
-  barcode: string
+  barcode: string,
 ): Promise<Tables<"product"> | null> => {
   const { data, error } = await supabase
     .from("product")
@@ -63,7 +63,7 @@ export const fetchProductByBarcode = async (
 };
 
 export const fetchEntry = async (
-  productId: string
+  productId: string,
 ): Promise<Tables<"entry">> => {
   const { data, error } = await supabase
     .from("entry")
@@ -77,7 +77,7 @@ export const fetchEntry = async (
 };
 
 export const fetchGenerative = async (
-  generativeUUID: string
+  generativeUUID: string,
 ): Promise<Tables<"generative">> => {
   const { data, error } = await supabase
     .from("generative")
@@ -108,6 +108,15 @@ export const updateProduct = async (product: string, icon: string) => {
     .from("product")
     .update({ icon_id: icon })
     .eq("uuid", product);
+
+  handleError(error);
+};
+
+export const updateMeal = async (meal: string, icon: string) => {
+  const { error } = await supabase
+    .from("meal")
+    .update({ icon_id: icon })
+    .eq("uuid", meal);
 
   handleError(error);
 };

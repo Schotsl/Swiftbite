@@ -28,7 +28,8 @@ import {
 
 import generateOptionsPrompt from "@/prompts/generate-options";
 import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
-import normalizeTitlePrompt from "@/prompts/normalize-title";
+import normalizeTitlePrompt from "@/prompts/normalize-meal";
+import normalizeProductPrompt from "@/prompts/normalize-product";
 import searchProductCrawlerPrompt from "@/prompts/search-product-crawler";
 import searchProductStructurePrompt from "@/prompts/search-product-structure";
 import searchProductsCrawlerPrompt from "@/prompts/search-products-crawler";
@@ -48,7 +49,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeNutrition> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -115,7 +116,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeVisuals> {
   const task = "estimate-visuals";
   const model = openai("gpt-4o-mini");
@@ -180,7 +181,7 @@ export async function searchProduct(
     quantity_original: string;
     quantity_original_unit: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductInsert | null> {
   const searchTask = "search-product";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -262,7 +263,7 @@ export async function searchProducts(
     query: string;
     lang: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) {
   const searchTask = "search-products";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -335,12 +336,59 @@ export async function searchProducts(
   return structureStream;
 }
 
+export async function normalizeMeal(
+  user: string,
+  data: {
+    title: string;
+    ingredients: string[];
+  },
+  signal?: AbortSignal,
+): Promise<string> {
+  const task = "normalize-meal";
+  const model = "gpt-4.1-mini";
+
+  const response = await generateObject({
+    model: openai(model),
+    output: "object",
+    schema: z.object({
+      normalized_title: z.string().describe("Normalized meal title"),
+    }),
+    abortSignal: signal,
+    messages: [
+      {
+        role: "system",
+        content: normalizeProductPrompt,
+      },
+      {
+        role: "user",
+        content: JSON.stringify(data),
+      },
+    ],
+  });
+
+  const { object, usage } = response;
+
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      model,
+      usage,
+    });
+  });
+
+  const normalized = object.normalized_title;
+  const normalizedLowercase = normalized.toLowerCase();
+
+  return normalizedLowercase;
+}
+
 export async function normalizeTitle(
   user: string,
   data: {
     title: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task = "normalize-title";
   const model = "gpt-4.1-mini";
@@ -388,7 +436,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<{
   quantity_original: number | null;
   quantity_original_unit: string | null;
@@ -443,7 +491,7 @@ export async function generateOptions(
     lang: string;
     title: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<Option[]> {
   const task = "generate-options";
   const model = "gpt-4.1-nano";
