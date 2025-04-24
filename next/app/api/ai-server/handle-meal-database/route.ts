@@ -5,7 +5,6 @@ import {
   fetchIcon,
   insertIcon,
   updateMeal,
-  updateProduct,
   uploadIcon,
 } from "@/utils/supabase";
 
@@ -27,8 +26,6 @@ export async function POST(request: Request) {
   const uuid = body.record.uuid;
   const title = body.record.title;
   const ingredients = body.record.ingredients;
-
-  console.log(body.record);
 
   after(async () => {
     // Normalize the title and look it up in the database
@@ -60,7 +57,7 @@ export async function POST(request: Request) {
 
     console.log(`[ICON] Uploading icon to storage`);
     await uploadIcon(`${newIconUuid}-256`, newIconResized);
-    await updateProduct(uuid, newIconUuid);
+    await updateMeal(uuid, newIconUuid);
     await uploadIcon(`${newIconUuid}`, newIconBuffer);
   });
 
