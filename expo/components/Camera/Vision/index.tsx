@@ -1,5 +1,5 @@
 import { RefObject, useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, Animated } from "react-native";
 import { CameraView } from "expo-camera";
 import { ImageManipulator } from "expo-image-manipulator";
 import { renderToBase64 } from "@/helper"; // Assuming these helpers are correctly exported
@@ -11,6 +11,9 @@ interface CameraVisionProps {
 
 export default function CameraVision({ camera }: CameraVisionProps) {
   const abort = useRef<AbortController | null>(null);
+
+  const animation = new Animated.Value(0);
+  const animationRef = useRef(animation);
 
   const [feedback, setFeedback] = useState<string | null>(
     "No food or product detected"
@@ -27,7 +30,7 @@ export default function CameraVision({ camera }: CameraVisionProps) {
     const url = `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/vision`;
     const body = JSON.stringify({ base64 });
     const method = "POST";
-    const response = await fetch(url, { headers, method, body, signal }); // Pass signal here
+    const response = await fetch(url, { headers, method, body, signal });
     const results = await response.json();
 
     return results.feedback;
@@ -35,6 +38,12 @@ export default function CameraVision({ camera }: CameraVisionProps) {
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
+
+    Animated.timing(animationRef.current, {
+      toValue: 0.75,
+      duration: 1000,
+      useNativeDriver: true,
+    }).start();
 
     intervalId = setInterval(async () => {
       if (!camera.current) {
@@ -87,9 +96,9 @@ export default function CameraVision({ camera }: CameraVisionProps) {
   }, [camera]);
 
   return (
-    <View
+    <Animated.View
       style={{
-        opacity: 0.75,
+        opacity: animation,
         maxWidth: 256,
         alignSelf: "center",
         paddingTop: 16,
@@ -105,6 +114,6 @@ export default function CameraVision({ camera }: CameraVisionProps) {
       >
         {feedback}
       </Text>
-    </View>
+    </Animated.View>
   );
 }
