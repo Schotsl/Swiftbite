@@ -1,10 +1,14 @@
-import { handleError } from "@/helper";
-import { generateIcon } from "@/utils/icon";
-import { normalizeTitle } from "@/utils/openai";
-import { after } from "next/server";
-
-import { supabase } from "@/utils/supabase";
+import { normalizeTitle, generateIcon } from "@/utils/openai";
 import { validateUsage } from "@/utils/usage";
+import { after } from "next/server";
+import {
+  fetchIcon,
+  insertIcon,
+  updateProduct,
+  uploadIcon,
+} from "@/utils/supabase";
+
+import sharp from "sharp";
 
 export const maxDuration = 120;
 
@@ -44,62 +48,32 @@ export async function POST(request: Request) {
     // Normalize the title and look it up in the database
     console.log(`[ICON] Normalizing title`);
     const iconTitle = await normalizeTitle(user, { title: productTitleNew });
+
+    console.log(`[ICON] Fetching icon from database`);
     const iconUuid = await fetchIcon(iconTitle);
 
     // If the icon already exists we'll update the product
     if (iconUuid) {
+      console.log(`[ICON] Updating product with icon`);
       await updateProduct(productUuid, iconUuid);
 
       return;
     }
 
-    const insertUuid = await insertIcon(iconTitle);
+    console.log(`[ICON] Generating icon`);
+    const newIconBuffer = await generateIcon({ title: iconTitle });
 
-    await generateIcon(insertUuid, iconTitle);
-    await updateProduct(productUuid, insertUuid);
+    console.log(`[ICON] Inserting icon into database`);
+    const newIconUuid = await insertIcon(iconTitle);
+
+    console.log(`[ICON] Resizing icon`);
+    const newIconResized = await sharp(newIconBuffer).resize(256).toBuffer();
+
+    console.log(`[ICON] Uploading icon to storage`);
+    await uploadIcon(`${newIconUuid}-256`, newIconResized);
+    await updateProduct(productUuid, newIconUuid);
+    await uploadIcon(`${newIconUuid}`, newIconBuffer);
   });
 
   return new Response("{}", { status: 200 });
 }
-
-const updateProduct = async (product: string, icon: string) => {
-  console.log(`[ICON] Updating product with icon`);
-
-  const { error } = await supabase
-    .from("product")
-    .update({ icon_id: icon })
-    .eq("uuid", product);
-
-  handleError(error);
-};
-
-const fetchIcon = async (title: string) => {
-  console.log(`[ICON] Fetching icon from database`);
-
-  const { error, data } = await supabase
-    .from("icon")
-    .select("uuid")
-    .eq("title", title);
-
-  handleError(error);
-
-  // We can't use single since it will throw an error if the data is empty
-  const icons = data || [];
-  return icons[0]?.uuid;
-};
-
-const insertIcon = async (title: string) => {
-  console.log(`[ICON] Inserting icon into database`);
-
-  const { error, data } = await supabase
-    .from("icon")
-    .insert({
-      title,
-    })
-    .select("uuid")
-    .single();
-
-  handleError(error);
-
-  return data!.uuid as string;
-};

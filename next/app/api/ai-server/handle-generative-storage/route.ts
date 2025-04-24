@@ -88,8 +88,6 @@ export async function POST(request: Request) {
       return;
     }
 
-    console.log(nutrition);
-
     // Update the entry with the estimated serving size
     const { error: entryUpdateError } = await supabase
       .from("entry")

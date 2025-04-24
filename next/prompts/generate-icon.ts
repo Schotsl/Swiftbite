@@ -1,0 +1,3 @@
+export const generateIconPrompt = (title: string) => {
+  return `Create a stylized icon representing ${title} using bold, angular geometric shapes and sharp edges. Incorporate rough, jagged lines to give it a raw, industrial, and almost brutal feel. The design should feature intentionally uneven lines and a textured appearance. Utilize a limited but striking color palette appropriate for the ${title}, focusing on 2-3 key colors that create high contrast (e.g., specify primary color, secondary/accent color). Maintain a minimalist composition that ensures the icon is visually impactful and stands out. The background must be transparent, and the final output should be a flat vector graphic.`;
+};

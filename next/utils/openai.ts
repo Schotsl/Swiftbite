@@ -1,9 +1,14 @@
 import { z } from "zod";
 import { after } from "next/server";
-import { Enums } from "@/database.types";
 import { insertUsage } from "./usage";
 import { openai as openai } from "@ai-sdk/openai";
-import { CoreMessage, generateObject, generateText, streamObject } from "ai";
+import {
+  CoreMessage,
+  experimental_generateImage,
+  generateObject,
+  generateText,
+  streamObject,
+} from "ai";
 
 import {
   optionSchema,
@@ -33,6 +38,9 @@ import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
 
 import { generateSlug } from "@/helper";
 
+import OpenAI from "openai";
+import { generateIconPrompt } from "@/prompts/generate-icon";
+
 export async function estimateNutrition(
   user: string,
   data: {
@@ -40,7 +48,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutrition> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -107,7 +115,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisuals> {
   const task = "estimate-visuals";
   const model = openai("gpt-4o-mini");
@@ -172,7 +180,7 @@ export async function searchProduct(
     quantity_original: string;
     quantity_original_unit: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductInsert | null> {
   const searchTask = "search-product";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -254,7 +262,7 @@ export async function searchProducts(
     query: string;
     lang: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ) {
   const searchTask = "search-products";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -332,7 +340,7 @@ export async function normalizeTitle(
   data: {
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-title";
   const model = "gpt-4.1-mini";
@@ -380,7 +388,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<{
   quantity_original: number | null;
   quantity_original_unit: string | null;
@@ -435,7 +443,7 @@ export async function generateOptions(
     lang: string;
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<Option[]> {
   const task = "generate-options";
   const model = "gpt-4.1-nano";
@@ -475,4 +483,22 @@ export async function generateOptions(
   }));
 
   return options;
+}
+
+export async function generateIcon(data: { title: string }) {
+  const openai = new OpenAI();
+
+  const title = data.title;
+  const result = await openai.images.generate({
+    size: "1024x1024",
+    model: "gpt-image-1",
+    prompt: generateIconPrompt(title),
+    quality: "high",
+    background: "transparent",
+  });
+
+  const resultBase64 = result.data![0].b64_json!;
+  const resultBytes = Buffer.from(resultBase64, "base64");
+
+  return resultBytes;
 }
