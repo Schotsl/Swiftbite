@@ -15,7 +15,8 @@
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
         "NSHealthShareUsageDescription": "Read health data",
-        "NSHealthUpdateUsageDescription": "Update health data"
+        "NSHealthUpdateUsageDescription": "Update health data",
+        "NSCameraUsageDescription": "Allow camera access to scan barcodes and take photos"
       },
       "entitlements": {
         "com.apple.developer.healthkit": true
@@ -50,7 +51,13 @@
           "backgroundColor": "#d0d0d0"
         }
       ],
-      "expo-font"
+      "expo-font",
+      [
+        "react-native-vision-camera",
+        {
+          "enableCodeScanner": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

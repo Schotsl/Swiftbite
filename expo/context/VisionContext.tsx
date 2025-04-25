@@ -1,7 +1,5 @@
 import supabase from "@/utils/supabase";
 
-import { CameraView } from "expo-camera";
-import { captureRef } from "react-native-view-shot";
 import React, {
   createContext,
   useState,
@@ -9,7 +7,6 @@ import React, {
   useRef,
   useContext,
   ReactNode,
-  RefObject,
 } from "react";
 
 import * as FileSystem from "expo-file-system";
@@ -18,7 +15,7 @@ interface VisionContextProps {
   feedback: string | null;
   websocket: WebSocket | null;
 
-  sendMessage: (camera: RefObject<CameraView>) => Promise<void>;
+  sendImage: (uri: string) => Promise<void>;
 }
 
 const VisionContext = createContext<VisionContextProps | undefined>(undefined);
@@ -143,31 +140,18 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
     };
   }, [websocket]);
 
-  const sendMessage = async (camera: RefObject<CameraView>) => {
+  const sendImage = async (uri: string) => {
     if (!websocket || websocket.readyState !== WebSocket.OPEN) {
       console.log("[VISION] Connection not ready to send");
 
       return;
     }
 
-    if (!camera.current) {
-      console.log("[VISION] Camera not ready");
-
-      return;
-    }
-
     console.log("[VISION] Sending message");
 
-    const result = await captureRef(camera.current, {
-      height: 256,
-      quality: 0.1,
-      format: "jpg",
-    });
-
+    const options = { encoding: FileSystem.EncodingType.Base64 };
+    const base64 = await FileSystem.readAsStringAsync(uri, options);
     const timing = performance.now();
-    const base64 = await FileSystem.readAsStringAsync(result, {
-      encoding: "base64",
-    });
 
     timingRef.current = timing;
 
@@ -175,7 +159,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   };
 
   return (
-    <VisionContext.Provider value={{ websocket, feedback, sendMessage }}>
+    <VisionContext.Provider value={{ websocket, feedback, sendImage }}>
       {children}
     </VisionContext.Provider>
   );

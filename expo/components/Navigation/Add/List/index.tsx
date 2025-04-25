@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { Alert, View } from "react-native";
-import { useCameraPermissions } from "expo-camera";
+import { useCameraPermission } from "react-native-vision-camera";
 
 import Button from "@/components/Button";
 
@@ -11,7 +11,7 @@ type NavigationAddListProps = {
 export default function NavigationAddList({ onClose }: NavigationAddListProps) {
   const router = useRouter();
 
-  const [permission, requestPermission] = useCameraPermissions();
+  const { hasPermission, requestPermission } = useCameraPermission();
 
   const handleSearch = () => {
     onClose();
@@ -31,11 +31,11 @@ export default function NavigationAddList({ onClose }: NavigationAddListProps) {
 
   const handleCamera = async () => {
     // Ask for camera permissions if not granted
-    if (!permission?.granted) {
+    if (!hasPermission) {
       const response = await requestPermission();
 
-      if (!response.granted) {
-        Alert.alert("Permission denied");
+      if (!response) {
+        Alert.alert("Je hebt geen toegang verleend voor de camera");
 
         return;
       }

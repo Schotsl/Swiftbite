@@ -1,41 +1,12 @@
 import { useVision } from "@/context/VisionContext";
-import { CameraView } from "expo-camera";
 import { Text, Animated } from "react-native";
-import { RefObject, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-interface CameraVisionProps {
-  camera: RefObject<CameraView>;
-}
-
-export default function CameraVision({ camera }: CameraVisionProps) {
-  const { feedback, sendMessage } = useVision();
+export default function CameraVision() {
+  const { feedback } = useVision();
 
   const animation = new Animated.Value(0);
-
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const animationRef = useRef(animation).current;
-
-  useEffect(() => {
-    // Send the first message ASAP
-    sendMessage(camera);
-
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-
-    // Send a message every second
-    intervalRef.current = setInterval(() => {
-      sendMessage(camera);
-    }, 1000);
-
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-
-        intervalRef.current = null;
-      }
-    };
-  }, [camera, sendMessage]);
 
   useEffect(() => {
     if (feedback) {

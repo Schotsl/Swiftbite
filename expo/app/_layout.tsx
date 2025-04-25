@@ -21,6 +21,7 @@ import { OpenSans_500Medium_Italic } from "@expo-google-fonts/open-sans/500Mediu
 import { OpenSans_600SemiBold_Italic } from "@expo-google-fonts/open-sans/600SemiBold_Italic";
 import { OpenSans_700Bold_Italic } from "@expo-google-fonts/open-sans/700Bold_Italic";
 import { OpenSans_800ExtraBold_Italic } from "@expo-google-fonts/open-sans/800ExtraBold_Italic";
+import { VisionProvider } from "@/context/VisionContext";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -60,26 +61,29 @@ export default function RootLayout() {
     .onEnd(() => runOnJS(handleBack)());
 
   return (
-    <QueryClientProvider client={query}>
-      <GestureHandlerRootView>
-        <GestureDetector gesture={handleGesture}>
-          <Stack
-            screenOptions={{
-              animation: "none",
-              headerShown: false,
-              gestureEnabled: true,
-              contentStyle: {
-                backgroundColor: "#FFFFFF",
-              },
-            }}
-          >
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="camera" />
-            <Stack.Screen name="sign-in" />
-            <Stack.Screen name="sign-up" />
-          </Stack>
-        </GestureDetector>
-      </GestureHandlerRootView>
-    </QueryClientProvider>
+    // TODO: This should be able to moved a level lower
+    <VisionProvider>
+      <QueryClientProvider client={query}>
+        <GestureHandlerRootView>
+          <GestureDetector gesture={handleGesture}>
+            <Stack
+              screenOptions={{
+                animation: "none",
+                headerShown: false,
+                gestureEnabled: true,
+                contentStyle: {
+                  backgroundColor: "#FFFFFF",
+                },
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="camera" />
+              <Stack.Screen name="sign-in" />
+              <Stack.Screen name="sign-up" />
+            </Stack>
+          </GestureDetector>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
+    </VisionProvider>
   );
 }

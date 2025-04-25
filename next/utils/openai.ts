@@ -2,13 +2,7 @@ import { z } from "zod";
 import { after } from "next/server";
 import { insertUsage } from "./usage";
 import { openai as openai } from "@ai-sdk/openai";
-import {
-  CoreMessage,
-  experimental_generateImage,
-  generateObject,
-  generateText,
-  streamObject,
-} from "ai";
+import { CoreMessage, generateObject, generateText, streamObject } from "ai";
 
 import {
   optionSchema,
@@ -26,7 +20,6 @@ import {
   Option,
 } from "@/types";
 
-import generateVisionPrompt from "@/prompts/generate-vision";
 import generateOptionsPrompt from "@/prompts/generate-options";
 import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
 import normalizeTitlePrompt from "@/prompts/normalize-meal";
@@ -50,7 +43,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutrition> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -117,7 +110,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisuals> {
   const task = "estimate-visuals";
   const model = openai("gpt-4o-mini");
@@ -182,7 +175,7 @@ export async function searchProduct(
     quantity_original: string;
     quantity_original_unit: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductInsert | null> {
   const searchTask = "search-product";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -264,7 +257,7 @@ export async function searchProducts(
     query: string;
     lang: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ) {
   const searchTask = "search-products";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -343,7 +336,7 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-meal";
   const model = "gpt-4.1-mini";
@@ -389,7 +382,7 @@ export async function normalizeTitle(
   data: {
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-title";
   const model = "gpt-4.1-mini";
@@ -437,7 +430,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<{
   quantity_original: number | null;
   quantity_original_unit: string | null;
@@ -486,57 +479,13 @@ export async function normalizeQuantity(
   return object;
 }
 
-export async function generateVision(
-  user: string,
-  data: {
-    base64: string;
-  },
-  signal?: AbortSignal,
-) {
-  const task = "generate-vision";
-  const model = "gpt-4.1-nano";
-
-  const response = await generateText({
-    model: openai(model),
-    abortSignal: signal,
-    messages: [
-      {
-        role: "system",
-        content: generateVisionPrompt,
-      },
-      {
-        role: "user",
-        content: [
-          {
-            type: "image",
-            image: `data:image/png;base64,${data.base64}`,
-          },
-        ],
-      },
-    ],
-  });
-
-  const { usage, text } = response;
-
-  after(async () => {
-    await insertUsage({
-      user,
-      task,
-      model,
-      usage,
-    });
-  });
-
-  return text;
-}
-
 export async function generateOptions(
   user: string,
   data: {
     lang: string;
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<Option[]> {
   const task = "generate-options";
   const model = "gpt-4.1-nano";
@@ -595,7 +544,3 @@ export async function generateIcon(data: { title: string }) {
 
   return resultBytes;
 }
-
-
-
-Lijkt me solid! Indd ketchup en mayo, zou gewoon zo'n goedkopen tube halen en ik vind mais in iedergeval lekker :) 

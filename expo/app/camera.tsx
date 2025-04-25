@@ -3,31 +3,44 @@ import CameraControls from "@/components/Camera/Controls";
 import CameraSelector from "@/components/Camera/Selector";
 import CameraShortcuts from "@/components/Camera/Shortcuts";
 
-import { Alert, View } from "react-native";
+import ImageResizer from "@bam.tech/react-native-image-resizer";
+
+// @ts-ignore
+import { toBase64 } from "vision-camera-base64-v3";
+import { useVision } from "@/context/VisionContext";
 import { useRouter } from "expo-router";
+import { useRunOnJS } from "react-native-worklets-core";
+import { Alert, View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
 import { detectBarcodes } from "react-native-barcodes-detector";
-import { VisionProvider } from "@/context/VisionContext";
 import { useEffect, useRef, useState } from "react";
+
 import {
-  BarcodeScanningResult,
-  BarcodeSettings,
-  CameraType,
-  CameraView,
-} from "expo-camera";
+  Camera,
+  useCameraDevice,
+  useFrameProcessor,
+  useCameraPermission,
+  useCodeScanner,
+  runAtTargetFps,
+  CameraPosition,
+} from "react-native-vision-camera";
 
 import * as ImagePicker from "expo-image-picker";
 
 export default function AddAI() {
-  const focus = useIsFocused();
-  const router = useRouter();
-  const camera = useRef<CameraView>(null);
-
   const [flash, setFlash] = useState<boolean>(false);
-  const [facing, setFacing] = useState<CameraType>("back");
+  const [facing, setFacing] = useState<CameraPosition>("back");
   const [selected, setSelected] = useState(CameraSelected.Barcode);
   const [processing, setProcessing] = useState<boolean>(false);
+
+  const camera = useRef<Camera>(null);
+  const focus = useIsFocused();
+  const router = useRouter();
+  const device = useCameraDevice(facing);
+
+  const { sendImage } = useVision();
+  const { hasPermission } = useCameraPermission();
 
   const isBarcode = selected === CameraSelected.Barcode;
   const isEstimation = selected === CameraSelected.Estimation;
@@ -38,15 +51,6 @@ export default function AddAI() {
 
   function handleFlash() {
     setFlash((current) => !current);
-  }
-
-  async function handleBarcode(data: BarcodeScanningResult) {
-    const barcode = data.data;
-
-    router.push({
-      pathname: "/add/add-product",
-      params: { barcode },
-    });
   }
 
   async function handleImage() {
@@ -70,7 +74,9 @@ export default function AddAI() {
 
     console.log("[DEVICE] Taking picture...");
 
-    const params = await camera.current.takePictureAsync();
+    const params = await camera.current.takePhoto({
+      flash: flash ? "on" : "off",
+    });
 
     if (!params) {
       return;
@@ -80,7 +86,7 @@ export default function AddAI() {
 
     router.push({
       pathname,
-      params,
+      params: { uri: params.path, width: params.width, height: params.height },
     });
 
     setProcessing(false);
@@ -137,48 +143,90 @@ export default function AddAI() {
     setFacing("back");
   }, [focus]);
 
+  const handleResize = useRunOnJS(
+    async (base64: string, width: number, height: number) => {
+      const originalData = `data:image/jpeg;base64,${base64}`;
+      const originalRatio = width / height;
+
+      const newWidth = width > height ? 256 : width / originalRatio;
+      const newHeight = height > width ? 256 : height * originalRatio;
+
+      const data = await ImageResizer.createResizedImage(
+        originalData,
+        newWidth,
+        newHeight,
+        "JPEG",
+        50
+      );
+
+      sendImage(data.uri);
+    },
+    []
+  );
+
+  const handleFrame = useFrameProcessor((frame) => {
+    "worklet";
+
+    const { width, height } = frame;
+
+    runAtTargetFps(1, () => {
+      const imageAsBase64 = toBase64(frame);
+
+      handleResize(imageAsBase64, width, height);
+    });
+  }, []);
+
+  const codeScanner = useCodeScanner({
+    codeTypes: ["qr", "ean-13", "ean-8", "code-128", "code-39"],
+    onCodeScanned: (codes) => {
+      const barcode = codes[0].value;
+
+      router.push({
+        pathname: "/add/add-product",
+        params: { barcode },
+      });
+    },
+  });
+
   if (!focus) {
     return null;
   }
 
-  const barcodeTypes = ["qr", "ean13", "ean8", "code128", "code39"];
-  const barcodeSetting = { barcodeTypes } as BarcodeSettings;
+  if (!device || !hasPermission) {
+    return null;
+  }
 
   return (
-    <VisionProvider>
-      <CameraView
+    <View style={{ flex: 1, gap: 24, paddingBottom: 64 }}>
+      <Camera
         ref={camera}
-        flash={flash ? "on" : "off"}
-        ratio="4:3"
-        facing={facing}
-        barcodeScannerSettings={isBarcode ? barcodeSetting : undefined}
-        onBarcodeScanned={(data) => {
-          if (!isBarcode) {
-            return;
-          }
-
-          handleBarcode(data);
-        }}
+        device={device!}
+        isActive={true}
+        pixelFormat="rgb"
+        codeScanner={isBarcode ? codeScanner : undefined}
+        frameProcessor={handleFrame}
         style={{
-          gap: 24,
-          flex: 1,
-          paddingBottom: 64,
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          position: "absolute",
         }}
-      >
-        <CameraShortcuts onFlash={handleFlash} flash={flash} />
+      />
 
-        {isEstimation && <CameraVision camera={camera} />}
+      <CameraShortcuts onFlash={handleFlash} flash={flash} />
 
-        <View style={{ marginTop: "auto", gap: 24 }}>
-          <CameraSelector onSelect={setSelected} />
+      {isEstimation && <CameraVision />}
 
-          <CameraControls
-            onFlip={handleFlip}
-            onTake={handleImage}
-            onDocument={handleDocument}
-          />
-        </View>
-      </CameraView>
-    </VisionProvider>
+      <View style={{ marginTop: "auto", gap: 24 }}>
+        <CameraSelector onSelect={setSelected} />
+
+        <CameraControls
+          onFlip={handleFlip}
+          onTake={handleImage}
+          onDocument={handleDocument}
+        />
+      </View>
+    </View>
   );
 }
