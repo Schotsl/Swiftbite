@@ -92,7 +92,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
         return;
       }
 
-      if (message.feedback) {
+      if (message.feedback !== undefined) {
         // Make sure the message is the latest
         if (message.received < latestRef.current) {
           return;

@@ -27,6 +27,7 @@ import {
 } from "react-native-vision-camera";
 
 import * as ImagePicker from "expo-image-picker";
+import { Image } from "expo-image";
 
 export default function AddAI() {
   const [flash, setFlash] = useState<boolean>(false);
@@ -143,8 +144,16 @@ export default function AddAI() {
     setFacing("back");
   }, [focus]);
 
+  const [previewUri, setPreviewUri] = useState<string>("");
+  const [previewAspect, setPreviewAspect] = useState<number>(1);
+
   const handleResize = useRunOnJS(
-    async (base64: string, width: number, height: number) => {
+    async (
+      base64: string,
+      width: number,
+      height: number,
+      orientation: number
+    ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
 
@@ -156,10 +165,18 @@ export default function AddAI() {
         newWidth,
         newHeight,
         "JPEG",
-        50
+        50,
+        orientation
       );
 
       sendImage(data.uri);
+
+      const adjustedRotation = Math.abs(orientation);
+      const adjustedRatio =
+        adjustedRotation === 90 ? height / width : originalRatio;
+
+      setPreviewUri(data.uri);
+      setPreviewAspect(adjustedRatio);
     },
     []
   );
@@ -167,12 +184,24 @@ export default function AddAI() {
   const handleFrame = useFrameProcessor((frame) => {
     "worklet";
 
+    const orientationCurrent = frame.orientation;
+
+    let orientation = 0;
+
+    if (orientationCurrent === "landscape-left") {
+      orientation = -90;
+    }
+
+    if (orientationCurrent === "landscape-right") {
+      orientation = 90;
+    }
+
     const { width, height } = frame;
 
     runAtTargetFps(1, () => {
       const imageAsBase64 = toBase64(frame);
 
-      handleResize(imageAsBase64, width, height);
+      handleResize(imageAsBase64, width, height, orientation);
     });
   }, []);
 
@@ -204,13 +233,28 @@ export default function AddAI() {
         isActive={true}
         pixelFormat="rgb"
         codeScanner={isBarcode ? codeScanner : undefined}
-        frameProcessor={handleFrame}
+        frameProcessor={isEstimation ? handleFrame : undefined}
         style={{
           top: 0,
           left: 0,
           right: 0,
           bottom: 0,
           position: "absolute",
+        }}
+      />
+
+      <Image
+        source={{
+          uri: previewUri,
+        }}
+        style={{
+          position: "absolute",
+          top: 80,
+          left: 80,
+          objectFit: "cover",
+          height: 100,
+          width: "auto",
+          aspectRatio: previewAspect,
         }}
       />
 

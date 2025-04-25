@@ -8,7 +8,7 @@ export async function generateVision(
   user: string,
   data: {
     base64: string;
-  },
+  }
 ) {
   const task = "generate-vision";
   const model = "gpt-4.1-nano";

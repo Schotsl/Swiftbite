@@ -64,6 +64,8 @@ Deno.serve((request) => {
     const feedback = await generateVision(user, { base64 });
     const received = Date.now();
 
+    console.log(`[VISION] ${feedback}`);
+
     socket.send(JSON.stringify({ feedback, received }));
   };
 
