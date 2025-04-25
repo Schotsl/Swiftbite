@@ -50,7 +50,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeNutrition> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -117,7 +117,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeVisuals> {
   const task = "estimate-visuals";
   const model = openai("gpt-4o-mini");
@@ -182,7 +182,7 @@ export async function searchProduct(
     quantity_original: string;
     quantity_original_unit: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductInsert | null> {
   const searchTask = "search-product";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -264,7 +264,7 @@ export async function searchProducts(
     query: string;
     lang: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) {
   const searchTask = "search-products";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -343,7 +343,7 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task = "normalize-meal";
   const model = "gpt-4.1-mini";
@@ -389,7 +389,7 @@ export async function normalizeTitle(
   data: {
     title: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task = "normalize-title";
   const model = "gpt-4.1-mini";
@@ -437,7 +437,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<{
   quantity_original: number | null;
   quantity_original_unit: string | null;
@@ -491,7 +491,7 @@ export async function generateVision(
   data: {
     base64: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) {
   const task = "generate-vision";
   const model = "gpt-4.1-nano";
@@ -536,7 +536,7 @@ export async function generateOptions(
     lang: string;
     title: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<Option[]> {
   const task = "generate-options";
   const model = "gpt-4.1-nano";
@@ -595,3 +595,7 @@ export async function generateIcon(data: { title: string }) {
 
   return resultBytes;
 }
+
+
+
+Lijkt me solid! Indd ketchup en mayo, zou gewoon zo'n goedkopen tube halen en ik vind mais in iedergeval lekker :) 

@@ -27,7 +27,7 @@ type MealContextType = {
   insertMealProduct: (
     productId: string,
     serving: ServingData,
-    productObject: Product
+    productObject: Product,
   ) => void;
 
   saveChanges: () => Promise<void>;
@@ -81,7 +81,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         meal_product: currentMeal.meal_product.map((mealProduct) =>
           mealProduct.product_id === productId
             ? { ...mealProduct, ...serving }
-            : mealProduct
+            : mealProduct,
         ),
       };
     });
@@ -92,7 +92,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   const insertMealProduct = (
     productId: string,
     serving: ServingData,
-    productObject: ProductInsert
+    productObject: ProductInsert,
   ) => {
     setMeal((currentMeal) => {
       const meal: MealProductWithProductInsert = {
@@ -119,7 +119,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       return {
         ...currentMeal,
         meal_product: currentMeal.meal_product.filter(
-          (mealProduct) => mealProduct.product_id !== productId
+          (mealProduct) => mealProduct.product_id !== productId,
         ),
       };
     });
@@ -174,7 +174,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
           selected_option: product.option,
           selected_quantity: product.quantity,
         });
-      }
+      },
     );
 
     // Prepare the payload for the meal_product updates
@@ -183,7 +183,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       ([productId, product]) => {
         // Find the original product
         const productOriginal = initial?.meal_product.find(
-          (product) => product.product_id === productId
+          (product) => product.product_id === productId,
         );
 
         // If the product is not found return a resolved promise
@@ -199,12 +199,12 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
         // Update the product
         return updateMealProductMutation.mutateAsync(productUpdated);
-      }
+      },
     );
 
     // Prepare the payload for the meal_product delete
     const deleteMealProductsPromises = removedProductIds.map((productId) =>
-      deleteMealProductMutation.mutateAsync({ mealId, productId })
+      deleteMealProductMutation.mutateAsync({ mealId, productId }),
     );
 
     await Promise.all([

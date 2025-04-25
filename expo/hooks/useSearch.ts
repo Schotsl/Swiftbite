@@ -50,7 +50,7 @@ export function useSearch() {
       {
         signal,
         headers,
-      }
+      },
     );
 
     if (response.status === 429) {
@@ -93,6 +93,6 @@ export function useSearch() {
 
   return useMemo(
     () => ({ error, search, products, loading, overloaded }),
-    [error, search, products, loading, overloaded]
+    [error, search, products, loading, overloaded],
   );
 }

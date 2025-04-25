@@ -7,8 +7,6 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useFonts } from "@expo-google-fonts/open-sans/useFonts";
 import { OpenSans_300Light } from "@expo-google-fonts/open-sans/300Light";

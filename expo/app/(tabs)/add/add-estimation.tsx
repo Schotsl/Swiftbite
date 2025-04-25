@@ -40,7 +40,7 @@ export default function Add2Preview() {
           width: parseInt(width),
           height: parseInt(height),
         }
-      : null
+      : null,
   );
 
   const [smallImage, setSmallImage] = useState<string | null>(null);

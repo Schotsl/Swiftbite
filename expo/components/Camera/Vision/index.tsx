@@ -1,9 +1,11 @@
-import { RefObject, useEffect, useRef, useState } from "react";
-import { Text, View, Animated } from "react-native";
-import { CameraView } from "expo-camera";
-import { ImageManipulator } from "expo-image-manipulator";
-import { renderToBase64 } from "@/helper"; // Assuming these helpers are correctly exported
 import supabase from "@/utils/supabase";
+
+import { CameraView } from "expo-camera";
+import { captureRef } from "react-native-view-shot";
+import { renderToBase64 } from "@/helper";
+import { Text, Animated } from "react-native";
+import { ImageManipulator } from "expo-image-manipulator";
+import { RefObject, useEffect, useRef, useState } from "react";
 
 interface CameraVisionProps {
   camera: RefObject<CameraView>;
@@ -60,20 +62,12 @@ export default function CameraVision({ camera }: CameraVisionProps) {
 
       abort.current = controller;
 
-      const result = await camera.current.takePictureAsync({
-        quality: 0.5,
+      const result = await captureRef(camera.current, {
+        height: 256,
+        quality: 0.1,
       });
 
-      if (!result?.uri) {
-        return;
-      }
-
-      const { width, height } = result;
-
-      const resize = width > height ? { width: 256 } : { height: 256 };
-      const manipulator = ImageManipulator.manipulate(result.uri);
-
-      manipulator.resize(resize);
+      const manipulator = ImageManipulator.manipulate(result);
 
       const base64 = await renderToBase64(manipulator, true);
       const feedback = await getVision(base64, controller.signal);
