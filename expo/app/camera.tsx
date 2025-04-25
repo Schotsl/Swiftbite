@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
 import { detectBarcodes } from "react-native-barcodes-detector";
+import { VisionProvider } from "@/context/VisionContext";
 import { useEffect, useRef, useState } from "react";
 import {
   BarcodeScanningResult,
@@ -144,38 +145,40 @@ export default function AddAI() {
   const barcodeSetting = { barcodeTypes } as BarcodeSettings;
 
   return (
-    <CameraView
-      ref={camera}
-      flash={flash ? "on" : "off"}
-      ratio="4:3"
-      facing={facing}
-      barcodeScannerSettings={isBarcode ? barcodeSetting : undefined}
-      onBarcodeScanned={(data) => {
-        if (!isBarcode) {
-          return;
-        }
+    <VisionProvider>
+      <CameraView
+        ref={camera}
+        flash={flash ? "on" : "off"}
+        ratio="4:3"
+        facing={facing}
+        barcodeScannerSettings={isBarcode ? barcodeSetting : undefined}
+        onBarcodeScanned={(data) => {
+          if (!isBarcode) {
+            return;
+          }
 
-        handleBarcode(data);
-      }}
-      style={{
-        gap: 24,
-        flex: 1,
-        paddingBottom: 64,
-      }}
-    >
-      <CameraShortcuts onFlash={handleFlash} flash={flash} />
+          handleBarcode(data);
+        }}
+        style={{
+          gap: 24,
+          flex: 1,
+          paddingBottom: 64,
+        }}
+      >
+        <CameraShortcuts onFlash={handleFlash} flash={flash} />
 
-      {isEstimation && <CameraVision camera={camera} />}
+        {isEstimation && <CameraVision camera={camera} />}
 
-      <View style={{ marginTop: "auto", gap: 24 }}>
-        <CameraSelector onSelect={setSelected} />
+        <View style={{ marginTop: "auto", gap: 24 }}>
+          <CameraSelector onSelect={setSelected} />
 
-        <CameraControls
-          onFlip={handleFlip}
-          onTake={handleImage}
-          onDocument={handleDocument}
-        />
-      </View>
-    </CameraView>
+          <CameraControls
+            onFlip={handleFlip}
+            onTake={handleImage}
+            onDocument={handleDocument}
+          />
+        </View>
+      </CameraView>
+    </VisionProvider>
   );
 }
