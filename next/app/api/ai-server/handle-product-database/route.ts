@@ -1,6 +1,6 @@
 import { normalizeTitle, generateIcon } from "@/utils/openai";
 import { validateUsage } from "@/utils/usage";
-import { after } from "next/server";
+import { after, NextResponse } from "next/server";
 import {
   fetchIcon,
   insertIcon,
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   const response = await validateUsage(user);
 
   if (response) {
-    return response;
+    return NextResponse.json({ error: response }, { status: 429 });
   }
 
   const productIcon = body.record.icon_id;

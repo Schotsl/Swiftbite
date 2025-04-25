@@ -38,21 +38,21 @@ export async function validateUsage(user: string) {
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", new Date(now - 60 * 1000).toISOString()),
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", hourTimestamp),
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", yearTimestamp),
@@ -71,23 +71,14 @@ export async function validateUsage(user: string) {
   const yearOutput = yearResult.data?.[0]?.output_tokens || 0;
 
   if (minuteInput > 500000 || minuteOutput > 500000) {
-    return NextResponse.json(
-      { error: "Minute limit exceeded" },
-      { status: 429 },
-    );
+    return "Minute limit exceeded";
   }
 
   if (hourInput > 500000 || hourOutput > 500000) {
-    return NextResponse.json(
-      { error: "Hourly limit exceeded" },
-      { status: 429 },
-    );
+    return "Hourly limit exceeded";
   }
 
   if (yearInput > 500000 || yearOutput > 500000) {
-    return NextResponse.json(
-      { error: "Yearly limit exceeded" },
-      { status: 429 },
-    );
+    return "Yearly limit exceeded";
   }
 }

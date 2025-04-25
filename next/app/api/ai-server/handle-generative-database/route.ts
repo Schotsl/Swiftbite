@@ -1,6 +1,6 @@
 import { handleError } from "@/helper";
 import { estimateNutrition, estimateVisuals } from "@/utils/openai";
-import { after } from "next/server";
+import { after, NextResponse } from "next/server";
 
 import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   const response = await validateUsage(user);
 
   if (response) {
-    return response;
+    return NextResponse.json({ error: response }, { status: 429 });
   }
 
   const generativeImage = body.record.image;
