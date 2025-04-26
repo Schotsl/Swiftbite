@@ -13,7 +13,7 @@ import useDeleteEntry from "@/mutations/useDeleteEntry";
 
 import HomeStreak from "@/components/Home/Streak";
 import HeaderTitle from "@/components/Header/Title";
-import HomeDate from "@/components/Home/Date";
+import HomeDate from "@/components/Home/Week/Day";
 
 import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";

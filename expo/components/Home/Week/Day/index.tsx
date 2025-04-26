@@ -1,12 +1,12 @@
 import { View, Text } from "react-native";
 
-type HomeDateProps = {
+type HomeWeekDayProps = {
   type: "normal" | "thick" | "dashed";
   date: number;
   weekday: string;
 };
 
-export default function HomeDate({ type, date, weekday }: HomeDateProps) {
+export default function HomeWeekDay({ type, date, weekday }: HomeWeekDayProps) {
   return (
     <View
       style={{
