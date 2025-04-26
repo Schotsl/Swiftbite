@@ -5,7 +5,6 @@ import CameraShortcuts from "@/components/Camera/Shortcuts";
 
 import ImageResizer from "@bam.tech/react-native-image-resizer";
 
-// @ts-ignore
 import { toBase64 } from "vision-camera-base64-v3";
 import { useVision } from "@/context/VisionContext";
 import { useRouter } from "expo-router";
@@ -154,7 +153,7 @@ export default function AddAI() {
       base64: string,
       width: number,
       height: number,
-      orientation: number
+      orientation: number,
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -177,7 +176,7 @@ export default function AddAI() {
         newHeight,
         "JPEG",
         50,
-        orientation
+        orientation,
       );
 
       sendImage(data.uri);
@@ -189,7 +188,7 @@ export default function AddAI() {
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    []
+    [],
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -232,27 +231,36 @@ export default function AddAI() {
     return null;
   }
 
-  if (!device || !hasPermission) {
-    return null;
-  }
-
   return (
     <View style={{ flex: 1, gap: 24, paddingBottom: 64 }}>
-      <Camera
-        ref={camera}
-        device={device!}
-        isActive={true}
-        pixelFormat="rgb"
-        codeScanner={isBarcode ? codeScanner : undefined}
-        frameProcessor={isEstimation ? handleFrame : undefined}
-        style={{
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          position: "absolute",
-        }}
-      />
+      {device && hasPermission ? (
+        <Camera
+          ref={camera}
+          device={device!}
+          isActive={true}
+          pixelFormat="rgb"
+          codeScanner={isBarcode ? codeScanner : undefined}
+          frameProcessor={isEstimation ? handleFrame : undefined}
+          style={{
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            position: "absolute",
+          }}
+        />
+      ) : (
+        <View
+          style={{
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            position: "absolute",
+            backgroundColor: "#000",
+          }}
+        />
+      )}
 
       {debug && (
         <Image

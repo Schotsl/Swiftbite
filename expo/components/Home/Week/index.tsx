@@ -1,8 +1,33 @@
 import HomeWeekDay from "./Day";
-
 import { View } from "react-native";
 
-export default function HomeWeek() {
+const getLetter = (date: Date): string => {
+  const weekdays = ["S", "M", "T", "W", "T", "F", "S"];
+  return weekdays[date.getDay()];
+};
+
+type HomeWeekProps = {
+  date: Date;
+  onPress: (date: Date) => void;
+};
+
+export default function HomeWeek({ date, onPress }: HomeWeekProps) {
+  const dateArray = [];
+  const dateNumber = date.getDate();
+
+  for (let i = -3; i <= 3; i++) {
+    const object = new Date(date);
+
+    object.setDate(dateNumber + i);
+
+    dateArray.push({
+      isToday: i === 0,
+      dateNumber: object.getDate(),
+      dateObject: object,
+      dateLetter: getLetter(object),
+    });
+  }
+
   return (
     <View
       style={{
@@ -10,13 +35,15 @@ export default function HomeWeek() {
         justifyContent: "space-between",
       }}
     >
-      <HomeWeekDay type="dashed" date={18} weekday="M" />
-      <HomeWeekDay type="dashed" date={19} weekday="D" />
-      <HomeWeekDay type="normal" date={20} weekday="W" />
-      <HomeWeekDay type="thick" date={21} weekday="D" />
-      <HomeWeekDay type="normal" date={22} weekday="F" />
-      <HomeWeekDay type="normal" date={22} weekday="S" />
-      <HomeWeekDay type="normal" date={31} weekday="S" />
+      {dateArray.map((day, index) => (
+        <HomeWeekDay
+          key={index}
+          type={day.isToday ? "thick" : "normal"}
+          date={day.dateNumber}
+          weekday={day.dateLetter}
+          onPress={() => onPress(day.dateObject)}
+        />
+      ))}
     </View>
   );
 }

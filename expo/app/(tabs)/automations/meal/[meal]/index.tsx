@@ -42,6 +42,7 @@ export default function DetailsScreen() {
   // TODO: I should check this with David since it causes a recursive update
   useEffect(() => {
     updateTitle(title);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title]);
 
   const handleSave = async () => {

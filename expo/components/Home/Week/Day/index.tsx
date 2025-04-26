@@ -1,14 +1,21 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 
 type HomeWeekDayProps = {
   type: "normal" | "thick" | "dashed";
   date: number;
   weekday: string;
+  onPress: () => void;
 };
 
-export default function HomeWeekDay({ type, date, weekday }: HomeWeekDayProps) {
+export default function HomeWeekDay({
+  type,
+  date,
+  weekday,
+  onPress,
+}: HomeWeekDayProps) {
   return (
-    <View
+    <TouchableOpacity
+      onPress={onPress}
       style={{
         gap: 8,
         alignItems: "center",
@@ -36,6 +43,6 @@ export default function HomeWeekDay({ type, date, weekday }: HomeWeekDayProps) {
       <Text style={{ fontSize: 16, fontFamily: "OpenSans_700Bold" }}>
         {date}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }

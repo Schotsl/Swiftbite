@@ -45,7 +45,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
     if (websocket) {
       console.log(
-        "[VISION] Closing existing connection before reconnecting..."
+        "[VISION] Closing existing connection before reconnecting...",
       );
 
       websocket.onopen = null;
@@ -89,6 +89,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
         setWebsocket(null);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

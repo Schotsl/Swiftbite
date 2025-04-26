@@ -1,5 +1,4 @@
 import { View } from "react-native";
-import { getToday } from "@/helper";
 import { useRouter } from "expo-router";
 
 import { ScrollView } from "react-native-gesture-handler";
@@ -13,28 +12,32 @@ import useDeleteEntry from "@/mutations/useDeleteEntry";
 
 import HomeStreak from "@/components/Home/Streak";
 import HeaderTitle from "@/components/Header/Title";
-import HomeDate from "@/components/Home/Week/Day";
 
 import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";
 import ItemDelete from "@/components/Item/Delete";
 import ItemProductWithServing from "@/components/Item/ProductWithServing";
 import HomeMacros from "@/components/Home/Macros";
+import HomeWeek from "@/components/Home/Week";
+import { getRange } from "@/helper";
 
 export default function Index() {
   const router = useRouter();
 
+  const [date, setDate] = useState<Date>(new Date());
   const [interval, setInterval] = useState<number | false>(1000);
 
   const deleteEntry = useDeleteEntry();
 
-  const { startDate, endDate } = getToday();
+  const { startDate, endDate } = getRange(date);
+
   const { data } = useSuspenseQuery({
     ...entryData({}),
     refetchInterval: interval,
     select: (entries) => {
-      const start = new Date(startDate).getTime();
-      const end = new Date(endDate).getTime();
+      const end = endDate.getTime();
+      const start = startDate.getTime();
+
       return entries.filter((entry) => {
         const entryTime = new Date(entry.created_at).getTime();
         return entryTime >= start && entryTime <= end;
@@ -151,20 +154,7 @@ export default function Index() {
           <HomeStreak />
         </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <HomeDate type="dashed" date={18} weekday="M" />
-          <HomeDate type="dashed" date={19} weekday="D" />
-          <HomeDate type="normal" date={20} weekday="W" />
-          <HomeDate type="thick" date={21} weekday="D" />
-          <HomeDate type="normal" date={22} weekday="F" />
-          <HomeDate type="normal" date={22} weekday="S" />
-          <HomeDate type="normal" date={31} weekday="S" />
-        </View>
+        <HomeWeek date={date} onPress={setDate} />
 
         <HomeMacros />
 

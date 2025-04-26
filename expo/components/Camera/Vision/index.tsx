@@ -33,6 +33,8 @@ export default function CameraVision() {
       resetHistory();
       resetFeedback();
     };
+    // TODO: Check with David if this is needed
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

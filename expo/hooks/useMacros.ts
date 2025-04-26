@@ -1,11 +1,11 @@
-import { getMacrosFromMeal, getMacrosFromProduct, getToday } from "@/helper";
+import { getMacrosFromMeal, getMacrosFromProduct, getRange } from "@/helper";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import entryData from "../queries/entryData";
 import { useMemo } from "react";
 
 export default function useDailyMacros() {
-  const { startDate, endDate } = getToday();
+  const { startDate, endDate } = getRange();
 
   const { data: entries } = useSuspenseQuery({
     ...entryData({}),

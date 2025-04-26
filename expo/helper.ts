@@ -81,22 +81,26 @@ export const getOptions = (product?: Product | ProductInsert) => {
   return options;
 };
 
-export const getToday = () => {
-  const now = new Date();
+export const getRange = (date = new Date()) => {
+  const startDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
+  );
 
-  const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const endingDay = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
+  const endDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate(),
     23,
     59,
     59,
     999,
   );
+
   return {
-    endDate: endingDay.toISOString(),
-    startDate: startDay.toISOString(),
+    endDate,
+    startDate,
   };
 };
 
