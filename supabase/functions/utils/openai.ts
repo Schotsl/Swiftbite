@@ -12,7 +12,7 @@ export async function generateVision(
   }
 ) {
   const task = "generate-vision";
-  const model = "gpt-4.1-nano";
+  const model = "gpt-4.1-mini";
 
   const length = data.history.length;
   const history = data.history

@@ -39,6 +39,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   useEffect(() => {
     const startWebsocket = async () => {
       console.log("[VISION] Connecting to service...");
+
       if (websocket) {
         websocket.close();
       }
@@ -87,55 +88,9 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
       console.log("[VISION] Connection established");
     };
 
-    websocket.onmessage = (event: MessageEvent) => {
-      const message = JSON.parse(event.data);
-
-      if (message.error) {
-        setFeedback(message.error);
-
-        return;
-      }
-
-      if (message.feedback !== undefined) {
-        // Make sure the message is the latest
-        if (message.received < latestRef.current) {
-          return;
-        }
-
-        latestRef.current = message.received;
-
-        setFeedback(message.feedback);
-
-        // Update the history but cap at 3 messages
-        if (historyRef.current.length >= 3) {
-          historyRef.current.shift();
-        }
-
-        historyRef.current.push(message.feedback);
-
-        // Log the response time
-        const timeRecevied = performance.now();
-        const timeDifference = timeRecevied - timingRef.current!;
-
-        console.log(`[VISION] Response time: ${timeDifference}ms`);
-      }
-    };
-
-    websocket.onerror = (error) => {
-      console.error(error);
-
-      setFeedback("Vision service error");
-    };
-
-    websocket.onclose = (event) => {
-      console.log("[VISION] Connection closed");
-
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-
-        intervalRef.current = null;
-      }
-    };
+    websocket.onerror = handleError;
+    websocket.onclose = handleClose;
+    websocket.onmessage = handleMessage;
 
     return () => {
       if (websocket) {
@@ -151,6 +106,56 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
       }
     };
   }, [websocket]);
+
+  const handleMessage = (event: MessageEvent) => {
+    const message = JSON.parse(event.data);
+
+    if (message.error) {
+      setFeedback(message.error);
+
+      return;
+    }
+
+    if (message.feedback !== undefined) {
+      // Make sure the message is the latest
+      if (message.received < latestRef.current) {
+        return;
+      }
+
+      latestRef.current = message.received;
+
+      setFeedback(message.feedback);
+
+      // Update the history but cap at 3 messages
+      if (historyRef.current.length >= 3) {
+        historyRef.current.shift();
+      }
+
+      historyRef.current.push(message.feedback);
+
+      // Log the response time
+      const timeRecevied = performance.now();
+      const timeDifference = timeRecevied - timingRef.current!;
+
+      console.log(`[VISION] Response time: ${timeDifference}ms`);
+    }
+  };
+
+  const handleClose = (event: CloseEvent) => {
+    console.log("[VISION] Connection closed");
+
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+
+      intervalRef.current = null;
+    }
+  };
+
+  const handleError = (error: Event) => {
+    console.error(error);
+
+    setFeedback("Vision service error");
+  };
 
   const sendImage = async (uri: string) => {
     if (!websocket || websocket.readyState !== WebSocket.OPEN) {
