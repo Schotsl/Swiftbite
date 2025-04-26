@@ -157,8 +157,17 @@ export default function AddAI() {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
 
-      const newWidth = width > height ? 256 : width / originalRatio;
-      const newHeight = height > width ? 256 : height * originalRatio;
+      // If width is larger than width should be 512, if height is larger than height should be 512, mainting the ratio
+      let newWidth = 0;
+      let newHeight = 0;
+
+      if (width > 512) {
+        newWidth = 512;
+        newHeight = 512 / originalRatio;
+      } else {
+        newHeight = 512;
+        newWidth = 512 * originalRatio;
+      }
 
       const data = await ImageResizer.createResizedImage(
         originalData,
