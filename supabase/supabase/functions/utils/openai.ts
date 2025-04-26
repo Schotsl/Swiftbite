@@ -9,7 +9,7 @@ export async function generateVision(
   data: {
     base64: string;
     history: string[];
-  }
+  },
 ) {
   const task = "generate-vision";
   const model = "gpt-4.1-mini";
@@ -20,7 +20,7 @@ export async function generateVision(
       (message, index) =>
         `${length - index} second${
           length - index > 1 ? "s" : ""
-        } ago: ${message}`
+        } ago: ${message}`,
     )
     .join("\n");
 

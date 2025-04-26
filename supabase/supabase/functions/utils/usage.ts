@@ -36,21 +36,21 @@ export async function validateUsage(user: string) {
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", new Date(now - 60 * 1000).toISOString()),
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", hourTimestamp),
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", yearTimestamp),

@@ -14,6 +14,8 @@ import * as FileSystem from "expo-file-system";
 
 interface VisionContextProps {
   feedback: string | null;
+  feedbackOld: string | null;
+
   websocket: WebSocket | null;
 
   sendImage: (uri: string) => Promise<void>;
@@ -30,6 +32,8 @@ interface VisionProviderProps {
 
 export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   const [feedback, setFeedback] = useState<string | null>(null);
+  const [feedbackOld, setFeedbackOld] = useState<string | null>(null);
+
   const [websocket, setWebsocket] = useState<WebSocket | null>(null);
 
   const timingRef = useRef<number>(performance.now());
@@ -127,7 +131,11 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
       latestRef.current = message.received;
 
-      setFeedback(message.feedback);
+      setFeedback((previous) => {
+        setFeedbackOld(previous);
+
+        return message.feedback;
+      });
 
       // Update the history but cap at 3 messages
       if (historyRef.current.length >= 3) {
@@ -156,7 +164,8 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   const handleError = (error: Event) => {
     console.error(error);
 
-    setFeedback("Vision service error");
+    // On error we'll attempt to reconnect
+    startWebsocket();
   };
 
   const sendImage = async (uri: string) => {
@@ -193,8 +202,9 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   return (
     <VisionContext.Provider
       value={{
-        websocket,
         feedback,
+        feedbackOld,
+        websocket,
         sendImage,
         resetHistory,
         resetFeedback,

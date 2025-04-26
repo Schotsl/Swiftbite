@@ -3,7 +3,7 @@ import { Text, Animated } from "react-native";
 import { useEffect, useRef } from "react";
 
 export default function CameraVision() {
-  const { feedback, resetHistory, resetFeedback } = useVision();
+  const { feedback, feedbackOld, resetHistory, resetFeedback } = useVision();
 
   const animation = new Animated.Value(0);
   const animationRef = useRef(animation).current;
@@ -52,7 +52,7 @@ export default function CameraVision() {
           fontFamily: "OpenSans_600SemiBold",
         }}
       >
-        {feedback}
+        {feedback === "OK" ? feedbackOld : feedback}
       </Text>
     </Animated.View>
   );
