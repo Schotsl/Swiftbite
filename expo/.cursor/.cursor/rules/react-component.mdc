@@ -1,0 +1,59 @@
+---
+description: Code convention for writing React components
+globs: *.tsx
+alwaysApply: false
+---
+
+# Your rule content
+
+## **Component File Structure**
+When creating React components, follow these guidelines to maintain consistency, readability, and ease of maintainability:
+
+- **Each file should contain only one React component.**  
+  Keeping one component per file makes it easier to locate, manage, and modify individual components without unnecessary complexity.  
+
+- **Use a default export with a fully descriptive function name that matches the filename.**  
+  The component's name should be explicit and self-explanatory, avoiding abbreviations or vague terms. The filename should be identical to the component name to allow for easy searching.  
+
+## **Component Naming Convention**
+Component names should follow a **Facebook-style naming convention**, where names reflect both the parent component and the feature or function of the component.  
+The format should be:  
+
+**`ParentComponentFeature`**  
+
+For example:
+- `ProfileHeaderLike` → A "Like" button in the header of the profile section.  
+- `SidebarMenuItem` → A menu item inside the sidebar component.  
+- `PostCommentInput` → A text input for adding a comment inside the post component.  
+
+This convention ensures that component names are always descriptive, making it clear where the component belongs and what it does at a glance.
+
+## **Inline Styling Requirement**
+When using styles in React components, **always use inline styles (`style={{}}`)** instead of `StyleSheet.create()`.  
+
+Using inline styles ensures that styles remain **self-contained within the component**, improving readability and making it easier to see how the component is styled without having to reference a separate styles object.
+
+#### **✅ Correct Example**
+```jsx
+type ProfileHeaderLikeProps = {
+  onLike: () => void;
+};
+
+export default function ProfileHeaderLike({
+  onLike,
+}: ProfileHeaderLikeProps) {
+  return (
+    <TouchableOpacity
+      onPress={onLike}
+      style={{
+        padding: 10,
+        borderRadius: 5,
+        backgroundColor: "#1877F2",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <FontAwesome name="thumbs-up" size={24} color="#fff" />
+    </TouchableOpacity>
+  );
+}

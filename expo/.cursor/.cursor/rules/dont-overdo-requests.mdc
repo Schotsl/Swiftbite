@@ -1,0 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+Only implement the requested functionalities; don't add functions that weren't asked for or refactor code that wasn't requested. Likewise, don't insert if statements where none existed before, and don't add try / catch blocks to the current snippets.

@@ -1,0 +1,9 @@
+---
+description: When installing package or running commands always use bun or bunx
+globs: 
+alwaysApply: false
+---
+
+# Your rule content
+- Always use bun to install packages
+- Always use bunx to run cli scripts
