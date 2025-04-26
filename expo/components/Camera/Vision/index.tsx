@@ -12,7 +12,7 @@ export default function CameraVision() {
     if (feedback) {
       if (feedback !== "OK") {
         Animated.timing(animationRef, {
-          toValue: 0.75,
+          toValue: 0.85,
           duration: 1000,
           useNativeDriver: true,
         }).start();
@@ -38,10 +38,14 @@ export default function CameraVision() {
   return (
     <Animated.View
       style={{
+        top: 68,
+        left: "50%",
+        width: 200,
         opacity: animationRef,
-        maxWidth: 256,
+        maxWidth: 200,
         alignSelf: "center",
-        paddingTop: 16,
+        position: "absolute",
+        transform: [{ translateX: -100 }],
       }}
     >
       <Text

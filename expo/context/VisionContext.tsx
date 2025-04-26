@@ -169,8 +169,14 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   };
 
   const sendImage = async (uri: string) => {
+    // If we're still connecting no need to re-try
+    if (websocket?.readyState === WebSocket.CONNECTING) {
+      return;
+    }
+
+    // If not open and not connecting attempt to reconnect
     if (!websocket || websocket.readyState !== WebSocket.OPEN) {
-      console.log("[VISION] Connection not ready to send");
+      startWebsocket();
 
       return;
     }
