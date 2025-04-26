@@ -16,6 +16,9 @@ interface VisionContextProps {
   websocket: WebSocket | null;
 
   sendImage: (uri: string) => Promise<void>;
+
+  resetHistory: () => void;
+  resetFeedback: () => void;
 }
 
 const VisionContext = createContext<VisionContextProps | undefined>(undefined);
@@ -30,6 +33,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
   const timingRef = useRef<number>(performance.now());
   const latestRef = useRef<number>(Date.now());
+  const historyRef = useRef<string[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -102,6 +106,14 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
         setFeedback(message.feedback);
 
+        // Update the history but cap at 3 messages
+        if (historyRef.current.length >= 3) {
+          historyRef.current.shift();
+        }
+
+        historyRef.current.push(message.feedback);
+
+        // Log the response time
         const timeRecevied = performance.now();
         const timeDifference = timeRecevied - timingRef.current!;
 
@@ -149,17 +161,38 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
     console.log("[VISION] Sending message");
 
+    const history = historyRef.current;
     const options = { encoding: FileSystem.EncodingType.Base64 };
     const base64 = await FileSystem.readAsStringAsync(uri, options);
     const timing = performance.now();
+    const body = JSON.stringify({
+      base64,
+      history,
+    });
 
     timingRef.current = timing;
 
-    websocket.send(base64);
+    websocket.send(body);
+  };
+
+  const resetHistory = () => {
+    historyRef.current = [];
+  };
+
+  const resetFeedback = () => {
+    setFeedback(null);
   };
 
   return (
-    <VisionContext.Provider value={{ websocket, feedback, sendImage }}>
+    <VisionContext.Provider
+      value={{
+        websocket,
+        feedback,
+        sendImage,
+        resetHistory,
+        resetFeedback,
+      }}
+    >
       {children}
     </VisionContext.Provider>
   );

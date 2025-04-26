@@ -14,10 +14,17 @@ export async function generateVision(
   const task = "generate-vision";
   const model = "gpt-4.1-nano";
 
-  const offset = 3;
+  const length = data.history.length;
   const history = data.history
-    .map((message, index) => `${offset - index - 1} seconds ago: ${message}`)
+    .map(
+      (message, index) =>
+        `${length - index} second${
+          length - index > 1 ? "s" : ""
+        } ago: ${message}`
+    )
     .join("\n");
+
+  console.log(history);
 
   const response = await generateText({
     model: openai(model),

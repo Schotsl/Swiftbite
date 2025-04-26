@@ -3,20 +3,37 @@ import { Text, Animated } from "react-native";
 import { useEffect, useRef } from "react";
 
 export default function CameraVision() {
-  const { feedback } = useVision();
+  const { feedback, resetHistory, resetFeedback } = useVision();
 
   const animation = new Animated.Value(0);
   const animationRef = useRef(animation).current;
 
   useEffect(() => {
     if (feedback) {
+      if (feedback !== "OK") {
+        Animated.timing(animationRef, {
+          toValue: 0.75,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start();
+
+        return;
+      }
+
       Animated.timing(animationRef, {
-        toValue: 0.75,
+        toValue: 0,
         duration: 1000,
         useNativeDriver: true,
       }).start();
     }
   }, [feedback, animationRef]);
+
+  useEffect(() => {
+    return () => {
+      resetHistory();
+      resetFeedback();
+    };
+  }, []);
 
   return (
     <Animated.View

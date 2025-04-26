@@ -17,13 +17,15 @@ The classifier may segment or label the wrong object -> 'Meerdere producten gede
 Cropped edges prevent accurate boundary detection -> 'De maaltijd staat niet volledig in beeld, zorg dat het geheel zichtbaar is'
 Tilt distorts geometry and can rotate prediction boxes -> 'De camera is gekanteld, houd hem recht'
 
+If you don't see any food or products just return 'Er is geen voedsel of product gedetecteerd', don't assume it's being blocked by something. Sometimes the image is just empty.
+
 Feel free to return additional or alternative feedback if it is relevant to the image, but always respond in Dutch.
 
 Please include the object title in the feedback, so "Het product" or "De maaltijd" etc...
 
-If the frame is good enough, simply return 'OK', don't be too critical of the image.
+If the frame is good enough, simply return 'OK', don't be too critical of the image. If you think the item can be clearly identified, return 'OK'.
 
-Return only the feedback string—nothing else. 
+Return only the feedback string—nothing else, keep the response short, so not multiple sentences.
 `;
 
 export default promptContent;
