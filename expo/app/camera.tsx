@@ -30,6 +30,8 @@ import * as ImagePicker from "expo-image-picker";
 import { Image } from "expo-image";
 
 export default function AddAI() {
+  const debug = false;
+
   const [flash, setFlash] = useState<boolean>(false);
   const [facing, setFacing] = useState<CameraPosition>("back");
   const [selected, setSelected] = useState(CameraSelected.Barcode);
@@ -161,12 +163,12 @@ export default function AddAI() {
       let newWidth = 0;
       let newHeight = 0;
 
-      if (width > 512) {
-        newWidth = 512;
-        newHeight = 512 / originalRatio;
+      if (width > 1024) {
+        newWidth = 1024;
+        newHeight = 1024 / originalRatio;
       } else {
-        newHeight = 512;
-        newWidth = 512 * originalRatio;
+        newHeight = 1024;
+        newWidth = 1024 * originalRatio;
       }
 
       const data = await ImageResizer.createResizedImage(
@@ -252,20 +254,22 @@ export default function AddAI() {
         }}
       />
 
-      <Image
-        source={{
-          uri: previewUri,
-        }}
-        style={{
-          position: "absolute",
-          top: 80,
-          left: 80,
-          objectFit: "cover",
-          height: 100,
-          width: "auto",
-          aspectRatio: previewAspect,
-        }}
-      />
+      {debug && (
+        <Image
+          source={{
+            uri: previewUri,
+          }}
+          style={{
+            top: 80,
+            left: 80,
+            width: "auto",
+            height: 100,
+            position: "absolute",
+            objectFit: "cover",
+            aspectRatio: previewAspect,
+          }}
+        />
+      )}
 
       <CameraShortcuts onFlash={handleFlash} flash={flash} />
 

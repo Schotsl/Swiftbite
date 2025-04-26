@@ -192,7 +192,11 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   };
 
   const resetHistory = () => {
-    historyRef.current = [];
+    historyRef.current = [
+      `Er is geen voedsel of product gedetecteerd`,
+      `Er is geen voedsel of product gedetecteerd`,
+      `Er is geen voedsel of product gedetecteerd`,
+    ];
   };
 
   const resetFeedback = () => {
