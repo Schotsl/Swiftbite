@@ -7,6 +7,7 @@ import React, {
   useRef,
   useContext,
   ReactNode,
+  useCallback,
 } from "react";
 
 import * as FileSystem from "expo-file-system";
@@ -34,48 +35,55 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   const timingRef = useRef<number>(performance.now());
   const latestRef = useRef<number>(Date.now());
   const historyRef = useRef<string[]>([]);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startWebsocket = useCallback(async () => {
+    console.log("[VISION] Connecting to service...");
+
+    if (websocket) {
+      console.log(
+        "[VISION] Closing existing connection before reconnecting..."
+      );
+
+      websocket.onopen = null;
+      websocket.onerror = null;
+      websocket.onclose = null;
+      websocket.onmessage = null;
+
+      websocket.close();
+
+      setWebsocket(null);
+    }
+
+    try {
+      const session = await supabase.auth.getSession();
+      const bearer = session?.data.session?.access_token;
+
+      const localBase = `ffbbrrfdghbvuajheulg.supabase.co/functions/v1/vision`;
+      const localUrl = `wss://${localBase}?token=${bearer}`;
+      const localSocket = new WebSocket(localUrl);
+
+      setWebsocket(localSocket);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [websocket]);
 
   useEffect(() => {
-    const startWebsocket = async () => {
-      console.log("[VISION] Connecting to service...");
-
-      if (websocket) {
-        websocket.close();
-      }
-
-      try {
-        const session = await supabase.auth.getSession();
-        const bearer = session?.data.session?.access_token;
-
-        const localBase = `ffbbrrfdghbvuajheulg.supabase.co/functions/v1/vision`;
-        const localUrl = `wss://${localBase}?token=${bearer}`;
-        const localSocket = new WebSocket(localUrl);
-
-        setWebsocket(localSocket);
-      } catch {
-        setFeedback("Failed to connect to vision service");
-      }
-    };
-
     startWebsocket();
 
     return () => {
-      if (timingRef.current) {
-        clearInterval(timingRef.current);
-      }
-
       if (websocket) {
+        console.log("[VISION] Cleaning up WebSocket on component unmount...");
+
         websocket.onopen = null;
         websocket.onerror = null;
         websocket.onclose = null;
         websocket.onmessage = null;
+
         websocket.close();
 
         setWebsocket(null);
       }
-
-      setFeedback("Disconnected from vision service");
     };
   }, []);
 
@@ -98,11 +106,6 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
         websocket.onmessage = null;
         websocket.onerror = null;
         websocket.onclose = null;
-      }
-
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
       }
     };
   }, [websocket]);
@@ -143,12 +146,11 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
   const handleClose = (event: CloseEvent) => {
     console.log("[VISION] Connection closed");
+    console.log("[VISION] Attempting to reconnect in 5 seconds...");
 
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-
-      intervalRef.current = null;
-    }
+    setTimeout(() => {
+      startWebsocket();
+    }, 5000);
   };
 
   const handleError = (error: Event) => {
