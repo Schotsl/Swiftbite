@@ -54,14 +54,17 @@ Deno.serve((request) => {
       return;
     }
 
-    const base64 = event.data.toString();
+    const json = event.data.toString();
+    const data = JSON.parse(json);
+    const base64 = data.base64;
 
     if (!base64) {
       socket.send(JSON.stringify({ error: "Please provide a base64 image" }));
       return;
     }
 
-    const feedback = await generateVision(user, { base64 });
+    const history = data.history || [];
+    const feedback = await generateVision(user, { base64, history });
     const received = Date.now();
 
     console.log(`[VISION] ${feedback}`);

@@ -8,10 +8,16 @@ export async function generateVision(
   user: string,
   data: {
     base64: string;
+    history: string[];
   }
 ) {
   const task = "generate-vision";
   const model = "gpt-4.1-nano";
+
+  const offset = 3;
+  const history = data.history
+    .map((message, index) => `${offset - index - 1} seconds ago: ${message}`)
+    .join("\n");
 
   const response = await generateText({
     model: openai(model),
@@ -28,6 +34,10 @@ export async function generateVision(
             image: `data:image/png;base64,${data.base64}`,
           },
         ],
+      },
+      {
+        role: "user",
+        content: history,
       },
     ],
   });
