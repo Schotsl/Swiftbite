@@ -27,6 +27,7 @@
     "@expo-google-fonts/open-sans": "^0.3.0",
     "@expo/vector-icons": "^14.0.2",
     "@hookform/resolvers": "^5.0.1",
+    "@krosben/react-native-gravatar": "^0.0.1",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/netinfo": "11.4.1",
     "@react-native-masked-view/masked-view": "0.3.2",

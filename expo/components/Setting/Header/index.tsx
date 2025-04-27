@@ -1,5 +1,7 @@
 import { Text, View } from "react-native";
 
+import SettingHeaderAvatar from "./Avatar";
+
 export default function SettingHeader() {
   return (
     <View
@@ -9,15 +11,7 @@ export default function SettingHeader() {
         flexDirection: "row",
       }}
     >
-      <View
-        style={{
-          width: 48,
-          height: 48,
-          borderColor: "#000",
-          borderWidth: 2,
-          borderRadius: 24,
-        }}
-      />
+      <SettingHeaderAvatar />
 
       <View style={{ gap: 4 }}>
         <Text
