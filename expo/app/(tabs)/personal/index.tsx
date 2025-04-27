@@ -1,9 +1,9 @@
+import { View } from "react-native";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-
-import Button from "@/components/Button";
 import { handleError } from "@/helper";
+
 import supabase from "@/utils/supabase";
+import SettingHeader from "@/components/Setting/Header";
 
 export default function Tab() {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,22 +22,8 @@ export default function Tab() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Settings</Text>
-      <Button
-        title="Sign out"
-        onPress={handleSignout}
-        disabled={isLoading}
-        loading={isLoading}
-      />
+    <View style={{ flex: 1, padding: 32 }}>
+      <SettingHeader />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
