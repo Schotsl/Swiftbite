@@ -1,8 +1,12 @@
 import { Text, View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
 
 import SettingHeaderAvatar from "./Avatar";
+import userData from "@/queries/userData";
 
 export default function SettingHeader() {
+  const { data } = useQuery(userData());
+
   return (
     <View
       style={{
@@ -20,7 +24,7 @@ export default function SettingHeader() {
             fontFamily: "OpenSans_600SemiBold",
           }}
         >
-          Sjors van Holst
+          {data?.first_name} {data?.last_name}
         </Text>
         <Text
           style={{

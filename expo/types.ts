@@ -34,6 +34,17 @@ export type ProductInsert = Omit<
 
 export type Generative = Tables<"generative">;
 
+export type UserBase = Tables<"user">;
+export type UserSetup = UserBase;
+export type User = UserBase & {
+  birth: Date;
+  weight: [];
+  length: number;
+  calories: number;
+  last_name: string;
+  first_name: string;
+};
+
 export type Entry = Tables<"entry">;
 export type EntryWithProduct = Entry & {
   product?: Product;
