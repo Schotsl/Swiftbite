@@ -1,28 +1,58 @@
-import { Href, Link } from "expo-router";
-import { Text, TouchableOpacity } from "react-native";
+import { Href, useRouter } from "expo-router";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 
-type SettingBlockItemProps = {
+type SettingBlockItemBaseProps = {
   last: boolean;
-  href: Href;
+  icon?: keyof typeof FontAwesome6.glyphMap;
   title: string;
   content: string;
+  loading?: boolean;
 };
+
+type SettingBlockItemWithHref = SettingBlockItemBaseProps & {
+  href: Href;
+  onPress?: never;
+};
+
+type SettingBlockItemWithOnPress = SettingBlockItemBaseProps & {
+  onPress: () => void;
+  href?: never;
+};
+
+type SettingBlockItemProps =
+  | SettingBlockItemWithHref
+  | SettingBlockItemWithOnPress;
 
 export default function SettingBlockItem({
   last = false,
+  icon,
   href,
   title,
   content,
+  loading = false,
+  onPress,
 }: SettingBlockItemProps) {
+  const router = useRouter();
+
   return (
-    <Link asChild href={href}>
-      <TouchableOpacity
+    <TouchableOpacity
+      onPress={onPress ? onPress : () => router.push(href)}
+      style={{
+        padding: 16,
+        paddingRight: 32,
+
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "space-between",
+
+        borderColor: "#000",
+        borderBottomWidth: last ? 0 : 2,
+      }}
+    >
+      <View
         style={{
           gap: 4,
-          padding: 16,
-
-          borderColor: "#000",
-          borderBottomWidth: last ? 0 : 2,
         }}
       >
         <Text
@@ -42,7 +72,13 @@ export default function SettingBlockItem({
         >
           {content}
         </Text>
-      </TouchableOpacity>
-    </Link>
+      </View>
+
+      {loading ? (
+        <ActivityIndicator size="small" color="#000" />
+      ) : (
+        icon && <FontAwesome6 name={icon} size={20} color="#000" />
+      )}
+    </TouchableOpacity>
   );
 }

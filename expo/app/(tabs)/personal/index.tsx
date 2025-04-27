@@ -85,6 +85,18 @@ export default function Tab() {
               },
             ]}
           />
+
+          <SettingBlock
+            items={[
+              {
+                icon: "arrow-right-from-bracket",
+                title: "Uitloggen",
+                loading: isLoading,
+                content: "Uitloggen van je account.",
+                onPress: handleSignout,
+              },
+            ]}
+          />
         </View>
       </View>
     </ScrollView>
