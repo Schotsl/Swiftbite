@@ -35,6 +35,13 @@
       "expo-apple-authentication",
       "react-native-health",
       [
+        "@sentry/react-native/expo",
+        {
+          "project": "swiftbite-expo",
+          "organization": "sjors-van-holst-0c97a3b77"
+        }
+      ],
+      [
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you analyze your food or barcode."
