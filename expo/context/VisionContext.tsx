@@ -72,6 +72,66 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
     }
   }, [websocket]);
 
+  const handleClose = useCallback(
+    (event: CloseEvent) => {
+      console.log("[VISION] Connection closed");
+      console.log("[VISION] Attempting to reconnect in 5 seconds...");
+
+      setTimeout(() => {
+        startWebsocket();
+      }, 5000);
+    },
+    [startWebsocket],
+  );
+
+  const handleError = useCallback(
+    (error: Event) => {
+      console.error(error);
+
+      // On error we'll attempt to reconnect
+      startWebsocket();
+    },
+    [startWebsocket],
+  );
+
+  const handleMessage = (event: MessageEvent) => {
+    const message = JSON.parse(event.data);
+
+    if (message.error) {
+      setFeedback(message.error);
+
+      return;
+    }
+
+    if (message.feedback !== undefined) {
+      // Make sure the message is the latest
+      if (message.received < latestRef.current) {
+        return;
+      }
+
+      latestRef.current = message.received;
+
+      setFeedback((previous) => {
+        setFeedbackOld(previous);
+
+        return message.feedback;
+      });
+
+      // Update the history but cap at 3 messages
+      if (historyRef.current.length >= 3) {
+        historyRef.current.shift();
+      }
+
+      historyRef.current.push(message.feedback);
+
+      // Log the response time
+      const timeRecevied = performance.now();
+      const timeDifference = timeRecevied - timingRef.current!;
+
+      console.log(`[VISION] Response time: ${timeDifference}ms`);
+    }
+  };
+
   useEffect(() => {
     startWebsocket();
 
@@ -113,61 +173,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
         websocket.onclose = null;
       }
     };
-  }, [websocket]);
-
-  const handleMessage = (event: MessageEvent) => {
-    const message = JSON.parse(event.data);
-
-    if (message.error) {
-      setFeedback(message.error);
-
-      return;
-    }
-
-    if (message.feedback !== undefined) {
-      // Make sure the message is the latest
-      if (message.received < latestRef.current) {
-        return;
-      }
-
-      latestRef.current = message.received;
-
-      setFeedback((previous) => {
-        setFeedbackOld(previous);
-
-        return message.feedback;
-      });
-
-      // Update the history but cap at 3 messages
-      if (historyRef.current.length >= 3) {
-        historyRef.current.shift();
-      }
-
-      historyRef.current.push(message.feedback);
-
-      // Log the response time
-      const timeRecevied = performance.now();
-      const timeDifference = timeRecevied - timingRef.current!;
-
-      console.log(`[VISION] Response time: ${timeDifference}ms`);
-    }
-  };
-
-  const handleClose = (event: CloseEvent) => {
-    console.log("[VISION] Connection closed");
-    console.log("[VISION] Attempting to reconnect in 5 seconds...");
-
-    setTimeout(() => {
-      startWebsocket();
-    }, 5000);
-  };
-
-  const handleError = (error: Event) => {
-    console.error(error);
-
-    // On error we'll attempt to reconnect
-    startWebsocket();
-  };
+  }, [websocket, handleError, handleClose]);
 
   const sendImage = async (uri: string) => {
     // If we're still connecting no need to re-try

@@ -5,7 +5,6 @@ import CameraShortcuts from "@/components/Camera/Shortcuts";
 
 import ImageResizer from "@bam.tech/react-native-image-resizer";
 
-import { toBase64 } from "vision-camera-base64-v3";
 import { useVision } from "@/context/VisionContext";
 import { useRouter } from "expo-router";
 import { useRunOnJS } from "react-native-worklets-core";
@@ -14,6 +13,10 @@ import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
 import { detectBarcodes } from "react-native-barcodes-detector";
 import { useEffect, useRef, useState } from "react";
+
+// TODO: vision-camera-base64-v3 is a GitHub fork of mine
+// eslint-disable-next-line import/no-unresolved
+import { toBase64 } from "vision-camera-base64-v3";
 
 import {
   Camera,
