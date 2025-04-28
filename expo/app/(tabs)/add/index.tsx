@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { TouchableOpacity, View, Text } from "react-native";
 import { useRouter } from "expo-router";
 
 import { ScrollView } from "react-native-gesture-handler";
@@ -52,7 +52,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity,
+        !entry.consumed_quantity
     );
 
     const interval = processing ? 500 : false;
@@ -93,7 +93,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data
@@ -142,6 +142,14 @@ export default function Index() {
           borderBottomWidth: 2,
         }}
       >
+        <TouchableOpacity
+          onPress={() => {
+            throw new Error("Test error");
+          }}
+        >
+          <Text>Test error</Text>
+        </TouchableOpacity>
+
         <View
           style={{
             alignContent: "center",

@@ -1,12 +1,17 @@
+import { runOnJS } from "react-native-reanimated";
+import { useEffect, useState } from "react";
+import { VisionProvider } from "@/context/VisionContext";
+import { isRunningInExpoGo } from "expo";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useNavigationContainerRef, useRouter } from "expo-router";
 import {
   Directions,
   Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import { runOnJS } from "react-native-reanimated";
+
+import * as Sentry from "@sentry/react-native";
 
 import { useFonts } from "@expo-google-fonts/open-sans/useFonts";
 import { OpenSans_300Light } from "@expo-google-fonts/open-sans/300Light";
@@ -21,16 +26,45 @@ import { OpenSans_500Medium_Italic } from "@expo-google-fonts/open-sans/500Mediu
 import { OpenSans_600SemiBold_Italic } from "@expo-google-fonts/open-sans/600SemiBold_Italic";
 import { OpenSans_700Bold_Italic } from "@expo-google-fonts/open-sans/700Bold_Italic";
 import { OpenSans_800ExtraBold_Italic } from "@expo-google-fonts/open-sans/800ExtraBold_Italic";
-import { VisionProvider } from "@/context/VisionContext";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
 };
 
-export default function RootLayout() {
-  const router = useRouter();
+const sentryIntegration = Sentry.reactNavigationIntegration({
+  enableTimeToInitialDisplay: !isRunningInExpoGo(),
+});
 
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  debug: false,
+  enabled: !isRunningInExpoGo(),
+  integrations: [sentryIntegration],
+});
+
+function RootLayout() {
   const query = new QueryClient();
+
+  const router = useRouter();
+  const container = useNavigationContainerRef();
+
+  const [configured, setConfigured] = useState(false);
+
+  useEffect(() => {
+    if (!container?.current) {
+      return;
+    }
+
+    // I added this to prevent annoying logs about re-initializing the integration
+    if (configured) {
+      return;
+    }
+
+    // Register the navigation integration
+    sentryIntegration.registerNavigationContainer(container);
+
+    setConfigured(true);
+  }, [container]);
 
   useFonts({
     OpenSans_300Light,
@@ -87,3 +121,5 @@ export default function RootLayout() {
     </VisionProvider>
   );
 }
+
+export default Sentry.wrap(RootLayout);
