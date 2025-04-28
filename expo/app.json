@@ -10,6 +10,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
+      "usesAppleSignIn": true,
       "userInterfaceStyle": "light",
       "bundleIdentifier": "com.sjorsvanholst.swiftbite",
       "infoPlist": {
@@ -20,9 +21,6 @@
       },
       "entitlements": {
         "com.apple.developer.healthkit": true
-      },
-      "ios": {
-        "usesAppleSignIn": true
       }
     },
     "android": {
