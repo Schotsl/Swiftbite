@@ -32,18 +32,18 @@ export default function Tab() {
           <SettingBlock
             items={[
               {
-                href: "/camera",
+                href: "/(tabs)/personal/my-details",
                 title: "Mijn gegevens",
                 content: "Wijzig gegevens zoals voornaam, achternaam, etc.",
               },
               {
-                href: "/camera",
+                href: "/(tabs)/personal/my-health",
                 title: "Mijn gezondheid",
                 content:
                   "Lichaamsmetingen en -geschiedenis, zoals gewicht en lengte.",
               },
               {
-                href: "/camera",
+                href: "/(tabs)/personal/my-preferences",
                 title: "Mijn voorkeur",
                 content: "Verander taal, meetsysteem en andere instellingen.",
               },
@@ -53,12 +53,12 @@ export default function Tab() {
           <SettingBlock
             items={[
               {
-                href: "/camera",
+                href: "/(tabs)/personal/change-password",
                 title: "Verander je wachtwoord",
                 content: "Verander je accountwachtwoord.",
               },
               {
-                href: "/camera",
+                href: "/(tabs)/personal/change-goals",
                 title: "Verander je doel",
                 content: "Verander je calorieën of macrodoelen.",
               },
@@ -68,7 +68,7 @@ export default function Tab() {
           <SettingBlock
             items={[
               {
-                href: "/camera",
+                href: "/(tabs)/personal/export-data",
                 title: "Exporteer gegevens",
                 content:
                   "Exporteer je dieetdata om te delen met een voedingscoach.",
@@ -79,7 +79,7 @@ export default function Tab() {
           <SettingBlock
             items={[
               {
-                href: "/camera",
+                href: "/(tabs)/personal/delete-account",
                 title: "Verwijder je account",
                 content: "Verwijder je account definitief.",
               },
