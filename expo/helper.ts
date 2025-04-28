@@ -1,11 +1,17 @@
 import { RowMap } from "react-native-swipe-list-view";
 import { ServingData } from "./schemas/serving";
 import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
-import { MealWithProduct, Option, Product, ProductInsert } from "./types";
+import {
+  Macros,
+  Option,
+  Product,
+  ProductInsert,
+  MealWithProduct,
+} from "./types";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean,
+  compressed: boolean
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -85,7 +91,7 @@ export const getRange = (date = new Date()) => {
   const startDate = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate(),
+    date.getDate()
   );
 
   const endDate = new Date(
@@ -95,7 +101,7 @@ export const getRange = (date = new Date()) => {
     23,
     59,
     59,
-    999,
+    999
   );
 
   return {
@@ -107,14 +113,8 @@ export const getRange = (date = new Date()) => {
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true,
-): {
-  fat: number;
-  gram: number;
-  carbs: number;
-  protein: number;
-  calories: number;
-} {
+  rounded = true
+): Macros {
   const gram = serving.gram || 0;
 
   const fat = product?.fat_100g || 0;
@@ -129,20 +129,13 @@ export function getMacrosFromProduct(
 
   return {
     fat: rounded ? Math.round(fatCalculated) : fatCalculated,
-    gram,
     carbs: rounded ? Math.round(carbsCalculated) : carbsCalculated,
     protein: rounded ? Math.round(proteinCalculated) : proteinCalculated,
     calories: rounded ? Math.round(caloriesCalculated) : caloriesCalculated,
   };
 }
 
-export function getMacrosFromMeal(meal: MealWithProduct): {
-  fat: number;
-  gram: number;
-  carbs: number;
-  protein: number;
-  calories: number;
-} {
+export function getMacrosFromMeal(meal: MealWithProduct): Macros {
   const products = meal.meal_product;
   const macros = products.reduce(
     (acc, product) => {
@@ -168,7 +161,7 @@ export function getMacrosFromMeal(meal: MealWithProduct): {
       carbs: 0,
       protein: 0,
       calories: 0,
-    },
+    }
   );
 
   return macros;

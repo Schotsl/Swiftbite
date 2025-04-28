@@ -27,9 +27,26 @@ export default function HomeMacros() {
           justifyContent: "space-between",
         }}
       >
-        <Progress label="Eiwitten" value={macros.protein} target={180} />
-        <Progress label="Carbs" value={macros.carbs} target={450} />
-        <Progress label="Vetten" value={macros.fat} target={85} />
+        <Progress
+          label="Eiwitten"
+          value={macros.protein}
+          style={{ maxWidth: 96 }}
+          target={180}
+        />
+
+        <Progress
+          label="Carbs"
+          value={macros.carbs}
+          style={{ maxWidth: 96 }}
+          target={450}
+        />
+
+        <Progress
+          label="Vetten"
+          value={macros.fat}
+          style={{ maxWidth: 96 }}
+          target={85}
+        />
       </View>
     </View>
   );

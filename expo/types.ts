@@ -9,6 +9,13 @@ export type ProductSearch = {
   quantity_original_unit: string;
 };
 
+export type Macros = {
+  fat: number;
+  carbs: number;
+  protein: number;
+  calories: number;
+};
+
 export type Option = {
   gram: number;
   value: string;
@@ -38,9 +45,9 @@ export type UserBase = Tables<"user">;
 export type UserSetup = UserBase;
 export type User = UserBase & {
   birth: Date;
+  macro: Macros;
   weight: [];
   length: number;
-  calories: number;
   last_name: string;
   first_name: string;
 };

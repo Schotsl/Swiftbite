@@ -1,19 +1,30 @@
-import { Text, View } from "react-native";
+import { DimensionValue, StyleProp, Text, View, ViewStyle } from "react-native";
 
 type ProgressProps = {
+  type?: string;
   label: string;
   value: number;
+  style?: StyleProp<ViewStyle>;
   target: number;
 };
 
-export default function Progress({ label, value, target }: ProgressProps) {
+export default function Progress({
+  type = "g",
+  label,
+  value,
+  style,
+  target,
+}: ProgressProps) {
   const progress = (value / target) * 100;
+  const progressRounded = Math.round(progress);
+  const progressWidth = `${progressRounded}%` as DimensionValue;
 
   return (
-    <View style={{ gap: 8, width: 96, alignItems: "center" }}>
+    <View style={[{ gap: 8, flex: 1, alignItems: "center" }, style]}>
       <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
         {label}
       </Text>
+
       <View
         style={{
           width: "100%",
@@ -27,10 +38,9 @@ export default function Progress({ label, value, target }: ProgressProps) {
       >
         <View
           style={{
-            top: -2,
-            left: -2,
-            width: progress,
-            height: 10,
+            width: progressWidth,
+            height: 6,
+            maxWidth: "100%",
             position: "absolute",
 
             borderRadius: 8,
@@ -41,13 +51,15 @@ export default function Progress({ label, value, target }: ProgressProps) {
 
       <View style={{ flexDirection: "row", gap: 4 }}>
         <Text style={{ fontSize: 14, fontFamily: "OpenSans_400Regular" }}>
-          {value}g
+          {value}
+          {type}
         </Text>
         <Text style={{ fontSize: 14, fontFamily: "OpenSans_600SemiBold" }}>
           /
         </Text>
         <Text style={{ fontSize: 14, fontFamily: "OpenSans_600SemiBold" }}>
-          {target}g
+          {target}
+          {type}
         </Text>
       </View>
     </View>

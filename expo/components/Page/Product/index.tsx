@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
-import { getOptions } from "@/helper";
+import { getMacrosFromProduct, getOptions } from "@/helper";
 import { useIsFocused } from "@react-navigation/native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Product, ProductInsert } from "@/types";
@@ -19,6 +19,7 @@ import ProductInfo from "@/components/Product/Info";
 
 import Input from "@/components/Input";
 import InputDropdown from "@/components/Input/Dropdown";
+import ProductImpact from "@/components/Product/Impact";
 
 export type PageProductProps = {
   serving?: ServingData;
@@ -60,13 +61,14 @@ export default function PageProduct({
 
   const product = productLocal || productOpenfood;
 
-  const { control, handleSubmit, reset, setValue } = useForm<ServingInput>({
-    resolver: zodResolver(servingSchema),
-    defaultValues: {
-      option: servingLocal?.option || "100-gram",
-      quantity: servingLocal?.quantity || 1,
-    },
-  });
+  const { watch, control, handleSubmit, reset, setValue } =
+    useForm<ServingInput>({
+      resolver: zodResolver(servingSchema),
+      defaultValues: {
+        option: servingLocal?.option || "100-gram",
+        quantity: servingLocal?.quantity || 1,
+      },
+    });
 
   useEffect(() => {
     if (focus) {
@@ -106,11 +108,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions(product);
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity",
+      (option) => option.value === "quantity"
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving",
+      (option) => option.value === "serving"
     );
 
     if (optionsServing) {
@@ -123,6 +125,19 @@ export default function PageProduct({
 
     return optionsObject;
   }, [product, setValue]);
+
+  const quantity = watch("quantity");
+  const option = watch("option");
+  const macros = useMemo(() => {
+    const selected = options.find(({ value }) => value === option)!;
+    const gram = selected.gram * quantity;
+
+    return getMacrosFromProduct(product!, {
+      gram,
+      option,
+      quantity,
+    });
+  }, [option, quantity, options, product]);
 
   if (isLoading) {
     return (
@@ -182,6 +197,8 @@ export default function PageProduct({
             control={control}
           />
         </View>
+
+        <ProductImpact {...macros} />
 
         <Button
           title={servingLocal ? "Product wijzigen" : "Product opslaan"}
