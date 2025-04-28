@@ -15,6 +15,7 @@ import { detectBarcodes } from "react-native-barcodes-detector";
 import { useEffect, useRef, useState } from "react";
 
 // TODO: vision-camera-base64-v3 is a GitHub fork of mine
+// @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { toBase64 } from "vision-camera-base64-v3";
 

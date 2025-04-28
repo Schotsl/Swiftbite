@@ -64,7 +64,7 @@ function RootLayout() {
     sentryIntegration.registerNavigationContainer(container);
 
     setConfigured(true);
-  }, [container]);
+  }, [container, configured]);
 
   useFonts({
     OpenSans_300Light,
