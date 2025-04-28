@@ -7,7 +7,7 @@ export default function MyPreferences() {
   return (
     <ScrollView>
       <View style={{ gap: 48, flex: 1, padding: 32 }}>
-        <Header title="Mijn voorkeuren" />
+        <Header title="Mijn voorkeur" />
       </View>
     </ScrollView>
   );
