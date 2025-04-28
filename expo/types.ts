@@ -43,7 +43,7 @@ export type Generative = Tables<"generative">;
 
 export type UserBase = Tables<"user">;
 export type UserSetup = UserBase;
-export type User = UserBase & {
+export type User = Omit<UserBase, "birth"> & {
   birth: Date;
   macro: Macros;
   weight: [];

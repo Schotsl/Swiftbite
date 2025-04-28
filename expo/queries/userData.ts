@@ -12,7 +12,10 @@ export default function userData() {
 
       handleError(error);
 
-      return data as User;
+      const birth = new Date(data.birth);
+      const user = { ...data, birth } as User;
+
+      return user;
     },
   });
 }
