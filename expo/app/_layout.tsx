@@ -38,7 +38,7 @@ const sentryIntegration = Sentry.reactNavigationIntegration({
 Sentry.init({
   dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
   debug: false,
-  enabled: !isRunningInExpoGo(),
+  enabled: !__DEV__,
   integrations: [sentryIntegration],
 });
 

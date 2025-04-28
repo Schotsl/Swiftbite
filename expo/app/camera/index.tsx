@@ -40,9 +40,9 @@ export default function AddAI() {
   const [selected, setSelected] = useState(CameraSelected.Barcode);
   const [processing, setProcessing] = useState<boolean>(false);
 
-  const camera = useRef<Camera>(null);
   const focus = useIsFocused();
   const router = useRouter();
+  const camera = useRef<Camera>(null);
   const device = useCameraDevice(facing);
 
   const { sendImage } = useVision();
