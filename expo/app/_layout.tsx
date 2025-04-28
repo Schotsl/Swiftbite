@@ -1,6 +1,6 @@
 import { runOnJS } from "react-native-reanimated";
 import { useEffect, useState } from "react";
-import { VisionProvider } from "@/context/VisionContext";
+
 import { isRunningInExpoGo } from "expo";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack, useNavigationContainerRef, useRouter } from "expo-router";
@@ -95,30 +95,27 @@ function RootLayout() {
     .onEnd(() => runOnJS(handleBack)());
 
   return (
-    // TODO: This should be able to moved a level lower
-    <VisionProvider>
-      <QueryClientProvider client={query}>
-        <GestureHandlerRootView>
-          <GestureDetector gesture={handleGesture}>
-            <Stack
-              screenOptions={{
-                animation: "none",
-                headerShown: false,
-                gestureEnabled: true,
-                contentStyle: {
-                  backgroundColor: "#FFFFFF",
-                },
-              }}
-            >
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="camera" />
-              <Stack.Screen name="sign-in" />
-              <Stack.Screen name="sign-up" />
-            </Stack>
-          </GestureDetector>
-        </GestureHandlerRootView>
-      </QueryClientProvider>
-    </VisionProvider>
+    <QueryClientProvider client={query}>
+      <GestureHandlerRootView>
+        <GestureDetector gesture={handleGesture}>
+          <Stack
+            screenOptions={{
+              animation: "none",
+              headerShown: false,
+              gestureEnabled: true,
+              contentStyle: {
+                backgroundColor: "#FFFFFF",
+              },
+            }}
+          >
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="camera" />
+            <Stack.Screen name="sign-in" />
+            <Stack.Screen name="sign-up" />
+          </Stack>
+        </GestureDetector>
+      </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 }
 
