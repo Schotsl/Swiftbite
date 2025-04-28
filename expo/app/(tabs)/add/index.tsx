@@ -1,25 +1,24 @@
-import { TouchableOpacity, View, Text } from "react-native";
+import { getRange } from "@/helper";
 import { useRouter } from "expo-router";
-
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { EntryWithProduct } from "@/types";
 import { useEffect, useMemo, useState } from "react";
+import { TouchableOpacity, View, Text } from "react-native";
 
 import entryData from "@/queries/entryData";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 
+import HomeWeek from "@/components/Home/Week";
 import HomeStreak from "@/components/Home/Streak";
+import HomeMacros from "@/components/Home/Macros";
 import HeaderTitle from "@/components/Header/Title";
 
 import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";
 import ItemDelete from "@/components/Item/Delete";
 import ItemProductWithServing from "@/components/Item/ProductWithServing";
-import HomeMacros from "@/components/Home/Macros";
-import HomeWeek from "@/components/Home/Week";
-import { getRange } from "@/helper";
 
 export default function Index() {
   const router = useRouter();
@@ -142,14 +141,6 @@ export default function Index() {
           borderBottomWidth: 2,
         }}
       >
-        <TouchableOpacity
-          onPress={() => {
-            throw new Error("Test error");
-          }}
-        >
-          <Text>Test error</Text>
-        </TouchableOpacity>
-
         <View
           style={{
             alignContent: "center",
