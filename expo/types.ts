@@ -10,7 +10,7 @@ export type ProductSearch = {
   quantity_original_unit: string;
 };
 
-export type Macros = {
+export type MacroAbsolute = {
   fat: number;
   carbs: number;
   protein: number;
@@ -20,6 +20,10 @@ export type Macros = {
 export type Option = {
   value: string;
   title: string;
+};
+
+export type OptionWithGram = Option & {
+  gram: number;
 };
 
 export type Image = {
@@ -48,6 +52,7 @@ export type User = Omit<UserBase, "birth" | "weight" | "macro"> & {
   macro: MacroData;
   weight: Weight[];
   length: number;
+  language: string;
   calories: number;
   last_name: string;
   first_name: string;

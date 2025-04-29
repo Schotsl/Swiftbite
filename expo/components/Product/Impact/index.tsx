@@ -1,12 +1,13 @@
 import Progress from "@/components/Progress";
+import { macroToAbsolute } from "@/helper";
 import userData from "@/queries/userData";
 
-import { Macros } from "@/types";
+import { MacroAbsolute } from "@/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Fragment, Suspense } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 
-type ProductImpactProps = Macros;
+type ProductImpactProps = MacroAbsolute;
 
 export default function ProductImpact({
   fat,
@@ -15,7 +16,9 @@ export default function ProductImpact({
   calories,
 }: ProductImpactProps) {
   const { data } = useSuspenseQuery(userData());
-  const { macro } = data!;
+  const { calories: userCalories, macro: userMacro } = data!;
+
+  const macrosAbsolute = macroToAbsolute(userMacro, userCalories);
 
   return (
     <View>
@@ -54,14 +57,14 @@ export default function ProductImpact({
               <Progress
                 label="Calorieën"
                 value={calories}
-                target={macro!.calories}
+                target={macrosAbsolute.calories}
                 type="kcal"
               />
 
               <Progress
                 label="Eiwitten"
                 value={protein}
-                target={macro.protein}
+                target={macrosAbsolute.protein}
               />
             </View>
 
@@ -71,9 +74,17 @@ export default function ProductImpact({
                 flexDirection: "row",
               }}
             >
-              <Progress label="Carbs" value={carbs} target={macro.carbs} />
+              <Progress
+                label="Carbs"
+                value={carbs}
+                target={macrosAbsolute.carbs}
+              />
 
-              <Progress label="Vetten" value={fat} target={macro.fat} />
+              <Progress
+                label="Vetten"
+                value={fat}
+                target={macrosAbsolute.fat}
+              />
             </View>
           </Fragment>
         </Suspense>

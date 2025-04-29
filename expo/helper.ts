@@ -2,12 +2,13 @@ import { RowMap } from "react-native-swipe-list-view";
 import { ServingData } from "./schemas/serving";
 import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
 import {
-  Macros,
-  Option,
   Product,
   ProductInsert,
   MealWithProduct,
+  MacroAbsolute,
+  OptionWithGram,
 } from "./types";
+import { MacroData } from "./schemas/personal/goal";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
@@ -42,49 +43,83 @@ export const rowTimeout = <T>(rowKey: string, rowMap: RowMap<T>) => {
   }, 500);
 };
 
-export const getOptions = (product?: Product | ProductInsert) => {
+export const getOptions = (
+  product?: Product | ProductInsert,
+): OptionWithGram[] => {
   let options = [
     {
+      gram: 1,
       title: "1 g",
       value: "1-gram",
-      gram: 1,
     },
     {
+      gram: 100,
       title: "100 g",
       value: "100-gram",
-      gram: 100,
     },
   ];
 
   if (product?.quantity_original) {
     options.push({
+      gram: product.quantity_original,
       title: `Productinhoud (${product.quantity_original} ${product.quantity_original_unit})`,
       value: `quantity`,
-      gram: product.quantity_original,
     });
   }
 
   if (product?.serving_original) {
     options.push({
+      gram: product.serving_original,
       title: `Portiegrootte (${product.serving_original} ${product.serving_original_unit})`,
       value: `serving`,
-      gram: product.serving_gram!,
     });
   }
 
   if (product?.options) {
-    const productOptions = product?.options as Option[];
+    const productOptions = product?.options as OptionWithGram[];
 
     productOptions.forEach((productOption) => {
       options.push({
+        gram: productOption.gram,
         title: `${productOption.title} (${productOption.gram} g)`,
         value: productOption.value,
-        gram: productOption.gram,
       });
     });
   }
 
   return options;
+};
+
+export const singleMacroToAbsolute = (
+  type: keyof MacroData,
+  value: number,
+  calories: number,
+) => {
+  let divider = 4;
+
+  if (type === "protein") {
+    divider = 4;
+  } else if (type === "fat") {
+    divider = 9;
+  }
+
+  const grams = (calories * value) / divider;
+  const gramsRounded = Math.round(grams);
+
+  return gramsRounded;
+};
+
+// TODO: Might wanna rename this to "macroToAbsolute" and "macrosToAbsolute" but I'd have to double check every where in the codebase for proper single and plural usage.
+export const macroToAbsolute = (
+  macro: MacroData,
+  calories: number,
+): MacroAbsolute => {
+  return {
+    fat: singleMacroToAbsolute("fat", macro.fat, calories),
+    carbs: singleMacroToAbsolute("carbs", macro.carbs, calories),
+    protein: singleMacroToAbsolute("protein", macro.protein, calories),
+    calories: calories,
+  };
 };
 
 export const getRange = (date = new Date()) => {
@@ -114,7 +149,7 @@ export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
   rounded = true,
-): Macros {
+): MacroAbsolute & { gram: number } {
   const gram = serving.gram || 0;
 
   const fat = product?.fat_100g || 0;
@@ -129,13 +164,16 @@ export function getMacrosFromProduct(
 
   return {
     fat: rounded ? Math.round(fatCalculated) : fatCalculated,
+    gram: gram,
     carbs: rounded ? Math.round(carbsCalculated) : carbsCalculated,
     protein: rounded ? Math.round(proteinCalculated) : proteinCalculated,
     calories: rounded ? Math.round(caloriesCalculated) : caloriesCalculated,
   };
 }
 
-export function getMacrosFromMeal(meal: MealWithProduct): Macros {
+export function getMacrosFromMeal(
+  meal: MealWithProduct,
+): MacroAbsolute & { gram: number } {
   const products = meal.meal_product;
   const macros = products.reduce(
     (acc, product) => {

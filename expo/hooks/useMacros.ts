@@ -1,10 +1,11 @@
-import { getMacrosFromMeal, getMacrosFromProduct, getRange } from "@/helper";
-import { useSuspenseQuery } from "@tanstack/react-query";
-
 import entryData from "../queries/entryData";
-import { useMemo } from "react";
 
-export default function useDailyMacros() {
+import { useMemo } from "react";
+import { MacroAbsolute } from "@/types";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getMacrosFromMeal, getMacrosFromProduct, getRange } from "@/helper";
+
+export default function useDailyMacros(): MacroAbsolute {
   const { startDate, endDate } = getRange();
 
   const { data: entries } = useSuspenseQuery({

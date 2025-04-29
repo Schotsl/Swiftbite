@@ -50,13 +50,16 @@ export default function PageSearch({
       return;
     }
 
+    setQuery(queryWatched);
+  }, [query, queryWatched]);
+
+  // TODO: This is very janky but if I move it inside the other useEffect the timeout won't trigger
+  useEffect(() => {
     if (timeout.current) {
       clearTimeout(timeout.current);
     }
 
-    setQuery(queryWatched);
-
-    timeout.current = setTimeout(() => setQueryTimed(queryWatched), 1000);
+    timeout.current = setTimeout(() => setQueryTimed(query), 1000);
 
     return () => {
       if (!timeout.current) {
@@ -65,7 +68,7 @@ export default function PageSearch({
 
       clearTimeout(timeout.current);
     };
-  }, [query, queryWatched]);
+  }, [query]);
 
   useEffect(() => {
     if (focus) {
@@ -93,7 +96,6 @@ export default function PageSearch({
           { value: Type.MEALS, title: "Maaltijden" },
         ]}
       />
-
       <View
         style={{
           padding: 16,
@@ -110,14 +112,14 @@ export default function PageSearch({
         />
       </View>
 
-      {selected === Type.PRODUCTS && (
+      {/* TODO: We'll just unmount the component to be sure no random requests get send */}
+      {focus && selected === Type.PRODUCTS && (
         <PageSearchProduct
           query={queryTimed}
           loading={queryTimed !== query}
           onSelect={onProductSelect}
         />
       )}
-
       {selected === Type.MEALS && (
         <PageSearchMeal query={query} onSelect={onMealSelect} />
       )}
