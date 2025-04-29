@@ -102,7 +102,7 @@ export default function Input({
                     fontFamily: "OpenSans_600SemiBold",
 
                     borderWidth: 2,
-                    borderColor: fieldState.error || error ? "#FF4141" : "#000",
+                    borderColor: fieldState.error || error ? "#7C0000" : "#000",
                     borderRadius: 8,
 
                     opacity: disabled ? 0.5 : 1,
@@ -140,7 +140,7 @@ export default function Input({
                   fontSize: 14,
                   fontFamily: "OpenSans_600SemiBold",
 
-                  color: "#FF4141",
+                  color: "#7C0000",
                   marginTop: 8,
                 }}
               >
