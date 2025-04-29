@@ -59,9 +59,9 @@ export default function SignInScreen() {
         <Input control={control} name="email" placeholder="E-mail" />
 
         <Input
-          control={control}
+          type="password"
           name="password"
-          password={true}
+          control={control}
           placeholder="Password"
         />
       </View>

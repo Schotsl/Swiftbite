@@ -16,7 +16,8 @@ type Type =
   | "numeric"
   | "email-address"
   | "phone-pad"
-  | "number-pad";
+  | "number-pad"
+  | "password";
 
 type InputProps = {
   name: string;
@@ -27,7 +28,6 @@ type InputProps = {
   label?: string;
   content?: string;
   required?: boolean;
-  password?: boolean;
   disabled?: boolean;
   multiline?: boolean;
   placeholder: string;
@@ -44,7 +44,6 @@ export default function Input({
   label,
   content,
   required = true,
-  password = false,
   disabled = false,
   multiline = false,
   placeholder,
@@ -112,9 +111,9 @@ export default function Input({
                   editable={!disabled}
                   multiline={multiline}
                   placeholder={placeholder}
-                  keyboardType={type}
+                  keyboardType={type === "password" ? "default" : type}
                   onChangeText={handleChange}
-                  secureTextEntry={password}
+                  secureTextEntry={type === "password"}
                   selectTextOnFocus={!disabled}
                   placeholderTextColor={"#aba9a9"}
                 />
