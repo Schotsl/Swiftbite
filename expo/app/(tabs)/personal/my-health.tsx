@@ -47,7 +47,7 @@ export default function MyHealth() {
 
   return (
     <ScrollView>
-      <View style={{ gap: 48, flex: 1, padding: 32 }}>
+      <View style={{ flex: 1, padding: 32 }}>
         <Header title="Mijn gezondheid" />
 
         <View style={{ gap: 48 }}>
