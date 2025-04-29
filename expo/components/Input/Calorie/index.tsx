@@ -1,23 +1,23 @@
+import Input from "@/components/Input";
 import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
 import ButtonSmall from "@/components/Button/Small";
 
-import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Text, View } from "react-native";
-import { Control, useController } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalorieData, calorieSchema } from "@/schemas/personal/goal";
+import { Control, useController, useForm } from "react-hook-form";
 
-type InputLengthProps = {
+type InputMacroProps = {
   name: string;
   label: string;
   control: Control<any>;
 };
 
-export default function InputLength({
-  name,
-  label,
-  control,
-}: InputLengthProps) {
+export default function InputMacro({ name, label, control }: InputMacroProps) {
+  const [visible, setVisible] = useState(false);
+
   const {
     field: { value, onChange },
   } = useController({
@@ -25,30 +25,29 @@ export default function InputLength({
     control,
   });
 
-  const [visible, setVisible] = useState(false);
-  const [temporary, setTemporary] = useState(0);
+  const {
+    control: localControl,
+    setValue,
+    handleSubmit,
+  } = useForm<CalorieData>({
+    resolver: zodResolver(calorieSchema),
+  });
 
   const handleClose = () => {
     setVisible(false);
-    setTemporary(value);
   };
 
   const handleOpen = () => {
+    setValue("calories", value);
+
     setVisible(true);
   };
 
-  const handleChange = (selected: number) => {
-    setTemporary(selected);
-  };
-
-  const handleSave = () => {
-    onChange(temporary);
+  const handleSave = (data: CalorieData) => {
+    onChange(data.calories);
 
     setVisible(false);
   };
-
-  // Start at 50 cm and go up to 250 cm
-  const options = Array.from({ length: 200 }, (_, i) => i + 50);
 
   return (
     <View>
@@ -68,7 +67,7 @@ export default function InputLength({
             fontFamily: "OpenSans_600SemiBold",
           }}
         >
-          {value} cm
+          {value} kcal
         </Text>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
@@ -79,17 +78,15 @@ export default function InputLength({
         button="Wijzigen opslaan"
         visible={visible}
         onClose={handleClose}
-        onButton={handleSave}
+        onButton={handleSubmit(handleSave)}
       >
-        <Picker
-          style={{ marginVertical: -20 }}
-          selectedValue={temporary}
-          onValueChange={handleChange}
-        >
-          {options.map((option) => (
-            <Picker.Item key={option} label={`${option} cm`} value={option} />
-          ))}
-        </Picker>
+        <Input
+          type="number-pad"
+          name="calories"
+          label="Caloriebudget"
+          control={localControl}
+          placeholder="0"
+        />
       </Modal>
     </View>
   );

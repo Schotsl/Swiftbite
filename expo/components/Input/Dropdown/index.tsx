@@ -125,6 +125,19 @@ export default function InputDropdown({
         </View>
       </TouchableOpacity>
 
+      {(fieldState.error || error) && (
+        <Text
+          style={{
+            fontSize: 14,
+            fontFamily: "OpenSans_600SemiBold",
+            color: "#FF4141",
+            marginTop: 8,
+          }}
+        >
+          {fieldState.error?.message || error}
+        </Text>
+      )}
+
       <Modal
         title={label}
         visible={visible}
@@ -159,19 +172,6 @@ export default function InputDropdown({
           </View>
         )}
       </Modal>
-
-      {(fieldState.error || error) && (
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "OpenSans_600SemiBold",
-            color: "#FF4141",
-            marginTop: 8,
-          }}
-        >
-          {fieldState.error?.message || error}
-        </Text>
-      )}
     </View>
   );
 }

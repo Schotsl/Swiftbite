@@ -117,29 +117,29 @@ export default function InputWeights({
         >
           <ButtonSmall icon="plus" onPress={handleOpen} nano />
         </View>
-
-        <Modal
-          title="Gewicht toevoegen"
-          button="Gewicht opslaan"
-          visible={visible}
-          onClose={handleClose}
-          onButton={handleSave}
-        >
-          <Picker
-            style={{ marginVertical: -20 }}
-            selectedValue={temporary}
-            onValueChange={handleChange}
-          >
-            {options.map((option) => (
-              <Picker.Item
-                key={option}
-                value={option}
-                label={`${option.toFixed(1)} kg`}
-              />
-            ))}
-          </Picker>
-        </Modal>
       </View>
+
+      <Modal
+        title="Gewicht toevoegen"
+        button="Gewicht opslaan"
+        visible={visible}
+        onClose={handleClose}
+        onButton={handleSave}
+      >
+        <Picker
+          style={{ marginVertical: -20 }}
+          selectedValue={temporary}
+          onValueChange={handleChange}
+        >
+          {options.map((option) => (
+            <Picker.Item
+              key={option}
+              value={option}
+              label={`${option.toFixed(1)} kg`}
+            />
+          ))}
+        </Picker>
+      </Modal>
     </View>
   );
 }

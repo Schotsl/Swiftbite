@@ -1,4 +1,5 @@
 import { Tables } from "./database.types";
+import { MacroData } from "./schemas/personal/goal";
 import { Weight } from "./schemas/personal/health";
 export type Product = Tables<"product">;
 
@@ -42,11 +43,12 @@ export type Generative = Tables<"generative">;
 
 export type UserBase = Tables<"user">;
 export type UserSetup = UserBase;
-export type User = Omit<UserBase, "birth" | "weight"> & {
+export type User = Omit<UserBase, "birth" | "weight" | "macro"> & {
   birth: Date;
-  macro: Macros;
+  macro: MacroData;
   weight: Weight[];
   length: number;
+  calories: number;
   last_name: string;
   first_name: string;
 };

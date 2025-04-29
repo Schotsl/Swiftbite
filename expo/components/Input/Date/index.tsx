@@ -70,23 +70,23 @@ export default function InputDate({ name, label, control }: InputDateProps) {
         </Text>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
-
-        <Modal
-          title={label}
-          button="Wijzigen opslaan"
-          visible={visible}
-          onClose={handleClose}
-          onButton={handleSave}
-        >
-          <DateTimePicker
-            mode="date"
-            value={temporary}
-            style={{ marginVertical: -16 }}
-            display="spinner"
-            onChange={handleChange}
-          />
-        </Modal>
       </View>
+
+      <Modal
+        title={label}
+        button="Wijzigen opslaan"
+        visible={visible}
+        onClose={handleClose}
+        onButton={handleSave}
+      >
+        <DateTimePicker
+          mode="date"
+          value={temporary}
+          style={{ marginVertical: -16 }}
+          display="spinner"
+          onChange={handleChange}
+        />
+      </Modal>
     </View>
   );
 }
