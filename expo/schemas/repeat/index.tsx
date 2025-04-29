@@ -5,7 +5,7 @@ export const repeatSchema = z.object({
     .array(
       z.string({
         required_error: "Voer een dag in",
-      })
+      }),
     )
     .min(1, "Voer minimaal een dag in")
     .max(7, "Voer maximaal 7 dagen in"),

@@ -30,7 +30,7 @@ export default function useUpdateRepeat() {
       ]);
 
       const updated = previous?.map((repeat) =>
-        repeat.uuid === repeatUpdate.uuid ? repeatUpdate : repeat
+        repeat.uuid === repeatUpdate.uuid ? repeatUpdate : repeat,
       );
 
       query.setQueryData<RepeatWithProductOrMeal[]>(["repeatData"], updated);

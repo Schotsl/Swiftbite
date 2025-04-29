@@ -22,8 +22,9 @@ import InputDropdown from "@/components/Input/Dropdown";
 import ProductImpact from "@/components/Product/Impact";
 
 export type PageProductProps = {
-  serving?: ServingData;
-  product?: Product | ProductInsert;
+  serving?: ServingData | null;
+  // TODO: Could probably be null instead of undefined also
+  product?: Product | ProductInsert | null;
 
   onSave: (product: Product | ProductInsert, serving: ServingData) => void;
 };

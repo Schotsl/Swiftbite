@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { ProductSearch } from "@/types";
 
 import PageSearch from "@/components/Page/Search";
@@ -6,19 +6,10 @@ import PageSearch from "@/components/Page/Search";
 export default function AutomationRepeatUpsertSearch() {
   const router = useRouter();
 
-  const { weekdays, time } = useLocalSearchParams<{
-    time: string;
-    weekdays: string;
-  }>();
-
   const handleProductSelect = (item: ProductSearch) => {
     router.push({
       pathname: `/(tabs)/automations/repeat/upsert/product`,
-      params: {
-        time,
-        weekdays,
-        ...item,
-      },
+      params: item,
     });
   };
 
