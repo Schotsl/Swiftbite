@@ -25,7 +25,6 @@ export default function InputWeights({
   } = useController({
     name,
     control,
-    defaultValue: [],
   });
 
   // TODO: Should be a type "normally" instead of having to cast
@@ -36,7 +35,6 @@ export default function InputWeights({
 
   const handleClose = () => {
     setVisible(false);
-    setTemporary(50);
   };
 
   const handleOpen = () => {

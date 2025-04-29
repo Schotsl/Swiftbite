@@ -23,7 +23,6 @@ export default function InputLength({
   } = useController({
     name,
     control,
-    defaultValue: 0,
   });
 
   const [visible, setVisible] = useState(false);
@@ -35,7 +34,6 @@ export default function InputLength({
   };
 
   const handleOpen = () => {
-    setTemporary(value);
     setVisible(true);
   };
 

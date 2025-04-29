@@ -22,19 +22,17 @@ export default function InputDate({ name, label, control }: InputDateProps) {
   } = useController({
     name,
     control,
-    defaultValue: new Date(),
   });
 
   const [visible, setVisible] = useState(false);
-  const [temporary, setTemporary] = useState<Date>(new Date(value));
+  const [temporary, setTemporary] = useState<Date>(value);
 
   const handleClose = () => {
     setVisible(false);
-    setTemporary(new Date(value));
   };
 
   const handleOpen = () => {
-    setTemporary(new Date(value));
+    setTemporary(value);
     setVisible(true);
   };
 

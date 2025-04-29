@@ -98,6 +98,7 @@ export default function InputDropdown({
         <Text
           style={{
             flex: 1,
+            color: selected ? "#000" : "#aba9a9",
             fontSize: 16,
             fontFamily: "OpenSans_600SemiBold",
 
