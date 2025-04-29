@@ -1,26 +1,21 @@
-import { View } from "react-native";
-import { SwipeListView } from "react-native-swipe-list-view";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { usePathname, useRouter } from "expo-router";
-
 import Tabs from "@/components/Tabs";
-import ItemMeal from "@/components/Item/Meal";
+import repeatData from "@/queries/repeatData";
 import ItemDelete from "@/components/Item/Delete";
+import ItemRepeatWithProductOrMeal from "@/components/Item/RepeatWithProductOrMeal";
 
-import mealData from "@/queries/mealData";
-import useDeleteMeal from "@/mutations/useDeleteMeal";
+import { View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import { SwipeListView } from "react-native-swipe-list-view";
+import { usePathname, useRouter } from "expo-router";
 
 export default function Tab() {
   const path = usePathname();
   const router = useRouter();
-  const deleteMeal = useDeleteMeal();
 
-  const { data } = useSuspenseQuery({
-    ...mealData(),
-  });
+  const { data } = useQuery(repeatData());
 
   const handleDelete = (uuid: string) => {
-    deleteMeal.mutate(uuid);
+    // TODO: Implement delete
   };
 
   return (
@@ -30,7 +25,7 @@ export default function Tab() {
       }}
     >
       <Tabs
-        add="/automations/meal/insert"
+        add="/automations/repeat/upsert"
         value={path}
         tabs={[
           { href: "/automations/meal", title: "Maaltijden" },
@@ -41,16 +36,19 @@ export default function Tab() {
       <SwipeListView
         data={data}
         keyExtractor={(item) => item.uuid}
-        renderItem={({ item }) => {
-          return (
-            <ItemMeal
-              meal={item}
-              onPress={() => {
-                router.push(`/(tabs)/automations/meal/${item.uuid}`);
-              }}
-            />
-          );
-        }}
+        renderItem={({ item }) => (
+          <ItemRepeatWithProductOrMeal
+            item={item}
+            onPress={() => {
+              router.push({
+                pathname: `/(tabs)/automations/repeat/upsert`,
+                params: {
+                  repeat: item.uuid,
+                },
+              });
+            }}
+          />
+        )}
         renderHiddenItem={({ item }) => (
           <ItemDelete onDelete={() => handleDelete(item.uuid)} />
         )}

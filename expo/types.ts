@@ -1,6 +1,7 @@
 import { Tables } from "./database.types";
 import { MacroData } from "./schemas/personal/goal";
 import { Weight } from "./schemas/personal/health";
+import { ServingData } from "./schemas/serving";
 export type Product = Tables<"product">;
 
 export type ProductSearch = {
@@ -8,6 +9,22 @@ export type ProductSearch = {
   brand: string;
   quantity_original: number;
   quantity_original_unit: string;
+};
+
+export type Repeat = Tables<"repeat">;
+export type RepeatWithProductOrMeal = Omit<Repeat, "serving" | "time"> & {
+  time: Date;
+  serving: ServingData;
+
+  meal?: Meal;
+  product?: Product;
+};
+
+export type RepeatInsert = Omit<
+  Repeat,
+  "uuid" | "user_id" | "created_at" | "updated_at" | "time"
+> & {
+  time: Date;
 };
 
 export type MacroAbsolute = {
