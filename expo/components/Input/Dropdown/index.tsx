@@ -1,13 +1,13 @@
 import { Option } from "@/types";
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Control, Controller, useController } from "react-hook-form";
+import { Control, useController } from "react-hook-form";
 import { Text, TouchableOpacity, View } from "react-native";
 
 import Modal from "@/components/Modal";
 import InputLabel from "../Label";
 import InputDropdownRadio from "./Radio";
-import { Picker } from "@react-native-picker/picker";
 
 type DropdownProps = {
   name: string;

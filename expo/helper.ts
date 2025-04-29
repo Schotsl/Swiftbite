@@ -11,7 +11,7 @@ import {
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean
+  compressed: boolean,
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -91,7 +91,7 @@ export const getRange = (date = new Date()) => {
   const startDate = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate()
+    date.getDate(),
   );
 
   const endDate = new Date(
@@ -101,7 +101,7 @@ export const getRange = (date = new Date()) => {
     23,
     59,
     59,
-    999
+    999,
   );
 
   return {
@@ -113,7 +113,7 @@ export const getRange = (date = new Date()) => {
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true
+  rounded = true,
 ): Macros {
   const gram = serving.gram || 0;
 
@@ -161,7 +161,7 @@ export function getMacrosFromMeal(meal: MealWithProduct): Macros {
       carbs: 0,
       protein: 0,
       calories: 0,
-    }
+    },
   );
 
   return macros;

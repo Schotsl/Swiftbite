@@ -40,7 +40,7 @@ export default function DeleteAccount() {
           style: "destructive",
           onPress: () => handleConfirm(data),
         },
-      ]
+      ],
     );
   };
 

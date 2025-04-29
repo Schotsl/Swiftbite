@@ -8,7 +8,7 @@ export default function ExportData() {
   const handleExport = () => {
     Alert.alert(
       "Dit is helaas nog niet mogelijk",
-      "De exporteer functie is onderweg, maar nog niet klaar. We werken hard aan deze en andere functionaliteiten."
+      "De exporteer functie is onderweg, maar nog niet klaar. We werken hard aan deze en andere functionaliteiten.",
     );
   };
 
