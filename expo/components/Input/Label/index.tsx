@@ -22,7 +22,7 @@ export default function InputLabel({
         style={{
           color: "#000",
           fontSize: 14,
-          fontWeight: "semibold",
+          fontFamily: "OpenSans_600SemiBold",
         }}
       >
         {label}

@@ -1,5 +1,5 @@
 import { Tables } from "./database.types";
-
+import { Weight } from "./schemas/personal/health";
 export type Product = Tables<"product">;
 
 export type ProductSearch = {
@@ -43,10 +43,10 @@ export type Generative = Tables<"generative">;
 
 export type UserBase = Tables<"user">;
 export type UserSetup = UserBase;
-export type User = Omit<UserBase, "birth"> & {
+export type User = Omit<UserBase, "birth" | "weight"> & {
   birth: Date;
   macro: Macros;
-  weight: [];
+  weight: Weight[];
   length: number;
   last_name: string;
   first_name: string;

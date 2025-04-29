@@ -15,10 +15,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { handleError } from "@/helper";
 import { useEffect, useState } from "react";
-import {
-  PreferenceData,
-  preferenceSchema,
-} from "@/schemas/personal/preferences";
+import { DetailsData, detailsSchema } from "@/schemas/personal/details";
 
 export default function MyDetails() {
   const router = useRouter();
@@ -28,12 +25,12 @@ export default function MyDetails() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { data: user } = useQuery(userData());
-  const { control, setValue, handleSubmit } = useForm<PreferenceData>({
-    resolver: zodResolver(preferenceSchema),
+  const { control, setValue, handleSubmit } = useForm<DetailsData>({
+    resolver: zodResolver(detailsSchema),
     defaultValues: user,
   });
 
-  const handleSave = (data: PreferenceData) => {
+  const handleSave = (data: DetailsData) => {
     if (!user) {
       return;
     }

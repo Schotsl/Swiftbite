@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const preferenceSchema = z.object({
+export const detailsSchema = z.object({
   birth: z.date({ required_error: "Voer een geboortedatum in" }),
   email: z
     .string({ required_error: "Voer een geldig e-mailadres in" })
@@ -13,4 +13,4 @@ export const preferenceSchema = z.object({
     .min(3, "Achternaam moet minstens 3 karakters lang zijn"),
 });
 
-export type PreferenceData = z.infer<typeof preferenceSchema>;
+export type DetailsData = z.infer<typeof detailsSchema>;

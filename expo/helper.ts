@@ -166,3 +166,12 @@ export function getMacrosFromMeal(meal: MealWithProduct): Macros {
 
   return macros;
 }
+
+export const transformDate = (date: Date | string | number): string => {
+  const dateObject = new Date(date);
+  return dateObject.toLocaleDateString("nl-NL", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+};

@@ -1,47 +1,46 @@
 import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
 import ButtonSmall from "@/components/Button/Small";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
 
+import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Text, View } from "react-native";
 import { Control, useController } from "react-hook-form";
-import { transformDate } from "@/helper";
 
-type InputDateProps = {
+type InputLengthProps = {
   name: string;
   label: string;
   control: Control<any>;
 };
 
-export default function InputDate({ name, label, control }: InputDateProps) {
+export default function InputLength({
+  name,
+  label,
+  control,
+}: InputLengthProps) {
   const {
     field: { value, onChange },
   } = useController({
     name,
     control,
-    defaultValue: new Date(),
+    defaultValue: 0,
   });
 
   const [visible, setVisible] = useState(false);
-  const [temporary, setTemporary] = useState<Date>(new Date(value));
+  const [temporary, setTemporary] = useState(0);
 
   const handleClose = () => {
     setVisible(false);
-    setTemporary(new Date(value));
+    setTemporary(value);
   };
 
   const handleOpen = () => {
-    setTemporary(new Date(value));
+    setTemporary(value);
     setVisible(true);
   };
 
-  const handleChange = (event: DateTimePickerEvent, selected?: Date) => {
-    const currentDate = selected || temporary;
-
-    setTemporary(currentDate);
+  const handleChange = (selected: number) => {
+    setTemporary(selected);
   };
 
   const handleSave = () => {
@@ -49,6 +48,9 @@ export default function InputDate({ name, label, control }: InputDateProps) {
 
     setVisible(false);
   };
+
+  // Start at 50 cm and go up to 250 cm
+  const options = Array.from({ length: 200 }, (_, i) => i + 50);
 
   return (
     <View>
@@ -68,7 +70,7 @@ export default function InputDate({ name, label, control }: InputDateProps) {
             fontFamily: "OpenSans_600SemiBold",
           }}
         >
-          {transformDate(value)}
+          {value} cm
         </Text>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
@@ -80,13 +82,15 @@ export default function InputDate({ name, label, control }: InputDateProps) {
           onClose={handleClose}
           onButton={handleSave}
         >
-          <DateTimePicker
-            mode="date"
-            value={temporary}
-            style={{ marginVertical: -16 }}
-            display="spinner"
-            onChange={handleChange}
-          />
+          <Picker
+            style={{ marginVertical: -20 }}
+            selectedValue={temporary}
+            onValueChange={handleChange}
+          >
+            {options.map((option) => (
+              <Picker.Item key={option} label={`${option} cm`} value={option} />
+            ))}
+          </Picker>
         </Modal>
       </View>
     </View>
