@@ -17,7 +17,6 @@ export type Macros = {
 };
 
 export type Option = {
-  gram: number;
   value: string;
   title: string;
 };
