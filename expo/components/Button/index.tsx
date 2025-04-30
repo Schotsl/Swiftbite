@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-type ButtonProps = {
+export type ButtonProps = {
   onPress: () => void;
 
   icon?: keyof typeof FontAwesome6.glyphMap;
