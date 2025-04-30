@@ -27,12 +27,18 @@ export type PageProductProps = {
   product?: Product | ProductInsert | null;
 
   onSave: (product: Product | ProductInsert, serving: ServingData) => void;
+  onDelete?: () => void;
+  onRepeat?: () => void;
+  onFavorite?: () => void;
 };
 
 export default function PageProduct({
   serving: servingLocal,
   product: productLocal,
   onSave,
+  onDelete,
+  onRepeat,
+  onFavorite,
 }: PageProductProps) {
   const focus = useIsFocused();
 
@@ -109,11 +115,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions(product);
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity",
+      (option) => option.value === "quantity"
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving",
+      (option) => option.value === "serving"
     );
 
     if (optionsServing) {
@@ -155,23 +161,12 @@ export default function PageProduct({
       <View style={{ padding: 32, gap: 48 }}>
         <View>
           <Header
+            small={true}
             title={product!.title!}
             content={product?.brand || "No brand"}
-            buttons={[
-              {
-                icon: "pencil",
-                onPress: () => {},
-              },
-              {
-                icon: "heart",
-                onPress: () => {},
-              },
-              {
-                icon: "repeat",
-                onPress: () => {},
-              },
-            ]}
-            small
+            onDelete={onDelete}
+            onRepeat={onRepeat}
+            onFavorite={onFavorite}
           />
 
           <ProductInfo items={info} />

@@ -9,6 +9,9 @@ type HeaderProps = {
   small?: boolean;
   content?: string | null;
   buttons?: ButtonSmallProps[];
+  onDelete?: () => void;
+  onRepeat?: () => void;
+  onFavorite?: () => void;
 };
 
 export default function Header({
@@ -16,6 +19,9 @@ export default function Header({
   small = false,
   content,
   buttons,
+  onDelete,
+  onRepeat,
+  onFavorite,
 }: HeaderProps) {
   return (
     <View
@@ -35,6 +41,12 @@ export default function Header({
         {buttons?.map((button, index) => (
           <ButtonSmall key={index} {...button} />
         ))}
+
+        {onDelete && <ButtonSmall icon="trash" onPress={onDelete} />}
+
+        {onFavorite && <ButtonSmall icon="heart" onPress={onFavorite} />}
+
+        {onRepeat && <ButtonSmall icon="repeat" onPress={onRepeat} />}
       </View>
 
       <HeaderTitle>{title}</HeaderTitle>
