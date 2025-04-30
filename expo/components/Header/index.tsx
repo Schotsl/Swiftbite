@@ -27,6 +27,7 @@ export default function Header({
     <View
       style={{
         gap: 12,
+        width: "100%",
         flexDirection: "column",
         paddingBottom: small ? 24 : 48,
       }}

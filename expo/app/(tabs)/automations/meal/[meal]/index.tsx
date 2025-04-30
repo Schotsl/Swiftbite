@@ -1,4 +1,3 @@
-import { Divider } from "@/components/Divider";
 import { useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,7 +6,6 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { MealData, mealSchema } from "@/schemas/serving";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import Button from "@/components/Button";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import InputLabel from "@/components/Input/Label";
@@ -15,6 +13,8 @@ import ItemDelete from "@/components/Item/Delete";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
 import ItemProductWithServing from "@/components/Item/ProductWithServing";
 import { useEffect } from "react";
+import ButtonOverlay from "@/components/Button/Overlay";
+import ButtonSmall from "@/components/Button/Small";
 
 export default function DetailsScreen() {
   const router = useRouter();
@@ -66,7 +66,11 @@ export default function DetailsScreen() {
         backgroundColor: "#fff",
       }}
     >
-      <Header title="Bewerk maaltijd" />
+      <Header
+        title="Bewerk maaltijd"
+        content="Een maaltijd is een combinatie van producten die je opslaat om later in één keer toe te voegen."
+        onDelete={handleDelete}
+      />
 
       <View style={{ gap: 48, width: "100%" }}>
         <View style={{ gap: 32 }}>
@@ -77,115 +81,107 @@ export default function DetailsScreen() {
             placeholder="Maaltijd titel"
           />
 
-          <View>
-            <InputLabel label="Ingrediënten" />
+          <View style={{ gap: 12 }}>
+            <View>
+              <InputLabel label="Ingrediënten" />
 
-            <SwipeListView
-              style={{
-                width: "100%",
-                flexDirection: "column",
-                borderWidth: 2,
-                borderColor: "#000000",
-                borderRadius: 8,
-              }}
-              data={meal?.meal_product}
-              keyExtractor={(item) => item.product_id}
-              renderItem={({ item, index }) => {
-                const length = meal?.meal_product.length || 0;
-                const serving = {
-                  gram: item.selected_gram!,
-                  option: item.selected_option!,
-                  quantity: item.selected_quantity!,
-                };
+              <SwipeListView
+                style={{
+                  width: "100%",
+                  flexDirection: "column",
+                  borderWidth: 2,
+                  borderColor: "#000000",
+                  borderRadius: 8,
+                }}
+                data={meal?.meal_product}
+                keyExtractor={(item) => item.product_id}
+                renderItem={({ item, index }) => {
+                  const length = meal?.meal_product.length || 0;
+                  const serving = {
+                    gram: item.selected_gram!,
+                    option: item.selected_option!,
+                    quantity: item.selected_quantity!,
+                  };
 
-                return (
-                  <ItemProductWithServing
-                    icon={false}
-                    small={true}
-                    border={index !== length - 1}
-                    product={item.product}
-                    serving={serving}
-                    onPress={() => {
-                      router.push({
-                        pathname: `/(tabs)/automations/meal/[meal]/product`,
-                        params: {
-                          meal: item.meal_id,
-                          product: item.product_id,
-                        },
-                      });
-                    }}
-                  />
-                );
-              }}
-              ListEmptyComponent={() => (
-                <View
-                  style={{
-                    height: 80,
-                    width: "100%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
+                  return (
+                    <ItemProductWithServing
+                      icon={false}
+                      small={true}
+                      border={index !== length - 1}
+                      product={item.product}
+                      serving={serving}
+                      onPress={() => {
+                        router.push({
+                          pathname: `/(tabs)/automations/meal/[meal]/product`,
+                          params: {
+                            meal: item.meal_id,
+                            product: item.product_id,
+                          },
+                        });
+                      }}
+                    />
+                  );
+                }}
+                ListEmptyComponent={() => (
+                  <View
                     style={{
-                      opacity: 0.25,
-                      maxWidth: 200,
-                      textAlign: "center",
-
-                      fontSize: 14,
-                      fontWeight: "semibold",
+                      height: 80,
+                      width: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    Nog geen ingrediënten toegevoegd
-                  </Text>
-                </View>
-              )}
-              renderHiddenItem={({ item, index }) => {
-                const length = meal?.meal_product.length || 0;
-                return (
-                  <ItemDelete
-                    border={index !== length - 1}
-                    onDelete={() => removeMealProduct(item.product_id)}
-                  />
-                );
-              }}
-              onRowDidOpen={(rowKey, rowMap) => {
-                setTimeout(() => {
-                  rowMap[rowKey]?.closeRow();
-                }, 500);
-              }}
-              rightOpenValue={-75}
-              useNativeDriver
-              disableRightSwipe
-            />
-          </View>
+                    <Text
+                      style={{
+                        opacity: 0.25,
+                        maxWidth: 200,
+                        textAlign: "center",
 
-          <View style={{ gap: 24 }}>
-            <Button
-              title="Voeg ingrediënt toe"
+                        fontSize: 14,
+                        fontWeight: "semibold",
+                      }}
+                    >
+                      Nog geen ingrediënten toegevoegd
+                    </Text>
+                  </View>
+                )}
+                renderHiddenItem={({ item, index }) => {
+                  const length = meal?.meal_product.length || 0;
+                  return (
+                    <ItemDelete
+                      border={index !== length - 1}
+                      onDelete={() => removeMealProduct(item.product_id)}
+                    />
+                  );
+                }}
+                onRowDidOpen={(rowKey, rowMap) => {
+                  setTimeout(() => {
+                    rowMap[rowKey]?.closeRow();
+                  }, 500);
+                }}
+                rightOpenValue={-75}
+                useNativeDriver
+                disableRightSwipe
+              />
+            </View>
+
+            <ButtonSmall
+              icon="plus"
               onPress={() => {
                 router.push(`/(tabs)/automations/meal/${mealId}/search`);
               }}
-            />
-
-            <Button
-              title="Wijzigingen opslaan"
-              onPress={handleSubmit(handleSave)}
-              disabled={isSubmitting}
-              loading={isSubmitting}
-            />
-
-            <Divider />
-
-            <Button
-              title="Verwijder maaltijd"
-              action="delete"
-              onPress={handleDelete}
-              disabled={isSubmitting}
+              title="Ingrediënt toevoegen"
             />
           </View>
         </View>
       </View>
+
+      <ButtonOverlay
+        title="Wijzigingen opslaan"
+        onPress={handleSubmit(handleSave)}
+        disabled={isSubmitting}
+        loading={isSubmitting}
+      />
     </View>
   );
 }

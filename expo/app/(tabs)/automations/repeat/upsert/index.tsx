@@ -11,15 +11,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
-import {
-  Text,
-  TouchableOpacity,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+import ButtonSmall from "@/components/Button/Small";
 
 export default function AutomationRepeatUpsert() {
-  const { height } = useWindowDimensions();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -94,60 +89,72 @@ export default function AutomationRepeatUpsert() {
 
           <InputTime name="time" label="Herhalen om" control={control} />
 
-          <View>
-            <InputLabel label="Ingrediënt" />
+          <View style={{ gap: 12 }}>
+            <View>
+              <InputLabel label="Ingrediënt" />
 
-            {product && serving ? (
-              <View
-                style={{
-                  marginTop: 2,
-                  borderWidth: 2,
-                  borderColor: "#000",
-                  borderRadius: 8,
-                  overflow: "hidden",
-                }}
-              >
-                <ItemProductWithServing
-                  icon={false}
-                  small={true}
-                  border={false}
-                  product={product}
-                  serving={serving}
-                  onPress={() => {
-                    router.push("/(tabs)/automations/repeat/upsert/product");
-                  }}
-                />
-              </View>
-            ) : (
-              // TODO: Make a empty state component
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() =>
-                  router.push("/(tabs)/automations/repeat/upsert/search")
-                }
-                style={{
-                  height: 80,
-                  borderWidth: 2,
-                  borderColor: "#000",
-                  borderRadius: 8,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
+              {product && serving ? (
+                <View
                   style={{
-                    opacity: 0.25,
-                    maxWidth: 200,
-                    textAlign: "center",
-
-                    fontSize: 14,
-                    fontWeight: "semibold",
+                    marginTop: 2,
+                    borderWidth: 2,
+                    borderColor: "#000",
+                    borderRadius: 8,
+                    overflow: "hidden",
                   }}
                 >
-                  Nog geen ingrediënt geselecteerd
-                </Text>
-              </TouchableOpacity>
-            )}
+                  <ItemProductWithServing
+                    icon={false}
+                    small={true}
+                    border={false}
+                    product={product}
+                    serving={serving}
+                    onPress={() => {
+                      router.push("/(tabs)/automations/repeat/upsert/product");
+                    }}
+                  />
+                </View>
+              ) : (
+                // TODO: Make a empty state component
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() =>
+                    router.push("/(tabs)/automations/repeat/upsert/search")
+                  }
+                  style={{
+                    height: 80,
+                    borderWidth: 2,
+                    borderColor: "#000",
+                    borderRadius: 8,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      opacity: 0.25,
+                      maxWidth: 200,
+                      textAlign: "center",
+
+                      fontSize: 14,
+                      fontWeight: "semibold",
+                    }}
+                  >
+                    Nog geen ingrediënt geselecteerd
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+
+            <ButtonSmall
+              icon={product && serving ? "pencil" : "plus"}
+              title={
+                product && serving ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"
+              }
+              onPress={() => {
+                router.push("/(tabs)/automations/repeat/upsert/search");
+              }}
+            />
           </View>
         </View>
       </View>

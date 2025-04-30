@@ -4,15 +4,16 @@ import { useForm } from "react-hook-form";
 import { Text, View } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 
-import Button from "@/components/Button";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import InputLabel from "@/components/Input/Label";
 import Item from "@/components/Item";
 import ItemDelete from "@/components/Item/Delete";
-import { Divider } from "@/components/Divider";
+
 import { useEditMeal } from "@/context/MealContext";
 import { MealData, mealSchema } from "@/schemas/serving";
+import ButtonOverlay from "@/components/Button/Overlay";
+import ButtonSmall from "@/components/Button/Small";
 
 export default function InsertMealForm() {
   const router = useRouter();
@@ -39,19 +40,30 @@ export default function InsertMealForm() {
     router.push(`/(tabs)/automations/meal/${meal?.uuid}/search`);
   };
 
+  const handleDelete = () => {
+    router.replace("/(tabs)/automations");
+  };
+
   return (
     <View
       style={{
         flex: 1,
         padding: 32,
-        alignItems: "flex-start",
         backgroundColor: "#fff",
-        gap: 48,
       }}
     >
-      <Header title="Nieuwe maaltijd" />
+      <Header
+        title="Nieuwe maaltijd"
+        content="Een maaltijd is een combinatie van producten die je opslaat om later in één keer toe te voegen."
+        onDelete={handleDelete}
+      />
 
-      <View style={{ width: "100%", gap: 32 }}>
+      <View
+        style={{
+          width: "100%",
+          gap: 32,
+        }}
+      >
         <Input
           name="title"
           control={control}
@@ -60,98 +72,96 @@ export default function InsertMealForm() {
           disabled={isSubmitting}
         />
 
-        <View>
-          <InputLabel label="Ingrediënten" />
-          <SwipeListView
-            style={{
-              width: "100%",
-              flexDirection: "column",
-              borderWidth: 2,
-              borderColor: "#000000",
-              borderRadius: 8,
-              minHeight: 50,
-            }}
-            data={meal?.meal_product || []}
-            keyExtractor={(item) => item.product_id}
-            ListEmptyComponent={() => (
-              <View
-                style={{
-                  height: 80,
-                  width: "100%",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Text
+        <View style={{ gap: 12 }}>
+          <View>
+            <InputLabel label="Ingrediënten" />
+            <SwipeListView
+              style={{
+                width: "100%",
+                flexDirection: "column",
+                borderWidth: 2,
+                borderColor: "#000000",
+                borderRadius: 8,
+                minHeight: 50,
+              }}
+              data={meal?.meal_product || []}
+              keyExtractor={(item) => item.product_id}
+              ListEmptyComponent={() => (
+                <View
                   style={{
-                    opacity: 0.25,
-                    maxWidth: 200,
-                    textAlign: "center",
-
-                    fontSize: 14,
-                    fontWeight: "semibold",
+                    height: 80,
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "center",
                   }}
                 >
-                  Nog geen ingrediënten toegevoegd
-                </Text>
-              </View>
-            )}
-            renderItem={({ item, index }) => {
-              const gram = item.selected_gram || 0;
-              const calories = item.product.calorie_100g || 0;
+                  <Text
+                    style={{
+                      opacity: 0.25,
+                      maxWidth: 200,
+                      textAlign: "center",
 
-              const caloriesCalculated = (calories / 100) * gram;
-              const caloriesRounded = Math.round(caloriesCalculated);
+                      fontSize: 14,
+                      fontWeight: "semibold",
+                    }}
+                  >
+                    Nog geen ingrediënten toegevoegd
+                  </Text>
+                </View>
+              )}
+              renderItem={({ item, index }) => {
+                const gram = item.selected_gram || 0;
+                const calories = item.product.calorie_100g || 0;
 
-              return (
-                <Item
-                  small
-                  key={item.product_id}
-                  border={index !== length - 1}
-                  title={item.product.title!}
-                  subtitle={`${caloriesRounded} kcal`}
-                  rightTop={`${gram}g`}
-                  onPress={() => {}}
-                />
-              );
-            }}
-            renderHiddenItem={({ item, index }) => {
-              const length = meal?.meal_product.length || 0;
-              return (
-                <ItemDelete
-                  border={index !== length - 1}
-                  onDelete={() => removeMealProduct(item.product_id)}
-                />
-              );
-            }}
-            onRowDidOpen={(rowKey, rowMap) => {
-              setTimeout(() => {
-                rowMap[rowKey]?.closeRow();
-              }, 500);
-            }}
-            rightOpenValue={-75}
-            useNativeDriver
-            disableRightSwipe
-          />
-        </View>
+                const caloriesCalculated = (calories / 100) * gram;
+                const caloriesRounded = Math.round(caloriesCalculated);
 
-        <View style={{ width: "100%", gap: 24 }}>
-          <Button
-            title="Voeg ingrediënt toe"
+                return (
+                  <Item
+                    small
+                    key={item.product_id}
+                    border={index !== length - 1}
+                    title={item.product.title!}
+                    subtitle={`${caloriesRounded} kcal`}
+                    rightTop={`${gram}g`}
+                    onPress={() => {}}
+                  />
+                );
+              }}
+              renderHiddenItem={({ item, index }) => {
+                const length = meal?.meal_product.length || 0;
+                return (
+                  <ItemDelete
+                    border={index !== length - 1}
+                    onDelete={() => removeMealProduct(item.product_id)}
+                  />
+                );
+              }}
+              onRowDidOpen={(rowKey, rowMap) => {
+                setTimeout(() => {
+                  rowMap[rowKey]?.closeRow();
+                }, 500);
+              }}
+              rightOpenValue={-75}
+              useNativeDriver
+              disableRightSwipe
+            />
+          </View>
+
+          <ButtonSmall
+            icon="plus"
             onPress={handleAddIngredient}
-            disabled={isSubmitting}
-          />
-
-          <Divider />
-
-          <Button
-            title="Maaltijd opslaan"
-            onPress={handleSubmit(handleSave)}
-            disabled={isSubmitting}
-            loading={isSubmitting}
+            title="Ingrediënt toevoegen"
           />
         </View>
       </View>
+
+      <ButtonOverlay
+        title="Maaltijd opslaan"
+        onPress={handleSubmit(handleSave)}
+        disabled={isSubmitting}
+        loading={isSubmitting}
+      />
     </View>
   );
 }

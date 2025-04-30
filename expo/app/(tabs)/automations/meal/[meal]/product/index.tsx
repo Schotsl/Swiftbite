@@ -6,7 +6,8 @@ import { useEditMeal } from "@/context/MealContext";
 import { router, useLocalSearchParams } from "expo-router";
 
 export default function AddPreviewBarcodeScreen() {
-  const { meal, updateMealProduct, insertMealProduct } = useEditMeal();
+  const { meal, updateMealProduct, insertMealProduct, removeMealProduct } =
+    useEditMeal();
 
   const { meal: mealId, product: productId } = useLocalSearchParams<{
     meal: string;
@@ -31,6 +32,11 @@ export default function AddPreviewBarcodeScreen() {
     <PageProduct
       product={product}
       serving={serving}
+      onDelete={() => {
+        removeMealProduct(productId!);
+
+        router.replace(`/(tabs)/automations/meal/${mealId}`);
+      }}
       onSave={async (productReturned, returnedServing) => {
         if (product) {
           updateMealProduct(productId!, returnedServing);
