@@ -43,7 +43,6 @@ export default function Modal({
         transparent={true}
         animationType="none"
         onRequestClose={onClose}
-        style={{}}
       >
         <ModalBackground onPress={onClose} />
 

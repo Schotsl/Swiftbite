@@ -12,14 +12,14 @@ import Animated from "react-native-reanimated";
 
 type NavigationAddInnerProps = {
   open: boolean;
-  background?: boolean;
+  overlay: boolean;
 
   onPress: () => void;
 };
 
 export default function NavigationAddInner({
   open,
-  background = true,
+  overlay,
   onPress,
 }: NavigationAddInnerProps) {
   const animatedRotation = useSharedValue(0);
@@ -42,24 +42,28 @@ export default function NavigationAddInner({
   return (
     <View
       style={{
-        transform: [{ rotate: "45deg" }],
-
         borderWidth: 2,
-        borderColor: background ? "#000" : "transparent",
+        borderColor: overlay ? "#000" : "transparent",
         borderRadius: 100,
-
-        borderTopColor: "transparent",
-        borderLeftColor: "transparent",
       }}
     >
+      {overlay && (
+        <View
+          style={{
+            top: -2,
+            width: 70,
+            height: 14,
+            position: "absolute",
+            backgroundColor: "#fff",
+          }}
+        ></View>
+      )}
+
       <View
         style={{
           borderWidth: 4,
-          borderColor: background ? "#fff" : "transparent",
+          borderColor: overlay ? "#fff" : "transparent",
           borderRadius: 100,
-
-          borderTopColor: "transparent",
-          borderLeftColor: "transparent",
         }}
       >
         <TouchableOpacity
@@ -68,7 +72,7 @@ export default function NavigationAddInner({
           style={{
             width: 62,
             height: 62,
-            transform: [{ rotate: "45deg" }],
+            zIndex: 11,
 
             borderWidth: 2,
             borderColor: "#000",

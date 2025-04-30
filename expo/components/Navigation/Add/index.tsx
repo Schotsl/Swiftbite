@@ -24,14 +24,14 @@ export default function NavigationAdd() {
         <View
           style={{
             left: "50%",
-            bottom: 46,
+            bottom: 23,
             position: "absolute",
             transform: [{ translateX: -32 }],
           }}
         >
           <NavigationAddInner
             open={open}
-            background={false}
+            overlay={false}
             onPress={() => setOpen(false)}
           />
         </View>
@@ -39,13 +39,17 @@ export default function NavigationAdd() {
 
       <View
         style={{
-          top: -49,
+          top: -26,
           left: "50%",
           position: "absolute",
           transform: [{ translateX: -32 }],
         }}
       >
-        <NavigationAddInner open={open} onPress={() => setOpen(true)} />
+        <NavigationAddInner
+          open={open}
+          overlay={true}
+          onPress={() => setOpen(true)}
+        />
       </View>
     </View>
   );

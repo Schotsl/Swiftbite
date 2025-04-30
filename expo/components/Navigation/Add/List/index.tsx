@@ -52,7 +52,7 @@ export default function NavigationAddList({ onClose }: NavigationAddListProps) {
         gap: 16,
         left: "50%",
         width: 175,
-        bottom: 142,
+        bottom: 110,
         position: "absolute",
         transform: [{ translateX: -87.5 }],
       }}
