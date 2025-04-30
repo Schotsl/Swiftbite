@@ -1,20 +1,25 @@
-import Button from "@/components/Button";
 import Header from "@/components/Header";
 import InputLabel from "@/components/Input/Label";
 import InputTime from "@/components/Input/Time";
 import InputWeekday from "@/components/Input/Weekday";
+import ButtonOverlay from "@/components/Button/Overlay";
 import ItemProductWithServing from "@/components/Item/ProductWithServing";
 
-import { Divider } from "@/components/Divider";
 import { useForm } from "react-hook-form";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
-import { Text, TouchableOpacity, View } from "react-native";
+import {
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from "react-native";
 
 export default function AutomationRepeatUpsert() {
+  const { height } = useWindowDimensions();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +82,11 @@ export default function AutomationRepeatUpsert() {
 
   return (
     <View style={{ padding: 32 }}>
-      <Header title={updating ? "Herhaling bewerken" : "Herhaling toevoegen"} />
+      <Header
+        title={updating ? "Herhaling bewerken" : "Herhaling toevoegen"}
+        content="Een herhaling is een product dat automatisch toevoegt wordt op de dagen en tijden die jij kiest"
+        onDelete={handleDelete}
+      />
 
       <View style={{ gap: 48 }}>
         <View style={{ gap: 32 }}>
@@ -141,25 +150,14 @@ export default function AutomationRepeatUpsert() {
             )}
           </View>
         </View>
-
-        <View style={{ width: "100%", gap: 24 }}>
-          <Button
-            title="Herhaling opslaan"
-            onPress={handleSubmit(handleSave)}
-            loading={isLoading}
-            disabled={isLoading || isDeleting}
-          />
-
-          <Divider />
-
-          <Button
-            title="Herhaling verwijderen"
-            onPress={handleDelete}
-            loading={isDeleting}
-            disabled={isLoading || isDeleting}
-          />
-        </View>
       </View>
+
+      <ButtonOverlay
+        title="Herhaling opslaan"
+        onPress={handleSubmit(handleSave)}
+        loading={isLoading}
+        disabled={isLoading || isDeleting}
+      />
     </View>
   );
 }

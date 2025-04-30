@@ -5,12 +5,18 @@ import { Product } from "@/types";
 import { useEditRepeat } from "@/context/RepeatContext";
 
 export default function AutomationRepeatUpsertProduct() {
-  const { product, serving, updateProduct, updateServing } = useEditRepeat();
+  const { product, serving, removeProduct, updateProduct, updateServing } =
+    useEditRepeat();
 
   return (
     <PageProduct
       product={product}
       serving={serving}
+      onDelete={() => {
+        removeProduct();
+
+        router.replace("/(tabs)/automations/repeat/upsert");
+      }}
       onSave={async (productReturned, returnedServing) => {
         if (product) {
           updateServing(returnedServing);
