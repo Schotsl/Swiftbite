@@ -26,6 +26,7 @@ type InputProps = {
   type?: Type;
   icon?: keyof typeof FontAwesome6.glyphMap;
   label?: string;
+  suffix?: string;
   content?: string;
   required?: boolean;
   disabled?: boolean;
@@ -42,6 +43,7 @@ export default function Input({
   type = "default",
   icon,
   label,
+  suffix,
   content,
   required = true,
   disabled = false,
@@ -90,33 +92,69 @@ export default function Input({
               )}
 
               <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                <TextInput
-                  value={value ? value.toString() : ""}
+                <View
                   style={{
-                    zIndex: 1,
-                    padding: 12,
-                    paddingLeft: icon ? 40 : 16,
-                    paddingHorizontal: 16,
-
-                    fontSize: 16,
-                    fontFamily: "OpenSans_600SemiBold",
-
                     borderWidth: 2,
                     borderColor: fieldState.error || error ? "#7C0000" : "#000",
                     borderRadius: 8,
+                    flexDirection: "row",
 
                     opacity: disabled ? 0.5 : 1,
                     minHeight: multiline ? 100 : undefined,
                   }}
-                  editable={!disabled}
-                  multiline={multiline}
-                  placeholder={placeholder}
-                  keyboardType={type === "password" ? "default" : type}
-                  onChangeText={handleChange}
-                  secureTextEntry={type === "password"}
-                  selectTextOnFocus={!disabled}
-                  placeholderTextColor={"#aba9a9"}
-                />
+                >
+                  <TextInput
+                    value={value ? value.toString() : ""}
+                    style={{
+                      flex: 1,
+                      zIndex: 1,
+                      padding: 12,
+                      paddingLeft: icon ? 40 : 16,
+                      paddingHorizontal: 16,
+
+                      fontSize: 16,
+                      fontFamily: "OpenSans_600SemiBold",
+                    }}
+                    editable={!disabled}
+                    multiline={multiline}
+                    placeholder={placeholder}
+                    keyboardType={type === "password" ? "default" : type}
+                    onChangeText={handleChange}
+                    secureTextEntry={type === "password"}
+                    selectTextOnFocus={!disabled}
+                    placeholderTextColor={"#aba9a9"}
+                  />
+
+                  {suffix && (
+                    <View
+                      style={{
+                        width: 78,
+                        height: "100%",
+
+                        alignItems: "center",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        backgroundColor: "#E2E2E2",
+
+                        borderColor: "#000",
+                        borderLeftWidth: 2,
+                        borderTopRightRadius: 8,
+                        borderBottomRightRadius: 8,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#000",
+
+                          fontSize: 16,
+                          fontFamily: "OpenSans_600SemiBold",
+                        }}
+                      >
+                        {suffix}
+                      </Text>
+                    </View>
+                  )}
+                </View>
               </TouchableWithoutFeedback>
             </View>
 

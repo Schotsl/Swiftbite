@@ -232,6 +232,7 @@ export default function PageEstimationManual() {
               <Input
                 name="calorie"
                 label="Calorieën"
+                suffix="kcal"
                 control={control}
                 placeholder="100"
               />
@@ -239,6 +240,7 @@ export default function PageEstimationManual() {
               <Input
                 name="protein"
                 label="Eiwit"
+                suffix="gram"
                 control={control}
                 placeholder="100"
               />
@@ -247,6 +249,7 @@ export default function PageEstimationManual() {
               <Input
                 name="carbs"
                 label="Koolhydraten"
+                suffix="gram"
                 control={control}
                 placeholder="100"
               />
@@ -254,6 +257,7 @@ export default function PageEstimationManual() {
               <Input
                 name="fat"
                 label="Vet"
+                suffix="gram"
                 control={control}
                 placeholder="100"
               />
@@ -266,6 +270,7 @@ export default function PageEstimationManual() {
             <Input
               name="fat_saturated"
               label="Verzadigd vet"
+              suffix="gram"
               control={control}
               placeholder="100"
             />
@@ -273,6 +278,7 @@ export default function PageEstimationManual() {
             <Input
               name="fat_unsaturated"
               label="Onverzadigd vet"
+              suffix="gram"
               control={control}
               placeholder="100"
             />
@@ -280,6 +286,7 @@ export default function PageEstimationManual() {
             <Input
               name="carbohydrate_sugar"
               label="Suiker"
+              suffix="gram"
               control={control}
               placeholder="100"
             />
@@ -287,6 +294,7 @@ export default function PageEstimationManual() {
             <Input
               name="fiber"
               label="Vezels"
+              suffix="gram"
               control={control}
               placeholder="100"
             />
@@ -294,6 +302,7 @@ export default function PageEstimationManual() {
             <Input
               name="sodium"
               label="Zout"
+              suffix="gram"
               control={control}
               placeholder="100"
             />
