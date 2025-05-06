@@ -57,17 +57,15 @@ export default function NavigationAddList({ onClose }: NavigationAddListProps) {
         transform: [{ translateX: -87.5 }],
       }}
     >
-      <Button icon="rectangle-list" title="Handmatig" onPress={handleManual} />
+      <Button icon="camera" title="Camera" onPress={handleCamera} />
+
+      <Button icon="magnifying-glass" title="Zoeken" onPress={handleSearch} />
 
       <Button
         icon="wand-magic-sparkles"
         title="Inschatting"
         onPress={handleEstimate}
       />
-
-      <Button icon="magnifying-glass" title="Zoeken" onPress={handleSearch} />
-
-      <Button icon="camera" title="Camera" onPress={handleCamera} />
     </View>
   );
 }
