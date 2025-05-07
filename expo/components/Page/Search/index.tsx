@@ -99,6 +99,7 @@ export default function PageSearch({
       <View
         style={{
           padding: 16,
+          flexDirection: "row",
           paddingHorizontal: 32,
           borderBottomWidth: 2,
           borderBottomColor: "#000000",
