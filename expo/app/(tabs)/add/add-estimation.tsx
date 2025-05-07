@@ -4,26 +4,44 @@ import { ScrollView } from "react-native";
 import Tabs from "@/components/Tabs";
 import PageEstimationAutomatic from "@/components/Page/Estimation/Automatic";
 import PageEstimationManual from "@/components/Page/Estimation/Manual";
+import { useLocalSearchParams } from "expo-router";
 
 export default function Add2Preview() {
+  const { uri, width, height } = useLocalSearchParams<{
+    uri?: string;
+    width?: string;
+    height?: string;
+  }>();
+
+  const image =
+    uri && width && height
+      ? {
+          uri,
+          width: parseInt(width),
+          height: parseInt(height),
+        }
+      : null;
+
   const [tab, setTab] = useState("automatic");
 
   return (
     <ScrollView>
-      <Tabs
-        tabs={[
-          {
-            title: "Automatisch",
-            value: "automatic",
-          },
-          {
-            title: "Handmatig",
-            value: "manual",
-          },
-        ]}
-        value={tab}
-        onSelect={setTab}
-      />
+      {!image && (
+        <Tabs
+          tabs={[
+            {
+              title: "Automatisch",
+              value: "automatic",
+            },
+            {
+              title: "Handmatig",
+              value: "manual",
+            },
+          ]}
+          value={tab}
+          onSelect={setTab}
+        />
+      )}
 
       {tab === "automatic" ? (
         <PageEstimationAutomatic />

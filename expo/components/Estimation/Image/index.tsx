@@ -21,7 +21,7 @@ export default function EstimationImage({
   onEdit,
   onDelete,
 }: EstimationImageProps) {
-  const imageAspect = image ? image.width / image.height : 1;
+  const imageAspect = image ? image.height / image.width : 1;
   const imageAspectCapped = Math.max(imageAspect, 4 / 5);
 
   return (
@@ -31,7 +31,7 @@ export default function EstimationImage({
       {image ? (
         <View
           style={{
-            width: "auto",
+            width: imageAspectCapped * 150,
             height: 150,
             position: "relative",
 
@@ -39,8 +39,6 @@ export default function EstimationImage({
             borderWidth: 2,
             borderColor: "#000",
             borderRadius: 8,
-
-            aspectRatio: imageAspectCapped,
           }}
         >
           <View
