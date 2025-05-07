@@ -45,7 +45,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
     if (websocket) {
       console.log(
-        "[VISION] Closing existing connection before reconnecting...",
+        "[VISION] Closing existing connection before reconnecting..."
       );
 
       websocket.onopen = null;
@@ -63,7 +63,10 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
       const bearer = session?.data.session?.access_token;
 
       const localBase = `ffbbrrfdghbvuajheulg.supabase.co/functions/v1/vision`;
-      const localUrl = `wss://${localBase}?token=${bearer}`;
+      const localUrl = `${localBase}?token=${bearer}`
+        .replace("http", "ws")
+        .replace("https", "wss");
+
       const localSocket = new WebSocket(localUrl);
 
       setWebsocket(localSocket);
@@ -81,7 +84,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
         startWebsocket();
       }, 5000);
     },
-    [startWebsocket],
+    [startWebsocket]
   );
 
   const handleError = useCallback(
@@ -91,7 +94,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
       // On error we'll attempt to reconnect
       startWebsocket();
     },
-    [startWebsocket],
+    [startWebsocket]
   );
 
   const handleMessage = (event: MessageEvent) => {
