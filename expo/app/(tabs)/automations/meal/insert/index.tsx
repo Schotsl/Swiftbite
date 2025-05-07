@@ -60,8 +60,9 @@ export default function InsertMealForm() {
 
       <View
         style={{
-          width: "100%",
           gap: 32,
+          width: "100%",
+          flexDirection: "row",
         }}
       >
         <Input

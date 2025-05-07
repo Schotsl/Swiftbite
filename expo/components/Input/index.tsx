@@ -73,7 +73,7 @@ export default function Input({
         };
 
         return (
-          <View style={{ flex: 1 }}>
+          <View style={{ flex: 1, minHeight: 78 }}>
             {label && <InputLabel label={label} required={required} />}
 
             <View style={{ position: "relative" }}>
