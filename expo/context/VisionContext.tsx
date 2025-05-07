@@ -16,8 +16,6 @@ interface VisionContextProps {
   feedback: string | null;
   feedbackOld: string | null;
 
-  websocket: WebSocket | null;
-
   sendImage: (uri: string) => Promise<void>;
 
   resetHistory: () => void;
@@ -34,28 +32,26 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [feedbackOld, setFeedbackOld] = useState<string | null>(null);
 
-  const [websocket, setWebsocket] = useState<WebSocket | null>(null);
-
   const timingRef = useRef<number>(performance.now());
   const latestRef = useRef<number>(Date.now());
+  const socketRef = useRef<WebSocket | null>(null);
   const historyRef = useRef<string[]>([]);
 
   const startWebsocket = useCallback(async () => {
     console.log("[VISION] Connecting to service...");
 
-    if (websocket) {
+    if (socketRef.current) {
       console.log(
         "[VISION] Closing existing connection before reconnecting..."
       );
 
-      websocket.onopen = null;
-      websocket.onerror = null;
-      websocket.onclose = null;
-      websocket.onmessage = null;
+      socketRef.current.onopen = null;
+      socketRef.current.onerror = null;
+      socketRef.current.onclose = null;
+      socketRef.current.onmessage = null;
 
-      websocket.close();
-
-      setWebsocket(null);
+      socketRef.current?.close();
+      socketRef.current = null;
     }
 
     try {
@@ -63,39 +59,36 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
       const bearer = session?.data.session?.access_token;
 
       const localBase = `ffbbrrfdghbvuajheulg.supabase.co/functions/v1/vision`;
-      const localUrl = `${localBase}?token=${bearer}`
-        .replace("http", "ws")
-        .replace("https", "wss");
+      const localUrl = `wss://${localBase}?token=${bearer}`;
 
       const localSocket = new WebSocket(localUrl);
 
-      setWebsocket(localSocket);
+      localSocket.onopen = () => console.log("[VISION] Connection established");
+      localSocket.onerror = handleError;
+      localSocket.onclose = handleClose;
+      localSocket.onmessage = handleMessage;
+
+      socketRef.current = localSocket;
     } catch (error) {
       console.error(error);
     }
-  }, [websocket]);
+  }, []);
 
-  const handleClose = useCallback(
-    (event: CloseEvent) => {
-      console.log("[VISION] Connection closed");
-      console.log("[VISION] Attempting to reconnect in 5 seconds...");
+  const handleClose = (event: CloseEvent) => {
+    console.log("[VISION] Connection closed");
+    console.log("[VISION] Attempting to reconnect in 5 seconds...");
 
-      setTimeout(() => {
-        startWebsocket();
-      }, 5000);
-    },
-    [startWebsocket]
-  );
-
-  const handleError = useCallback(
-    (error: Event) => {
-      console.error(error);
-
-      // On error we'll attempt to reconnect
+    setTimeout(() => {
       startWebsocket();
-    },
-    [startWebsocket]
-  );
+    }, 5000);
+  };
+
+  const handleError = (error: Event) => {
+    console.error(error);
+
+    // On error we'll attempt to reconnect
+    startWebsocket();
+  };
 
   const handleMessage = (event: MessageEvent) => {
     const message = JSON.parse(event.data);
@@ -139,55 +132,30 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
     startWebsocket();
 
     return () => {
-      if (websocket) {
+      if (socketRef.current) {
         console.log("[VISION] Cleaning up WebSocket on component unmount...");
 
-        websocket.onopen = null;
-        websocket.onerror = null;
-        websocket.onclose = null;
-        websocket.onmessage = null;
+        socketRef.current.onopen = null;
+        socketRef.current.onerror = null;
+        socketRef.current.onclose = null;
+        socketRef.current.onmessage = null;
 
-        websocket.close();
-
-        setWebsocket(null);
+        socketRef.current.close();
+        socketRef.current = null;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    if (!websocket) {
-      return;
-    }
-
-    websocket.onopen = () => {
-      console.log("[VISION] Connection established");
-    };
-
-    websocket.onerror = handleError;
-    websocket.onclose = handleClose;
-    websocket.onmessage = handleMessage;
-
-    return () => {
-      if (websocket) {
-        websocket.onopen = null;
-        websocket.onmessage = null;
-        websocket.onerror = null;
-        websocket.onclose = null;
-      }
-    };
-  }, [websocket, handleError, handleClose]);
-
   const sendImage = async (uri: string) => {
     // If we're still connecting no need to re-try
-    if (websocket?.readyState === WebSocket.CONNECTING) {
+    if (socketRef.current?.readyState === WebSocket.CONNECTING) {
       return;
     }
 
     // If not open and not connecting attempt to reconnect
-    if (!websocket || websocket.readyState !== WebSocket.OPEN) {
+    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
       startWebsocket();
-
       return;
     }
 
@@ -204,7 +172,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
     timingRef.current = timing;
 
-    websocket.send(body);
+    socketRef.current.send(body);
   };
 
   const resetHistory = () => {
@@ -224,7 +192,6 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
       value={{
         feedback,
         feedbackOld,
-        websocket,
         sendImage,
         resetHistory,
         resetFeedback,
