@@ -1,4 +1,4 @@
-export const generateIconPrompt = (title: string) => {
+const generateIconPrompt = (title: string) => {
   return `
 Create a stylized icon representing ${title} using bold, angular geometric shapes and sharp edges. The defining feature should be rough, jagged lines used for outlines (typically black) and internal details, giving the icon a raw, industrial, and almost brutal feel. The design must feature intentionally uneven lines and a textured appearance inherent in this style.
 
@@ -9,3 +9,5 @@ Design the icon with a composition that fits naturally within a circle, avoiding
 The background must be transparent, and the final output should be a flat vector graphic. The goal is a visually impactful icon that stands out due to its unique aesthetic.
 `;
 };
+
+export default generateIconPrompt;

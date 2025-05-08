@@ -1,25 +1,33 @@
+import OpenAI from "openai";
+
 import { z } from "zod";
 import { after } from "next/server";
 import { insertUsage } from "./usage";
 import { openai as openai } from "@ai-sdk/openai";
-import { CoreMessage, generateObject, generateText, streamObject } from "ai";
+import {
+  CoreMessage,
+  generateText,
+  streamObject,
+  generateObject,
+  StreamObjectResult,
+} from "ai";
 
 import {
+  OptionData,
   optionSchema,
+  ProductData,
+  ProductGenerativeNutritionData,
   productGenerativeNutritionSchema,
+  ProductGenerativeVisualsData,
   productGenerativeVisualsSchema,
   productSchema,
+  ProductSearchData,
   productSearchSchema,
+  QuantitySchema,
   quantitySchema,
 } from "@/schema";
 
-import {
-  ProductGenerativeNutrition,
-  ProductInsert,
-  ProductGenerativeVisuals,
-  Option,
-} from "@/types";
-
+import generateIconPrompt from "@/prompts/generate-icon";
 import generateOptionsPrompt from "@/prompts/generate-options";
 import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
 import normalizeTitlePrompt from "@/prompts/normalize-meal";
@@ -31,11 +39,6 @@ import searchProductsStructurePrompt from "@/prompts/search-products-structure";
 import estimateVisualPrompt from "@/prompts/estimate-visual";
 import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
 
-import { generateSlug } from "@/helper";
-
-import OpenAI from "openai";
-import { generateIconPrompt } from "@/prompts/generate-icon";
-
 export async function estimateNutrition(
   user: string,
   data: {
@@ -43,8 +46,8 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
-): Promise<ProductGenerativeNutrition> {
+  signal?: AbortSignal,
+): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
 
@@ -96,12 +99,7 @@ export async function estimateNutrition(
     });
   });
 
-  return {
-    ...object,
-
-    favorite: false,
-    estimated: true,
-  };
+  return object;
 }
 
 export async function estimateVisuals(
@@ -111,8 +109,8 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
-): Promise<ProductGenerativeVisuals> {
+  signal?: AbortSignal,
+): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = openai("gpt-4o-mini");
 
@@ -176,8 +174,8 @@ export async function searchProduct(
     quantity_original: string;
     quantity_original_unit: string;
   },
-  signal?: AbortSignal
-): Promise<ProductInsert | null> {
+  signal?: AbortSignal,
+): Promise<ProductData | null> {
   const searchTask = "search-product";
   const searchModel = openai.responses("gpt-4.1-mini");
 
@@ -244,12 +242,7 @@ export async function searchProduct(
   });
 
   const { object } = structureResponse;
-  return {
-    ...object,
-
-    icon_id: null,
-    favorite: false,
-  };
+  return object;
 }
 
 export async function searchProducts(
@@ -258,8 +251,14 @@ export async function searchProducts(
     query: string;
     lang: string;
   },
-  signal?: AbortSignal
-) {
+  signal?: AbortSignal,
+): Promise<
+  StreamObjectResult<
+    ProductSearchData[],
+    ProductSearchData[],
+    AsyncIterable<ProductSearchData> & ReadableStream<ProductSearchData>
+  >
+> {
   const searchTask = "search-products";
   const searchModel = openai.responses("gpt-4.1-mini");
 
@@ -337,7 +336,7 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task = "normalize-meal";
   const model = "gpt-4.1-mini";
@@ -383,7 +382,7 @@ export async function normalizeTitle(
   data: {
     title: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task = "normalize-title";
   const model = "gpt-4.1-mini";
@@ -431,12 +430,8 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal
-): Promise<{
-  quantity_original: number | null;
-  quantity_original_unit: string | null;
-  quantity_gram: number | null;
-}> {
+  signal?: AbortSignal,
+): Promise<QuantitySchema> {
   // If no combined or unit is provided there is no way to know the original unit
   if (!data.combined && !data.unit) {
     return {
@@ -486,8 +481,8 @@ export async function generateOptions(
     lang: string;
     title: string;
   },
-  signal?: AbortSignal
-): Promise<Option[]> {
+  signal?: AbortSignal,
+): Promise<OptionData[]> {
   const task = "generate-options";
   const model = "gpt-4.1-nano";
 
@@ -519,13 +514,7 @@ export async function generateOptions(
     });
   });
 
-  const options = object.map((option) => ({
-    value: generateSlug(option.title),
-    title: option.title,
-    gram: option.gram,
-  }));
-
-  return options;
+  return object;
 }
 
 export async function generateIcon(data: { title: string }) {

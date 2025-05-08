@@ -15,41 +15,41 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit"
+    "quantity_original_unit",
   );
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!quantity_original) {
     return NextResponse.json(
       { error: "Please provide a quantity_original" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!quantity_original_unit) {
     return NextResponse.json(
       { error: "Please provide a quantity_original_unit" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     searchProduct(
       user!,
       { title, lang, brand, quantity_original, quantity_original_unit },
-      request.signal
+      request.signal,
     ),
   ]);
 
@@ -67,10 +67,12 @@ export async function GET(request: NextRequest) {
   }
 
   const product: Product = {
-    type: "generative",
     uuid: crypto.randomUUID(),
+    type: "generative",
     options: productOptions,
+    favorite: false,
 
+    icon_id: null,
     user_id: user!,
 
     created_at: new Date().toISOString(),
