@@ -1,211 +1,78 @@
 import { View } from "react-native";
-import { decode } from "base64-arraybuffer";
 import { useForm } from "react-hook-form";
+import { Divider } from "@/components/Divider";
+import { useState } from "react";
+import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useIsFocused } from "@react-navigation/native";
-import { ImageManipulator } from "expo-image-manipulator";
-import { Image as ImageType } from "@/types";
-import { handleError, renderToBase64 } from "@/helper";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
-import { EstimationData, estimationSchema } from "@/schemas/serving";
-
-import supabase from "@/utils/supabase";
+import { ManualData, manualSchema } from "@/schemas/insert/manual";
 
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import Header from "@/components/Header";
-import EstimationImage from "@/components/Estimation/Image";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertProduct from "@/mutations/useInsertProduct";
-import useInsertGenerative from "@/mutations/useInsertGenerative";
-import Tabs from "@/components/Tabs";
-import { Divider } from "@/components/Divider";
+import ButtonOverlay from "@/components/Button/Overlay";
 
 export default function PageEstimationManual() {
-  const focus = useIsFocused();
   const router = useRouter();
 
-  const initialImage = useLocalSearchParams<{
-    uri?: string;
-    width?: string;
-    height?: string;
-  }>();
-
-  const { uri, width, height } = initialImage;
-
   const [saving, setSaving] = useState(false);
-  const [image, setImage] = useState<ImageType | null>(
-    uri && width && height
-      ? {
-          uri,
-          width: parseInt(width),
-          height: parseInt(height),
-        }
-      : null
-  );
-
-  const [smallImage, setSmallImage] = useState<string | null>(null);
-  const [largeImage, setLargeImage] = useState<string | null>(null);
 
   const insertEntry = useInsertEntry();
   const insertProduct = useInsertProduct();
-  const insertGenerative = useInsertGenerative();
 
-  const { control, setError, handleSubmit } = useForm<EstimationData>({
-    resolver: zodResolver(estimationSchema),
+  const { control, handleSubmit } = useForm<ManualData>({
+    resolver: zodResolver(manualSchema),
+    defaultValues: {
+      calorie_100g: 0,
+      protein_100g: 0,
+      carbohydrate_100g: 0,
+      fat_100g: 0,
+      fat_saturated_100g: 0,
+      fat_unsaturated_100g: 0,
+      fat_trans_100g: 0,
+      carbohydrate_sugar_100g: 0,
+      fiber_100g: 0,
+      sodium_100g: 0,
+      iron_100g: 0,
+      potassium_100g: 0,
+      calcium_100g: 0,
+      cholesterol_100g: 0,
+    },
   });
 
-  const handleResize = useCallback(async () => {
-    if (!image) {
-      return;
-    }
-
-    console.log("[DEVICE] Manipulating picture...");
-
-    const smallManipulator = ImageManipulator.manipulate(image.uri);
-    const largeManipulator = ImageManipulator.manipulate(image.uri);
-
-    const isLandscape = image.width > image.height;
-
-    smallManipulator.resize({
-      width: isLandscape ? 512 : null,
-      height: isLandscape ? null : 512,
-    });
-
-    largeManipulator.resize({
-      width: isLandscape ? 1440 : null,
-      height: isLandscape ? null : 1440,
-    });
-
-    const [imageBase64Small, imageBase64Large] = await Promise.all([
-      renderToBase64(smallManipulator, true),
-      renderToBase64(largeManipulator, false),
-    ]);
-
-    setSmallImage(imageBase64Small);
-    setLargeImage(imageBase64Large);
-
-    console.log("[DEVICE] Picture manipulated");
-  }, [image]);
-
-  useEffect(() => {
-    handleResize();
-  }, [handleResize]);
-
-  const validateSave = (data: EstimationData) => {
-    if (image) {
-      return true;
-    }
-
-    if (!data.title || data.title.trim() === "") {
-      setError("title", {
-        type: "manual",
-        message: `Een titel is verplicht als er geen afbeelding is geselecteerd`,
-      });
-
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleSave = async (data: EstimationData) => {
-    // TODO: This should probably be done within ZOD
-    if (!validateSave(data)) {
-      return;
-    }
-
+  const handleSave = async (data: ManualData) => {
     setSaving(true);
 
     const product = await insertProduct.mutateAsync({
-      title: data.title ?? null,
-      image: null,
+      type: "manual",
       brand: null,
       barcode: null,
       options: null,
-      estimated: true,
+      estimated: false,
 
       icon_id: null,
-      calcium_100g: null,
-      calorie_100g: null,
-      carbohydrate_100g: null,
-      carbohydrate_sugar_100g: null,
-      cholesterol_100g: null,
-      fat_100g: null,
-      fat_saturated_100g: null,
-      fat_trans_100g: null,
-      fat_unsaturated_100g: null,
-      fiber_100g: null,
-      iron_100g: null,
-      potassium_100g: null,
-      protein_100g: null,
-      sodium_100g: null,
 
-      serving_gram: null,
-      serving_original: null,
-      serving_original_unit: null,
+      serving_gram: 100,
+      serving_original: 1,
+      serving_original_unit: "100-gram",
 
-      quantity_gram: null,
-      quantity_original: null,
-      quantity_original_unit: null,
+      quantity_gram: 100,
+      quantity_original: 1,
+      quantity_original_unit: "g",
+      ...data,
     });
 
-    const entryPromise = insertEntry.mutateAsync({
+    await insertEntry.mutateAsync({
       meal_id: null,
       product_id: product.uuid,
-      consumed_gram: null,
-      consumed_option: null,
-      consumed_quantity: null,
+      consumed_gram: 100,
+      consumed_option: "g",
+      consumed_quantity: 1,
     });
-
-    const generativePromise = insertGenerative.mutateAsync({
-      image: !!image,
-      content: data.content ?? null,
-      product_id: product.uuid,
-    });
-
-    const [generative] = await Promise.all([generativePromise, entryPromise]);
-
-    if (!image) {
-      console.log("[DEVICE] No image has been selected so skipping upload");
-
-      router.replace("/");
-
-      return;
-    }
-
-    await Promise.all([
-      uploadImage(`${generative.uuid}-small`, smallImage!),
-      uploadImage(`${generative.uuid}`, largeImage!),
-    ]);
-
-    console.log("[DEVICE] All images uploaded");
 
     router.replace("/");
   };
-
-  const uploadImage = async (name: string, base64: string) => {
-    const content = decode(base64);
-    const contentType = "image/jpeg";
-
-    const { error } = await supabase.storage
-      .from("generative")
-      .upload(name, content, {
-        contentType,
-      });
-
-    handleError(error);
-  };
-
-  useEffect(() => {
-    if (focus) {
-      return;
-    }
-
-    setSmallImage(null);
-    setLargeImage(null);
-  }, [focus]);
 
   return (
     <View
@@ -215,7 +82,7 @@ export default function PageEstimationManual() {
     >
       <Header
         title="Handmatig inschatten"
-        content="Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro’s handmatig in te vullen, dit is geen product"
+        content="Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
       />
 
       <View style={{ gap: 48 }}>
@@ -230,36 +97,41 @@ export default function PageEstimationManual() {
           <View style={{ gap: 18 }}>
             <View style={{ gap: 18, flexDirection: "row" }}>
               <Input
-                name="calorie"
+                type="number-pad"
+                name="calorie_100g"
                 label="Calorieën"
                 suffix="kcal"
                 control={control}
-                placeholder="100"
+                placeholder="0"
               />
 
               <Input
-                name="protein"
+                type="number-pad"
+                name="protein_100g"
                 label="Eiwit"
                 suffix="gram"
                 control={control}
-                placeholder="100"
+                placeholder="0"
               />
             </View>
+
             <View style={{ gap: 18, flexDirection: "row" }}>
               <Input
-                name="carbs"
+                type="number-pad"
+                name="carbohydrate_100g"
                 label="Koolhydraten"
                 suffix="gram"
                 control={control}
-                placeholder="100"
+                placeholder="0"
               />
 
               <Input
-                name="fat"
-                label="Vet"
+                type="number-pad"
+                name="fat_100g"
+                label="Vetten"
                 suffix="gram"
                 control={control}
-                placeholder="100"
+                placeholder="0"
               />
             </View>
           </View>
@@ -268,49 +140,99 @@ export default function PageEstimationManual() {
 
           <View style={{ gap: 16 }}>
             <Input
-              name="fat_saturated"
+              type="number-pad"
+              name="fat_saturated_100g"
               label="Verzadigd vet"
               suffix="gram"
               control={control}
-              placeholder="100"
+              placeholder="0"
             />
 
             <Input
-              name="fat_unsaturated"
+              type="number-pad"
+              name="fat_unsaturated_100g"
               label="Onverzadigd vet"
               suffix="gram"
               control={control}
-              placeholder="100"
+              placeholder="0"
             />
 
             <Input
-              name="carbohydrate_sugar"
+              type="number-pad"
+              name="fat_trans_100g"
+              label="Transvet"
+              suffix="gram"
+              control={control}
+              placeholder="0"
+            />
+
+            <Input
+              type="number-pad"
+              name="carbohydrate_sugar_100g"
               label="Suiker"
               suffix="gram"
               control={control}
-              placeholder="100"
+              placeholder="0"
             />
 
             <Input
-              name="fiber"
+              type="number-pad"
+              name="fiber_100g"
               label="Vezels"
               suffix="gram"
               control={control}
-              placeholder="100"
+              placeholder="0"
             />
 
             <Input
-              name="sodium"
+              type="number-pad"
+              name="sodium_100g"
               label="Zout"
               suffix="gram"
               control={control}
-              placeholder="100"
+              placeholder="0"
+            />
+
+            <Input
+              type="number-pad"
+              name="iron_100g"
+              label="IJzer"
+              suffix="mg"
+              control={control}
+              placeholder="0"
+            />
+
+            <Input
+              type="number-pad"
+              name="potassium_100g"
+              label="Kalium"
+              suffix="gram"
+              control={control}
+              placeholder="0"
+            />
+
+            <Input
+              type="number-pad"
+              name="calcium_100g"
+              label="Calcium"
+              suffix="gram"
+              control={control}
+              placeholder="0"
+            />
+
+            <Input
+              type="number-pad"
+              name="cholesterol_100g"
+              label="Cholesterol"
+              suffix="mg"
+              control={control}
+              placeholder="0"
             />
           </View>
         </View>
 
-        <Button
-          title="Product opslaan"
+        <ButtonOverlay
+          title="Inschatting opslaan"
           onPress={handleSubmit(handleSave)}
           loading={saving}
           disabled={saving}

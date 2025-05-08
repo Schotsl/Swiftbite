@@ -104,7 +104,7 @@ export default function Input({
                   }}
                 >
                   <TextInput
-                    value={value ? value.toString() : ""}
+                    value={value !== undefined ? value.toString() : ""}
                     style={{
                       flex: 1,
                       zIndex: 1,
