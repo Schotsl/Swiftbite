@@ -6,7 +6,9 @@ export type Option = {
   gram: number;
 };
 
-export type Product = Tables<"product">;
+export type Product = Tables<"product"> & {
+  options: Option[];
+};
 
 export type ProductInsert = Omit<
   Product,

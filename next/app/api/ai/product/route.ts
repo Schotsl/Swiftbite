@@ -2,7 +2,7 @@ import { getUser, supabase } from "@/utils/supabase";
 import { after, NextRequest, NextResponse } from "next/server";
 import { generateOptions, searchProduct } from "@/utils/openai";
 import { Product } from "@/types";
-import { handleError } from "@/helper";
+import { generateSlug, handleError } from "@/helper";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
@@ -15,41 +15,41 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit",
+    "quantity_original_unit"
   );
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!quantity_original) {
     return NextResponse.json(
       { error: "Please provide a quantity_original" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!quantity_original_unit) {
     return NextResponse.json(
       { error: "Please provide a quantity_original_unit" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     searchProduct(
       user!,
       { title, lang, brand, quantity_original, quantity_original_unit },
-      request.signal,
+      request.signal
     ),
   ]);
 
@@ -69,8 +69,12 @@ export async function GET(request: NextRequest) {
   const product: Product = {
     uuid: crypto.randomUUID(),
     type: "generative",
-    options: productOptions,
     favorite: false,
+    options: productOptions.map((option) => ({
+      value: generateSlug(option.title),
+      title: option.title,
+      gram: option.gram,
+    })),
 
     icon_id: null,
     user_id: user!,
