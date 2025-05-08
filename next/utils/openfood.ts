@@ -1,6 +1,6 @@
 import { ProductV2 } from "@openfoodfacts/openfoodfacts-nodejs";
-import { generateSlug, roundNumber } from "@/helper";
 import { Option, ProductInsert } from "@/types";
+import { generateSlug, roundNumber } from "@/helper";
 import { generateOptions, normalizeQuantity } from "./openai";
 
 export function getTitle(product: ProductV2, lang: string) {
@@ -32,7 +32,7 @@ export function getTitle(product: ProductV2, lang: string) {
 export async function mapProduct(
   user: string,
   product: ProductV2,
-  lang: string,
+  lang: string
 ): Promise<ProductInsert & { options: Option[] }> {
   const { nutriments } = product;
 
@@ -67,7 +67,7 @@ export async function mapProduct(
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans,
+    nutritionFats - nutritionSaturated - nutritionTrans
   );
 
   return {
