@@ -8,14 +8,16 @@ type entryDataType = {
   openfood?: string;
 };
 
-export default function entryData({ openfood }: entryDataType) {
+export default function entryData<T extends EntryWithProduct>({
+  openfood,
+}: entryDataType) {
   return queryOptions({
     queryKey: ["entryData", openfood],
     queryFn: async () => {
       const { error, data } = await supabase
         .from("entry")
         .select(
-          `*,product:product_id (*),meal:meal_id (*,meal_product (*,product (*))))`,
+          `*,product:product_id (*),meal:meal_id (*,meal_product (*,product (*))))`
         )
         .order("created_at", { ascending: false });
 
@@ -23,7 +25,7 @@ export default function entryData({ openfood }: entryDataType) {
 
       // For some reason the Supabase parser give a error type but it works fine otherwise
       const dataUnknown = data as unknown;
-      const dataParsed = dataUnknown as EntryWithProduct[];
+      const dataParsed = dataUnknown as T[];
 
       return dataParsed;
     },

@@ -12,7 +12,7 @@ import { MacroData } from "./schemas/personal/goal";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean,
+  compressed: boolean
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -44,7 +44,7 @@ export const rowTimeout = <T>(rowKey: string, rowMap: RowMap<T>) => {
 };
 
 export const getOptions = (
-  product?: Product | ProductInsert,
+  product?: Product | ProductInsert
 ): OptionWithGram[] => {
   let options = [
     {
@@ -93,7 +93,7 @@ export const getOptions = (
 export const singleMacroToAbsolute = (
   type: keyof MacroData,
   value: number,
-  calories: number,
+  calories: number
 ) => {
   let divider = 4;
 
@@ -112,7 +112,7 @@ export const singleMacroToAbsolute = (
 // TODO: Might wanna rename this to "macroToAbsolute" and "macrosToAbsolute" but I'd have to double check every where in the codebase for proper single and plural usage.
 export const macroToAbsolute = (
   macro: MacroData,
-  calories: number,
+  calories: number
 ): MacroAbsolute => {
   return {
     fat: singleMacroToAbsolute("fat", macro.fat, calories),
@@ -126,7 +126,7 @@ export const getRange = (date = new Date()) => {
   const startDate = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate(),
+    date.getDate()
   );
 
   const endDate = new Date(
@@ -136,7 +136,7 @@ export const getRange = (date = new Date()) => {
     23,
     59,
     59,
-    999,
+    999
   );
 
   return {
@@ -148,7 +148,7 @@ export const getRange = (date = new Date()) => {
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true,
+  rounded = true
 ): MacroAbsolute & { gram: number } {
   const gram = serving.gram || 0;
 
@@ -172,7 +172,7 @@ export function getMacrosFromProduct(
 }
 
 export function getMacrosFromMeal(
-  meal: MealWithProduct,
+  meal: MealWithProduct
 ): MacroAbsolute & { gram: number } {
   const products = meal.meal_product;
   const macros = products.reduce(
@@ -199,7 +199,7 @@ export function getMacrosFromMeal(
       carbs: 0,
       protein: 0,
       calories: 0,
-    },
+    }
   );
 
   return macros;
@@ -212,4 +212,22 @@ export const transformDate = (date: Date | string | number): string => {
     month: "long",
     year: "numeric",
   });
+};
+
+export const transformImage = (
+  uri?: string,
+  width?: string,
+  height?: string
+) => {
+  const complete = uri && width && height;
+
+  if (complete) {
+    return {
+      uri,
+      width: parseInt(width),
+      height: parseInt(height),
+    };
+  }
+
+  return null;
 };

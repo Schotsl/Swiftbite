@@ -1,32 +1,42 @@
-import { useState } from "react";
-import { ScrollView } from "react-native";
-
 import Tabs from "@/components/Tabs";
-import PageEstimationAutomatic from "@/components/Page/Estimation/Automatic";
+import entryData from "@/queries/entryData";
+
 import PageEstimationManual from "@/components/Page/Estimation/Manual";
+import PageEstimationAutomatic from "@/components/Page/Estimation/Automatic";
+
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { ScrollView } from "react-native";
+import { transformImage } from "@/helper";
 import { useLocalSearchParams } from "expo-router";
+import { EntryWithProductManual } from "@/types";
 
 export default function Add2Preview() {
-  const { uri, width, height } = useLocalSearchParams<{
+  const {
+    uri,
+    width,
+    height,
+    entry: entryId,
+  } = useLocalSearchParams<{
     uri?: string;
     width?: string;
     height?: string;
+    entry?: string;
   }>();
 
-  const image =
-    uri && width && height
-      ? {
-          uri,
-          width: parseInt(width),
-          height: parseInt(height),
-        }
-      : null;
+  const { data: entry } = useQuery({
+    ...entryData<EntryWithProductManual>({}),
+    select: (entries) => entries.find((entry) => entry.uuid === entryId),
+  });
 
-  const [tab, setTab] = useState("automatic");
+  const image = transformImage(uri, width, height);
+  const product = entry?.product;
+
+  const [tab, setTab] = useState(product ? "manual" : "automatic");
 
   return (
     <ScrollView>
-      {!image && (
+      {!image && !product && (
         <Tabs
           tabs={[
             {
@@ -46,7 +56,15 @@ export default function Add2Preview() {
       {tab === "automatic" ? (
         <PageEstimationAutomatic />
       ) : (
-        <PageEstimationManual />
+        <PageEstimationManual
+          title={product ? product.title : "Handmatig inschatten"}
+          product={product}
+          content={
+            product
+              ? undefined
+              : "Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
+          }
+        />
       )}
     </ScrollView>
   );

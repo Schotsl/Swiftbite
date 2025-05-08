@@ -1,7 +1,9 @@
 import { z } from "zod";
 
 export const manualSchema = z.object({
-  title: z.string({ required_error: "Voer een titel in" }),
+  title: z
+    .string({ required_error: "Voer een titel in" })
+    .min(3, "Voer minimaal 3 karakters in"),
 
   calorie_100g: z.coerce
     .number({ required_error: "Voer calorieën in" })

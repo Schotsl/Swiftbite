@@ -4,22 +4,33 @@ import { Divider } from "@/components/Divider";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ProductManual } from "@/types";
 import { ManualData, manualSchema } from "@/schemas/insert/manual";
 
 import Input from "@/components/Input";
-import Button from "@/components/Button";
 import Header from "@/components/Header";
-import useInsertEntry from "@/mutations/useInsertEntry";
-import useInsertProduct from "@/mutations/useInsertProduct";
 import ButtonOverlay from "@/components/Button/Overlay";
 
-export default function PageEstimationManual() {
+import useInsertEntry from "@/mutations/useInsertEntry";
+import useInsertProduct from "@/mutations/useInsertProduct";
+import useUpdateProduct from "@/mutations/useUpdateProduct";
+
+export default function PageEstimationManual({
+  title,
+  content,
+  product,
+}: {
+  title: string;
+  content?: string;
+  product?: ProductManual;
+}) {
   const router = useRouter();
 
   const [saving, setSaving] = useState(false);
 
   const insertEntry = useInsertEntry();
   const insertProduct = useInsertProduct();
+  const updateProduct = useUpdateProduct();
 
   const { control, handleSubmit } = useForm<ManualData>({
     resolver: zodResolver(manualSchema),
@@ -27,24 +38,36 @@ export default function PageEstimationManual() {
       calorie_100g: 0,
       protein_100g: 0,
       carbohydrate_100g: 0,
+      carbohydrate_sugar_100g: 0,
       fat_100g: 0,
+      fat_trans_100g: 0,
       fat_saturated_100g: 0,
       fat_unsaturated_100g: 0,
-      fat_trans_100g: 0,
-      carbohydrate_sugar_100g: 0,
+      iron_100g: 0,
       fiber_100g: 0,
       sodium_100g: 0,
-      iron_100g: 0,
-      potassium_100g: 0,
       calcium_100g: 0,
+      potassium_100g: 0,
       cholesterol_100g: 0,
+      ...product,
     },
   });
 
   const handleSave = async (data: ManualData) => {
     setSaving(true);
 
-    const product = await insertProduct.mutateAsync({
+    if (product) {
+      await updateProduct.mutateAsync({
+        ...product,
+        ...data,
+      });
+
+      router.replace("/");
+
+      return;
+    }
+
+    const insert = await insertProduct.mutateAsync({
       type: "manual",
       brand: null,
       barcode: null,
@@ -55,7 +78,7 @@ export default function PageEstimationManual() {
 
       serving_gram: 100,
       serving_original: 1,
-      serving_original_unit: "100-gram",
+      serving_original_unit: "g",
 
       quantity_gram: 100,
       quantity_original: 1,
@@ -65,7 +88,7 @@ export default function PageEstimationManual() {
 
     await insertEntry.mutateAsync({
       meal_id: null,
-      product_id: product.uuid,
+      product_id: insert.uuid,
       consumed_gram: 100,
       consumed_option: "g",
       consumed_quantity: 1,
@@ -80,18 +103,17 @@ export default function PageEstimationManual() {
         padding: 32,
       }}
     >
-      <Header
-        title="Handmatig inschatten"
-        content="Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
-      />
+      <Header title={title} content={content} />
 
       <View style={{ gap: 48 }}>
-        <Input
-          name="title"
-          label="Titel"
-          control={control}
-          placeholder="Wrap"
-        />
+        {!product && (
+          <Input
+            name="title"
+            label="Titel"
+            control={control}
+            placeholder="Wrap"
+          />
+        )}
 
         <View style={{ gap: 24 }}>
           <View style={{ gap: 18 }}>
@@ -230,14 +252,14 @@ export default function PageEstimationManual() {
             />
           </View>
         </View>
-
-        <ButtonOverlay
-          title="Inschatting opslaan"
-          onPress={handleSubmit(handleSave)}
-          loading={saving}
-          disabled={saving}
-        />
       </View>
+
+      <ButtonOverlay
+        title="Inschatting opslaan"
+        onPress={handleSubmit(handleSave)}
+        loading={saving}
+        disabled={saving}
+      />
     </View>
   );
 }

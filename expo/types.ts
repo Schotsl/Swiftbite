@@ -4,6 +4,25 @@ import { Weight } from "./schemas/personal/health";
 import { ServingData } from "./schemas/serving";
 export type Product = Tables<"product">;
 
+export type ProductManual = Product & {
+  type: "manual";
+  title: string;
+  calorie_100g: number;
+  protein_100g: number;
+  carbohydrate_100g: number;
+  carbohydrate_sugar_100g: number;
+  fat_100g: number;
+  fat_trans_100g: number;
+  fat_saturated_100g: number;
+  fat_unsaturated_100g: number;
+  iron_100g: number;
+  fiber_100g: number;
+  sodium_100g: number;
+  calcium_100g: number;
+  potassium_100g: number;
+  cholesterol_100g: number;
+};
+
 export type ProductSearch = {
   title: string;
   brand: string;
@@ -79,6 +98,10 @@ export type Entry = Tables<"entry">;
 export type EntryWithProduct = Entry & {
   product?: Product;
   meal?: MealWithProduct;
+};
+
+export type EntryWithProductManual = Entry & {
+  product: ProductManual;
 };
 
 export type Meal = Tables<"meal">;
