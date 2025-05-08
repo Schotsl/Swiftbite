@@ -20,16 +20,16 @@ import ProductInfo from "@/components/Product/Info";
 import Input from "@/components/Input";
 import InputDropdown from "@/components/Input/Dropdown";
 import ProductImpact from "@/components/Product/Impact";
+import useUpdateProduct from "@/mutations/useUpdateProduct";
 
 export type PageProductProps = {
   serving?: ServingData | null;
   // TODO: Could probably be null instead of undefined also
-  product?: Product | ProductInsert | null;
+  product: Product;
 
   onSave: (product: Product | ProductInsert, serving: ServingData) => void;
   onDelete?: () => void;
   onRepeat?: () => void;
-  onFavorite?: () => void;
 };
 
 export default function PageProduct({
@@ -38,11 +38,9 @@ export default function PageProduct({
   onSave,
   onDelete,
   onRepeat,
-  onFavorite,
 }: PageProductProps) {
   const focus = useIsFocused();
-
-  const [saving, setSaving] = useState(false);
+  const updateProduct = useUpdateProduct();
 
   const { title, brand, quantity_original, quantity_original_unit, barcode } =
     useLocalSearchParams<{
@@ -66,7 +64,10 @@ export default function PageProduct({
     enabled: !productLocal,
   });
 
-  const product = productLocal || productOpenfood;
+  const product = productLocal || productOpenfood!;
+
+  const [saving, setSaving] = useState(false);
+  const [favorite, setFavorite] = useState(product.favorite);
 
   const { watch, control, handleSubmit, reset, setValue } =
     useForm<ServingInput>({
@@ -85,6 +86,17 @@ export default function PageProduct({
       });
     }
   }, [focus, reset, servingLocal]);
+
+  const handleFavorite = () => {
+    setFavorite((previous) => {
+      updateProduct.mutate({
+        ...product,
+        favorite: !previous,
+      });
+
+      return !previous;
+    });
+  };
 
   const handleSave = async (data: ServingInput) => {
     setSaving(true);
@@ -115,11 +127,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions(product);
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity",
+      (option) => option.value === "quantity"
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving",
+      (option) => option.value === "serving"
     );
 
     if (optionsServing) {
@@ -133,8 +145,9 @@ export default function PageProduct({
     return optionsObject;
   }, [product, setValue]);
 
-  const quantity = watch("quantity");
   const option = watch("option");
+  const quantity = watch("quantity");
+
   const macros = useMemo(() => {
     const selected = options.find(({ value }) => value === option)!;
     const gram = selected.gram * quantity;
@@ -164,9 +177,10 @@ export default function PageProduct({
             small={true}
             title={product!.title!}
             content={product?.brand || "No brand"}
+            favorite={favorite}
             onDelete={onDelete}
             onRepeat={onRepeat}
-            onFavorite={onFavorite}
+            onFavorite={handleFavorite}
           />
 
           <ProductInfo items={info} />

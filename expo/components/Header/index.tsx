@@ -6,9 +6,10 @@ import ButtonSmall, { ButtonSmallProps } from "../Button/Small";
 
 type HeaderProps = {
   title: string;
-  small?: boolean;
   content?: string | null;
   buttons?: ButtonSmallProps[];
+  small?: boolean;
+  favorite?: boolean;
   onDelete?: () => void;
   onRepeat?: () => void;
   onFavorite?: () => void;
@@ -16,9 +17,10 @@ type HeaderProps = {
 
 export default function Header({
   title,
-  small = false,
   content,
   buttons,
+  small = false,
+  favorite = false,
   onDelete,
   onRepeat,
   onFavorite,
@@ -45,7 +47,15 @@ export default function Header({
 
         {onDelete && <ButtonSmall icon="trash" onPress={onDelete} />}
 
-        {onFavorite && <ButtonSmall icon="heart" onPress={onFavorite} />}
+        {onFavorite && (
+          <ButtonSmall
+            icon="heart"
+            style={{
+              backgroundColor: favorite ? "red" : "transparent",
+            }}
+            onPress={onFavorite}
+          />
+        )}
 
         {onRepeat && <ButtonSmall icon="repeat" onPress={onRepeat} />}
       </View>
