@@ -32,12 +32,12 @@ import generateOptionsPrompt from "@/prompts/generate-options";
 import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
 import normalizeTitlePrompt from "@/prompts/normalize-meal";
 import normalizeProductPrompt from "@/prompts/normalize-product";
+import searchProductsPrompt from "@/prompts/search-products";
 import searchProductCrawlerPrompt from "@/prompts/search-product-crawler";
 import searchProductStructurePrompt from "@/prompts/search-product-structure";
-import searchProductsCrawlerPrompt from "@/prompts/search-products-crawler";
-import searchProductsStructurePrompt from "@/prompts/search-products-structure";
 import estimateVisualPrompt from "@/prompts/estimate-visual";
 import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
+import { google } from "@ai-sdk/google";
 
 export async function estimateNutrition(
   user: string,
@@ -46,7 +46,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -109,10 +109,10 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
-  const model = openai("gpt-4o-mini");
+  const model = google("gemini-2.5-pro-exp-03-25");
 
   const messages: CoreMessage[] = [];
 
@@ -174,7 +174,7 @@ export async function searchProduct(
     quantity_original: string;
     quantity_original_unit: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductData | null> {
   const searchTask = "search-product";
   const searchModel = openai.responses("gpt-4.1-mini");
@@ -248,10 +248,13 @@ export async function searchProduct(
 export async function searchProducts(
   user: string,
   data: {
-    query: string;
     lang: string;
+    query: string;
+    google: string;
+    openfood: string;
+    fatsecret: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -259,35 +262,8 @@ export async function searchProducts(
     AsyncIterable<ProductSearchData> & ReadableStream<ProductSearchData>
   >
 > {
-  const searchTask = "search-products";
-  const searchModel = openai.responses("gpt-4.1-mini");
-
-  const searchResponse = await generateText({
-    model: searchModel,
-    abortSignal: signal,
-    messages: [
-      {
-        role: "system",
-        content: searchProductsCrawlerPrompt,
-      },
-      {
-        role: "user",
-        content: JSON.stringify(data),
-      },
-    ],
-    tools: {
-      web_search_preview: openai.tools.webSearchPreview({
-        searchContextSize: "low",
-        userLocation: {
-          type: "approximate",
-          country: data.lang,
-        },
-      }),
-    },
-  });
-
   const structureTask = "search-products-structure";
-  const structureModel = openai("gpt-4.1-nano");
+  const structureModel = openai("gpt-4.1");
 
   const structureStream = streamObject({
     model: structureModel,
@@ -297,11 +273,27 @@ export async function searchProducts(
     messages: [
       {
         role: "system",
-        content: searchProductsStructurePrompt,
+        content: searchProductsPrompt,
       },
       {
         role: "user",
-        content: searchResponse.text,
+        content: JSON.stringify({
+          lang: "Dutch",
+          query: data.query,
+          location: "Amsterdam",
+        }),
+      },
+      {
+        role: "system",
+        content: `Open Food Facts results: ${data.openfood}`,
+      },
+      {
+        role: "system",
+        content: `Google results: ${data.google}`,
+      },
+      {
+        role: "system",
+        content: `Fatsecret results: ${data.fatsecret}`,
       },
     ],
   });
@@ -311,13 +303,6 @@ export async function searchProducts(
     const usage = await structureStream.usage;
 
     await Promise.all([
-      insertUsage({
-        user,
-        task: searchTask,
-        model: searchModel.modelId,
-        usage: searchResponse.usage,
-      }),
-
       insertUsage({
         user,
         task: structureTask,
@@ -336,7 +321,7 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-meal";
   const model = "gpt-4.1-mini";
@@ -382,7 +367,7 @@ export async function normalizeTitle(
   data: {
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-title";
   const model = "gpt-4.1-mini";
@@ -430,7 +415,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<QuantitySchema> {
   // If no combined or unit is provided there is no way to know the original unit
   if (!data.combined && !data.unit) {
@@ -481,7 +466,7 @@ export async function generateOptions(
     lang: string;
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<OptionData[]> {
   const task = "generate-options";
   const model = "gpt-4.1-nano";

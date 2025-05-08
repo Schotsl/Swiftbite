@@ -100,16 +100,22 @@ export const productSchema = nutritionSchema.extend({
 export type ProductData = z.infer<typeof productSchema>;
 
 export const productSearchSchema = z.object({
-  title: z.string().describe("Product title"),
-  brand: z.string().describe("Product brand").nullable(),
+  title: z
+    .string()
+    .describe("Product title, this shouldn't include the quantity or unit"),
+  brand: z.string().describe("Product brand"),
   quantity_original: z
     .number()
-    .describe("Quantity of the product in the packaging"),
+    .describe("Quantity of the product in the packaging")
+    .optional()
+    .nullable(),
   quantity_original_unit: z
     .string()
     .describe(
       `Unit for the quantity of the product in the packaging (e.g., g, ml)`
-    ),
+    )
+    .optional()
+    .nullable(),
 });
 
 export type ProductSearchData = z.infer<typeof productSearchSchema>;
