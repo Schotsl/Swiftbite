@@ -14,14 +14,11 @@ import ButtonOverlay from "@/components/Button/Overlay";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useUpdateProduct from "@/mutations/useUpdateProduct";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function PageEstimationManual({
-  title,
-  content,
   product,
 }: {
-  title: string;
-  content?: string;
   product?: ProductManual;
 }) {
   const router = useRouter();
@@ -98,164 +95,174 @@ export default function PageEstimationManual({
   };
 
   return (
-    <View
-      style={{
-        padding: 32,
-      }}
-    >
-      <Header title={title} content={content} />
+    <View>
+      <ScrollView
+        style={{
+          padding: 32,
+        }}
+      >
+        <Header
+          title={product ? product.title : "Handmatig inschatten"}
+          content={
+            product
+              ? undefined
+              : "Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
+          }
+        />
 
-      <View style={{ gap: 48 }}>
-        {!product && (
-          <Input
-            name="title"
-            label="Titel"
-            control={control}
-            placeholder="Wrap"
-          />
-        )}
+        <View style={{ gap: 48 }}>
+          {!product && (
+            <Input
+              name="title"
+              label="Titel"
+              control={control}
+              placeholder="Wrap"
+            />
+          )}
 
-        <View style={{ gap: 24 }}>
-          <View style={{ gap: 18 }}>
-            <View style={{ gap: 18, flexDirection: "row" }}>
+          <View style={{ gap: 24 }}>
+            <View style={{ gap: 18 }}>
+              <View style={{ gap: 18, flexDirection: "row" }}>
+                <Input
+                  type="number-pad"
+                  name="calorie_100g"
+                  label="Calorieën"
+                  suffix="kcal"
+                  control={control}
+                  placeholder="0"
+                />
+
+                <Input
+                  type="number-pad"
+                  name="protein_100g"
+                  label="Eiwit"
+                  suffix="gram"
+                  control={control}
+                  placeholder="0"
+                />
+              </View>
+
+              <View style={{ gap: 18, flexDirection: "row" }}>
+                <Input
+                  type="number-pad"
+                  name="carbohydrate_100g"
+                  label="Koolhydraten"
+                  suffix="gram"
+                  control={control}
+                  placeholder="0"
+                />
+
+                <Input
+                  type="number-pad"
+                  name="fat_100g"
+                  label="Vetten"
+                  suffix="gram"
+                  control={control}
+                  placeholder="0"
+                />
+              </View>
+            </View>
+
+            <Divider />
+
+            <View style={{ gap: 16 }}>
               <Input
                 type="number-pad"
-                name="calorie_100g"
-                label="Calorieën"
-                suffix="kcal"
+                name="fat_saturated_100g"
+                label="Verzadigd vet"
+                suffix="gram"
                 control={control}
                 placeholder="0"
               />
 
               <Input
                 type="number-pad"
-                name="protein_100g"
-                label="Eiwit"
+                name="fat_unsaturated_100g"
+                label="Onverzadigd vet"
                 suffix="gram"
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="number-pad"
+                name="fat_trans_100g"
+                label="Transvet"
+                suffix="gram"
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="number-pad"
+                name="carbohydrate_sugar_100g"
+                label="Suiker"
+                suffix="gram"
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="number-pad"
+                name="fiber_100g"
+                label="Vezels"
+                suffix="gram"
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="number-pad"
+                name="sodium_100g"
+                label="Zout"
+                suffix="gram"
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="number-pad"
+                name="iron_100g"
+                label="IJzer"
+                suffix="mg"
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="number-pad"
+                name="potassium_100g"
+                label="Kalium"
+                suffix="gram"
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="number-pad"
+                name="calcium_100g"
+                label="Calcium"
+                suffix="gram"
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="number-pad"
+                name="cholesterol_100g"
+                label="Cholesterol"
+                suffix="mg"
                 control={control}
                 placeholder="0"
               />
             </View>
-
-            <View style={{ gap: 18, flexDirection: "row" }}>
-              <Input
-                type="number-pad"
-                name="carbohydrate_100g"
-                label="Koolhydraten"
-                suffix="gram"
-                control={control}
-                placeholder="0"
-              />
-
-              <Input
-                type="number-pad"
-                name="fat_100g"
-                label="Vetten"
-                suffix="gram"
-                control={control}
-                placeholder="0"
-              />
-            </View>
-          </View>
-
-          <Divider />
-
-          <View style={{ gap: 16 }}>
-            <Input
-              type="number-pad"
-              name="fat_saturated_100g"
-              label="Verzadigd vet"
-              suffix="gram"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="fat_unsaturated_100g"
-              label="Onverzadigd vet"
-              suffix="gram"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="fat_trans_100g"
-              label="Transvet"
-              suffix="gram"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="carbohydrate_sugar_100g"
-              label="Suiker"
-              suffix="gram"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="fiber_100g"
-              label="Vezels"
-              suffix="gram"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="sodium_100g"
-              label="Zout"
-              suffix="gram"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="iron_100g"
-              label="IJzer"
-              suffix="mg"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="potassium_100g"
-              label="Kalium"
-              suffix="gram"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="calcium_100g"
-              label="Calcium"
-              suffix="gram"
-              control={control}
-              placeholder="0"
-            />
-
-            <Input
-              type="number-pad"
-              name="cholesterol_100g"
-              label="Cholesterol"
-              suffix="mg"
-              control={control}
-              placeholder="0"
-            />
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       <ButtonOverlay
-        title="Inschatting opslaan"
+        tab={!product}
+        title={product ? "Inschatting wijzigen" : "Inschatting opslaan"}
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}

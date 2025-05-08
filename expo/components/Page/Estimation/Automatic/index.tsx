@@ -1,47 +1,38 @@
 import { View } from "react-native";
 import { decode } from "base64-arraybuffer";
 import { useForm } from "react-hook-form";
+import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { ImageManipulator } from "expo-image-manipulator";
-import { Image as ImageType } from "@/types";
-import { handleError, renderToBase64 } from "@/helper";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import { EstimationData, estimationSchema } from "@/schemas/serving";
+import { handleError, renderToBase64, transformImage } from "@/helper";
 
 import supabase from "@/utils/supabase";
 
 import Input from "@/components/Input";
-import Button from "@/components/Button";
 import Header from "@/components/Header";
 import EstimationImage from "@/components/Estimation/Image";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useInsertGenerative from "@/mutations/useInsertGenerative";
+import ButtonOverlay from "@/components/Button/Overlay";
 
 export default function PageEstimationAutomatic() {
   const focus = useIsFocused();
   const router = useRouter();
 
-  const initialImage = useLocalSearchParams<{
+  const { uri, width, height } = useLocalSearchParams<{
     uri?: string;
     width?: string;
     height?: string;
   }>();
 
-  const { uri, width, height } = initialImage;
+  const image = transformImage(uri, width, height);
 
   const [saving, setSaving] = useState(false);
-  const [image, setImage] = useState<ImageType | null>(
-    uri && width && height
-      ? {
-          uri,
-          width: parseInt(width),
-          height: parseInt(height),
-        }
-      : null
-  );
 
   const [smallImage, setSmallImage] = useState<string | null>(null);
   const [largeImage, setLargeImage] = useState<string | null>(null);
@@ -117,8 +108,8 @@ export default function PageEstimationAutomatic() {
     setSaving(true);
 
     const product = await insertProduct.mutateAsync({
+      type: "generative",
       title: data.title ?? null,
-      image: null,
       brand: null,
       barcode: null,
       options: null,
@@ -206,53 +197,56 @@ export default function PageEstimationAutomatic() {
   }, [focus]);
 
   return (
-    <View
-      style={{
-        padding: 32,
-      }}
-    >
-      <Header
-        title="Automatisch inschatten"
-        content="Dit is een AI-inschatting van de calorieën en macro's van je maaltijd. Controleer het resultaat en pas het zo nodig aan op het volgende scherm."
-      />
-
-      <View style={{ gap: 48 }}>
-        <View style={{ gap: 24 }}>
-          <EstimationImage
-            image={image}
-            required={!!image}
-            // TODO: This should be done with a parameter storing the title or content
-            onAdd={() => router.push("/camera")}
-            onEdit={() => router.push("/camera")}
-            onDelete={() => setImage(null)}
-          />
-
-          <Input
-            name="title"
-            label="Titel"
-            required={!image}
-            placeholder="Wrap"
-            control={control}
-          />
-
-          <Input
-            name="content"
-            label="Beschrijving"
-            content="Informatie die niet makkelijk uit de foto te halen is, is relevant, zoals bijvoorbeeld de inhoud van een wrap."
-            placeholder="Een wrap met kip, sla, tomaat, avocado..."
-            control={control}
-            required={false}
-            multiline
-          />
-        </View>
-
-        <Button
-          title="Product opslaan"
-          onPress={handleSubmit(handleSave)}
-          loading={saving}
-          disabled={saving}
+    <View>
+      <ScrollView
+        style={{
+          padding: 32,
+        }}
+      >
+        <Header
+          title="Automatisch inschatten"
+          content="Dit is een AI-inschatting van de calorieën en macro's van je maaltijd. Controleer het resultaat en pas het zo nodig aan op het volgende scherm."
         />
-      </View>
+
+        <View style={{ gap: 48 }}>
+          <View style={{ gap: 24 }}>
+            <EstimationImage
+              image={image}
+              required={!!image}
+              // TODO: This should be done with a parameter storing the title or content
+              onAdd={() => router.push("/camera")}
+              onEdit={() => router.push("/camera")}
+              onDelete={() => {}}
+            />
+
+            <Input
+              name="title"
+              label="Titel"
+              required={!image}
+              placeholder="Wrap"
+              control={control}
+            />
+
+            <Input
+              name="content"
+              label="Beschrijving"
+              content="Informatie die niet makkelijk uit de foto te halen is, is relevant, zoals bijvoorbeeld de inhoud van een wrap."
+              placeholder="Een wrap met kip, sla, tomaat, avocado..."
+              control={control}
+              required={false}
+              multiline
+            />
+          </View>
+        </View>
+      </ScrollView>
+
+      <ButtonOverlay
+        tab={true}
+        title="Product opslaan"
+        onPress={handleSubmit(handleSave)}
+        loading={saving}
+        disabled={saving}
+      />
     </View>
   );
 }

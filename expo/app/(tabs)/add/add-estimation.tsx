@@ -6,10 +6,10 @@ import PageEstimationAutomatic from "@/components/Page/Estimation/Automatic";
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollView } from "react-native";
 import { transformImage } from "@/helper";
 import { useLocalSearchParams } from "expo-router";
 import { EntryWithProductManual } from "@/types";
+import { View } from "react-native";
 
 export default function Add2Preview() {
   const {
@@ -35,7 +35,7 @@ export default function Add2Preview() {
   const [tab, setTab] = useState(product ? "manual" : "automatic");
 
   return (
-    <ScrollView>
+    <View>
       {!image && !product && (
         <Tabs
           tabs={[
@@ -56,16 +56,8 @@ export default function Add2Preview() {
       {tab === "automatic" ? (
         <PageEstimationAutomatic />
       ) : (
-        <PageEstimationManual
-          title={product ? product.title : "Handmatig inschatten"}
-          product={product}
-          content={
-            product
-              ? undefined
-              : "Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
-          }
-        />
+        <PageEstimationManual product={product} />
       )}
-    </ScrollView>
+    </View>
   );
 }

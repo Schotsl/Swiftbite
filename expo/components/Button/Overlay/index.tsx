@@ -2,13 +2,23 @@ import { View, useWindowDimensions } from "react-native";
 
 import Button, { ButtonProps } from "@/components/Button";
 
-export default function ButtonOverlay({ ...props }: ButtonProps) {
+type ButtonOverlayProps = ButtonProps & {
+  tab?: boolean;
+};
+
+export default function ButtonOverlay({
+  tab = false,
+  ...props
+}: ButtonOverlayProps) {
   const { height } = useWindowDimensions();
+
+  const navHeight = 226;
+  const tabHeight = tab ? 62 : 0;
 
   return (
     <View
       style={{
-        top: height - 214 - 16,
+        top: height - navHeight - tabHeight,
         left: 0,
         right: 0,
         position: "absolute",

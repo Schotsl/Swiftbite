@@ -117,5 +117,9 @@
   },
   "overrides": {
     "@expo/config-plugins": "~9.0.0"
-  }
+  },
+  "trustedDependencies": [
+    "@sentry/cli",
+    "unrs-resolver"
+  ]
 }
