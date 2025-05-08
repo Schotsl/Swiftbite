@@ -99,6 +99,7 @@ export async function estimateNutrition(
   return {
     ...object,
 
+    favorite: false,
     estimated: true,
   };
 }
@@ -246,8 +247,8 @@ export async function searchProduct(
   return {
     ...object,
 
-    image: null,
     icon_id: null,
+    favorite: false,
   };
 }
 

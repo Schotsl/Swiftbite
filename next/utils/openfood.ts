@@ -32,7 +32,7 @@ export function getTitle(product: ProductV2, lang: string) {
 export async function mapProduct(
   user: string,
   product: ProductV2,
-  lang: string,
+  lang: string
 ): Promise<ProductInsert & { options: Option[] }> {
   const { nutriments } = product;
 
@@ -61,12 +61,13 @@ export async function mapProduct(
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans,
+    nutritionFats - nutritionSaturated - nutritionTrans
   );
 
   return {
     title,
     options,
+    favorite: false,
 
     quantity_gram: quantity.quantity_gram,
     quantity_original: quantity.quantity_original,
@@ -77,7 +78,6 @@ export async function mapProduct(
     serving_original_unit: serving.quantity_original_unit,
 
     brand: product.brands,
-    image: product.image_front_url,
     barcode: product.code,
     estimated: false,
 

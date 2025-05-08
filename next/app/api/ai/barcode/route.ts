@@ -17,14 +17,14 @@ export async function GET(request: NextRequest) {
   if (!code) {
     return NextResponse.json(
       { error: "Please provide a code" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
 
   const productMapped = await mapProduct(user!, productOpenfood, lang);
   const productFinished: Product = {
+    type: "barcode",
     uuid: crypto.randomUUID(),
 
     user_id: user!,
