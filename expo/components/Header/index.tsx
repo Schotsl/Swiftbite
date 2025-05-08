@@ -47,17 +47,17 @@ export default function Header({
 
         {onDelete && <ButtonSmall icon="trash" onPress={onDelete} />}
 
+        {onRepeat && <ButtonSmall icon="repeat" onPress={onRepeat} />}
+
         {onFavorite && (
           <ButtonSmall
             icon="heart"
+            onPress={onFavorite}
             style={{
               backgroundColor: favorite ? "red" : "transparent",
             }}
-            onPress={onFavorite}
           />
         )}
-
-        {onRepeat && <ButtonSmall icon="repeat" onPress={onRepeat} />}
       </View>
 
       <HeaderTitle>{title}</HeaderTitle>

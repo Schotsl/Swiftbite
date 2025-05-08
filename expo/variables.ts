@@ -1,4 +1,5 @@
 export default {
+  gapSmall: 16,
   gapLarge: 48,
 
   padding: 32,

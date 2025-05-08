@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
+import { Product } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
-import { Product, ProductInsert } from "@/types";
 import { ScrollView, Text, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { getMacrosFromProduct, getOptions } from "@/helper";
@@ -22,13 +22,13 @@ export type PageProductProps = {
   product: Product;
   serving?: ServingData | null;
 
-  onSave: (product: Product | ProductInsert, serving: ServingData) => void;
+  onSave: (serving: ServingData) => void;
   onDelete?: () => void;
-  onRepeat?: () => void;
+  onRepeat?: (serving: ServingData) => void;
 };
 
 export default function PageProduct({
-  serving,
+  serving: servingProp,
   product,
   onSave,
   onDelete,
@@ -45,8 +45,8 @@ export default function PageProduct({
     useForm<ServingInput>({
       resolver: zodResolver(servingSchema),
       defaultValues: {
-        option: serving?.option || "100-gram",
-        quantity: serving?.quantity || 1,
+        option: servingProp?.option || "100-gram",
+        quantity: servingProp?.quantity || 1,
       },
     });
 
@@ -59,10 +59,16 @@ export default function PageProduct({
     }
 
     reset({
-      option: serving?.option || "100-gram",
-      quantity: serving?.quantity || 1,
+      option: servingProp?.option || "100-gram",
+      quantity: servingProp?.quantity || 1,
     });
-  }, [focus, serving, reset]);
+  }, [focus, servingProp, reset]);
+
+  const handleSave = async (data: ServingInput) => {
+    setSaving(true);
+
+    onSave(serving);
+  };
 
   const handleFavorite = () => {
     setFavorite((previous) => {
@@ -75,15 +81,6 @@ export default function PageProduct({
 
       return favorite;
     });
-  };
-
-  const handleSave = async (data: ServingInput) => {
-    setSaving(true);
-
-    const selected = options.find((option) => option.value === data.option)!;
-    const gram = selected.gram * data.quantity;
-
-    onSave(product, { ...data, gram });
   };
 
   const info = useMemo(() => {
@@ -124,16 +121,14 @@ export default function PageProduct({
     return optionsObject;
   }, [product, setValue]);
 
-  const macros = useMemo(() => {
-    const selected = options.find(({ value }) => value === option)!;
+  const serving = useMemo(() => {
+    const selected = options.find((object) => object.value === option)!;
     const gram = selected.gram * quantity;
 
-    return getMacrosFromProduct(product!, {
-      gram,
-      option,
-      quantity,
-    });
-  }, [option, quantity, options, product]);
+    return { option, quantity, gram };
+  }, [option, quantity, options]);
+
+  const macros = getMacrosFromProduct(product, serving);
 
   return (
     <View>
@@ -152,14 +147,14 @@ export default function PageProduct({
               content={product.brand || "No brand"}
               favorite={favorite}
               onDelete={onDelete}
-              onRepeat={onRepeat}
+              onRepeat={onRepeat && (() => onRepeat(serving))}
               onFavorite={handleFavorite}
             />
 
             <ProductInfo items={info} />
           </View>
 
-          <View style={{ gap: 16 }}>
+          <View style={{ gap: variables.gapSmall }}>
             <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
               Portie
             </Text>
@@ -186,7 +181,7 @@ export default function PageProduct({
       </ScrollView>
 
       <ButtonOverlay
-        title={serving ? "Product wijzigen" : "Product opslaan"}
+        title={servingProp ? "Product wijzigen" : "Product opslaan"}
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}
