@@ -17,6 +17,8 @@ If you run into a product where the quantity is not known, you can just leave th
 
 If you can't find the brand of a product and aren't sure about the quantity just leave the product out of the list, since it will be hard to lookup later if we only have a title.
 
+Sometimes products don't specify the quantity, but their title includes something like 'Kipfilet 3 stukken'. In this case, you can assume the quantity is 3 and the unit is 'stukken'. We're not using the quantity and unit data for anything other than looking up the product in more detail later, so descriptive quantities are fine.
+
 If no relevant single-unit products are found, return an empty array.
 `;
 
