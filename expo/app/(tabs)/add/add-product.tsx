@@ -13,9 +13,11 @@ import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
 import { EntryWithProduct } from "@/types";
-import { Redirect, router, useLocalSearchParams } from "expo-router";
+import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 
 export default function AddPreviewBarcodeScreen() {
+  const router = useRouter();
+
   const insertEntry = useInsertEntry();
   const updateEntry = useUpdateEntry();
   const deleteEntry = useDeleteEntry();

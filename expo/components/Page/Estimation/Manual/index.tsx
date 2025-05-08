@@ -15,11 +15,16 @@ import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useUpdateProduct from "@/mutations/useUpdateProduct";
 import { ScrollView } from "react-native-gesture-handler";
+import { ServingData } from "@/schemas/serving";
 
 export default function PageEstimationManual({
   product,
+  onDelete,
+  onRepeat,
 }: {
   product?: ProductManual;
+  onDelete?: () => void;
+  onRepeat?: (serving: ServingData) => void;
 }) {
   const router = useRouter();
 
@@ -50,6 +55,12 @@ export default function PageEstimationManual({
     },
   });
 
+  const serving = {
+    gram: 100,
+    option: "g",
+    quantity: 1,
+  };
+
   const handleSave = async (data: ManualData) => {
     setSaving(true);
 
@@ -69,13 +80,14 @@ export default function PageEstimationManual({
       brand: null,
       barcode: null,
       options: null,
+      favorite: false,
       estimated: false,
 
       icon_id: null,
 
-      serving_gram: 100,
-      serving_original: 1,
-      serving_original_unit: "g",
+      serving_gram: serving.gram,
+      serving_original: serving.quantity,
+      serving_original_unit: serving.option,
 
       quantity_gram: 100,
       quantity_original: 1,
@@ -86,9 +98,9 @@ export default function PageEstimationManual({
     await insertEntry.mutateAsync({
       meal_id: null,
       product_id: insert.uuid,
-      consumed_gram: 100,
-      consumed_option: "g",
-      consumed_quantity: 1,
+      consumed_gram: serving.gram,
+      consumed_option: serving.option,
+      consumed_quantity: serving.quantity,
     });
 
     router.replace("/");
@@ -108,6 +120,8 @@ export default function PageEstimationManual({
               ? undefined
               : "Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
           }
+          onDelete={onDelete}
+          onRepeat={onRepeat && (() => onRepeat(serving))}
         />
 
         <View style={{ gap: 48 }}>
