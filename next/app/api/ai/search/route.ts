@@ -5,6 +5,7 @@ import { streamToResponse } from "@/helper";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
+  const signal = request.signal;
 
   const lang = request.nextUrl.searchParams.get("lang");
   const query = request.nextUrl.searchParams.get("query");
@@ -24,16 +25,17 @@ export async function GET(request: NextRequest) {
   }
 
   const fatsecretUrl = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=95e21b8a439b147f9&q=${query}&fields=items.title,items.link,items.snippet`;
-  const fatsecretRequest = fetch(fatsecretUrl);
+  const fatsecretRequest = fetch(fatsecretUrl, { signal });
 
   const googleUrl = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=e245e29713fe4444b&q=${query}&fields=items.title,items.link,items.snippet`;
-  const googleRequest = fetch(googleUrl);
+  const googleRequest = fetch(googleUrl, { signal });
 
   const openfoodUrl = "https://search.openfoodfacts.org/search";
   const openfoodMethod = "POST";
   const openfoodHeaders = { "Content-Type": "application/json" };
   const openfoodBody = {
     q: query,
+    lang: lang,
     page: 1,
     page_size: 32,
     fields: [
@@ -72,6 +74,7 @@ export async function GET(request: NextRequest) {
     method: openfoodMethod,
     headers: openfoodHeaders,
     body: JSON.stringify(openfoodBody),
+    signal,
   });
 
   const [googleResponse, openfoodResponse, fatsecretResponse] =

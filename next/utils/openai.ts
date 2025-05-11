@@ -263,7 +263,7 @@ export async function searchProducts(
   >
 > {
   const structureTask = "search-products-structure";
-  const structureModel = openai("gpt-4.1");
+  const structureModel = openai("gpt-4.1-mini");
 
   const structureStream = streamObject({
     model: structureModel,
@@ -296,6 +296,9 @@ export async function searchProducts(
         content: `Fatsecret results: ${data.fatsecret}`,
       },
     ],
+    onError: (error) => {
+      throw error.error;
+    },
   });
 
   after(async () => {

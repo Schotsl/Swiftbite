@@ -19,6 +19,8 @@ If you can't find the brand of a product and aren't sure about the quantity just
 
 Sometimes products don't specify the quantity, but their title includes something like 'Kipfilet 3 stukken'. In this case, you can assume the quantity is 3 and the unit is 'stukken'. We're not using the quantity and unit data for anything other than looking up the product in more detail later, so descriptive quantities are fine.
 
+When showing general results, so let's say something like "Coca Cola" try to filter and return results that the user might actually see in the store.
+
 If no relevant single-unit products are found, return an empty array.
 `;
 
