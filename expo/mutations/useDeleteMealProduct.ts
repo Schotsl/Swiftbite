@@ -1,7 +1,6 @@
+import { handleError } from "@/helper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { handleError } from "@/helper";
-import { MealProductWithProduct } from "@/types";
 import supabase from "@/utils/supabase";
 
 export default function useDeleteMealProduct() {

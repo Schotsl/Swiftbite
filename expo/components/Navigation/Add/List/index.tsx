@@ -19,10 +19,6 @@ export default function NavigationAddList({ onClose }: NavigationAddListProps) {
     router.push("/add/add-search");
   };
 
-  const handleManual = () => {
-    onClose();
-  };
-
   const handleEstimate = () => {
     onClose();
 

@@ -15,8 +15,6 @@ import ItemProductWithServing from "@/components/Item/ProductWithServing";
 import { useEffect } from "react";
 import ButtonOverlay from "@/components/Button/Overlay";
 import ButtonSmall from "@/components/Button/Small";
-import { useQuery } from "@tanstack/react-query";
-import productData from "@/queries/productData";
 
 export default function DetailsScreen() {
   const router = useRouter();
@@ -27,7 +25,6 @@ export default function DetailsScreen() {
 
   const {
     title,
-    favorite,
     mealProducts,
     updating,
     removeMealProduct,

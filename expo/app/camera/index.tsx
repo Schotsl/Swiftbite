@@ -27,7 +27,6 @@ import {
   useCodeScanner,
   runAtTargetFps,
   CameraPosition,
-  useCameraFormat,
 } from "react-native-vision-camera";
 
 import * as ImagePicker from "expo-image-picker";

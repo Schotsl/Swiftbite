@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Meal, MealWithProduct, ProductSearch } from "@/types";
+import { MealWithProduct, ProductSearch } from "@/types";
 
 import PageSearch from "@/components/Page/Search";
 import useInsertEntry from "@/mutations/useInsertEntry";

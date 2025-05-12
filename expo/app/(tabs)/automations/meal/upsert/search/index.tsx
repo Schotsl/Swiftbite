@@ -1,12 +1,10 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { ProductSearch } from "@/types";
 
 import PageSearch from "@/components/Page/Search";
 
 export default function AddText() {
   const router = useRouter();
-
-  const { meal } = useLocalSearchParams<{ meal: string }>();
 
   const handleProductSelect = (product: ProductSearch) => {
     router.push({

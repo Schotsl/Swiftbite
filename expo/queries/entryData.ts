@@ -1,6 +1,5 @@
+import { Entry } from "@/types";
 import { queryOptions } from "@tanstack/react-query";
-
-import { Entry, MealProduct } from "@/types";
 import { handleError, mapMeal } from "@/helper";
 
 import supabase from "@/utils/supabase";
