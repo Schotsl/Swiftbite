@@ -43,9 +43,13 @@ export const rowTimeout = <T>(rowKey: string, rowMap: RowMap<T>) => {
   }, 500);
 };
 
-export const getOptions = (
-  product?: Product | ProductInsert
-): OptionWithGram[] => {
+export const getOptions = ({
+  meal,
+  product,
+}: {
+  meal?: MealWithProduct;
+  product?: Product | ProductInsert;
+}): OptionWithGram[] => {
   let options = [
     {
       gram: 1,
@@ -58,6 +62,14 @@ export const getOptions = (
       value: "100-gram",
     },
   ];
+
+  if (meal) {
+    options.push({
+      gram: 800,
+      title: `Maaltijd grootte`,
+      value: `meal`,
+    });
+  }
 
   if (product?.quantity_original) {
     options.push({

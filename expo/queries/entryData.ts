@@ -1,14 +1,15 @@
 import { queryOptions } from "@tanstack/react-query";
 
+import { Entry } from "@/types";
 import { handleError } from "@/helper";
-import { EntryWithProduct } from "@/types";
+
 import supabase from "@/utils/supabase";
 
 type entryDataType = {
   openfood?: string;
 };
 
-export default function entryData<T extends EntryWithProduct>({
+export default function entryData<T extends Entry>({
   openfood,
 }: entryDataType) {
   return queryOptions({

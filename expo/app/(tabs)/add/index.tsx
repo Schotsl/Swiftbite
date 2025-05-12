@@ -187,7 +187,15 @@ export default function Index() {
               }}
             />
           ) : (
-            <ItemMeal meal={item.meal!} onPress={() => {}} />
+            <ItemMeal
+              meal={item.meal!}
+              onPress={() => {
+                router.push({
+                  pathname: "/(tabs)/add/add-meal",
+                  params: { entry: item.uuid },
+                });
+              }}
+            />
           );
         }}
         renderHiddenItem={({ item }) => (

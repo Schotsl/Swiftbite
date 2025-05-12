@@ -96,9 +96,13 @@ export type User = Omit<UserBase, "birth" | "weight" | "macro"> & {
 
 export type Entry = Tables<"entry">;
 export type EntryWithProduct = Entry & {
+  meal: never;
   product: Product;
-  // Meal has to be removed
-  meal?: MealWithProduct;
+};
+
+export type EntryWithMeal = Entry & {
+  meal: MealWithProduct;
+  product: never;
 };
 
 export type EntryWithProductManual = Entry & {
