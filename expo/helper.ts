@@ -65,8 +65,8 @@ export const getOptions = ({
 
   if (meal) {
     options.push({
-      gram: 800,
-      title: `Maaltijd grootte`,
+      gram: meal.quantity_gram,
+      title: `Standaardmaaltijd (${meal.quantity_gram} g)`,
       value: `meal`,
     });
   }
@@ -242,4 +242,15 @@ export const transformImage = (
   }
 
   return null;
+};
+
+export const mapMeal = (
+  meal: Omit<MealWithProduct, "quantity_gram">
+): MealWithProduct => {
+  const total = meal.meal_product.reduce(
+    (sum: number, item: { selected_gram: number }) => sum + item.selected_gram,
+    0
+  );
+
+  return { ...meal, quantity_gram: total };
 };

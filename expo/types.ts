@@ -112,7 +112,10 @@ export type EntryWithProductManual = Entry & {
 export type Meal = Tables<"meal">;
 export type MealProduct = Tables<"meal_product">;
 export type MealProductWithProduct = MealProduct & { product: Product };
-export type MealWithProduct = Meal & { meal_product: MealProductWithProduct[] };
+export type MealWithProduct = Meal & {
+  quantity_gram: number;
+  meal_product: MealProductWithProduct[];
+};
 
 export type MealInsert = Omit<
   Meal,

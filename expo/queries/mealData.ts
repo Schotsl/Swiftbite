@@ -1,7 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
+import { handleError, mapMeal } from "@/helper";
 
-import { handleError } from "@/helper";
-import { MealWithProduct } from "@/types";
 import supabase from "@/utils/supabase";
 
 export default function mealData() {
@@ -17,7 +16,8 @@ export default function mealData() {
 
       console.log(`[Query] fetched ${data?.length} meal_product`);
 
-      return data as MealWithProduct[];
+      const mapped = data?.map(mapMeal);
+      return mapped;
     },
   });
 }

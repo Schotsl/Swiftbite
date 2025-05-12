@@ -48,9 +48,9 @@ export default function AddPreviewBarcodeScreen() {
   }
 
   const serving = {
-    gram: entry.consumed_gram!,
-    option: entry.consumed_option!,
-    quantity: entry.consumed_quantity!,
+    gram: entry.consumed_gram,
+    option: entry.consumed_option,
+    quantity: entry.consumed_quantity,
   };
 
   const handleSave = async (returnedServing: ServingData) => {

@@ -22,7 +22,7 @@ export function EntryEditItems({ barcode, quantity }: EntryEditItemsProps) {
 
       {quantity && (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-          <FontAwesome6 name="cube" size={16} color="#545454" />
+          <FontAwesome6 name="weight-hanging" size={16} color="#545454" />
           <Text
             style={{ fontSize: 16, fontWeight: "semibold", color: "#545454" }}
           >

@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
-import { Meal, ProductSearch } from "@/types";
+import { MealWithProduct, ProductSearch } from "@/types";
 import { useEffect, useRef, useState } from "react";
 
 import Tabs from "@/components/Tabs";
@@ -19,7 +19,7 @@ enum Type {
 }
 
 type PageSearchProps = {
-  onMealSelect: (meal: Meal) => void;
+  onMealSelect: (meal: MealWithProduct) => void;
   onProductSelect: (product: ProductSearch) => void;
 };
 

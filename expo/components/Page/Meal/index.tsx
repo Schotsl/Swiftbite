@@ -82,22 +82,21 @@ export default function PageMeal({
     });
   };
 
-  // const info = useMemo(() => {
-  //   const items = [];
+  const info = useMemo(() => {
+    const items = [];
 
-  //   if (product.barcode) {
-  //     items.push({ icon: "barcode", value: product.barcode });
-  //   }
+    items.push({
+      icon: "bowl-food",
+      value: `${meal.meal_product.length} ingrediënten`,
+    });
 
-  //   if (product.quantity_original) {
-  //     items.push({
-  //       icon: "cube",
-  //       value: `${product.quantity_original} ${product.quantity_original_unit}`,
-  //     });
-  //   }
+    items.push({
+      icon: "weight-hanging",
+      value: `${meal.quantity_gram} g`,
+    });
 
-  //   return items;
-  // }, [product]);
+    return items;
+  }, [meal]);
 
   const options = useMemo(() => {
     const optionsObject = getOptions({ meal });
@@ -136,7 +135,7 @@ export default function PageMeal({
               onFavorite={handleFavorite}
             />
 
-            {/* <ProductInfo items={info} /> */}
+            <ProductInfo items={info} />
           </View>
 
           <View style={{ gap: variables.gapSmall }}>

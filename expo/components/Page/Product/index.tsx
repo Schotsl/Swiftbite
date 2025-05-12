@@ -92,7 +92,7 @@ export default function PageProduct({
 
     if (product.quantity_original) {
       items.push({
-        icon: "cube",
+        icon: "weight-hanging",
         value: `${product.quantity_original} ${product.quantity_original_unit}`,
       });
     }

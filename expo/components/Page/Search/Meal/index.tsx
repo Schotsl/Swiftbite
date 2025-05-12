@@ -1,4 +1,4 @@
-import { Meal } from "@/types";
+import { MealWithProduct } from "@/types";
 import { FlatList } from "react-native";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
@@ -10,7 +10,7 @@ type PageSearchProps = {
   query: string;
   loading?: boolean;
 
-  onSelect: (meal: Meal) => void;
+  onSelect: (meal: MealWithProduct) => void;
 };
 
 export default function PageSearchMeal({
