@@ -15,14 +15,28 @@ import ItemProductWithServing from "@/components/Item/ProductWithServing";
 import { useEffect } from "react";
 import ButtonOverlay from "@/components/Button/Overlay";
 import ButtonSmall from "@/components/Button/Small";
+import { useQuery } from "@tanstack/react-query";
+import productData from "@/queries/productData";
 
 export default function DetailsScreen() {
   const router = useRouter();
 
   const deleteMeal = useDeleteMeal();
 
+  const { data: products } = useQuery({
+    ...productData({}),
+  });
+
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
-  const { meal, removeMealProduct, updateTitle, saveChanges } = useEditMeal();
+  const {
+    title,
+    favorite,
+    mealProducts,
+    updating,
+    removeMealProduct,
+    updateTitle,
+    saveChanges,
+  } = useEditMeal();
 
   const {
     watch,
@@ -32,18 +46,15 @@ export default function DetailsScreen() {
   } = useForm<MealData>({
     resolver: zodResolver(mealSchema),
     defaultValues: {
-      title: meal?.title || "",
+      title,
     },
   });
 
-  // Keep the local context in sync with the form
-  const title = watch("title");
+  const watchTitle = watch("title");
 
-  // TODO: I should check this with David since it causes a recursive update
   useEffect(() => {
-    updateTitle(title);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [title]);
+    updateTitle(watchTitle);
+  }, [watchTitle, updateTitle]);
 
   const handleSave = async () => {
     await saveChanges();
@@ -67,7 +78,7 @@ export default function DetailsScreen() {
       }}
     >
       <Header
-        title="Bewerk maaltijd"
+        title={updating ? "Bewerk maaltijd" : "Maaltijd toevoegen"}
         content="Een maaltijd is een combinatie van producten die je opslaat om later in één keer toe te voegen."
         onDelete={handleDelete}
       />
@@ -93,10 +104,14 @@ export default function DetailsScreen() {
                   borderColor: "#000000",
                   borderRadius: 8,
                 }}
-                data={meal?.meal_product}
+                data={mealProducts}
                 keyExtractor={(item) => item.product_id}
                 renderItem={({ item, index }) => {
-                  const length = meal?.meal_product.length || 0;
+                  const length = mealProducts.length || 0;
+                  const product = products?.find(
+                    (product) => product.uuid === item.product_id
+                  )!;
+
                   const serving = {
                     gram: item.selected_gram!,
                     option: item.selected_option!,
@@ -108,13 +123,12 @@ export default function DetailsScreen() {
                       icon={false}
                       small={true}
                       border={index !== length - 1}
-                      product={item.product}
+                      product={product}
                       serving={serving}
                       onPress={() => {
                         router.push({
-                          pathname: `/(tabs)/automations/meal/[meal]/product`,
+                          pathname: `/(tabs)/automations/meal/upsert/product`,
                           params: {
-                            meal: item.meal_id,
                             product: item.product_id,
                           },
                         });
@@ -146,7 +160,8 @@ export default function DetailsScreen() {
                   </View>
                 )}
                 renderHiddenItem={({ item, index }) => {
-                  const length = meal?.meal_product.length || 0;
+                  const length = mealProducts.length || 0;
+
                   return (
                     <ItemDelete
                       border={index !== length - 1}
@@ -168,7 +183,12 @@ export default function DetailsScreen() {
             <ButtonSmall
               icon="plus"
               onPress={() => {
-                router.push(`/(tabs)/automations/meal/${mealId}/search`);
+                router.push({
+                  pathname: `/(tabs)/automations/meal/upsert/search`,
+                  params: {
+                    meal: mealId,
+                  },
+                });
               }}
               title="Ingrediënt toevoegen"
             />

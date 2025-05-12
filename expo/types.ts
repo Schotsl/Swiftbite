@@ -114,7 +114,7 @@ export type MealProduct = Tables<"meal_product">;
 export type MealProductWithProduct = MealProduct & { product: Product };
 export type MealWithProduct = Meal & {
   quantity_gram: number;
-  meal_product: MealProductWithProduct[];
+  meal_products: MealProductWithProduct[];
 };
 
 export type MealInsert = Omit<
@@ -141,7 +141,7 @@ export type MealProductWithProductInsert = Omit<
 
 export type MealWithProductInsert = Omit<
   MealInsert & {
-    meal_product: MealProductWithProductInsert[];
+    meal_products: MealProductWithProductInsert[];
   },
   "uuid" | "user_id" | "created_at" | "updated_at" | "icon_id"
 > &

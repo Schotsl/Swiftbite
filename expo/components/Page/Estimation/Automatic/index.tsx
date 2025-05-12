@@ -113,6 +113,7 @@ export default function PageEstimationAutomatic() {
       brand: null,
       barcode: null,
       options: null,
+      favorite: false,
       estimated: true,
 
       icon_id: null,

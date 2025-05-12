@@ -1,7 +1,7 @@
 import entryData from "../queries/entryData";
 
 import { useMemo } from "react";
-import { MacroAbsolute } from "@/types";
+import { EntryWithMeal, EntryWithProduct, MacroAbsolute } from "@/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getMacrosFromMeal, getMacrosFromProduct, getRange } from "@/helper";
 
@@ -9,7 +9,7 @@ export default function useDailyMacros(): MacroAbsolute {
   const { startDate, endDate } = getRange();
 
   const { data: entries } = useSuspenseQuery({
-    ...entryData({}),
+    ...entryData<EntryWithProduct | EntryWithMeal>({}),
     select: (entries) => {
       const end = new Date(endDate).getTime();
       const start = new Date(startDate).getTime();
@@ -60,7 +60,7 @@ export default function useDailyMacros(): MacroAbsolute {
           calories: acc.calories + macro.calories,
         };
       },
-      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 },
+      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 }
     );
   }, [entries]);
 

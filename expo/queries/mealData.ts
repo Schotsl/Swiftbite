@@ -9,7 +9,7 @@ export default function mealData() {
     queryFn: async () => {
       const { error, data } = await supabase
         .from("meal")
-        .select(`*,meal_product (*,product (*))`)
+        .select(`*,meal_products (*,product (*))`)
         .order("title", { ascending: false });
 
       handleError(error);

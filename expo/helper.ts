@@ -186,7 +186,7 @@ export function getMacrosFromProduct(
 export function getMacrosFromMeal(
   meal: MealWithProduct
 ): MacroAbsolute & { gram: number } {
-  const products = meal.meal_product;
+  const products = meal.meal_products;
   const macros = products.reduce(
     (acc, product) => {
       const serving = {
@@ -247,7 +247,7 @@ export const transformImage = (
 export const mapMeal = (
   meal: Omit<MealWithProduct, "quantity_gram">
 ): MealWithProduct => {
-  const total = meal.meal_product.reduce(
+  const total = meal.meal_products.reduce(
     (sum: number, item: { selected_gram: number }) => sum + item.selected_gram,
     0
   );

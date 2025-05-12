@@ -101,7 +101,7 @@ export default function PageProduct({
   }, [product]);
 
   const options = useMemo(() => {
-    const optionsObject = getOptions(product);
+    const optionsObject = getOptions({ product });
     const optionsQuantity = optionsObject.find(
       (option) => option.value === "quantity"
     );

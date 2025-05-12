@@ -87,7 +87,7 @@ export default function PageMeal({
 
     items.push({
       icon: "bowl-food",
-      value: `${meal.meal_product.length} ingrediënten`,
+      value: `${meal.meal_products.length} ingrediënten`,
     });
 
     items.push({

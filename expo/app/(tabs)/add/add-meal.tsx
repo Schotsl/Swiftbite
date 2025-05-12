@@ -47,10 +47,11 @@ export default function AddPreviewBarcodeScreen() {
     return <Redirect href="/" />;
   }
 
+  // The serving value is only undefined if it's AI generated so we can enforce the type
   const serving = {
-    gram: entry.consumed_gram,
-    option: entry.consumed_option,
-    quantity: entry.consumed_quantity,
+    gram: entry.consumed_gram!,
+    option: entry.consumed_option!,
+    quantity: entry.consumed_quantity!,
   };
 
   const handleSave = async (returnedServing: ServingData) => {

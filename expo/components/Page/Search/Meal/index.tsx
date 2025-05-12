@@ -24,7 +24,7 @@ export default function PageSearchMeal({
   const { data, isError, isLoading } = useSuspenseQuery({
     ...mealData(),
     select: (data) =>
-      data.filter((meal) => {
+      data?.filter((meal) => {
         const titleLower = meal.title.toLowerCase();
         const titleMatch = titleLower.includes(queryLower);
 
@@ -66,7 +66,7 @@ export default function PageSearchMeal({
         return (
           <Item
             title={item.title}
-            subtitle={`${item.meal_product.length} ingrediënten`}
+            subtitle={`${item.meal_products.length} ingrediënten`}
             rightBottom={`420 kcal`}
             subtitleIcon="bowl-food"
             onPress={() => onSelect(item)}

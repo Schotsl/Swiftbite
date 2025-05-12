@@ -1,38 +1,30 @@
 import PageProduct from "@/components/Page/Product";
 
 import { router } from "expo-router";
-import { Product } from "@/types";
 import { useEditRepeat } from "@/context/RepeatContext";
+import { ServingData } from "@/schemas/serving";
 
 export default function AutomationRepeatUpsertProduct() {
-  const { product, serving, removeProduct, updateProduct, updateServing } =
-    useEditRepeat();
+  const { product, serving, removeProduct, updateServing } = useEditRepeat();
+
+  const handleSave = async (returnedServing: ServingData) => {
+    updateServing(returnedServing);
+
+    router.replace("/(tabs)/automations/repeat/upsert");
+  };
+
+  const handleDelete = () => {
+    removeProduct();
+
+    router.replace("/(tabs)/automations/repeat/upsert");
+  };
 
   return (
     <PageProduct
-      product={product}
+      product={product!}
       serving={serving}
-      onDelete={() => {
-        removeProduct();
-
-        router.replace("/(tabs)/automations/repeat/upsert");
-      }}
-      onSave={async (productReturned, returnedServing) => {
-        if (product) {
-          updateServing(returnedServing);
-
-          router.replace("/(tabs)/automations/repeat/upsert");
-
-          return;
-        }
-
-        const productCast = productReturned as Product;
-
-        updateProduct(productCast);
-        updateServing(returnedServing);
-
-        router.replace("/(tabs)/automations/repeat/upsert");
-      }}
+      onSave={handleSave}
+      onDelete={handleDelete}
     />
   );
 }

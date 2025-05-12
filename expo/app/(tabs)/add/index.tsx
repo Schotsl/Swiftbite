@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { EntryWithProduct } from "@/types";
+import { EntryWithMeal, EntryWithProduct } from "@/types";
 import { useEffect, useMemo, useState } from "react";
 
 import entryData from "@/queries/entryData";
@@ -31,7 +31,7 @@ export default function Index() {
   const { startDate, endDate } = getRange(date);
 
   const { data } = useSuspenseQuery({
-    ...entryData({}),
+    ...entryData<EntryWithProduct | EntryWithMeal>({}),
     refetchInterval: interval,
     select: (entries) => {
       const end = endDate.getTime();
@@ -65,25 +65,25 @@ export default function Index() {
         title: "Night",
         subtitle: "21:00 - 06:00",
         startHour: 21,
-        data: [] as EntryWithProduct[],
+        data: [] as (EntryWithProduct | EntryWithMeal)[],
       },
       {
         title: "Evening",
         subtitle: "17:00 - 21:00",
         startHour: 17,
-        data: [] as EntryWithProduct[],
+        data: [] as (EntryWithProduct | EntryWithMeal)[],
       },
       {
         title: "Afternoon",
         subtitle: "12:00 - 17:00",
         startHour: 12,
-        data: [] as EntryWithProduct[],
+        data: [] as (EntryWithProduct | EntryWithMeal)[],
       },
       {
         title: "Morning",
         subtitle: "06:00 - 12:00",
         startHour: 6,
-        data: [] as EntryWithProduct[],
+        data: [] as (EntryWithProduct | EntryWithMeal)[],
       },
     ];
 

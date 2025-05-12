@@ -10,7 +10,7 @@ export default function MealLayout() {
 
   const { data, isLoading } = useSuspenseQuery({
     ...mealData(),
-    select: (data) => data.find((meal) => meal.uuid === mealId),
+    select: (data) => data?.find((meal) => meal.uuid === mealId),
   });
 
   if (isLoading) {

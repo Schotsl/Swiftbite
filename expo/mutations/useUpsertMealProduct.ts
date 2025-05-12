@@ -9,16 +9,16 @@ import {
 } from "@/types";
 import supabase from "@/utils/supabase";
 
-export default function useInsertMealProduct() {
+export default function useUpsertMealProduct() {
   const query = useQueryClient();
 
   return useMutation({
     mutationFn: async (
-      mealProduct: MealProductInsert,
+      mealProduct: MealProductInsert
     ): Promise<MealProduct | null> => {
       const { data, error } = await supabase
         .from("meal_product")
-        .insert(mealProduct)
+        .upsert(mealProduct)
         .select()
         .single();
 
@@ -49,7 +49,7 @@ export default function useInsertMealProduct() {
 
         // Create a new array with the optimistic product added
         const updatedMealProduct = [
-          ...meal.meal_product,
+          ...meal.meal_products,
           optimisticProduct as MealProductWithProduct,
         ];
 

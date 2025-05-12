@@ -9,7 +9,7 @@ export default function useUpdateMealProduct() {
 
   return useMutation({
     mutationFn: async (
-      mealProduct: MealProductWithProduct,
+      mealProduct: MealProductWithProduct
     ): Promise<MealProductWithProduct> => {
       const { product, ...rest } = mealProduct;
 
@@ -37,7 +37,7 @@ export default function useUpdateMealProduct() {
         }
 
         // Replace the old product with the new one
-        meal.meal_product = meal.meal_product.map((product) => {
+        meal.meal_products = meal.meal_products.map((product) => {
           if (product.product_id !== mealProductInsert.product_id) {
             return product;
           }

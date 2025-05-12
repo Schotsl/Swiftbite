@@ -13,6 +13,7 @@ import useDeleteMeal from "@/mutations/useDeleteMeal";
 export default function Tab() {
   const path = usePathname();
   const router = useRouter();
+  
   const deleteMeal = useDeleteMeal();
 
   const { data } = useSuspenseQuery({
@@ -30,7 +31,7 @@ export default function Tab() {
       }}
     >
       <Tabs
-        add="/automations/meal/insert"
+        add="/automations/meal/upsert"
         value={path}
         tabs={[
           { href: "/automations/meal", title: "Maaltijden" },
@@ -46,7 +47,12 @@ export default function Tab() {
             <ItemMeal
               meal={item}
               onPress={() => {
-                router.push(`/(tabs)/automations/meal/${item.uuid}`);
+                router.push({
+                  pathname: `/(tabs)/automations/meal/upsert`,
+                  params: {
+                    meal: item.uuid,
+                  },
+                });
               }}
             />
           );

@@ -8,13 +8,10 @@ export default function AddText() {
 
   const { meal } = useLocalSearchParams<{ meal: string }>();
 
-  const handleProductSelect = (item: ProductSearch) => {
+  const handleProductSelect = (product: ProductSearch) => {
     router.push({
-      pathname: `/(tabs)/automations/meal/[meal]/product`,
-      params: {
-        meal,
-        ...item,
-      },
+      pathname: `/(tabs)/automations/meal/upsert/product`,
+      params: product,
     });
   };
 
