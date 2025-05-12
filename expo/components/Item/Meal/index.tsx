@@ -18,7 +18,7 @@ export default function ItemMeal({
 
   onPress,
 }: ItemMealProps) {
-  const length = meal.meal_products.length;
+  const length = meal.meal_products?.length || 0;
   const macros = getMacrosFromMeal(meal);
 
   return (

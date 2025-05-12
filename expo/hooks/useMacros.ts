@@ -64,7 +64,7 @@ export default function useDailyMacros(): MacroAbsolute {
           calories: acc.calories + macro.calories,
         };
       },
-      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 }
+      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 },
     );
   }, [entries]);
 

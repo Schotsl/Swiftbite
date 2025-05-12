@@ -107,7 +107,7 @@ export default function AutomationRepeatUpsert() {
                     icon={false}
                     small={true}
                     border={false}
-                    product={product}
+                    product={product.uuid}
                     serving={serving}
                     onPress={() => {
                       router.push("/(tabs)/automations/repeat/upsert/product");

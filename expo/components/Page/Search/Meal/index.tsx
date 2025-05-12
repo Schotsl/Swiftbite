@@ -66,7 +66,7 @@ export default function PageSearchMeal({
         return (
           <Item
             title={item.title}
-            subtitle={`${item.meal_products.length} ingrediënten`}
+            subtitle={`${item.meal_products?.length || 0} ingrediënten`}
             rightBottom={`420 kcal`}
             subtitleIcon="bowl-food"
             onPress={() => onSelect(item)}

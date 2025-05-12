@@ -23,11 +23,8 @@ export default function DetailsScreen() {
 
   const deleteMeal = useDeleteMeal();
 
-  const { data: products } = useQuery({
-    ...productData({}),
-  });
-
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
+
   const {
     title,
     favorite,
@@ -108,16 +105,13 @@ export default function DetailsScreen() {
                 keyExtractor={(item) => item.product_id}
                 renderItem={({ item, index }) => {
                   const length = mealProducts.length || 0;
-                  const product = products?.find(
-                    (product) => product.uuid === item.product_id
-                  )!;
 
                   return (
                     <ItemProductWithServing
                       icon={false}
                       small={true}
                       border={index !== length - 1}
-                      product={product}
+                      product={item.product_id}
                       serving={item.serving}
                       onPress={() => {
                         router.push({
@@ -179,9 +173,6 @@ export default function DetailsScreen() {
               onPress={() => {
                 router.push({
                   pathname: `/(tabs)/automations/meal/upsert/search`,
-                  params: {
-                    meal: mealId,
-                  },
                 });
               }}
               title="Ingrediënt toevoegen"

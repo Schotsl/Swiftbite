@@ -31,7 +31,6 @@ export async function POST(request: Request) {
     // Normalize the title and look it up in the database
     console.log(`[MEAL] Normalizing title`);
     const iconIngredients = await fetchIngredients(uuid);
-    console.log(`[MEAL] Icon ingredients: ${iconIngredients}`);
     const iconTitle = await normalizeMeal(user, {
       title: title,
       ingredients: iconIngredients,

@@ -25,7 +25,7 @@ export default function useUpdateProduct() {
 
       const previous = query.getQueryData<Product[]>(["productData"]);
       const updated = previous?.map((product) =>
-        product.uuid === productUpdate.uuid ? productUpdate : product
+        product.uuid === productUpdate.uuid ? productUpdate : product,
       );
 
       query.setQueryData<Product[]>(["productData"], updated);

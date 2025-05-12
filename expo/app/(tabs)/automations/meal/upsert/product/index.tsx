@@ -64,7 +64,7 @@ export default function AddPreviewBarcodeScreen() {
   }
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product_id === productId
+    (mealProduct) => mealProduct.product_id === productId,
   );
 
   return (
@@ -77,7 +77,7 @@ export default function AddPreviewBarcodeScreen() {
         router.replace(`/(tabs)/automations/meal/upsert`);
       }}
       onSave={async (returnedServing: ServingData) => {
-        if (returnedServing) {
+        if (mealProduct?.serving) {
           updateMealProduct(productId!, returnedServing);
 
           router.replace(`/(tabs)/automations/meal/upsert`);
@@ -85,7 +85,7 @@ export default function AddPreviewBarcodeScreen() {
           return;
         }
 
-        insertMealProduct(productId!, returnedServing);
+        insertMealProduct(product.uuid, returnedServing);
 
         router.replace(`/(tabs)/automations/meal/upsert`);
       }}

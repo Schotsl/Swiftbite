@@ -13,7 +13,7 @@ import useDeleteMeal from "@/mutations/useDeleteMeal";
 export default function Tab() {
   const path = usePathname();
   const router = useRouter();
-  
+
   const deleteMeal = useDeleteMeal();
 
   const { data } = useSuspenseQuery({

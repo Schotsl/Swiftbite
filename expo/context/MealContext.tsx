@@ -2,19 +2,20 @@ import React, { createContext, ReactNode, useContext, useState } from "react";
 import { ServingData } from "@/schemas/serving";
 import { MealProductInsert, MealWithProduct } from "../types";
 
-import * as crypto from "expo-crypto";
-
 import useUpdateMeal from "@/mutations/useUpdateMeal";
 import useInsertMeal from "@/mutations/useInsertMeal";
 import useUpsertMealProduct from "@/mutations/useUpsertMealProduct";
 import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
 
+type MealProductTemporary = Omit<MealProductInsert, "meal_id"> & {
+  meal_id: string | null;
+};
+
 type MealContextType = {
-  uuid: string;
   title: string;
   favorite: boolean;
   updating: boolean;
-  mealProducts: MealProductInsert[];
+  mealProducts: MealProductTemporary[];
 
   updateTitle: (title: string) => void;
   updateFavorite: (favorite: boolean) => void;
@@ -44,7 +45,6 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   const upsertMealProductMutation = useUpsertMealProduct();
   const deleteMealProductMutation = useDeleteMealProduct();
 
-  const initialUuid = initial?.uuid || crypto.randomUUID();
   const initialTitle = initial?.title || "";
   const initialFavorite = initial?.favorite || false;
   const initialMealProducts = initial?.meal_products || [];
@@ -52,7 +52,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   const [title, setTitle] = useState(initialTitle);
   const [favorite, setFavorite] = useState(initialFavorite);
   const [mealProducts, setMealProducts] =
-    useState<MealProductInsert[]>(initialMealProducts);
+    useState<MealProductTemporary[]>(initialMealProducts);
 
   const updateTitle = (title: string) => {
     setTitle(title);
@@ -66,9 +66,9 @@ export const MealProvider: React.FC<MealProviderProps> = ({
     setMealProducts((prev) =>
       prev.map((mealProduct) =>
         mealProduct.product_id === productId
-          ? { ...mealProduct, ...serving }
-          : mealProduct
-      )
+          ? { ...mealProduct, serving }
+          : mealProduct,
+      ),
     );
   };
 
@@ -77,7 +77,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       ...prev,
       {
         serving,
-        meal_id: initialUuid,
+        meal_id: null,
         product_id: productId,
       },
     ]);
@@ -85,15 +85,17 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const removeMealProduct = (productId: string) => {
     setMealProducts((prev) =>
-      prev.filter((mealProduct) => mealProduct.product_id !== productId)
+      prev.filter((mealProduct) => mealProduct.product_id !== productId),
     );
   };
 
   const saveChanges = async () => {
     if (updating) {
+      const { uuid } = initial;
+
       // We delete every meal_product so we don't have to keep track of which ones are new
       const promiseDelete = deleteMealProductMutation.mutateAsync({
-        mealId: initialUuid,
+        mealId: uuid,
       });
 
       const promiseUpdate = updateMealMutation.mutateAsync({
@@ -105,21 +107,27 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       await Promise.all([promiseDelete, promiseUpdate]);
 
       const promiseArray = mealProducts.map((mealProduct) =>
-        upsertMealProductMutation.mutateAsync(mealProduct)
+        upsertMealProductMutation.mutateAsync({
+          ...mealProduct,
+          meal_id: uuid,
+        }),
       );
 
       await Promise.all(promiseArray);
+
+      return;
     }
 
-    await insertMealMutation.mutateAsync({
-      uuid: initialUuid,
+    const { uuid } = await insertMealMutation.mutateAsync({
       title,
       favorite,
-      ingredients: [],
     });
 
     const promiseArray = mealProducts.map((mealProduct) =>
-      upsertMealProductMutation.mutateAsync(mealProduct)
+      upsertMealProductMutation.mutateAsync({
+        ...mealProduct,
+        meal_id: uuid,
+      }),
     );
 
     await Promise.all(promiseArray);
@@ -128,7 +136,6 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   return (
     <MealContext.Provider
       value={{
-        uuid: initialUuid,
         title,
         updating,
         favorite,

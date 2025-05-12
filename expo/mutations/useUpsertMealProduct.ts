@@ -14,7 +14,7 @@ export default function useUpsertMealProduct() {
 
   return useMutation({
     mutationFn: async (
-      mealProduct: MealProductInsert
+      mealProduct: MealProductInsert,
     ): Promise<MealProduct | null> => {
       const { data, error } = await supabase
         .from("meal_product")
@@ -49,7 +49,7 @@ export default function useUpsertMealProduct() {
 
         // Create a new array with the optimistic product added
         const updatedMealProduct = [
-          ...meal.meal_products,
+          ...(meal.meal_products || []),
           optimisticProduct as MealProductWithProduct,
         ];
 

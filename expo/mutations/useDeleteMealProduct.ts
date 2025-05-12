@@ -32,7 +32,7 @@ export default function useDeleteMealProduct() {
             ...meal,
             meal_product: [],
           };
-        })
+        }),
       );
 
       return { previous };

@@ -27,7 +27,7 @@ export default function useUpdateEntry() {
 
       const previous = query.getQueryData<EntryWithProduct[]>(["entryData"]);
       const updated = previous?.map((entry) =>
-        entry.uuid === entryUpdate.uuid ? { ...entry, ...entryUpdate } : entry
+        entry.uuid === entryUpdate.uuid ? { ...entry, ...entryUpdate } : entry,
       );
 
       query.setQueryData<EntryWithProduct[]>(["entryData"], updated);

@@ -126,7 +126,7 @@ export type MealProduct = MealProductBase & {
 export type MealProductWithProduct = MealProduct & { product: Product };
 export type MealWithProduct = Meal & {
   quantity_gram: number;
-  meal_products: MealProductWithProduct[];
+  meal_products: MealProductWithProduct[] | null;
 };
 
 export type MealInsert = Omit<
@@ -153,7 +153,7 @@ export type MealProductWithProductInsert = Omit<
 
 export type MealWithProductInsert = Omit<
   MealInsert & {
-    meal_products: MealProductWithProductInsert[];
+    meal_products: MealProductWithProductInsert[] | null;
   },
   "uuid" | "user_id" | "created_at" | "updated_at" | "icon_id"
 > &

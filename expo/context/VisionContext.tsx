@@ -42,7 +42,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
     if (socketRef.current) {
       console.log(
-        "[VISION] Closing existing connection before reconnecting..."
+        "[VISION] Closing existing connection before reconnecting...",
       );
 
       socketRef.current.onopen = null;
