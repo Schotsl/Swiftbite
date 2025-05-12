@@ -42,26 +42,18 @@ export default function AddPreviewBarcodeScreen() {
   }
 
   const meal = entry?.meal;
+  const serving = entry?.serving;
 
-  if (!meal) {
+  if (!meal || !serving) {
     return <Redirect href="/" />;
   }
-
-  // The serving value is only undefined if it's AI generated so we can enforce the type
-  const serving = {
-    gram: entry.consumed_gram!,
-    option: entry.consumed_option!,
-    quantity: entry.consumed_quantity!,
-  };
 
   const handleSave = async (returnedServing: ServingData) => {
     if (entry) {
       // If we have a existing entry we'll update it
       await updateEntry.mutateAsync({
         ...entry,
-        consumed_gram: returnedServing.gram,
-        consumed_option: returnedServing.option,
-        consumed_quantity: returnedServing.quantity,
+        serving: returnedServing,
       });
 
       router.replace("/");
@@ -71,11 +63,9 @@ export default function AddPreviewBarcodeScreen() {
 
     // Otherwise we'll create a new entry
     await insertEntry.mutateAsync({
+      serving: returnedServing,
       meal_id: meal.uuid,
       product_id: null,
-      consumed_gram: returnedServing.gram,
-      consumed_option: returnedServing.option,
-      consumed_quantity: returnedServing.quantity,
     });
 
     router.replace("/");
@@ -97,11 +87,9 @@ export default function AddPreviewBarcodeScreen() {
     }
 
     await insertEntry.mutateAsync({
+      serving,
       meal_id: meal.uuid,
       product_id: null,
-      consumed_gram: serving.gram,
-      consumed_option: serving.option,
-      consumed_quantity: serving.quantity,
     });
 
     router.replace("/");

@@ -17,12 +17,16 @@ export default function AddText() {
   };
 
   const handleMealSelect = (meal: MealWithProduct) => {
+    const serving = {
+      gram: meal.quantity_gram,
+      quantity: 1,
+      option: "meal",
+    };
+
     insertEntry.mutateAsync({
+      serving,
       meal_id: meal.uuid,
       product_id: null,
-      consumed_gram: meal.quantity_gram,
-      consumed_quantity: 1,
-      consumed_option: "meal",
     });
 
     router.push({

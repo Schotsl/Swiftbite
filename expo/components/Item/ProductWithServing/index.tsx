@@ -9,7 +9,7 @@ type ItemProductWithServingProps = {
   small?: boolean;
   border?: boolean;
   product: Product | ProductInsert;
-  serving: ServingData;
+  serving: ServingData | null;
   onPress: () => void;
 };
 
@@ -21,7 +21,15 @@ export default function ItemProductWithServing({
   serving,
   onPress,
 }: ItemProductWithServingProps) {
-  const macros = getMacrosFromProduct(product, serving);
+  const macros = serving
+    ? getMacrosFromProduct(product, serving)
+    : {
+        fat: 0,
+        gram: 0,
+        carbs: 0,
+        protein: 0,
+        calories: 0,
+      };
 
   const title = product.title || "Loading...";
   const brand = product.brand || "No brand";

@@ -51,7 +51,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.consumed_quantity
+        !entry.serving
     );
 
     const interval = processing ? 500 : false;
@@ -164,16 +164,10 @@ export default function Index() {
         style={{ marginBottom: -2 }}
         sections={sections}
         renderItem={({ item }) => {
-          const serving = {
-            gram: item.consumed_gram!,
-            option: item.consumed_option!,
-            quantity: item.consumed_quantity!,
-          };
-
           return item.product ? (
             <ItemProductWithServing
               product={item.product}
-              serving={serving}
+              serving={item.serving}
               onPress={() => {
                 router.push({
                   pathname:

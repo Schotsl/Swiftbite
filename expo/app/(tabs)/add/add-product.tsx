@@ -67,13 +67,7 @@ export default function AddPreviewBarcodeScreen() {
 
   const productEntry = entry?.product;
   const product = productEntry || productOpenfood;
-  const serving = entry
-    ? {
-        gram: entry?.consumed_gram!,
-        option: entry?.consumed_option!,
-        quantity: entry?.consumed_quantity!,
-      }
-    : undefined;
+  const serving = entry?.serving;
 
   if (!product) {
     return <Redirect href="/" />;
@@ -84,9 +78,7 @@ export default function AddPreviewBarcodeScreen() {
       // If we have a existing entry we'll update it
       await updateEntry.mutateAsync({
         ...entry,
-        consumed_gram: returnedServing.gram,
-        consumed_option: returnedServing.option,
-        consumed_quantity: returnedServing.quantity,
+        serving: returnedServing,
       });
 
       router.replace("/");
@@ -96,11 +88,9 @@ export default function AddPreviewBarcodeScreen() {
 
     // Otherwise we'll create a new entry
     await insertEntry.mutateAsync({
+      serving: returnedServing,
       meal_id: null,
       product_id: product.uuid,
-      consumed_gram: returnedServing.gram,
-      consumed_option: returnedServing.option,
-      consumed_quantity: returnedServing.quantity,
     });
 
     router.replace("/");
@@ -122,11 +112,9 @@ export default function AddPreviewBarcodeScreen() {
     }
 
     await insertEntry.mutateAsync({
+      serving,
       meal_id: null,
       product_id: product.uuid,
-      consumed_gram: serving.gram,
-      consumed_option: serving.option,
-      consumed_quantity: serving.quantity,
     });
 
     router.replace("/");

@@ -59,11 +59,9 @@ export default function Add2Preview() {
     }
 
     await insertEntry.mutateAsync({
+      serving,
       meal_id: null,
       product_id: product.uuid,
-      consumed_gram: serving.gram,
-      consumed_option: serving.option,
-      consumed_quantity: serving.quantity,
     });
 
     router.replace("/");

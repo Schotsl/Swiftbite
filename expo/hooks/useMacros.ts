@@ -25,15 +25,19 @@ export default function useDailyMacros(): MacroAbsolute {
 
   const totals = useMemo(() => {
     const macros = entries.map((entry) => {
-      const { product, meal } = entry;
+      const { product, meal, serving } = entry;
+
+      if (!serving) {
+        return {
+          fat: 0,
+          gram: 0,
+          carbs: 0,
+          protein: 0,
+          calories: 0,
+        };
+      }
 
       if (product) {
-        const serving = {
-          gram: entry.consumed_gram!,
-          option: entry.consumed_option!,
-          quantity: entry.consumed_quantity!,
-        };
-
         return getMacrosFromProduct(product, serving);
       }
 

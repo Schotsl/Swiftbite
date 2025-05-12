@@ -144,9 +144,7 @@ export default function PageEstimationAutomatic() {
     const entryPromise = insertEntry.mutateAsync({
       meal_id: null,
       product_id: product.uuid,
-      consumed_gram: null,
-      consumed_option: null,
-      consumed_quantity: null,
+      serving: null,
     });
 
     const generativePromise = insertGenerative.mutateAsync({

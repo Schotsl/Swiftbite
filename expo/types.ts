@@ -94,7 +94,11 @@ export type User = Omit<UserBase, "birth" | "weight" | "macro"> & {
   first_name: string;
 };
 
-export type Entry = Tables<"entry">;
+export type EntryBase = Tables<"entry">;
+export type Entry = Omit<EntryBase, "serving"> & {
+  serving: ServingData | null;
+};
+
 export type EntryWithProduct = Entry & {
   meal: never;
   product: Product;
