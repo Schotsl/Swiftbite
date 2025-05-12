@@ -2,7 +2,10 @@ import { Tables } from "./database.types";
 import { MacroData } from "./schemas/personal/goal";
 import { Weight } from "./schemas/personal/health";
 import { ServingData } from "./schemas/serving";
-export type Product = Tables<"product">;
+export type ProductBase = Tables<"product">;
+export type Product = Omit<ProductBase, "serving"> & {
+  serving: ServingData | null;
+};
 
 export type ProductManual = Product & {
   type: "manual";

@@ -111,6 +111,7 @@ export default function PageEstimationAutomatic() {
       type: "generative",
       title: data.title ?? null,
       brand: null,
+      serving: null,
       barcode: null,
       options: null,
       favorite: false,
@@ -131,10 +132,6 @@ export default function PageEstimationAutomatic() {
       potassium_100g: null,
       protein_100g: null,
       sodium_100g: null,
-
-      serving_gram: null,
-      serving_original: null,
-      serving_original_unit: null,
 
       quantity_gram: null,
       quantity_original: null,

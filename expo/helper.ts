@@ -80,10 +80,10 @@ export const getOptions = ({
     });
   }
 
-  if (product?.serving_original) {
+  if (product?.serving) {
     options.push({
-      gram: product.serving_original,
-      title: `Portiegrootte (${product.serving_original} ${product.serving_original_unit})`,
+      gram: product.serving?.gram,
+      title: `Portiegrootte (${product.serving?.gram} ${product.serving?.option})`,
       value: `serving`,
     });
   }
