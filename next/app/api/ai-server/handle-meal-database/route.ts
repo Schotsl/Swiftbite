@@ -3,6 +3,7 @@ import { validateUsage } from "@/utils/usage";
 import { after, NextResponse } from "next/server";
 import {
   fetchIcon,
+  fetchIngredients,
   insertIcon,
   updateMeal,
   uploadIcon,
@@ -25,14 +26,15 @@ export async function POST(request: Request) {
 
   const uuid = body.record.uuid;
   const title = body.record.title;
-  const ingredients = body.record.ingredients;
 
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[MEAL] Normalizing title`);
+    const iconIngredients = await fetchIngredients(uuid);
+    console.log(`[MEAL] Icon ingredients: ${iconIngredients}`);
     const iconTitle = await normalizeMeal(user, {
       title: title,
-      ingredients: ingredients,
+      ingredients: iconIngredients,
     });
 
     console.log(`[MEAL] Fetching icon from database`);
