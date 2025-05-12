@@ -6,8 +6,17 @@ export type Option = {
   gram: number;
 };
 
-export type Product = Tables<"product"> & {
+export type ServingData = {
+  quantity: number;
+  option: string;
+  gram: number;
+};
+
+export type ProductBase = Tables<"product">;
+export type Product = Omit<ProductBase, "options" | "serving" | "quantity"> & {
   options: Option[];
+  serving: ServingData | null;
+  quantity: ServingData | null;
 };
 
 export type ProductInsert = Omit<

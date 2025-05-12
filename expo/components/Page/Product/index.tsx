@@ -90,10 +90,10 @@ export default function PageProduct({
       items.push({ icon: "barcode", value: product.barcode });
     }
 
-    if (product.quantity_original) {
+    if (product.quantity) {
       items.push({
         icon: "weight-hanging",
-        value: `${product.quantity_original} ${product.quantity_original_unit}`,
+        value: `${product.quantity.gram} ${product.quantity.option}`,
       });
     }
 

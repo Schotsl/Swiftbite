@@ -114,6 +114,7 @@ export default function PageEstimationAutomatic() {
       serving: null,
       barcode: null,
       options: null,
+      quantity: null,
       favorite: false,
       estimated: true,
 
@@ -132,10 +133,6 @@ export default function PageEstimationAutomatic() {
       potassium_100g: null,
       protein_100g: null,
       sodium_100g: null,
-
-      quantity_gram: null,
-      quantity_original: null,
-      quantity_original_unit: null,
     });
 
     const entryPromise = insertEntry.mutateAsync({

@@ -3,8 +3,9 @@ import { MacroData } from "./schemas/personal/goal";
 import { Weight } from "./schemas/personal/health";
 import { ServingData } from "./schemas/serving";
 export type ProductBase = Tables<"product">;
-export type Product = Omit<ProductBase, "serving"> & {
+export type Product = Omit<ProductBase, "serving" | "quantity"> & {
   serving: ServingData | null;
+  quantity: ServingData | null;
 };
 
 export type ProductManual = Product & {

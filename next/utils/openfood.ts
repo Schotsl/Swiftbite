@@ -70,19 +70,36 @@ export async function mapProduct(
     nutritionFats - nutritionSaturated - nutritionTrans
   );
 
+  const quantityParsed =
+    quantity?.quantity_gram &&
+    quantity?.quantity_original &&
+    quantity?.quantity_original_unit
+      ? {
+          gram: quantity.quantity_gram,
+          quantity: quantity.quantity_original,
+          option: quantity.quantity_original_unit,
+        }
+      : null;
+
+  const servingParsed =
+    serving?.quantity_gram &&
+    serving?.quantity_original &&
+    serving?.quantity_original_unit
+      ? {
+          gram: serving.quantity_gram,
+          quantity: serving.quantity_original,
+          option: serving.quantity_original_unit,
+        }
+      : null;
+
   return {
     type: "barcode",
     title,
     options: optionsMapped,
     favorite: false,
 
-    quantity_gram: quantity.quantity_gram,
-    quantity_original: quantity.quantity_original,
-    quantity_original_unit: quantity.quantity_original_unit,
-
-    serving_gram: serving.quantity_gram,
-    serving_original: serving.quantity_original,
-    serving_original_unit: serving.quantity_original_unit,
+    serving: servingParsed,
+    quantity: quantityParsed,
 
     brand: product.brands,
     barcode: product.code,

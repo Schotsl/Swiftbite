@@ -72,10 +72,10 @@ export const getOptions = ({
     });
   }
 
-  if (product?.quantity_original) {
+  if (product?.quantity) {
     options.push({
-      gram: product.quantity_original,
-      title: `Productinhoud (${product.quantity_original} ${product.quantity_original_unit})`,
+      gram: product.quantity.gram,
+      title: `Productinhoud (${product.quantity.gram} ${product.quantity.option})`,
       value: `quantity`,
     });
   }

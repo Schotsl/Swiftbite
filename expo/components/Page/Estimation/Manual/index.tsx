@@ -75,8 +75,15 @@ export default function PageEstimationManual({
       return;
     }
 
+    const quantity: ServingData = {
+      gram: 100,
+      option: "g",
+      quantity: 1,
+    };
+
     const insert = await insertProduct.mutateAsync({
       serving,
+      quantity,
 
       type: "manual",
       brand: null,
@@ -87,9 +94,6 @@ export default function PageEstimationManual({
 
       icon_id: null,
 
-      quantity_gram: 100,
-      quantity_original: 1,
-      quantity_original_unit: "g",
       ...data,
     });
 

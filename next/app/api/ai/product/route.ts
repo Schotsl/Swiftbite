@@ -66,6 +66,28 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "No product found" }, { status: 404 });
   }
 
+  const {
+    quantity_gram: quantityGram,
+    quantity_original: quantityOriginal,
+    quantity_original_unit: quantityOriginalUnit,
+    serving_gram: servingGram,
+    serving_original: servingOriginal,
+    serving_original_unit: servingOriginalUnit,
+    ...rest
+  } = productInsert;
+
+  const quantity = {
+    gram: quantityGram,
+    option: quantityOriginalUnit,
+    quantity: quantityOriginal,
+  };
+
+  const serving = {
+    gram: servingGram,
+    option: servingOriginalUnit,
+    quantity: servingOriginal,
+  };
+
   const product: Product = {
     uuid: crypto.randomUUID(),
     type: "generative",
@@ -82,7 +104,10 @@ export async function GET(request: NextRequest) {
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
 
-    ...productInsert,
+    quantity,
+    serving,
+
+    ...rest,
   };
 
   after(async () => {
