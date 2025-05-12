@@ -67,8 +67,8 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       prev.map((mealProduct) =>
         mealProduct.product_id === productId
           ? { ...mealProduct, serving }
-          : mealProduct,
-      ),
+          : mealProduct
+      )
     );
   };
 
@@ -85,13 +85,13 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const removeMealProduct = (productId: string) => {
     setMealProducts((prev) =>
-      prev.filter((mealProduct) => mealProduct.product_id !== productId),
+      prev.filter((mealProduct) => mealProduct.product_id !== productId)
     );
   };
 
   const saveChanges = async () => {
     if (updating) {
-      const { uuid } = initial;
+      const uuid = initial;
 
       // We delete every meal_product so we don't have to keep track of which ones are new
       const promiseDelete = deleteMealProductMutation.mutateAsync({
@@ -110,7 +110,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         upsertMealProductMutation.mutateAsync({
           ...mealProduct,
           meal_id: uuid,
-        }),
+        })
       );
 
       await Promise.all(promiseArray);
@@ -127,7 +127,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       upsertMealProductMutation.mutateAsync({
         ...mealProduct,
         meal_id: uuid,
-      }),
+      })
     );
 
     await Promise.all(promiseArray);
