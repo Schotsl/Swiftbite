@@ -91,6 +91,7 @@ export async function GET(request: NextRequest) {
   const fatsecretItems = fatsecretData.items;
 
   // Remove duplicates brand labels from openfoodItems
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const openfoodMapped = openfoodItems.map((item: any) => {
     const brands = item.brands || [];
     const brandsTags = item.brands_tags || [];
