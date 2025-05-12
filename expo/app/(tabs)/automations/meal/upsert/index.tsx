@@ -112,19 +112,13 @@ export default function DetailsScreen() {
                     (product) => product.uuid === item.product_id
                   )!;
 
-                  const serving = {
-                    gram: item.selected_gram!,
-                    option: item.selected_option!,
-                    quantity: item.selected_quantity!,
-                  };
-
                   return (
                     <ItemProductWithServing
                       icon={false}
                       small={true}
                       border={index !== length - 1}
                       product={product}
-                      serving={serving}
+                      serving={item.serving}
                       onPress={() => {
                         router.push({
                           pathname: `/(tabs)/automations/meal/upsert/product`,

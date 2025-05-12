@@ -67,18 +67,10 @@ export default function AddPreviewBarcodeScreen() {
     (mealProduct) => mealProduct.product_id === productId
   );
 
-  const mealProductServing = mealProduct
-    ? {
-        gram: mealProduct.selected_gram,
-        option: mealProduct.selected_option,
-        quantity: mealProduct.selected_quantity,
-      }
-    : undefined;
-
   return (
     <PageProduct
       product={product}
-      serving={mealProductServing}
+      serving={mealProduct?.serving}
       onDelete={() => {
         removeMealProduct(productId!);
 

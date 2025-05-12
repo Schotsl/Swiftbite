@@ -76,12 +76,9 @@ export const MealProvider: React.FC<MealProviderProps> = ({
     setMealProducts((prev) => [
       ...prev,
       {
+        serving,
         meal_id: initialUuid,
         product_id: productId,
-
-        selected_gram: serving.gram,
-        selected_option: serving.option,
-        selected_quantity: serving.quantity,
       },
     ]);
   };

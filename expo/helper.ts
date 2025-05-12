@@ -7,6 +7,7 @@ import {
   MealWithProduct,
   MacroAbsolute,
   OptionWithGram,
+  MealProduct,
 } from "./types";
 import { MacroData } from "./schemas/personal/goal";
 
@@ -189,12 +190,7 @@ export function getMacrosFromMeal(
   const products = meal.meal_products;
   const macros = products.reduce(
     (acc, product) => {
-      const serving = {
-        gram: product.selected_gram!,
-        option: product.selected_option!,
-        quantity: product.selected_quantity!,
-      };
-
+      const serving = product.serving;
       const macros = getMacrosFromProduct(product.product, serving);
 
       return {
@@ -248,7 +244,7 @@ export const mapMeal = (
   meal: Omit<MealWithProduct, "quantity_gram">
 ): MealWithProduct => {
   const total = meal.meal_products.reduce(
-    (sum: number, item: { selected_gram: number }) => sum + item.selected_gram,
+    (sum: number, item: MealProduct) => sum + item.serving.gram,
     0
   );
 

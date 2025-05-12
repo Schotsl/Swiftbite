@@ -114,7 +114,11 @@ export type EntryWithProductManual = Entry & {
 };
 
 export type Meal = Tables<"meal">;
-export type MealProduct = Tables<"meal_product">;
+export type MealProductBase = Tables<"meal_product">;
+export type MealProduct = MealProductBase & {
+  serving: ServingData;
+};
+
 export type MealProductWithProduct = MealProduct & { product: Product };
 export type MealWithProduct = Meal & {
   quantity_gram: number;
