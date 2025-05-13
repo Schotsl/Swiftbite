@@ -8,12 +8,13 @@ import {
   MacroAbsolute,
   OptionWithGram,
   MealProduct,
+  User,
 } from "./types";
 import { MacroData } from "./schemas/personal/goal";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean,
+  compressed: boolean
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -106,7 +107,7 @@ export const getOptions = ({
 export const singleMacroToAbsolute = (
   type: keyof MacroData,
   value: number,
-  calories: number,
+  calories: number
 ) => {
   let divider = 4;
 
@@ -125,7 +126,7 @@ export const singleMacroToAbsolute = (
 // TODO: Might wanna rename this to "macroToAbsolute" and "macrosToAbsolute" but I'd have to double check every where in the codebase for proper single and plural usage.
 export const macroToAbsolute = (
   macro: MacroData,
-  calories: number,
+  calories: number
 ): MacroAbsolute => {
   return {
     fat: singleMacroToAbsolute("fat", macro.fat, calories),
@@ -139,7 +140,7 @@ export const getRange = (date = new Date()) => {
   const startDate = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate(),
+    date.getDate()
   );
 
   const endDate = new Date(
@@ -149,7 +150,7 @@ export const getRange = (date = new Date()) => {
     23,
     59,
     59,
-    999,
+    999
   );
 
   return {
@@ -161,7 +162,7 @@ export const getRange = (date = new Date()) => {
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true,
+  rounded = true
 ): MacroAbsolute & { gram: number } {
   const gram = serving.gram || 0;
 
@@ -185,7 +186,7 @@ export function getMacrosFromProduct(
 }
 
 export function getMacrosFromMeal(
-  meal: MealWithProduct,
+  meal: MealWithProduct
 ): MacroAbsolute & { gram: number } {
   const products = meal.meal_products || [];
   const macros = products.reduce(
@@ -207,7 +208,7 @@ export function getMacrosFromMeal(
       carbs: 0,
       protein: 0,
       calories: 0,
-    },
+    }
   );
 
   return macros;
@@ -225,7 +226,7 @@ export const transformDate = (date: Date | string | number): string => {
 export const transformImage = (
   uri?: string,
   width?: string,
-  height?: string,
+  height?: string
 ) => {
   const complete = uri && width && height;
 
@@ -241,13 +242,64 @@ export const transformImage = (
 };
 
 export const mapMeal = (
-  meal: Omit<MealWithProduct, "quantity_gram">,
+  meal: Omit<MealWithProduct, "quantity_gram">
 ): MealWithProduct => {
   const total =
     meal.meal_products?.reduce(
       (sum: number, item: MealProduct) => sum + item.serving.gram,
-      0,
+      0
     ) || 0;
 
   return { ...meal, quantity_gram: total };
 };
+
+export function isProductFavorite(
+  user: User | undefined,
+  product: string
+): boolean {
+  if (!user) {
+    return false;
+  }
+
+  return user.favorite_products.includes(product);
+}
+
+export function isMealFavorite(user: User | undefined, meal: string): boolean {
+  if (!user) {
+    return false;
+  }
+
+  return user.favorite_meals.includes(meal);
+}
+
+export function toggleProductFavorite(
+  user: User | undefined,
+  product: string
+): string[] {
+  if (!user) {
+    return [product];
+  }
+
+  const favorite = isProductFavorite(user, product);
+  const favoriteArray = favorite
+    ? user.favorite_products.filter((id) => id !== product)
+    : [...user.favorite_products, product];
+
+  return favoriteArray;
+}
+
+export function toggleMealFavorite(
+  user: User | undefined,
+  meal: string
+): string[] {
+  if (!user) {
+    return [meal];
+  }
+
+  const favorite = isMealFavorite(user, meal);
+  const favoriteArray = favorite
+    ? user.favorite_meals.filter((id) => id !== meal)
+    : [...user.favorite_meals, meal];
+
+  return favoriteArray;
+}

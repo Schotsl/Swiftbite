@@ -4,8 +4,17 @@ import { useIsFocused } from "@react-navigation/native";
 import { MealWithProduct } from "@/types";
 import { ScrollView, Text, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
-import { getMacrosFromMeal, getOptions } from "@/helper";
+import {
+  getMacrosFromMeal,
+  getOptions,
+  isMealFavorite,
+  toggleMealFavorite,
+} from "@/helper";
 import { ServingData, ServingInput, servingSchema } from "@/schemas/serving";
+import { useQuery } from "@tanstack/react-query";
+
+import userData from "@/queries/userData";
+import useUpdateUser from "@/mutations/useUpdateUser";
 
 import variables from "@/variables";
 
@@ -15,7 +24,6 @@ import InputDropdown from "@/components/Input/Dropdown";
 import ProductInfo from "@/components/Product/Info";
 import ProductImpact from "@/components/Product/Impact";
 import ButtonOverlay from "@/components/Button/Overlay";
-import useUpdateMeal from "@/mutations/useUpdateMeal";
 
 export type PageMealProps = {
   meal: MealWithProduct;
@@ -35,10 +43,12 @@ export default function PageMeal({
 }: PageMealProps) {
   const focus = useIsFocused();
 
-  const updateMeal = useUpdateMeal();
+  const updateUser = useUpdateUser();
+
+  const { data: user } = useQuery(userData());
 
   const [saving, setSaving] = useState(false);
-  const [favorite, setFavorite] = useState(meal.favorite);
+  const [favorite, setFavorite] = useState(isMealFavorite(user, meal.uuid));
 
   const { watch, control, reset, setValue, handleSubmit } =
     useForm<ServingInput>({
@@ -70,15 +80,20 @@ export default function PageMeal({
   };
 
   const handleFavorite = () => {
-    setFavorite((previous) => {
-      const favorite = !previous;
+    if (!user) {
+      return;
+    }
 
-      updateMeal.mutate({
-        ...meal,
-        favorite,
+    setFavorite((previous) => {
+      const favoriteInverted = !previous;
+      const favoriteMeals = toggleMealFavorite(user, meal.uuid);
+
+      updateUser.mutateAsync({
+        ...user,
+        favorite_meals: favoriteMeals,
       });
 
-      return favorite;
+      return favoriteInverted;
     });
   };
 

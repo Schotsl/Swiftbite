@@ -13,12 +13,10 @@ type MealProductTemporary = Omit<MealProductInsert, "meal_id"> & {
 
 type MealContextType = {
   title: string;
-  favorite: boolean;
   updating: boolean;
   mealProducts: MealProductTemporary[];
 
   updateTitle: (title: string) => void;
-  updateFavorite: (favorite: boolean) => void;
 
   removeMealProduct: (productId: string) => void;
   updateMealProduct: (productId: string, serving: ServingData) => void;
@@ -46,11 +44,9 @@ export const MealProvider: React.FC<MealProviderProps> = ({
   const deleteMealProductMutation = useDeleteMealProduct();
 
   const initialTitle = initial?.title || "";
-  const initialFavorite = initial?.favorite || false;
   const initialMealProducts = initial?.meal_products || [];
 
   const [title, setTitle] = useState(initialTitle);
-  const [favorite, setFavorite] = useState(initialFavorite);
   const [mealProducts, setMealProducts] =
     useState<MealProductTemporary[]>(initialMealProducts);
 
@@ -58,17 +54,13 @@ export const MealProvider: React.FC<MealProviderProps> = ({
     setTitle(title);
   };
 
-  const updateFavorite = (favorite: boolean) => {
-    setFavorite(favorite);
-  };
-
   const updateMealProduct = (productId: string, serving: ServingData) => {
     setMealProducts((prev) =>
       prev.map((mealProduct) =>
         mealProduct.product_id === productId
           ? { ...mealProduct, serving }
-          : mealProduct,
-      ),
+          : mealProduct
+      )
     );
   };
 
@@ -85,7 +77,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const removeMealProduct = (productId: string) => {
     setMealProducts((prev) =>
-      prev.filter((mealProduct) => mealProduct.product_id !== productId),
+      prev.filter((mealProduct) => mealProduct.product_id !== productId)
     );
   };
 
@@ -99,7 +91,6 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       const promiseUpdate = updateMealMutation.mutateAsync({
         ...initial,
         title,
-        favorite,
       });
 
       await Promise.all([promiseDelete, promiseUpdate]);
@@ -108,7 +99,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         upsertMealProductMutation.mutateAsync({
           ...mealProduct,
           meal_id: uuid,
-        }),
+        })
       );
 
       await Promise.all(promiseArray);
@@ -118,14 +109,13 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
     const { uuid } = await insertMealMutation.mutateAsync({
       title,
-      favorite,
     });
 
     const promiseArray = mealProducts.map((mealProduct) =>
       upsertMealProductMutation.mutateAsync({
         ...mealProduct,
         meal_id: uuid,
-      }),
+      })
     );
 
     await Promise.all(promiseArray);
@@ -136,11 +126,9 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       value={{
         title,
         updating,
-        favorite,
         mealProducts,
 
         updateTitle,
-        updateFavorite,
 
         removeMealProduct,
         updateMealProduct,

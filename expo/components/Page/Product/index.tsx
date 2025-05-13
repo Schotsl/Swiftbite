@@ -1,11 +1,16 @@
 import { useForm } from "react-hook-form";
 import { Product } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { ScrollView, Text, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { getMacrosFromProduct, getOptions } from "@/helper";
 import { ServingData, ServingInput, servingSchema } from "@/schemas/serving";
+import { isProductFavorite, toggleProductFavorite } from "@/helper";
+
+import userData from "@/queries/userData";
+import useUpdateUser from "@/mutations/useUpdateUser";
 
 import variables from "@/variables";
 
@@ -34,8 +39,14 @@ export default function PageProduct({
 }: PageProductProps) {
   const focus = useIsFocused();
 
+  const updateUser = useUpdateUser();
+
+  const { data: user } = useQuery(userData());
+
   const [saving, setSaving] = useState(false);
-  const [favorite, setFavorite] = useState(false);
+  const [favorite, setFavorite] = useState(
+    isProductFavorite(user, product.uuid)
+  );
 
   const { watch, control, reset, setValue, handleSubmit } =
     useForm<ServingInput>({
@@ -66,11 +77,21 @@ export default function PageProduct({
     onSave(serving);
   };
 
-  const handleFavorite = () => {
-    setFavorite((previous) => {
-      const favorite = !previous;
+  const handleFavorite = async () => {
+    if (!user) {
+      return;
+    }
 
-      return favorite;
+    setFavorite((previous) => {
+      const favoriteInverted = !previous;
+      const favoriteProducts = toggleProductFavorite(user, product.uuid);
+
+      updateUser.mutateAsync({
+        ...user,
+        favorite_products: favoriteProducts,
+      });
+
+      return favoriteInverted;
     });
   };
 
@@ -94,11 +115,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions({ product });
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity",
+      (option) => option.value === "quantity"
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving",
+      (option) => option.value === "serving"
     );
 
     if (optionsServing) {

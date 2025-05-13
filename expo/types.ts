@@ -98,6 +98,8 @@ export type User = Omit<UserBase, "birth" | "weight" | "macro"> & {
   calories: number;
   last_name: string;
   first_name: string;
+  favorite_meals: string[];
+  favorite_products: string[];
 };
 
 export type EntryBase = Tables<"entry">;
