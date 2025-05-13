@@ -9,7 +9,7 @@ export default function AutomationRepeatUpsertSearch() {
   const handleProductSelect = (item: ProductSearch) => {
     router.push({
       pathname: `/(tabs)/automations/repeat/upsert/product`,
-      params: item,
+      params: { product: item.uuid },
     });
   };
 

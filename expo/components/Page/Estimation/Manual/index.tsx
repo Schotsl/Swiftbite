@@ -87,9 +87,10 @@ export default function PageEstimationManual({
 
       type: "manual",
       brand: null,
+      search: null,
       barcode: null,
       options: null,
-      favorite: false,
+      embedding: null,
       estimated: false,
 
       icon_id: null,

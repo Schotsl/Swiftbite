@@ -9,7 +9,7 @@ export default function AddText() {
   const handleProductSelect = (product: ProductSearch) => {
     router.push({
       pathname: `/(tabs)/automations/meal/upsert/product`,
-      params: product,
+      params: { product: product.uuid },
     });
   };
 

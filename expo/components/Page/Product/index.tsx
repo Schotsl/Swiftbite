@@ -9,8 +9,6 @@ import { ServingData, ServingInput, servingSchema } from "@/schemas/serving";
 
 import variables from "@/variables";
 
-import useUpdateProduct from "@/mutations/useUpdateProduct";
-
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import InputDropdown from "@/components/Input/Dropdown";
@@ -36,10 +34,8 @@ export default function PageProduct({
 }: PageProductProps) {
   const focus = useIsFocused();
 
-  const updateProduct = useUpdateProduct();
-
   const [saving, setSaving] = useState(false);
-  const [favorite, setFavorite] = useState(product.favorite);
+  const [favorite, setFavorite] = useState(false);
 
   const { watch, control, reset, setValue, handleSubmit } =
     useForm<ServingInput>({
@@ -73,11 +69,6 @@ export default function PageProduct({
   const handleFavorite = () => {
     setFavorite((previous) => {
       const favorite = !previous;
-
-      updateProduct.mutate({
-        ...product,
-        favorite,
-      });
 
       return favorite;
     });

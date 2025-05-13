@@ -67,8 +67,8 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       prev.map((mealProduct) =>
         mealProduct.product_id === productId
           ? { ...mealProduct, serving }
-          : mealProduct
-      )
+          : mealProduct,
+      ),
     );
   };
 
@@ -85,7 +85,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const removeMealProduct = (productId: string) => {
     setMealProducts((prev) =>
-      prev.filter((mealProduct) => mealProduct.product_id !== productId)
+      prev.filter((mealProduct) => mealProduct.product_id !== productId),
     );
   };
 
@@ -108,7 +108,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         upsertMealProductMutation.mutateAsync({
           ...mealProduct,
           meal_id: uuid,
-        })
+        }),
       );
 
       await Promise.all(promiseArray);
@@ -125,7 +125,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       upsertMealProductMutation.mutateAsync({
         ...mealProduct,
         meal_id: uuid,
-      })
+      }),
     );
 
     await Promise.all(promiseArray);
