@@ -15,13 +15,6 @@ export const maxDuration = 120;
 export async function POST(request: Request) {
   // Make sure the user isn't over their usage limits
   const body = await request.json();
-  const user = body.record.user_id;
-
-  const response = await validateUsage(user);
-
-  if (response) {
-    return NextResponse.json({ error: response }, { status: 429 });
-  }
 
   const productIcon = body.record.icon_id;
   const productUuid = body.record.uuid;
@@ -47,7 +40,7 @@ export async function POST(request: Request) {
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[ICON] Normalizing title`);
-    const iconTitle = await normalizeTitle(user, { title: productTitleNew });
+    const iconTitle = await normalizeTitle({ title: productTitleNew });
 
     console.log(`[ICON] Fetching icon from database`);
     const iconUuid = await fetchIcon(iconTitle);

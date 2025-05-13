@@ -46,7 +46,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -109,7 +109,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = google("gemini-2.5-pro-exp-03-25");
@@ -209,7 +209,7 @@ export async function searchProducts(
   system: {
     products: ProductSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -291,7 +291,7 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-meal";
   const model = "gpt-4.1-mini";
@@ -333,11 +333,11 @@ export async function normalizeMeal(
 }
 
 export async function normalizeTitle(
-  user: string,
+  // user: string,
   data: {
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-title";
   const model = "gpt-4.1-mini";
@@ -361,16 +361,16 @@ export async function normalizeTitle(
     ],
   });
 
-  const { object, usage } = response;
+  const { object } = response;
 
-  after(async () => {
-    await insertUsage({
-      user,
-      task,
-      model,
-      usage,
-    });
-  });
+  // after(async () => {
+  //   await insertUsage({
+  //     user,
+  //     task,
+  //     model,
+  //     usage,
+  //   });
+  // });
 
   const normalized = object.normalized_title;
   const normalizedLowercase = normalized.toLowerCase();
@@ -385,7 +385,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<QuantitySchema> {
   // If no combined or unit is provided there is no way to know the original unit
   if (!data.combined && !data.unit) {
