@@ -45,13 +45,6 @@ export async function GET(request: NextRequest) {
   const openfoodStringified = JSON.stringify(openfoodResponse);
   const fatsecretStringified = JSON.stringify(fatsecretResponse);
 
-  // Create a stream for Supabase results
-  const supabaseStream = {
-    partialObjectStream: (async function* () {
-      yield supabaseResponse;
-    })(),
-  };
-
   // Create a stream for AI results
   const generativeStream = await searchProducts(
     user!,
@@ -67,39 +60,6 @@ export async function GET(request: NextRequest) {
     },
     request.signal
   );
-
-  // Create a combined stream
-  const combinedStream = {
-    partialObjectStream: (async function* () {
-      const data = [];
-
-      for await (const chunk of supabaseStream.partialObjectStream) {
-        if (chunk.length === 0) {
-          continue;
-        }
-
-        data.push(...chunk);
-
-        yield data;
-      }
-
-      for await (const chunk of generativeStream.partialObjectStream) {
-        if (chunk.length === 0) {
-          continue;
-        }
-
-        const mapped = chunk.map((result) => {
-          return {
-            new: true,
-            ...result,
-          };
-        });
-
-        data.push(...mapped);
-        yield data;
-      }
-    })(),
-  };
 
   after(async () => {
     const results = await generativeStream.object;
@@ -188,6 +148,27 @@ export async function GET(request: NextRequest) {
     });
   });
 
-  const response = streamToResponse([combinedStream]);
+  const combinedStream = {
+    partialObjectStream: (async function* () {
+      // First yield the Supabase results
+      yield supabaseResponse;
+
+      // Then yield combined results as AI results come in
+      for await (const chunk of generativeStream.partialObjectStream) {
+        if (chunk.length === 0) {
+          continue;
+        }
+
+        const mapped = chunk.map((result) => ({
+          new: true,
+          ...result,
+        }));
+
+        yield [...supabaseResponse, ...mapped];
+      }
+    })(),
+  };
+
+  const response = streamToResponse(combinedStream);
   return response;
 }

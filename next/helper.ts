@@ -22,11 +22,9 @@ export const roundNumber = (number: number, precision = 2) => {
   return rounded / factor;
 };
 
-export const streamToResponse = <T>(
-  streams: {
-    partialObjectStream: AsyncIterable<T>;
-  }[]
-): Response => {
+export const streamToResponse = <T>(streams: {
+  partialObjectStream: AsyncIterable<T>;
+}): Response => {
   const headers = {
     "Content-Type": "application/json",
     "Transfer-Encoding": "chunked",
@@ -34,12 +32,10 @@ export const streamToResponse = <T>(
 
   const readable = new ReadableStream({
     async start(controller) {
-      for (const stream of streams) {
-        for await (const chunk of stream.partialObjectStream) {
-          const stringified = JSON.stringify(chunk);
+      for await (const chunk of streams.partialObjectStream) {
+        const stringified = JSON.stringify(chunk);
 
-          controller.enqueue(stringified);
-        }
+        controller.enqueue(stringified);
       }
 
       controller.close();

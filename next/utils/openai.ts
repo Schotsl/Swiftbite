@@ -180,6 +180,7 @@ export async function searchProduct(data: {
     model: searchModel,
     output: "object",
     schema: productSchema,
+    temperature: 0,
     messages: [
       {
         role: "system",
@@ -221,6 +222,10 @@ export async function searchProducts(
 
   const structureStream = streamObject({
     model: structureModel,
+    output: "array",
+    schema: productSearchSchema,
+    temperature: 0,
+    abortSignal: signal,
     providerOptions: {
       google: {
         thinkingConfig: {
@@ -228,9 +233,6 @@ export async function searchProducts(
         },
       },
     },
-    output: "array",
-    schema: productSearchSchema,
-    abortSignal: signal,
     messages: [
       {
         role: "system",

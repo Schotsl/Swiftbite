@@ -123,10 +123,10 @@ export const supabaseRequest = async (
 ): Promise<ProductSearch[]> => {
   const vector = await generateEmbedding({ value: query });
 
-  const { data: results } = await supabase.rpc("match_documents", {
+  const { data: results } = await supabase.rpc("match_product", {
     query_embedding: vector,
     match_threshold: 0.5,
-    match_count: 10,
+    match_count: 25,
   });
 
   const resultsSafe = results || [];
