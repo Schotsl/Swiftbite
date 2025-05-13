@@ -74,27 +74,39 @@ export const productSchema = nutritionSchema.extend({
 
   serving_original: z
     .number()
-    .describe("Numeric value of the recommended serving size"),
+    .describe("Numeric value of the recommended serving size")
+    .optional()
+    .nullable(),
   serving_original_unit: z
     .string()
-    .describe(`Unit of the recommended serving size`),
+    .describe(`Unit of the recommended serving size`)
+    .optional()
+    .nullable(),
   serving_gram: z
     .number()
     .describe(
       `Numeric value of the recommended serving size converted to grams`
-    ),
+    )
+    .optional()
+    .nullable(),
 
   quantity_original: z
     .number()
-    .describe("Numeric value of the total quantity in the product's packaging"),
+    .describe("Numeric value of the total quantity in the product's packaging")
+    .optional()
+    .nullable(),
   quantity_original_unit: z
     .string()
-    .describe(`Unit of the total quantity in the product's packaging`),
+    .describe(`Unit of the total quantity in the product's packaging`)
+    .optional()
+    .nullable(),
   quantity_gram: z
     .number()
     .describe(
       `Numeric value of the total quantity in the product's packaging converted to grams`
-    ),
+    )
+    .optional()
+    .nullable(),
 });
 
 export type ProductData = z.infer<typeof productSchema>;
