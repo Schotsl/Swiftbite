@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
   console.log(`[OPTIONS/${title}] Inserting options into database`);
 
   const { error } = await supabase
-    .from("test")
+    .from("product")
     .update({ options: optionsMapped })
     .eq("uuid", uuid);
 

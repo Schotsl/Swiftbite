@@ -4,6 +4,8 @@ import { getUser, supabase } from "@/utils/supabase";
 import { handleError, streamToResponse } from "@/helper";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
+import { Product, ProductInsert } from "@/types";
+import { Tables } from "@/database.types";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
@@ -104,34 +106,65 @@ export async function GET(request: NextRequest) {
     const resultsMapped = results.map((result) => {
       return {
         uuid: crypto.randomUUID(),
-        search_title: result.title,
-        search_brand: result.brand,
-        search_quantity_original: result.quantity_original,
-        search_quantity_original_unit: result.quantity_original_unit,
-      };
+        title: null,
+        brand: null,
+        user_id: null,
+        type: "search",
+        quantity: null,
+        serving: null,
+        barcode: null,
+        calcium_100g: null,
+        carbohydrate_100g: null,
+        cholesterol_100g: null,
+        calorie_100g: null,
+        carbohydrate_sugar_100g: null,
+        embedding: null,
+        estimated: false,
+        fat_100g: null,
+        fat_saturated_100g: null,
+        fat_trans_100g: null,
+        fat_unsaturated_100g: null,
+        fiber_100g: null,
+        iron_100g: null,
+        icon_id: null,
+        potassium_100g: null,
+        protein_100g: null,
+        sodium_100g: null,
+        created_at: new Date().toISOString(),
+        updated_at: null,
+        options: null,
+        search: {
+          title: result.title,
+          brand: result.brand,
+          quantity_original: result.quantity_original,
+          quantity_original_unit: result.quantity_original_unit,
+        },
+      } as Product;
     });
 
-    const { error } = await supabase.from("test").insert(resultsMapped);
+    const { error } = await supabase.from("product").insert(resultsMapped);
+
+    handleError(error);
 
     resultsMapped.forEach(async (result) => {
       const params = new URLSearchParams({
         uuid: result.uuid,
         lang,
-        title: result.search_title,
-        brand: result.search_brand,
+        title: result.search!.title,
+        brand: result.search!.brand,
       });
 
-      if (result.search_quantity_original) {
+      if (result.search!.quantity_original) {
         params.set(
           "quantity_original",
-          result.search_quantity_original.toString()
+          result.search!.quantity_original.toString()
         );
       }
 
-      if (result.search_quantity_original_unit) {
+      if (result.search!.quantity_original_unit) {
         params.set(
           "quantity_original_unit",
-          result.search_quantity_original_unit
+          result.search!.quantity_original_unit
         );
       }
 
@@ -152,16 +185,7 @@ export async function GET(request: NextRequest) {
           headers,
         }
       );
-
-      fetch(
-        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-embedding?${params.toString()}`,
-        {
-          headers,
-        }
-      );
     });
-
-    handleError(error);
   });
 
   const response = streamToResponse([combinedStream]);

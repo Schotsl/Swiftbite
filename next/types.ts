@@ -14,17 +14,21 @@ export type ServingData = {
 
 export type ProductBase = Tables<"product">;
 export type Product = Omit<ProductBase, "options" | "serving" | "quantity"> & {
-  options: Option[];
+  search: ProductSearchBase | null;
+  options: Option[] | null;
   serving: ServingData | null;
   quantity: ServingData | null;
 };
 
-export type ProductSearch = {
-  new: boolean;
+export type ProductSearchBase = {
   title: string;
   brand: string;
   quantity_original: number;
   quantity_original_unit: string;
+};
+
+export type ProductSearch = ProductSearchBase & {
+  new: boolean;
 };
 
 export type ProductInsert = Omit<

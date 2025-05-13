@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
   console.log(`[PRODUCT/${title}] Updating product`);
 
   const { error: errorProduct } = await supabase
-    .from("test")
+    .from("product")
     .update({
       ...rest,
       quantity,
@@ -99,16 +99,20 @@ export async function GET(request: NextRequest) {
 
   handleError(errorProduct);
 
-  const embeddingInput = [title, brand];
+  let embeddingInput = `${title} ${brand}`;
 
   if (quantity) {
-    embeddingInput.push(`${quantity.quantity} ${quantity.option}`);
+    embeddingInput += ` ${quantity.quantity} ${quantity.option}`;
   }
+
+  console.log(`[PRODUCT/${title}] Generating embedding`);
 
   const embedding = await generateEmbedding({ value: embeddingInput });
 
+  console.log(`[PRODUCT/${title}] Updating embedding`);
+
   const { error: errorEmbedding } = await supabase
-    .from("test")
+    .from("product")
     .update({ embedding })
     .eq("uuid", uuid);
 

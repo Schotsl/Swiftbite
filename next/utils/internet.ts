@@ -129,8 +129,8 @@ export const supabaseRequest = async (
     match_count: 10,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const mapped = results.map((result: any) => ({
+  const resultsSafe = results || [];
+  const resultsMapped = resultsSafe.map((result: any) => ({
     new: false,
     title: result.title,
     brand: result.brand,
@@ -138,5 +138,5 @@ export const supabaseRequest = async (
     quantity_original_unit: result.quantity.option,
   }));
 
-  return mapped;
+  return resultsMapped;
 };

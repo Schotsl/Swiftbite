@@ -474,7 +474,7 @@ export async function generateIcon(data: { title: string }) {
 }
 
 export async function generateEmbedding(data: {
-  value: string | string[];
+  value?: string;
 }): Promise<number[]> {
   const model = openai.embedding("text-embedding-3-small");
   const { value } = data;
