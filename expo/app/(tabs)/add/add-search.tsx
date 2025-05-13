@@ -12,7 +12,7 @@ export default function AddText() {
   const handleProductSelect = (product: ProductSearch) => {
     router.push({
       pathname: "/add/add-product",
-      params: product,
+      params: { product: product.uuid },
     });
   };
 

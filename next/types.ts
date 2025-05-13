@@ -29,6 +29,7 @@ export type ProductSearchBase = {
 
 export type ProductSearch = ProductSearchBase & {
   new: boolean;
+  uuid: string;
 };
 
 export type ProductInsert = Omit<

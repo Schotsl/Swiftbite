@@ -37,6 +37,7 @@ export async function mapProduct(
   const { nutriments } = product;
 
   const title = getTitle(product, lang);
+  const brand = product.brands;
 
   const [quantity, serving, options] = await Promise.all([
     normalizeQuantity(user, {
@@ -51,9 +52,10 @@ export async function mapProduct(
       combined: product.serving_size,
     }),
 
-    generateOptions(user, {
+    generateOptions({
       lang,
       title,
+      brand,
     }),
   ]);
 
@@ -95,13 +97,14 @@ export async function mapProduct(
   return {
     type: "barcode",
     title,
-    options: optionsMapped,
-    favorite: false,
+    brand,
+    search: null,
+    embedding: null,
 
+    options: optionsMapped,
     serving: servingParsed,
     quantity: quantityParsed,
 
-    brand: product.brands,
     barcode: product.code,
     estimated: false,
 

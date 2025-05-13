@@ -29,6 +29,7 @@ export type ProductManual = Product & {
 
 export type ProductSearch = {
   new: boolean;
+  uuid: string;
   title: string;
   brand: string;
   quantity_original: number;

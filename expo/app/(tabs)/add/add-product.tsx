@@ -1,5 +1,5 @@
 import entryData from "@/queries/entryData";
-import openfoodData from "@/queries/openfoodData";
+import productData from "@/queries/productData";
 
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
@@ -22,20 +22,9 @@ export default function AddPreviewBarcodeScreen() {
   const updateEntry = useUpdateEntry();
   const deleteEntry = useDeleteEntry();
 
-  const {
-    entry: entryId,
-    title,
-    brand,
-    barcode,
-    quantity_original,
-    quantity_original_unit,
-  } = useLocalSearchParams<{
+  const { entry: entryId, product: productId } = useLocalSearchParams<{
     entry: string;
-    title: string;
-    brand: string;
-    barcode: string;
-    quantity_original: string;
-    quantity_original_unit: string;
+    product: string;
   }>();
 
   const { data: entry, isLoading: isLoadingEntry } = useQuery({
@@ -43,19 +32,15 @@ export default function AddPreviewBarcodeScreen() {
     select: (entries) => entries.find((entry) => entry.uuid === entryId),
     enabled: !!entryId,
   });
-
-  const { data: productOpenfood, isLoading: isLoadingOpenfood } = useQuery({
-    ...openfoodData({
-      title,
-      brand,
-      barcode,
-      quantity_original,
-      quantity_original_unit,
+  console.log(productId);
+  const { data: productObject, isLoading: isLoadingProduct } = useQuery({
+    ...productData({
+      uuid: productId,
     }),
     enabled: !entryId,
   });
 
-  if (isLoadingEntry || isLoadingOpenfood) {
+  if (isLoadingEntry || isLoadingProduct) {
     return (
       <View style={{ padding: 32, minHeight: "100%" }}>
         <HeaderLoading />
@@ -64,9 +49,10 @@ export default function AddPreviewBarcodeScreen() {
       </View>
     );
   }
+  console.log(productObject);
 
   const productEntry = entry?.product;
-  const product = productEntry || productOpenfood;
+  const product = productEntry || productObject?.[0];
   const serving = entry?.serving;
 
   if (!product) {
@@ -90,7 +76,7 @@ export default function AddPreviewBarcodeScreen() {
     await insertEntry.mutateAsync({
       serving: returnedServing,
       meal_id: null,
-      product_id: product.uuid,
+      product_id: productId,
     });
 
     router.replace("/");

@@ -5,20 +5,25 @@ import { Product } from "@/types";
 import supabase from "@/utils/supabase";
 
 type productDataType = {
-  openfood?: string;
+  uuid?: string;
+  barcode?: string;
 };
 
-export default function productData({ openfood }: productDataType) {
+export default function productData({ uuid, barcode }: productDataType) {
   return queryOptions({
-    queryKey: ["productData", openfood],
+    queryKey: ["productData", uuid, barcode],
     queryFn: async () => {
       let query = supabase
         .from("product")
         .select(`*`)
         .order("created_at", { ascending: false });
 
-      if (openfood) {
-        query = query.eq("barcode", openfood);
+      if (barcode) {
+        query = query.eq("barcode", barcode);
+      }
+
+      if (uuid) {
+        query = query.eq("uuid", uuid);
       }
 
       const { error, data } = await query;

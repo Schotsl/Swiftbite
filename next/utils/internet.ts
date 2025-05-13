@@ -132,6 +132,7 @@ export const supabaseRequest = async (
   const resultsSafe = results || [];
   const resultsMapped = resultsSafe.map((result: any) => ({
     new: false,
+    uuid: result.uuid,
     title: result.title,
     brand: result.brand,
     quantity_original: result.quantity.quantity,

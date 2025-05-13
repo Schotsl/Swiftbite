@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
     const results = await generativeStream.object;
     const resultsMapped = results.map((result) => {
       return {
-        uuid: crypto.randomUUID(),
+        uuid: getUUID(result),
         title: null,
         brand: null,
         user_id: null,
@@ -161,6 +161,7 @@ export async function GET(request: NextRequest) {
 
         const mapped = chunk.map((result) => ({
           new: true,
+          uuid: getUUID(result),
           ...result,
         }));
 
@@ -172,3 +173,27 @@ export async function GET(request: NextRequest) {
   const response = streamToResponse(combinedStream);
   return response;
 }
+
+// Get UUID from title, brand, quantity_original and quantity_original_unit
+// This function will take these search params and generate a UUID and store it in a local object so we can return the same uuid if it's requested later again
+
+const uuids: { [key: string]: string } = {};
+
+const getUUID = ({
+  title,
+  brand,
+  quantity_original,
+  quantity_original_unit,
+}: {
+  title: string;
+  brand: string;
+  quantity_original?: number | null;
+  quantity_original_unit?: string | null;
+}): string => {
+  const key = `${title}-${brand}-${quantity_original}-${quantity_original_unit}`;
+  const uuid = crypto.randomUUID();
+
+  uuids[key] = uuid;
+
+  return uuid;
+};
