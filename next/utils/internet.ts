@@ -1,4 +1,8 @@
 import OpenFoodFacts from "@openfoodfacts/openfoodfacts-nodejs";
+import { generateEmbedding } from "./openai";
+import { ProductSearchData } from "@/schema";
+import { supabase } from "./supabase";
+import { ProductSearch } from "@/types";
 
 export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
   const timeStart = performance.now();
@@ -112,4 +116,27 @@ export const openfoodRequest = async (
   console.log(`[SEARCH] Openfood request took ${timeDiff}ms`);
 
   return minimized;
+};
+
+export const supabaseRequest = async (
+  query: string
+): Promise<ProductSearch[]> => {
+  const vector = await generateEmbedding({ value: query });
+
+  const { data: results } = await supabase.rpc("match_documents", {
+    query_embedding: vector,
+    match_threshold: 0.5,
+    match_count: 10,
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const mapped = results.map((result: any) => ({
+    new: false,
+    title: result.title,
+    brand: result.brand,
+    quantity_original: result.quantity.quantity,
+    quantity_original_unit: result.quantity.option,
+  }));
+
+  return mapped;
 };

@@ -20,7 +20,7 @@ export default function PageSearchProduct({
   onSelect,
 }: PageSearchProps) {
   const { error, search, loading, products, overloaded } = useSearch();
-
+  console.log(products);
   const isEmpty = products.length === 0;
   const isSearchable = query.length >= 4;
 
@@ -71,6 +71,7 @@ export default function PageSearchProduct({
             <Item
               title={item.title}
               subtitle={item.brand}
+              subtitleIcon={item.new ? "globe" : undefined}
               rightTop={`${item.quantity_original} ${item.quantity_original_unit}`}
               onPress={() => onSelect(item)}
             />

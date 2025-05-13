@@ -1,6 +1,6 @@
 import { supabase } from "@/utils/supabase";
 import { handleError } from "@/helper";
-import { searchProduct } from "@/utils/openai";
+import { generateEmbedding, searchProduct } from "@/utils/openai";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
 
   console.log(`[PRODUCT/${title}] Updating product`);
 
-  const { error } = await supabase
+  const { error: errorProduct } = await supabase
     .from("test")
     .update({
       ...rest,
@@ -97,7 +97,22 @@ export async function GET(request: NextRequest) {
     })
     .eq("uuid", uuid);
 
-  handleError(error);
+  handleError(errorProduct);
+
+  const embeddingInput = [title, brand];
+
+  if (quantity) {
+    embeddingInput.push(`${quantity.quantity} ${quantity.option}`);
+  }
+
+  const embedding = await generateEmbedding({ value: embeddingInput });
+
+  const { error: errorEmbedding } = await supabase
+    .from("test")
+    .update({ embedding })
+    .eq("uuid", uuid);
+
+  handleError(errorEmbedding);
 
   const response = NextResponse.json({}, { status: 200 });
   return response;

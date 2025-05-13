@@ -19,6 +19,14 @@ export type Product = Omit<ProductBase, "options" | "serving" | "quantity"> & {
   quantity: ServingData | null;
 };
 
+export type ProductSearch = {
+  new: boolean;
+  title: string;
+  brand: string;
+  quantity_original: number;
+  quantity_original_unit: string;
+};
+
 export type ProductInsert = Omit<
   Product,
   "uuid" | "options" | "user_id" | "created_at" | "updated_at"

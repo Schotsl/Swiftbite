@@ -1,5 +1,5 @@
 import { searchProducts } from "@/utils/openai";
-import { fatsecretRequest } from "@/utils/internet";
+import { fatsecretRequest, supabaseRequest } from "@/utils/internet";
 import { getUser, supabase } from "@/utils/supabase";
 import { handleError, streamToResponse } from "@/helper";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
@@ -26,18 +26,32 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const [googleResponse, openfoodResponse, fatsecretResponse] =
-    await Promise.all([
-      googleRequest(query, signal),
-      openfoodRequest(query, lang, signal),
-      fatsecretRequest(query, signal),
-    ]);
+  // Get all results first
+  const [
+    googleResponse,
+    openfoodResponse,
+    fatsecretResponse,
+    supabaseResponse,
+  ] = await Promise.all([
+    googleRequest(query, signal),
+    openfoodRequest(query, lang, signal),
+    fatsecretRequest(query, signal),
+    supabaseRequest(query),
+  ]);
 
   const googleStringified = JSON.stringify(googleResponse);
   const openfoodStringified = JSON.stringify(openfoodResponse);
   const fatsecretStringified = JSON.stringify(fatsecretResponse);
 
-  const stream = await searchProducts(
+  // Create a stream for Supabase results
+  const supabaseStream = {
+    partialObjectStream: (async function* () {
+      yield supabaseResponse;
+    })(),
+  };
+
+  // Create a stream for AI results
+  const generativeStream = await searchProducts(
     user!,
     {
       query,
@@ -46,11 +60,47 @@ export async function GET(request: NextRequest) {
       openfood: openfoodStringified,
       fatsecret: fatsecretStringified,
     },
+    {
+      products: supabaseResponse,
+    },
     request.signal
   );
 
+  // Create a combined stream
+  const combinedStream = {
+    partialObjectStream: (async function* () {
+      const data = [];
+
+      for await (const chunk of supabaseStream.partialObjectStream) {
+        if (chunk.length === 0) {
+          continue;
+        }
+
+        data.push(...chunk);
+
+        yield data;
+      }
+
+      for await (const chunk of generativeStream.partialObjectStream) {
+        if (chunk.length === 0) {
+          continue;
+        }
+
+        const mapped = chunk.map((result) => {
+          return {
+            new: true,
+            ...result,
+          };
+        });
+
+        data.push(...mapped);
+        yield data;
+      }
+    })(),
+  };
+
   after(async () => {
-    const results = await stream.object;
+    const results = await generativeStream.object;
     const resultsMapped = results.map((result) => {
       return {
         uuid: crypto.randomUUID(),
@@ -102,11 +152,18 @@ export async function GET(request: NextRequest) {
           headers,
         }
       );
+
+      fetch(
+        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-embedding?${params.toString()}`,
+        {
+          headers,
+        }
+      );
     });
 
     handleError(error);
   });
 
-  const response = streamToResponse(stream);
+  const response = streamToResponse([combinedStream]);
   return response;
 }

@@ -21,6 +21,8 @@ Sometimes products don't specify the quantity, but their title includes somethin
 
 When showing general results, so let's say something like "Coca Cola" try to filter and return results that the user might actually see in the store.
 
+You will also receive a list of results we have already returned from our database. If any of your results are identical, you can leave them out. Because we want to avoid duplication, you may need to return an empty array if everything is already covered.
+
 If no relevant single-unit products are found, return an empty array.
 `;
 

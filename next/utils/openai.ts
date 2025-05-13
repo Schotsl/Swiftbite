@@ -10,6 +10,7 @@ import {
   streamObject,
   generateObject,
   StreamObjectResult,
+  embed,
 } from "ai";
 
 import {
@@ -171,7 +172,7 @@ export async function searchProduct(data: {
   quantity_original: number | null;
   quantity_original_unit: string | null;
 }): Promise<ProductData | null> {
-  const searchModel = google("gemini-2.5-pro-exp-03-25", {
+  const searchModel = google("gemini-2.5-pro-preview-03-25", {
     useSearchGrounding: true,
   });
 
@@ -204,6 +205,9 @@ export async function searchProducts(
     openfood: string;
     fatsecret: string;
   },
+  system: {
+    products: ProductSearchData[];
+  },
   signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
@@ -213,10 +217,17 @@ export async function searchProducts(
   >
 > {
   const structureTask = "search-products";
-  const structureModel = openai("gpt-4.1-mini");
+  const structureModel = google("gemini-2.5-flash-preview-04-17");
 
   const structureStream = streamObject({
     model: structureModel,
+    providerOptions: {
+      google: {
+        thinkingConfig: {
+          thinkingBudget: 0,
+        },
+      },
+    },
     output: "array",
     schema: productSearchSchema,
     abortSignal: signal,
@@ -226,12 +237,8 @@ export async function searchProducts(
         content: searchProductsPrompt,
       },
       {
-        role: "user",
-        content: JSON.stringify({
-          lang: "Dutch",
-          query: data.query,
-          location: "Amsterdam",
-        }),
+        role: "system",
+        content: `We've already returned these products to the user: ${JSON.stringify(system.products)}`,
       },
       {
         role: "system",
@@ -244,6 +251,14 @@ export async function searchProducts(
       {
         role: "system",
         content: `Fatsecret results: ${data.fatsecret}`,
+      },
+      {
+        role: "user",
+        content: JSON.stringify({
+          lang: "Dutch",
+          query: data.query,
+          location: "Amsterdam",
+        }),
       },
     ],
     onError: (error) => {
@@ -456,4 +471,17 @@ export async function generateIcon(data: { title: string }) {
   const resultBytes = Buffer.from(resultBase64, "base64");
 
   return resultBytes;
+}
+
+export async function generateEmbedding(data: {
+  value: string | string[];
+}): Promise<number[]> {
+  const model = openai.embedding("text-embedding-3-small");
+  const { value } = data;
+  const { embedding } = await embed({
+    model,
+    value,
+  });
+
+  return embedding;
 }
