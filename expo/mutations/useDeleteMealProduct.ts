@@ -7,7 +7,7 @@ export default function useDeleteMealProduct() {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ mealId }: { mealId: string }): Promise<void> => {
+    mutationFn: async (mealId: string): Promise<void> => {
       const { error } = await supabase
         .from("meal_product")
         .delete()
@@ -15,7 +15,7 @@ export default function useDeleteMealProduct() {
 
       handleError(error);
     },
-    onMutate: async ({ mealId }) => {
+    onMutate: async (mealId) => {
       // Cancel any outgoing refetches
       await client.cancelQueries({ queryKey: ["mealData"] });
       const previous = client.getQueryData(["mealData"]);
@@ -31,7 +31,7 @@ export default function useDeleteMealProduct() {
             ...meal,
             meal_product: [],
           };
-        }),
+        })
       );
 
       return { previous };

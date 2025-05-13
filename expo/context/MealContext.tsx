@@ -91,12 +91,10 @@ export const MealProvider: React.FC<MealProviderProps> = ({
 
   const saveChanges = async () => {
     if (updating) {
-      const uuid = initial;
+      const { uuid } = initial;
 
       // We delete every meal_product so we don't have to keep track of which ones are new
-      const promiseDelete = deleteMealProductMutation.mutateAsync({
-        mealId: uuid,
-      });
+      const promiseDelete = deleteMealProductMutation.mutateAsync(uuid);
 
       const promiseUpdate = updateMealMutation.mutateAsync({
         ...initial,
