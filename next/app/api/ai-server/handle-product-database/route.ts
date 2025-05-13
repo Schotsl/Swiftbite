@@ -1,6 +1,5 @@
 import { normalizeTitle, generateIcon } from "@/utils/openai";
-import { validateUsage } from "@/utils/usage";
-import { after, NextResponse } from "next/server";
+import { after } from "next/server";
 import {
   fetchIcon,
   insertIcon,
