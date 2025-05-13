@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
   const response = await validateUsage(user);
 
   if (response) {
-    return response;
+    return NextResponse.json({ error: response }, { status: 429 });
   }
 
   return NextResponse.next();

@@ -1,7 +1,9 @@
-import { getUser } from "@/utils/supabase";
-import { NextRequest, NextResponse } from "next/server";
 import { searchProducts } from "@/utils/openai";
-import { streamToResponse } from "@/helper";
+import { fatsecretRequest } from "@/utils/internet";
+import { getUser, supabase } from "@/utils/supabase";
+import { handleError, streamToResponse } from "@/helper";
+import { googleRequest, openfoodRequest } from "@/utils/internet";
+import { after, NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
@@ -24,92 +26,16 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const fatsecretUrl = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=95e21b8a439b147f9&q=${query}&fields=items.title,items.link,items.snippet`;
-  const fatsecretRequest = fetch(fatsecretUrl, { signal });
-
-  const googleUrl = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=e245e29713fe4444b&q=${query}&fields=items.title,items.link,items.snippet`;
-  const googleRequest = fetch(googleUrl, { signal });
-
-  const openfoodUrl = "https://search.openfoodfacts.org/search";
-  const openfoodMethod = "POST";
-  const openfoodHeaders = { "Content-Type": "application/json" };
-  const openfoodBody = {
-    q: query,
-    lang: lang,
-    page: 1,
-    page_size: 32,
-    fields: [
-      "code",
-      "lang",
-      "brands",
-      "brands_tags",
-      "quantity",
-      "countries_tags",
-      "product_name",
-      "product_name_en",
-      "product_name_nl",
-      "product_name_fr",
-      "product_name_de",
-      "product_name_it",
-      "product_name_es",
-      "product_name_pt",
-      "product_name_ru",
-      "product_name_pl",
-      "product_name_tr",
-      "generic_name",
-      "generic_name_en",
-      "generic_name_nl",
-      "generic_name_fr",
-      "generic_name_de",
-      "generic_name_it",
-      "generic_name_es",
-      "generic_name_pt",
-      "generic_name_ru",
-      "generic_name_pl",
-      "generic_name_tr",
-    ],
-  };
-
-  const openfoodRequest = fetch(openfoodUrl, {
-    method: openfoodMethod,
-    headers: openfoodHeaders,
-    body: JSON.stringify(openfoodBody),
-    signal,
-  });
-
   const [googleResponse, openfoodResponse, fatsecretResponse] =
-    await Promise.all([googleRequest, openfoodRequest, fatsecretRequest]);
+    await Promise.all([
+      googleRequest(query, signal),
+      openfoodRequest(query, lang, signal),
+      fatsecretRequest(query, signal),
+    ]);
 
-  const [googleData, openfoodData, fatsecretData] = await Promise.all([
-    googleResponse.json(),
-    openfoodResponse.json(),
-    fatsecretResponse.json(),
-  ]);
-
-  const googleItems = googleData.items;
-  const openfoodItems = openfoodData.hits;
-  const fatsecretItems = fatsecretData.items;
-
-  // Remove duplicates brand labels from openfoodItems
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const openfoodMapped = openfoodItems.map((item: any) => {
-    const brands = item.brands || [];
-    const brandsTags = item.brands_tags || [];
-    const brandsCombined = [...brands, ...brandsTags];
-    const brandsUnique = brandsCombined.filter(
-      (brand, index, self) =>
-        index === self.findIndex((t) => t.toLowerCase() === brand.toLowerCase())
-    );
-
-    delete item.brands_tags;
-    delete item.brands;
-
-    return { ...item, brands: brandsUnique };
-  });
-
-  const googleStringified = JSON.stringify(googleItems);
-  const openfoodStringified = JSON.stringify(openfoodMapped);
-  const fatsecretStringified = JSON.stringify(fatsecretItems);
+  const googleStringified = JSON.stringify(googleResponse);
+  const openfoodStringified = JSON.stringify(openfoodResponse);
+  const fatsecretStringified = JSON.stringify(fatsecretResponse);
 
   const stream = await searchProducts(
     user!,
@@ -122,6 +48,64 @@ export async function GET(request: NextRequest) {
     },
     request.signal
   );
+
+  after(async () => {
+    const results = await stream.object;
+    const resultsMapped = results.map((result) => {
+      return {
+        uuid: crypto.randomUUID(),
+        search_title: result.title,
+        search_brand: result.brand,
+        search_quantity_original: result.quantity_original,
+        search_quantity_original_unit: result.quantity_original_unit,
+      };
+    });
+
+    const { error } = await supabase.from("test").insert(resultsMapped);
+
+    resultsMapped.forEach(async (result) => {
+      const params = new URLSearchParams({
+        uuid: result.uuid,
+        lang,
+        title: result.search_title,
+        brand: result.search_brand,
+      });
+
+      if (result.search_quantity_original) {
+        params.set(
+          "quantity_original",
+          result.search_quantity_original.toString()
+        );
+      }
+
+      if (result.search_quantity_original_unit) {
+        params.set(
+          "quantity_original_unit",
+          result.search_quantity_original_unit
+        );
+      }
+
+      const headers = {
+        "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
+      };
+
+      fetch(
+        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-data?${params.toString()}`,
+        {
+          headers,
+        }
+      );
+
+      fetch(
+        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
+        {
+          headers,
+        }
+      );
+    });
+
+    handleError(error);
+  });
 
   const response = streamToResponse(stream);
   return response;

@@ -33,8 +33,7 @@ import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
 import normalizeTitlePrompt from "@/prompts/normalize-meal";
 import normalizeProductPrompt from "@/prompts/normalize-product";
 import searchProductsPrompt from "@/prompts/search-products";
-import searchProductCrawlerPrompt from "@/prompts/search-product-crawler";
-import searchProductStructurePrompt from "@/prompts/search-product-structure";
+import searchProductPrompt from "@/prompts/search-product";
 import estimateVisualPrompt from "@/prompts/estimate-visual";
 import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
 import { google } from "@ai-sdk/google";
@@ -165,83 +164,34 @@ export async function estimateVisuals(
   return object;
 }
 
-export async function searchProduct(
-  user: string,
-  data: {
-    lang: string;
-    brand: string;
-    title: string;
-    quantity_original: string;
-    quantity_original_unit: string;
-  },
-  signal?: AbortSignal
-): Promise<ProductData | null> {
-  const searchTask = "search-product";
-  const searchModel = openai.responses("gpt-4.1-mini");
+export async function searchProduct(data: {
+  lang: string;
+  brand: string;
+  title: string;
+  quantity_original: number | null;
+  quantity_original_unit: string | null;
+}): Promise<ProductData | null> {
+  const searchModel = google("gemini-2.5-pro-exp-03-25", {
+    useSearchGrounding: true,
+  });
 
-  const searchResponse = await generateText({
+  const searchResponse = await generateObject({
     model: searchModel,
-    abortSignal: signal,
+    output: "object",
+    schema: productSchema,
     messages: [
       {
         role: "system",
-        content: searchProductCrawlerPrompt,
+        content: searchProductPrompt,
       },
       {
         role: "user",
         content: JSON.stringify(data),
       },
     ],
-    tools: {
-      web_search_preview: openai.tools.webSearchPreview({
-        searchContextSize: "low",
-        userLocation: {
-          type: "approximate",
-          country: data.lang,
-        },
-      }),
-    },
   });
 
-  const structureTask = "search-product-structure";
-  const structureModel = openai.responses("gpt-4.1-nano");
-
-  const structureResponse = await generateObject({
-    model: structureModel,
-    output: "object",
-    schema: productSchema,
-    abortSignal: signal,
-    messages: [
-      {
-        role: "system",
-        content: searchProductStructurePrompt,
-      },
-      {
-        role: "user",
-        content: searchResponse.text,
-      },
-    ],
-  });
-
-  after(async () => {
-    await Promise.all([
-      insertUsage({
-        user,
-        task: searchTask,
-        model: searchModel.modelId,
-        usage: searchResponse.usage,
-      }),
-
-      insertUsage({
-        user,
-        task: structureTask,
-        model: structureModel.modelId,
-        usage: structureResponse.usage,
-      }),
-    ]);
-  });
-
-  const { object } = structureResponse;
+  const { object } = searchResponse;
   return object;
 }
 
@@ -262,7 +212,7 @@ export async function searchProducts(
     AsyncIterable<ProductSearchData> & ReadableStream<ProductSearchData>
   >
 > {
-  const structureTask = "search-products-structure";
+  const structureTask = "search-products";
   const structureModel = openai("gpt-4.1-mini");
 
   const structureStream = streamObject({
@@ -463,22 +413,17 @@ export async function normalizeQuantity(
   return object;
 }
 
-export async function generateOptions(
-  user: string,
-  data: {
-    lang: string;
-    title: string;
-  },
-  signal?: AbortSignal
-): Promise<OptionData[]> {
-  const task = "generate-options";
-  const model = "gpt-4.1-nano";
+export async function generateOptions(data: {
+  lang: string;
+  title: string;
+  brand: string;
+}): Promise<OptionData[]> {
+  const model = "gpt-4.1-mini";
 
   const response = await generateObject({
     model: openai(model),
     output: "array",
     schema: optionSchema,
-    abortSignal: signal,
     messages: [
       {
         role: "system",
@@ -491,17 +436,7 @@ export async function generateOptions(
     ],
   });
 
-  const { object, usage } = response;
-
-  after(async () => {
-    await insertUsage({
-      user,
-      task,
-      model,
-      usage,
-    });
-  });
-
+  const { object } = response;
   return object;
 }
 
