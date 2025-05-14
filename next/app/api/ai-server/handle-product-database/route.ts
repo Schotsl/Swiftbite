@@ -47,24 +47,40 @@ export async function POST(request: Request) {
     // If the icon already exists we'll update the product
     if (iconUuid) {
       console.log(`[ICON] Updating product with icon`);
+
       await updateProduct(productUuid, iconUuid);
 
       return;
     }
 
-    console.log(`[ICON] Generating icon`);
-    const newIconBuffer = await generateIcon({ title: iconTitle });
+    try {
+      console.log(`[ICON] Inserting icon into database`);
+      const iconUuid = await insertIcon(iconTitle);
 
-    console.log(`[ICON] Inserting icon into database`);
-    const newIconUuid = await insertIcon(iconTitle);
+      console.log(`[ICON] Generating icon`);
+      const newIconBuffer = await generateIcon({ title: iconTitle });
 
-    console.log(`[ICON] Resizing icon`);
-    const newIconResized = await sharp(newIconBuffer).resize(256).toBuffer();
+      console.log(`[ICON] Resizing icon`);
+      const newIconResized = await sharp(newIconBuffer).resize(256).toBuffer();
 
-    console.log(`[ICON] Uploading icon to storage`);
-    await uploadIcon(`${newIconUuid}-256`, newIconResized);
-    await updateProduct(productUuid, newIconUuid);
-    await uploadIcon(`${newIconUuid}`, newIconBuffer);
+      console.log(`[ICON] Uploading icon to storage`);
+      await uploadIcon(`${iconUuid}-256`, newIconResized);
+      await updateProduct(productUuid, iconUuid);
+      await uploadIcon(`${iconUuid}`, newIconBuffer);
+    } catch (error: Error | unknown) {
+      // If we get a unique constraint violation try to fetch the icon again
+      if (
+        error instanceof Error &&
+        error.message?.includes("unique constraint")
+      ) {
+        console.log(`[ICON] Race condition detected, fetching icon again`);
+        const iconUuid = await fetchIcon(iconTitle)!;
+
+        console.log(`[ICON] Updating product with existing icon`);
+        await updateProduct(productUuid, iconUuid);
+      }
+      throw error;
+    }
   });
 
   return new Response("{}", { status: 200 });
