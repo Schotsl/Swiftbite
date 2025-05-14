@@ -34,6 +34,8 @@ type InputProps = {
   placeholder: string;
 
   error?: string;
+
+  onSubmit?: () => void;
 };
 
 export default function Input({
@@ -50,6 +52,8 @@ export default function Input({
   multiline = false,
   placeholder,
   error,
+
+  onSubmit,
 }: InputProps) {
   return (
     <Controller
@@ -119,10 +123,11 @@ export default function Input({
                     multiline={multiline}
                     placeholder={placeholder}
                     keyboardType={type === "password" ? "default" : type}
-                    onChangeText={handleChange}
                     secureTextEntry={type === "password"}
                     selectTextOnFocus={!disabled}
                     placeholderTextColor={"#aba9a9"}
+                    onChangeText={handleChange}
+                    onSubmitEditing={onSubmit}
                   />
 
                   {suffix && (

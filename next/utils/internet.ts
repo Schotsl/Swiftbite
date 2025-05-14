@@ -126,7 +126,7 @@ export const supabaseRequest = async (
   const { data: results } = await supabase.rpc("match_product", {
     query_embedding: vector,
     match_threshold: 0.5,
-    match_count: 6,
+    match_count: 12,
   });
 
   const resultsSafe = results || [];

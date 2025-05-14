@@ -218,7 +218,7 @@ export async function searchProducts(
   >
 > {
   const structureTask = "search-products";
-  const structureModel = google("gemini-2.5-flash-preview-04-17");
+  const structureModel = google("gemini-2.5-pro-preview-03-25");
 
   const structureStream = streamObject({
     model: structureModel,
@@ -263,6 +263,7 @@ export async function searchProducts(
           lang: "Dutch",
           query: data.query,
           location: "Amsterdam",
+          measurement: "Metric",
         }),
       },
     ],

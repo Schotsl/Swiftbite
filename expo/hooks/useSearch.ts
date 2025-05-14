@@ -53,15 +53,15 @@ export function useSearch() {
 
     if (response.status === 429) {
       setProducts([]);
-      setLoading(false);
       setOverloaded(true);
+      setLoading(false);
 
       return;
     }
 
     if (!response.body || response.status !== 200) {
-      setError(true);
       setProducts([]);
+      setError(true);
       setLoading(false);
 
       return;

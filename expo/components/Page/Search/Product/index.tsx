@@ -1,10 +1,11 @@
-import { FlatList } from "react-native";
+import { ActivityIndicator, FlatList, View } from "react-native";
 import { useSearch } from "@/hooks/useSearch";
 import { useEffect } from "react";
 import { ProductSearch } from "@/types";
 
 import Item from "@/components/Item";
 import ProductStatus from "@/components/Product/Status";
+import { ScrollView } from "react-native-gesture-handler";
 
 type PageSearchProps = {
   query: string;
@@ -20,7 +21,7 @@ export default function PageSearchProduct({
   onSelect,
 }: PageSearchProps) {
   const { error, search, loading, products, overloaded } = useSearch();
-  console.log(products);
+
   const isEmpty = products.length === 0;
   const isSearchable = query.length >= 4;
 
@@ -63,21 +64,37 @@ export default function PageSearchProduct({
 
   if (!isEmpty && isSearchable) {
     return (
-      <FlatList
-        data={products}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => {
-          return (
-            <Item
-              title={item.title}
-              subtitle={item.brand}
-              subtitleIcon={item.new ? "globe" : undefined}
-              rightTop={`${item.quantity_original} ${item.quantity_original_unit}`}
-              onPress={() => onSelect(item)}
-            />
-          );
-        }}
-      />
+      <ScrollView style={{ flex: 1 }}>
+        <FlatList
+          scrollEnabled={false}
+          data={products}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => {
+            return (
+              <Item
+                title={item.title}
+                subtitle={item.brand}
+                subtitleIcon={item.new ? "globe" : undefined}
+                rightTop={`${item.quantity_original} ${item.quantity_original_unit}`}
+                onPress={() => onSelect(item)}
+              />
+            );
+          }}
+        />
+
+        {loading && (
+          <View
+            style={{
+              width: "100%",
+              padding: 32,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
+      </ScrollView>
     );
   }
 

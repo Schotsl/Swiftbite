@@ -13,34 +13,34 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit",
+    "quantity_original_unit"
   );
 
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -99,7 +99,15 @@ export async function GET(request: NextRequest) {
 
   handleError(errorProduct);
 
-  let embeddingInput = `${title} ${brand}`;
+  let embeddingInput = `${title}`;
+
+  // If the brand is not already in the title we'll add it
+  const lowerBrand = brand.toLowerCase();
+  const lowerTitle = title.toLowerCase();
+
+  if (!lowerTitle.includes(lowerBrand)) {
+    embeddingInput = `${title} ${brand}`;
+  }
 
   if (quantity) {
     embeddingInput += ` ${quantity.quantity} ${quantity.option}`;
