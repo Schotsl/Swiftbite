@@ -2,15 +2,16 @@ import OpenAI from "openai";
 
 import { z } from "zod";
 import { after } from "next/server";
+import { google } from "@ai-sdk/google";
 import { insertUsage } from "./usage";
+import { ProductSearch } from "@/types";
 import { openai as openai } from "@ai-sdk/openai";
 import {
+  embed,
   CoreMessage,
-  generateText,
   streamObject,
   generateObject,
   StreamObjectResult,
-  embed,
 } from "ai";
 
 import {
@@ -37,7 +38,6 @@ import searchProductsPrompt from "@/prompts/search-products";
 import searchProductPrompt from "@/prompts/search-product";
 import estimateVisualPrompt from "@/prompts/estimate-visual";
 import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
-import { google } from "@ai-sdk/google";
 
 export async function estimateNutrition(
   user: string,
@@ -46,7 +46,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -109,7 +109,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = google("gemini-2.5-pro-preview-03-25");
@@ -207,9 +207,9 @@ export async function searchProducts(
     fatsecret: string;
   },
   system: {
-    products: ProductSearchData[];
+    products: ProductSearch[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -295,7 +295,7 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task = "normalize-meal";
   const model = "gpt-4.1-mini";
@@ -341,7 +341,7 @@ export async function normalizeTitle(
   data: {
     title: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const model = "gpt-4.1-mini";
 
@@ -388,7 +388,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<QuantitySchema> {
   // If no combined or unit is provided there is no way to know the original unit
   if (!data.combined && !data.unit) {

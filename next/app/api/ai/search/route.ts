@@ -1,6 +1,6 @@
-import { Product } from "@/types";
 import { searchProducts } from "@/utils/openai";
 import { getUser, supabase } from "@/utils/supabase";
+import { Product, ProductSearch } from "@/types";
 import { handleError, streamToResponse } from "@/helper";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
@@ -55,51 +55,19 @@ export async function GET(request: NextRequest) {
       fatsecret: fatsecretStringified,
     },
     {
-      products: supabaseResponse,
+      products: supabaseResponse.map((product) => ({
+        title: product.title!,
+        brand: product.brand!,
+        quantity_original: product.quantity?.quantity,
+        quantity_original_unit: product.quantity?.option,
+      })),
     },
     request.signal,
   );
 
   after(async () => {
     const results = await generativeStream.object;
-    const resultsMapped = results.map((result) => {
-      return {
-        uuid: getUUID(result),
-        title: null,
-        brand: null,
-        user_id: null,
-        type: "search",
-        quantity: null,
-        serving: null,
-        barcode: null,
-        calcium_100g: null,
-        carbohydrate_100g: null,
-        cholesterol_100g: null,
-        calorie_100g: null,
-        carbohydrate_sugar_100g: null,
-        embedding: null,
-        estimated: false,
-        fat_100g: null,
-        fat_saturated_100g: null,
-        fat_trans_100g: null,
-        fat_unsaturated_100g: null,
-        fiber_100g: null,
-        iron_100g: null,
-        icon_id: null,
-        potassium_100g: null,
-        protein_100g: null,
-        sodium_100g: null,
-        created_at: new Date().toISOString(),
-        updated_at: null,
-        options: null,
-        search: {
-          title: result.title,
-          brand: result.brand,
-          quantity_original: result.quantity_original,
-          quantity_original_unit: result.quantity_original_unit,
-        },
-      } as Product;
-    });
+    const resultsMapped = results.map(getProduct);
 
     const { error } = await supabase.from("product").insert(resultsMapped);
 
@@ -158,11 +126,7 @@ export async function GET(request: NextRequest) {
           continue;
         }
 
-        const mapped = chunk.map((result) => ({
-          new: true,
-          uuid: getUUID(result),
-          ...result,
-        }));
+        const mapped = chunk.map(getProduct);
 
         yield [...supabaseResponse, ...mapped];
       }
@@ -178,21 +142,52 @@ export async function GET(request: NextRequest) {
 
 const uuids: { [key: string]: string } = {};
 
-const getUUID = ({
-  title,
-  brand,
-  quantity_original,
-  quantity_original_unit,
-}: {
-  title: string;
-  brand: string;
-  quantity_original?: number | null;
-  quantity_original_unit?: string | null;
-}): string => {
+const getUUID = (search: ProductSearch): string => {
+  const { title, brand, quantity_original, quantity_original_unit } = search;
+
   const key = `${title}-${brand}-${quantity_original}-${quantity_original_unit}`;
   const uuid = crypto.randomUUID();
 
   uuids[key] = uuid;
 
   return uuid;
+};
+
+const getProduct = (search: ProductSearch): Product => {
+  return {
+    uuid: getUUID(search),
+    type: "search",
+    search,
+    estimated: false,
+    processing: true,
+
+    title: null,
+    brand: null,
+    user_id: null,
+    serving: null,
+    options: null,
+    barcode: null,
+    quantity: null,
+    embedding: null,
+
+    icon_id: null,
+    iron_100g: null,
+    fiber_100g: null,
+    sodium_100g: null,
+    protein_100g: null,
+    calorie_100g: null,
+    calcium_100g: null,
+    potassium_100g: null,
+    cholesterol_100g: null,
+    carbohydrate_100g: null,
+    carbohydrate_sugar_100g: null,
+
+    fat_100g: null,
+    fat_trans_100g: null,
+    fat_saturated_100g: null,
+    fat_unsaturated_100g: null,
+
+    updated_at: null,
+    created_at: new Date().toISOString(),
+  };
 };

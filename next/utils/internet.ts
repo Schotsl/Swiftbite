@@ -1,8 +1,6 @@
-import OpenFoodFacts from "@openfoodfacts/openfoodfacts-nodejs";
-import { generateEmbedding } from "./openai";
-import { ProductSearchData } from "@/schema";
 import { supabase } from "./supabase";
-import { ProductSearch } from "@/types";
+import { generateEmbedding } from "./openai";
+import { Product } from "@/types";
 
 export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
   const timeStart = performance.now();
@@ -39,7 +37,7 @@ export const googleRequest = async (query: string, signal: AbortSignal) => {
 export const openfoodRequest = async (
   query: string,
   lang: string,
-  signal: AbortSignal
+  signal: AbortSignal,
 ) => {
   const timeStart = performance.now();
 
@@ -101,7 +99,8 @@ export const openfoodRequest = async (
     const brandsCombined = [...brands, ...brandsTags];
     const brandsUnique = brandsCombined.filter(
       (brand, index, self) =>
-        index === self.findIndex((t) => t.toLowerCase() === brand.toLowerCase())
+        index ===
+        self.findIndex((t) => t.toLowerCase() === brand.toLowerCase()),
     );
 
     delete item.brands_tags;
@@ -118,9 +117,7 @@ export const openfoodRequest = async (
   return minimized;
 };
 
-export const supabaseRequest = async (
-  query: string
-): Promise<ProductSearch[]> => {
+export const supabaseRequest = async (query: string): Promise<Product[]> => {
   const vector = await generateEmbedding({ value: query });
 
   const { data: results } = await supabase.rpc("product_match", {
@@ -130,14 +127,5 @@ export const supabaseRequest = async (
   });
 
   const resultsSafe = results || [];
-  const resultsMapped = resultsSafe.map((result: any) => ({
-    new: false,
-    uuid: result.uuid,
-    title: result.title,
-    brand: result.brand,
-    quantity_original: result.quantity.quantity,
-    quantity_original_unit: result.quantity.option,
-  }));
-
-  return resultsMapped;
+  return resultsSafe;
 };

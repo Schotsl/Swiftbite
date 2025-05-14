@@ -100,6 +100,7 @@ export async function mapProduct(
     brand,
     search: null,
     embedding: null,
+    processing: false,
 
     options: optionsMapped,
     serving: servingParsed,

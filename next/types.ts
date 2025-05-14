@@ -7,29 +7,28 @@ export type Option = {
 };
 
 export type ServingData = {
-  quantity: number;
-  option: string;
   gram: number;
+  option: string;
+  quantity: number;
+};
+
+export type ProductSearch = {
+  title: string;
+  brand: string;
+  quantity_original?: number | null;
+  quantity_original_unit?: string | null;
 };
 
 export type ProductBase = Tables<"product">;
-export type Product = Omit<ProductBase, "options" | "serving" | "quantity"> & {
-  search: ProductSearchBase | null;
+
+export type Product = Omit<
+  ProductBase,
+  "search" | "options" | "serving" | "quantity"
+> & {
+  search: ProductSearch | null;
   options: Option[] | null;
   serving: ServingData | null;
   quantity: ServingData | null;
-};
-
-export type ProductSearchBase = {
-  title: string;
-  brand: string;
-  quantity_original: number;
-  quantity_original_unit: string;
-};
-
-export type ProductSearch = ProductSearchBase & {
-  new: boolean;
-  uuid: string;
 };
 
 export type ProductInsert = Omit<
