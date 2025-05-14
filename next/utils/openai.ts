@@ -112,7 +112,7 @@ export async function estimateVisuals(
   signal?: AbortSignal
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
-  const model = google("gemini-2.5-pro-exp-03-25");
+  const model = google("gemini-2.5-pro-preview-03-25");
 
   const messages: CoreMessage[] = [];
 

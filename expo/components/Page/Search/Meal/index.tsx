@@ -36,7 +36,7 @@ export default function PageSearchMeal({
 
   if (isLoading || loadingOverwrite) {
     return (
-      <ProductStatus status="🕵️ We zijn het hele internet aan het zoeken naar jou product" />
+      <ProductStatus status="🕵️ We zijn het hele internet aan het zoeken naar jou maaltijden" />
     );
   }
 
@@ -44,7 +44,16 @@ export default function PageSearchMeal({
     return (
       <ProductStatus
         active={false}
-        status="😔 Er is iets mis gegaan tijdens het zoeken naar jou product"
+        status="😔 Er is iets mis gegaan tijdens het zoeken naar jou maaltijden"
+      />
+    );
+  }
+
+  if (isEmpty && !query) {
+    return (
+      <ProductStatus
+        active={false}
+        status={"😲 Je hebt nog geen maaltijden aan je account toegevoegd"}
       />
     );
   }
@@ -53,7 +62,7 @@ export default function PageSearchMeal({
     return (
       <ProductStatus
         active={false}
-        status={"😔 We hebben geen producten gevonden met deze naam"}
+        status={"😔 We hebben geen maaltijden gevonden met deze naam"}
       />
     );
   }

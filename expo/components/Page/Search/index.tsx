@@ -51,6 +51,13 @@ export default function PageSearch({
     setQuery(queryWatched);
   };
 
+  const placeholder =
+    selected === Type.PRODUCTS
+      ? "Zoek naar een product..."
+      : selected === Type.BASICS
+        ? "Zoek naar een basisitem..."
+        : "Zoek naar een maaltijd...";
+
   return (
     <View style={{ flex: 1 }}>
       <Tabs
@@ -75,7 +82,7 @@ export default function PageSearch({
           name="query"
           icon="magnifying-glass"
           control={control}
-          placeholder="Zoek naar een product..."
+          placeholder={placeholder}
           onSubmit={handleSubmit}
         />
       </View>
