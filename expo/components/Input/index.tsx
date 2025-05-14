@@ -35,6 +35,8 @@ type InputProps = {
 
   error?: string;
 
+  onBlur?: () => void;
+  onFocus?: () => void;
   onSubmit?: () => void;
 };
 
@@ -53,6 +55,8 @@ export default function Input({
   placeholder,
   error,
 
+  onBlur,
+  onFocus,
   onSubmit,
 }: InputProps) {
   const height = label ? 78 : 48;
@@ -128,6 +132,8 @@ export default function Input({
                     secureTextEntry={type === "password"}
                     selectTextOnFocus={!disabled}
                     placeholderTextColor={"#aba9a9"}
+                    onBlur={onBlur}
+                    onFocus={onFocus}
                     onChangeText={handleChange}
                     onSubmitEditing={onSubmit}
                   />

@@ -1,5 +1,5 @@
-import { MealWithProduct } from "@/types";
 import { FlatList } from "react-native";
+import { ServingData } from "@/schemas/serving";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import Item from "@/components/Item";
@@ -8,14 +8,12 @@ import ProductStatus from "@/components/Product/Status";
 
 type PageSearchProps = {
   query: string;
-  loading?: boolean;
 
-  onSelect: (meal: MealWithProduct) => void;
+  onSelect: (meal: string, serving: ServingData) => void;
 };
 
 export default function PageSearchMeal({
   query,
-  loading: loadingOverwrite,
 
   onSelect,
 }: PageSearchProps) {
@@ -34,7 +32,7 @@ export default function PageSearchMeal({
 
   const isEmpty = data?.length === 0;
 
-  if (isLoading || loadingOverwrite) {
+  if (isLoading) {
     return (
       <ProductStatus status="🕵️ We zijn het hele internet aan het zoeken naar jou maaltijden" />
     );
@@ -78,7 +76,13 @@ export default function PageSearchMeal({
             subtitle={`${item.meal_products?.length || 0} ingrediënten`}
             rightBottom={`420 kcal`}
             subtitleIcon="bowl-food"
-            onPress={() => onSelect(item)}
+            onPress={() =>
+              onSelect(item.uuid, {
+                gram: item.quantity_gram,
+                quantity: 1,
+                option: "meal",
+              })
+            }
           />
         );
       }}

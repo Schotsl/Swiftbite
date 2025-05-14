@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@/hooks/useSearch";
-import { useEffect } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
@@ -12,16 +12,19 @@ import SearchCollapsable from "@/components/Search/Collapsable";
 
 type PageSearchProps = {
   query: string;
+  queryWatched: string;
+  focused: boolean;
 
   onSelect: (product: string) => void;
 };
 
 export default function PageSearchProduct({
   query,
-
+  queryWatched,
+  focused,
   onSelect,
 }: PageSearchProps) {
-  const { error, search, loading, products, overloaded } = useSearch();
+  const { error, search, reset, loading, products, overloaded } = useSearch();
 
   const { data: favoriteProducts, isLoading: favoriteProductsLoading } =
     useQuery(productData({ rpc: "product_favorite" }));
@@ -33,11 +36,16 @@ export default function PageSearchProduct({
     useQuery(productData({ rpc: "product_most_used" }));
 
   const isEmpty = products.length === 0;
+  const isActive = focused || queryWatched.length > 0;
   const isSearchable = query.length >= 4;
 
   useEffect(() => {
-    search(query);
-  }, [query, search]);
+    if (isSearchable) {
+      search(query);
+    } else {
+      reset();
+    }
+  }, [query]);
 
   if (loading) {
     return (
@@ -72,13 +80,13 @@ export default function PageSearchProduct({
     );
   }
 
-  if (!isEmpty && isSearchable) {
+  if (isSearchable) {
     return (
       <ScrollView style={{ flex: 1 }}>
         <FlatList
-          scrollEnabled={false}
           data={products}
-          keyExtractor={(item, index) => index.toString()}
+          scrollEnabled={false}
+          keyExtractor={(item, index) => item.uuid}
           renderItem={({ item }) => {
             return (
               <Item
@@ -97,14 +105,25 @@ export default function PageSearchProduct({
             style={{
               width: "100%",
               padding: 32,
-              justifyContent: "center",
               alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <ActivityIndicator size="large" color="#0000ff" />
           </View>
         )}
       </ScrollView>
+    );
+  }
+
+  if (isActive) {
+    return (
+      <ProductStatus
+        active={false}
+        status={
+          "🥳 Start met zoeken door minimaal 4 letters te typen en druk op enter"
+        }
+      />
     );
   }
 
@@ -140,11 +159,6 @@ export default function PageSearchProduct({
         loading={mostRecentProductsLoading}
         products={mostRecentProducts}
         onSelect={onSelect}
-      />
-
-      <ProductStatus
-        active={false}
-        status={"🥳 Start met zoeken door minimaal 4 letters te typen"}
       />
     </View>
   );

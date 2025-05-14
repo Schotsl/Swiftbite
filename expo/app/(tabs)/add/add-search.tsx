@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { MealWithProduct, ProductSearch } from "@/types";
+import { ServingData } from "@/schemas/serving";
 
 import PageSearch from "@/components/Page/Search";
 import useInsertEntry from "@/mutations/useInsertEntry";
@@ -16,16 +16,10 @@ export default function AddText() {
     });
   };
 
-  const handleMealSelect = (meal: MealWithProduct) => {
-    const serving = {
-      gram: meal.quantity_gram,
-      quantity: 1,
-      option: "meal",
-    };
-
+  const handleMealSelect = (meal: string, serving: ServingData) => {
     insertEntry.mutateAsync({
       serving,
-      meal_id: meal.uuid,
+      meal_id: meal,
       product_id: null,
     });
 

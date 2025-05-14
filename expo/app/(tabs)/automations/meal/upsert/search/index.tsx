@@ -1,15 +1,14 @@
 import { useRouter } from "expo-router";
-import { ProductSearch } from "@/types";
 
 import PageSearch from "@/components/Page/Search";
 
 export default function AddText() {
   const router = useRouter();
 
-  const handleProductSelect = (product: ProductSearch) => {
+  const handleProductSelect = (product: string) => {
     router.push({
       pathname: `/(tabs)/automations/meal/upsert/product`,
-      params: { product: product.uuid },
+      params: { product },
     });
   };
 

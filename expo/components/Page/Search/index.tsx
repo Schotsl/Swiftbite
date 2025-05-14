@@ -11,6 +11,7 @@ import PageSearchMeal from "./Meal";
 import { useForm } from "react-hook-form";
 import { SearchData, searchSchema } from "@/schemas/search";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ServingData } from "@/schemas/serving";
 
 enum Type {
   MEALS = "meals",
@@ -19,7 +20,7 @@ enum Type {
 }
 
 type PageSearchProps = {
-  onMealSelect: (meal: MealWithProduct) => void;
+  onMealSelect: (meal: string, serving: ServingData) => void;
   onProductSelect: (product: string) => void;
 };
 
@@ -30,6 +31,7 @@ export default function PageSearch({
   const focus = useIsFocused();
 
   const [query, setQuery] = useState("");
+  const [focused, setFocused] = useState(false);
   const [selected, setSelected] = useState(Type.PRODUCTS);
 
   const { control, watch } = useForm<SearchData>({
@@ -84,12 +86,19 @@ export default function PageSearch({
           control={control}
           placeholder={placeholder}
           onSubmit={handleSubmit}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
         />
       </View>
 
       {/* TODO: We'll just unmount the component to be sure no random requests get send */}
       {focus && selected === Type.PRODUCTS && (
-        <PageSearchProduct query={query} onSelect={onProductSelect} />
+        <PageSearchProduct
+          query={query}
+          queryWatched={queryWatched}
+          focused={focused}
+          onSelect={onProductSelect}
+        />
       )}
 
       {selected === Type.MEALS && (

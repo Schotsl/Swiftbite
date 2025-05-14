@@ -1,15 +1,14 @@
 import { useRouter } from "expo-router";
-import { ProductSearch } from "@/types";
 
 import PageSearch from "@/components/Page/Search";
 
 export default function AutomationRepeatUpsertSearch() {
   const router = useRouter();
 
-  const handleProductSelect = (item: ProductSearch) => {
+  const handleProductSelect = (product: string) => {
     router.push({
       pathname: `/(tabs)/automations/repeat/upsert/product`,
-      params: { product: item.uuid },
+      params: { product },
     });
   };
 
