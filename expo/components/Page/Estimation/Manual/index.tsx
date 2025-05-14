@@ -92,6 +92,7 @@ export default function PageEstimationManual({
       options: null,
       embedding: null,
       estimated: false,
+      processing: false,
 
       icon_id: null,
 

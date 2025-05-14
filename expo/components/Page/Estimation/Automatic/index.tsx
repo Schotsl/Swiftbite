@@ -118,6 +118,7 @@ export default function PageEstimationAutomatic() {
       quantity: null,
       estimated: true,
       embedding: null,
+      processing: true,
 
       icon_id: null,
       calcium_100g: null,

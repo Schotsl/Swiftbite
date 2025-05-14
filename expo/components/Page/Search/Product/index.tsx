@@ -36,7 +36,7 @@ export default function PageSearchProduct({
     useQuery(productData({ rpc: "product_most_used" }));
 
   const isEmpty = products.length === 0;
-  const isActive = focused || queryWatched.length > 0;
+  const isActive = focused || queryWatched?.length > 0;
   const isSearchable = query.length >= 4;
 
   useEffect(() => {
@@ -89,11 +89,12 @@ export default function PageSearchProduct({
           keyExtractor={(item, index) => item.uuid}
           renderItem={({ item }) => {
             return (
+              // TODO: This could probably be fixed with a defined type for processing
               <Item
-                title={item.title}
-                subtitle={item.brand}
-                subtitleIcon={item.new ? "globe" : undefined}
-                rightTop={`${item.quantity_original} ${item.quantity_original_unit}`}
+                title={(item.title || item.search?.title)!}
+                subtitle={(item.brand || item.search?.brand)!}
+                subtitleIcon={item.processing ? "globe" : undefined}
+                rightTop={`${item.quantity?.quantity || item.search?.quantity_original} ${item.quantity?.option || item.search?.quantity_original_unit}`}
                 onPress={() => onSelect(item.uuid)}
               />
             );

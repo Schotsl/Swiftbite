@@ -32,7 +32,7 @@ export default function AddPreviewBarcodeScreen() {
     select: (entries) => entries.find((entry) => entry.uuid === entryId),
     enabled: !!entryId,
   });
-  console.log(productId);
+
   const { data: productObject, isLoading: isLoadingProduct } = useQuery({
     ...productData({
       uuid: productId,
@@ -49,7 +49,6 @@ export default function AddPreviewBarcodeScreen() {
       </View>
     );
   }
-  console.log(productObject);
 
   const productEntry = entry?.product;
   const product = productEntry || productObject?.[0];

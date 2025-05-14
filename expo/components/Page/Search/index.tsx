@@ -49,7 +49,6 @@ export default function PageSearch({
   }, [focus]);
 
   const handleSubmit = () => {
-    console.log(queryWatched);
     setQuery(queryWatched);
   };
 

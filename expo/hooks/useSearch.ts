@@ -1,7 +1,7 @@
+import { Product } from "@/types";
 import supabase from "@/utils/supabase";
 
 import { fetch } from "expo/fetch";
-import { ProductSearch } from "@/types";
 import { useRef, useState, useCallback, useMemo } from "react";
 
 export function useSearch() {
@@ -9,7 +9,7 @@ export function useSearch() {
 
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [products, setProducts] = useState<ProductSearch[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [overloaded, setOverloaded] = useState(false);
 
   const reset = useCallback(() => {

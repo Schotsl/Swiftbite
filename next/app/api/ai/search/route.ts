@@ -16,14 +16,14 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -62,7 +62,7 @@ export async function GET(request: NextRequest) {
         quantity_original_unit: product.quantity?.option,
       })),
     },
-    request.signal,
+    request.signal
   );
 
   after(async () => {
@@ -84,14 +84,14 @@ export async function GET(request: NextRequest) {
       if (result.search!.quantity_original) {
         params.set(
           "quantity_original",
-          result.search!.quantity_original.toString(),
+          result.search!.quantity_original.toString()
         );
       }
 
       if (result.search!.quantity_original_unit) {
         params.set(
           "quantity_original_unit",
-          result.search!.quantity_original_unit,
+          result.search!.quantity_original_unit
         );
       }
 
@@ -103,14 +103,14 @@ export async function GET(request: NextRequest) {
         `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-data?${params.toString()}`,
         {
           headers,
-        },
+        }
       );
 
       fetch(
         `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
         {
           headers,
-        },
+        }
       );
     });
   });

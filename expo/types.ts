@@ -2,8 +2,18 @@ import { Tables } from "./database.types";
 import { MacroData } from "./schemas/personal/goal";
 import { Weight } from "./schemas/personal/health";
 import { ServingData } from "./schemas/serving";
+
+export type ProductSearch = {
+  title: string;
+  brand: string;
+  quantity_original?: number | null;
+  quantity_original_unit?: string | null;
+};
+
 export type ProductBase = Tables<"product">;
-export type Product = Omit<ProductBase, "serving" | "quantity"> & {
+
+export type Product = Omit<ProductBase, "search" | "serving" | "quantity"> & {
+  search: ProductSearch | null;
   serving: ServingData | null;
   quantity: ServingData | null;
 };
@@ -25,15 +35,6 @@ export type ProductManual = Product & {
   calcium_100g: number;
   potassium_100g: number;
   cholesterol_100g: number;
-};
-
-export type ProductSearch = {
-  new: boolean;
-  uuid: string;
-  title: string;
-  brand: string;
-  quantity_original: number;
-  quantity_original_unit: string;
 };
 
 export type Repeat = Tables<"repeat">;
