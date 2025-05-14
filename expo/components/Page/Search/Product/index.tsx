@@ -24,7 +24,7 @@ export default function PageSearchProduct({
   focused,
   onSelect,
 }: PageSearchProps) {
-  const { error, search, reset, loading, products, overloaded } = useSearch();
+  const { error, loading, products, overloaded, reset, search } = useSearch();
 
   const { data: favoriteProducts, isLoading: favoriteProductsLoading } =
     useQuery(productData({ rpc: "product_favorite" }));
@@ -47,7 +47,7 @@ export default function PageSearchProduct({
     }
   }, [query]);
 
-  if (loading) {
+  if (loading && isEmpty) {
     return (
       <ProductStatus status="🕵️ We zijn het hele internet aan het zoeken naar jou product" />
     );

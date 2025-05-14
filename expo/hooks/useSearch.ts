@@ -91,9 +91,12 @@ export function useSearch() {
 
       if (parsed.length > 0) {
         setProducts(parsed);
-        setLoading(false);
       }
     }
+
+    await reader.closed;
+
+    setLoading(false);
   }, []);
 
   return useMemo(

@@ -117,6 +117,8 @@ export async function GET(request: NextRequest) {
 
   const combinedStream = {
     partialObjectStream: (async function* () {
+      console.log("[SEARCH] Yielding Supabase results");
+
       // First yield the Supabase results
       yield supabaseResponse;
 
@@ -130,6 +132,9 @@ export async function GET(request: NextRequest) {
 
         yield [...supabaseResponse, ...mapped];
       }
+
+      // Close the stream after the last chunk
+      console.log("[SEARCH] Closing stream");
     })(),
   };
 
