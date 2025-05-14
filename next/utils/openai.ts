@@ -240,7 +240,10 @@ export async function searchProducts(
       },
       {
         role: "system",
-        content: `We've already returned these products to the user: ${JSON.stringify(system.products)}`,
+        content:
+          system.products.length > 0
+            ? `We've already found these database results: ${JSON.stringify(system.products)}`
+            : "We've found no database results",
       },
       {
         role: "system",
@@ -339,7 +342,6 @@ export async function normalizeTitle(
   },
   signal?: AbortSignal
 ): Promise<string> {
-  const task = "normalize-title";
   const model = "gpt-4.1-mini";
 
   const response = await generateObject({

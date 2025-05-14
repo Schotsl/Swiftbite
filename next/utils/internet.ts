@@ -39,7 +39,7 @@ export const googleRequest = async (query: string, signal: AbortSignal) => {
 export const openfoodRequest = async (
   query: string,
   lang: string,
-  signal: AbortSignal,
+  signal: AbortSignal
 ) => {
   const timeStart = performance.now();
 
@@ -101,8 +101,7 @@ export const openfoodRequest = async (
     const brandsCombined = [...brands, ...brandsTags];
     const brandsUnique = brandsCombined.filter(
       (brand, index, self) =>
-        index ===
-        self.findIndex((t) => t.toLowerCase() === brand.toLowerCase()),
+        index === self.findIndex((t) => t.toLowerCase() === brand.toLowerCase())
     );
 
     delete item.brands_tags;
@@ -120,14 +119,14 @@ export const openfoodRequest = async (
 };
 
 export const supabaseRequest = async (
-  query: string,
+  query: string
 ): Promise<ProductSearch[]> => {
   const vector = await generateEmbedding({ value: query });
 
   const { data: results } = await supabase.rpc("match_product", {
     query_embedding: vector,
     match_threshold: 0.5,
-    match_count: 25,
+    match_count: 6,
   });
 
   const resultsSafe = results || [];
