@@ -20,7 +20,7 @@ enum Type {
 
 type PageSearchProps = {
   onMealSelect: (meal: MealWithProduct) => void;
-  onProductSelect: (product: ProductSearch) => void;
+  onProductSelect: (product: string) => void;
 };
 
 export default function PageSearch({

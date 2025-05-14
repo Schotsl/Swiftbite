@@ -9,10 +9,10 @@ export default function AddText() {
 
   const insertEntry = useInsertEntry();
 
-  const handleProductSelect = (product: ProductSearch) => {
+  const handleProductSelect = (product: string) => {
     router.push({
       pathname: "/add/add-product",
-      params: { product: product.uuid },
+      params: { product },
     });
   };
 

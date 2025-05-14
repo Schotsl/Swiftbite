@@ -2,11 +2,13 @@ import { Text, View } from "react-native";
 import { useState, useEffect, Fragment } from "react";
 
 type ProductStatusProps = {
+  small?: boolean;
   status: string;
   active?: boolean;
 };
 
 export default function ProductStatus({
+  small = false,
   status,
   active = true,
 }: ProductStatusProps) {
@@ -40,9 +42,8 @@ export default function ProductStatus({
       <Text
         style={{
           maxWidth: 250,
-          marginTop: -48,
+          marginTop: small ? -12 : -48,
           textAlign: "center",
-
           fontSize: 16,
           fontFamily: "OpenSans_400Regular",
         }}
