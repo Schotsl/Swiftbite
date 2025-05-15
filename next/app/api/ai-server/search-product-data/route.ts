@@ -6,7 +6,6 @@ import { generateEmbedding, searchProduct } from "@/utils/openai";
 
 export async function GET(request: NextRequest) {
   const uuid = request.nextUrl.searchParams.get("uuid");
-  const type = request.nextUrl.searchParams.get("type") as Enums<"type">;
   const lang = request.nextUrl.searchParams.get("lang");
   const title = request.nextUrl.searchParams.get("title");
   const brand = request.nextUrl.searchParams.get("brand");
@@ -21,13 +20,6 @@ export async function GET(request: NextRequest) {
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 }
-    );
-  }
-
-  if (!type) {
-    return NextResponse.json(
-      { error: "Please provide a type" },
       { status: 400 }
     );
   }
