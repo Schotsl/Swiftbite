@@ -4,7 +4,6 @@ import { z } from "zod";
 import { after } from "next/server";
 import { google } from "@ai-sdk/google";
 import { insertUsage } from "./usage";
-import { ProductSearch } from "@/types";
 import { openai as openai } from "@ai-sdk/openai";
 import {
   embed,
@@ -15,6 +14,8 @@ import {
 } from "ai";
 
 import {
+  GenericSearchData,
+  genericSearchSchema,
   OptionData,
   optionSchema,
   ProductData,
@@ -29,6 +30,7 @@ import {
   quantitySchema,
 } from "@/schema";
 
+import genericSearchPrompt from "@/prompts/search-generic";
 import generateIconPrompt from "@/prompts/generate-icon";
 import generateOptionsPrompt from "@/prompts/generate-options";
 import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
@@ -207,7 +209,7 @@ export async function searchProducts(
     fatsecret: string;
   },
   system: {
-    products: ProductSearch[];
+    products: ProductSearchData[];
   },
   signal?: AbortSignal,
 ): Promise<
@@ -287,6 +289,82 @@ export async function searchProducts(
   });
 
   return structureStream;
+}
+
+export async function searchGeneric(
+  user: string,
+  data: {
+    lang: string;
+    query: string;
+    google: string;
+  },
+  system: {
+    generic: GenericSearchData[];
+  },
+  signal?: AbortSignal,
+): Promise<
+  StreamObjectResult<
+    GenericSearchData[],
+    GenericSearchData[],
+    AsyncIterable<GenericSearchData> & ReadableStream<GenericSearchData>
+  >
+> {
+  const genericTask = "search-generic";
+  const genericModel = google("gemini-2.5-pro-preview-03-25");
+
+  const genericStream = streamObject({
+    model: genericModel,
+    output: "array",
+    schema: genericSearchSchema,
+    temperature: 0,
+    abortSignal: signal,
+    providerOptions: {
+      google: {
+        thinkingConfig: {
+          thinkingBudget: 0,
+        },
+      },
+    },
+    messages: [
+      {
+        role: "system",
+        content: genericSearchPrompt,
+      },
+      {
+        role: "system",
+        content:
+          system.generic.length > 0
+            ? `We've already found these database results: ${JSON.stringify(system.generic)}`
+            : "We've found no database results",
+      },
+      {
+        role: "system",
+        content: `Google results: ${data.google}`,
+      },
+      {
+        role: "user",
+        content: JSON.stringify({
+          lang: "Dutch",
+          query: data.query,
+          location: "Amsterdam",
+          measurement: "Metric",
+        }),
+      },
+    ],
+  });
+
+  after(async () => {
+    const usage = await genericStream.usage;
+
+    await insertUsage({
+      user,
+      task: genericTask,
+      model: genericModel.modelId,
+      usage,
+    });
+  });
+
+  return genericStream;
 }
 
 export async function normalizeMeal(

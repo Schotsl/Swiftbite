@@ -1,6 +1,7 @@
 import { supabase } from "./supabase";
 import { generateEmbedding } from "./openai";
 import { Product } from "@/types";
+import { Enums } from "@/database.types";
 
 export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
   const timeStart = performance.now();
@@ -116,11 +117,15 @@ export const openfoodRequest = async (
   return minimized;
 };
 
-export const supabaseRequest = async (query: string): Promise<Product[]> => {
-  const vector = await generateEmbedding({ value: query });
+export const supabaseRequest = async (
+  value: string,
+  type: Enums<"type">
+): Promise<Product[]> => {
+  const vector = await generateEmbedding({ value });
 
   const { data: results } = await supabase.rpc("product_match", {
     query_embedding: vector,
+    query_type: type,
     match_threshold: 0.5,
     match_count: 8,
   });

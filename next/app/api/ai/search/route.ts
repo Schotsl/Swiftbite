@@ -1,16 +1,19 @@
-import { searchProducts } from "@/utils/openai";
+import { Enums } from "@/database.types";
+import { Product } from "@/types";
 import { getUser, supabase } from "@/utils/supabase";
-import { Product, ProductSearch } from "@/types";
+import { searchGeneric, searchProducts } from "@/utils/openai";
 import { handleError, streamToResponse } from "@/helper";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
 import { fatsecretRequest, supabaseRequest } from "@/utils/internet";
+import { GenericSearchData, ProductSearchData } from "@/schema";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
   const signal = request.signal;
 
   const lang = request.nextUrl.searchParams.get("lang");
+  const type = request.nextUrl.searchParams.get("type") as Enums<"type">;
   const query = request.nextUrl.searchParams.get("query");
 
   if (!lang) {
@@ -27,43 +30,65 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Get all results first
+  if (!type) {
+    return NextResponse.json(
+      { error: "Please provide a type" },
+      { status: 400 }
+    );
+  }
+
+  const promises = [googleRequest(query, signal), supabaseRequest(query, type)];
+
+  if (type === "search_product") {
+    promises.push(openfoodRequest(query, lang, signal));
+    promises.push(fatsecretRequest(query, signal));
+  }
+
+  // Get all the data first
   const [
     googleResponse,
+    supabaseResponse,
     openfoodResponse,
     fatsecretResponse,
-    supabaseResponse,
-  ] = await Promise.all([
-    googleRequest(query, signal),
-    openfoodRequest(query, lang, signal),
-    fatsecretRequest(query, signal),
-    supabaseRequest(query),
-  ]);
-
-  const googleStringified = JSON.stringify(googleResponse);
-  const openfoodStringified = JSON.stringify(openfoodResponse);
-  const fatsecretStringified = JSON.stringify(fatsecretResponse);
+  ] = await Promise.all(promises);
 
   // Create a stream for AI results
-  const generativeStream = await searchProducts(
-    user!,
-    {
-      query,
-      lang,
-      google: googleStringified,
-      openfood: openfoodStringified,
-      fatsecret: fatsecretStringified,
-    },
-    {
-      products: supabaseResponse.map((product) => ({
-        title: product.title!,
-        brand: product.brand!,
-        quantity_original: product.quantity?.quantity,
-        quantity_original_unit: product.quantity?.option,
-      })),
-    },
-    request.signal
-  );
+  const generativeStream =
+    type === "search_product"
+      ? await searchProducts(
+          user!,
+          {
+            query,
+            lang,
+            google: JSON.stringify(googleResponse),
+            openfood: JSON.stringify(openfoodResponse),
+            fatsecret: JSON.stringify(fatsecretResponse),
+          },
+          {
+            products: supabaseResponse.map((product: Product) => ({
+              title: product.title,
+              brand: product.brand,
+              quantity_original: product.quantity?.quantity,
+              quantity_original_unit: product.quantity?.option,
+            })),
+          },
+          request.signal
+        )
+      : await searchGeneric(
+          user!,
+          {
+            query,
+            lang,
+            google: JSON.stringify(googleResponse),
+          },
+          {
+            generic: supabaseResponse.map((product: Product) => ({
+              title: product.title,
+              category: product.brand,
+            })),
+          },
+          request.signal
+        );
 
   after(async () => {
     const results = await generativeStream.object;
@@ -74,6 +99,10 @@ export async function GET(request: NextRequest) {
     handleError(error);
 
     resultsMapped.forEach(async (result) => {
+      if (result.type === "search_generic") {
+        return;
+      }
+
       const params = new URLSearchParams({
         uuid: result.uuid,
         lang,
@@ -95,23 +124,23 @@ export async function GET(request: NextRequest) {
         );
       }
 
-      const headers = {
-        "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
-      };
+      // const headers = {
+      //   "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
+      // };
 
-      fetch(
-        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-data?${params.toString()}`,
-        {
-          headers,
-        }
-      );
+      // fetch(
+      //   `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-data?${params.toString()}`,
+      //   {
+      //     headers,
+      //   }
+      // );
 
-      fetch(
-        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
-        {
-          headers,
-        }
-      );
+      // fetch(
+      //   `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
+      //   {
+      //     headers,
+      //   }
+      // );
     });
   });
 
@@ -147,10 +176,7 @@ export async function GET(request: NextRequest) {
 
 const uuids: { [key: string]: string } = {};
 
-const getUUID = (search: ProductSearch): string => {
-  const { title, brand, quantity_original, quantity_original_unit } = search;
-
-  const key = `${title}-${brand}-${quantity_original}-${quantity_original_unit}`;
+const getUUID = (key: string): string => {
   const uuid = crypto.randomUUID();
 
   uuids[key] = uuid;
@@ -158,11 +184,30 @@ const getUUID = (search: ProductSearch): string => {
   return uuid;
 };
 
-const getProduct = (search: ProductSearch): Product => {
+const getProduct = (search: ProductSearchData | GenericSearchData): Product => {
+  const isGeneric = "category" in search;
+
+  const parsedType = isGeneric ? "search_generic" : "search_product";
+  const parsedUuid = getUUID(
+    isGeneric
+      ? search.title + search.category
+      : search.title +
+          search.brand +
+          search.quantity_original +
+          search.quantity_original_unit
+  );
+
+  const safeSearch = isGeneric
+    ? {
+        title: search.title,
+        brand: search.category,
+      }
+    : search;
+
   return {
-    uuid: getUUID(search),
-    type: "search",
-    search,
+    type: parsedType,
+    uuid: parsedUuid,
+    search: safeSearch,
     estimated: false,
     processing: true,
 

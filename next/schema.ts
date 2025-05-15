@@ -132,6 +132,13 @@ export const productSearchSchema = z.object({
 
 export type ProductSearchData = z.infer<typeof productSearchSchema>;
 
+export const genericSearchSchema = z.object({
+  title: z.string().describe("The title of the generic item"),
+  category: z.string().describe("The category of the generic item"),
+});
+
+export type GenericSearchData = z.infer<typeof genericSearchSchema>;
+
 export const quantitySchema = z.object({
   quantity_gram: z.number().describe("Quantity converted to grams").nullable(),
   quantity_original: z

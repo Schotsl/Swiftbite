@@ -1,4 +1,5 @@
 import { Tables } from "./database.types";
+import { ProductSearchData } from "./schema";
 
 export type Option = {
   title: string;
@@ -11,21 +12,13 @@ export type ServingData = {
   option: string;
   quantity: number;
 };
-
-export type ProductSearch = {
-  title: string;
-  brand: string;
-  quantity_original?: number | null;
-  quantity_original_unit?: string | null;
-};
-
 export type ProductBase = Tables<"product">;
 
 export type Product = Omit<
   ProductBase,
   "search" | "options" | "serving" | "quantity"
 > & {
-  search: ProductSearch | null;
+  search: ProductSearchData | null;
   options: Option[] | null;
   serving: ServingData | null;
   quantity: ServingData | null;
