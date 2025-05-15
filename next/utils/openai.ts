@@ -14,6 +14,8 @@ import {
 } from "ai";
 
 import {
+  GenericData,
+  genericSchema,
   GenericSearchData,
   genericSearchSchema,
   OptionData,
@@ -30,14 +32,18 @@ import {
   quantitySchema,
 } from "@/schema";
 
-import genericSearchPrompt from "@/prompts/search-generic";
 import generateIconPrompt from "@/prompts/generate-icon";
 import generateOptionsPrompt from "@/prompts/generate-options";
 import normalizeQuantityPrompt from "@/prompts/normalize-quantity";
 import normalizeTitlePrompt from "@/prompts/normalize-meal";
 import normalizeProductPrompt from "@/prompts/normalize-product";
+
+import searchGenericPrompt from "@/prompts/search-generic";
+import searchGenericsPrompt from "@/prompts/search-generics";
+
 import searchProductsPrompt from "@/prompts/search-products";
 import searchProductPrompt from "@/prompts/search-product";
+
 import estimateVisualPrompt from "@/prompts/estimate-visual";
 import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
 
@@ -48,7 +54,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -111,7 +117,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = google("gemini-2.5-pro-preview-03-25");
@@ -173,7 +179,7 @@ export async function searchProduct(data: {
   title: string;
   quantity_original: number | null;
   quantity_original_unit: string | null;
-}): Promise<ProductData | null> {
+}): Promise<ProductData> {
   const searchModel = google("gemini-2.5-pro-preview-03-25", {
     useSearchGrounding: true,
   });
@@ -211,7 +217,7 @@ export async function searchProducts(
   system: {
     products: ProductSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -291,7 +297,37 @@ export async function searchProducts(
   return structureStream;
 }
 
-export async function searchGeneric(
+export async function searchGeneric(data: {
+  lang: string;
+  title: string;
+  category: string;
+}): Promise<GenericData> {
+  const searchModel = google("gemini-2.5-pro-preview-03-25", {
+    useSearchGrounding: true,
+  });
+
+  const searchResponse = await generateObject({
+    model: searchModel,
+    output: "object",
+    schema: genericSchema,
+    temperature: 0,
+    messages: [
+      {
+        role: "system",
+        content: searchGenericPrompt,
+      },
+      {
+        role: "user",
+        content: JSON.stringify(data),
+      },
+    ],
+  });
+
+  const { object } = searchResponse;
+  return object;
+}
+
+export async function searchGenerics(
   user: string,
   data: {
     lang: string;
@@ -301,7 +337,7 @@ export async function searchGeneric(
   system: {
     generic: GenericSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     GenericSearchData[],
@@ -328,7 +364,7 @@ export async function searchGeneric(
     messages: [
       {
         role: "system",
-        content: genericSearchPrompt,
+        content: searchGenericsPrompt,
       },
       {
         role: "system",
@@ -373,7 +409,7 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-meal";
   const model = "gpt-4.1-mini";
@@ -419,7 +455,7 @@ export async function normalizeTitle(
   data: {
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const model = "gpt-4.1-mini";
 
@@ -466,7 +502,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<QuantitySchema> {
   // If no combined or unit is provided there is no way to know the original unit
   if (!data.combined && !data.unit) {

@@ -132,6 +132,18 @@ export const productSearchSchema = z.object({
 
 export type ProductSearchData = z.infer<typeof productSearchSchema>;
 
+export const genericSchema = nutritionSchema.extend({
+  title: z.string().describe("Product title"),
+  category: z.string().describe("Product category"),
+  estimated: z
+    .boolean()
+    .describe(
+      `True if nutritional values are estimated due to not being able to find the product`,
+    ),
+});
+
+export type GenericData = z.infer<typeof genericSchema>;
+
 export const genericSearchSchema = z.object({
   title: z.string().describe("The title of the generic item"),
   category: z.string().describe("The category of the generic item"),

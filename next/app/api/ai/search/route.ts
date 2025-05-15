@@ -1,7 +1,7 @@
 import { Enums } from "@/database.types";
 import { Product } from "@/types";
 import { getUser, supabase } from "@/utils/supabase";
-import { searchGeneric, searchProducts } from "@/utils/openai";
+import { searchGenerics, searchProducts } from "@/utils/openai";
 import { handleError, streamToResponse } from "@/helper";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
@@ -19,21 +19,21 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!type) {
     return NextResponse.json(
       { error: "Please provide a type" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -72,9 +72,9 @@ export async function GET(request: NextRequest) {
               quantity_original_unit: product.quantity?.option,
             })),
           },
-          request.signal
+          request.signal,
         )
-      : await searchGeneric(
+      : await searchGenerics(
           user!,
           {
             query,
@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
               category: product.brand,
             })),
           },
-          request.signal
+          request.signal,
         );
 
   after(async () => {
@@ -99,13 +99,10 @@ export async function GET(request: NextRequest) {
     handleError(error);
 
     resultsMapped.forEach(async (result) => {
-      if (result.type === "search_generic") {
-        return;
-      }
-
       const params = new URLSearchParams({
         uuid: result.uuid,
         lang,
+        type,
         title: result.search!.title,
         brand: result.search!.brand,
       });
@@ -113,34 +110,34 @@ export async function GET(request: NextRequest) {
       if (result.search!.quantity_original) {
         params.set(
           "quantity_original",
-          result.search!.quantity_original.toString()
+          result.search!.quantity_original.toString(),
         );
       }
 
       if (result.search!.quantity_original_unit) {
         params.set(
           "quantity_original_unit",
-          result.search!.quantity_original_unit
+          result.search!.quantity_original_unit,
         );
       }
 
-      // const headers = {
-      //   "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
-      // };
+      const headers = {
+        "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
+      };
 
-      // fetch(
-      //   `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-data?${params.toString()}`,
-      //   {
-      //     headers,
-      //   }
-      // );
+      fetch(
+        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-data?${params.toString()}`,
+        {
+          headers,
+        },
+      );
 
-      // fetch(
-      //   `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
-      //   {
-      //     headers,
-      //   }
-      // );
+      fetch(
+        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
+        {
+          headers,
+        },
+      );
     });
   });
 
@@ -194,7 +191,7 @@ const getProduct = (search: ProductSearchData | GenericSearchData): Product => {
       : search.title +
           search.brand +
           search.quantity_original +
-          search.quantity_original_unit
+          search.quantity_original_unit,
   );
 
   const safeSearch = isGeneric

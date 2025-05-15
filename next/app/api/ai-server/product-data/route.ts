@@ -1,10 +1,17 @@
+import { Enums } from "@/database.types";
 import { supabase } from "@/utils/supabase";
+import { ProductData } from "@/schema";
 import { handleError } from "@/helper";
-import { generateEmbedding, searchProduct } from "@/utils/openai";
+import {
+  generateEmbedding,
+  searchGeneric,
+  searchProduct,
+} from "@/utils/openai";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const uuid = request.nextUrl.searchParams.get("uuid");
+  const type = request.nextUrl.searchParams.get("type") as Enums<"type">;
   const lang = request.nextUrl.searchParams.get("lang");
   const title = request.nextUrl.searchParams.get("title");
   const brand = request.nextUrl.searchParams.get("brand");
@@ -13,49 +20,70 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit",
+    "quantity_original_unit"
   );
 
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 },
+      { status: 400 }
+    );
+  }
+
+  if (!type) {
+    return NextResponse.json(
+      { error: "Please provide a type" },
+      { status: 400 }
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   console.log(`[PRODUCT/${title}] Searching product`);
 
-  const product = await searchProduct({
-    lang,
-    brand,
-    title,
-    quantity_original: quantity_original ? Number(quantity_original) : null,
-    quantity_original_unit,
-  });
+  let product: ProductData | null = null;
 
-  if (!product) {
-    return NextResponse.json({ error: "No product found" }, { status: 404 });
+  if (type === "search_product") {
+    product = await searchProduct({
+      lang,
+      brand,
+      title,
+      quantity_original: quantity_original ? Number(quantity_original) : null,
+      quantity_original_unit,
+    });
+  } else {
+    const generic = await searchGeneric({
+      lang,
+      title,
+      category: brand,
+    });
+
+    const { category, ...rest } = generic;
+
+    product = {
+      brand: category,
+      barcode: null,
+      ...rest,
+    };
   }
 
   const {
@@ -106,8 +134,8 @@ export async function GET(request: NextRequest) {
   const lowerBrand = brand.toLowerCase();
   const lowerTitle = title.toLowerCase();
 
-  if (!lowerTitle.includes(lowerBrand)) {
-    embeddingInput = `${title} ${brand}`;
+  if (!lowerTitle.includes(lowerBrand) && type === "search_product") {
+    embeddingInput += ` ${brand}`;
   }
 
   if (quantity) {
