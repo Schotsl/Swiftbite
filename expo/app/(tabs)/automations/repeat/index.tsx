@@ -1,7 +1,7 @@
 import Tabs from "@/components/Tabs";
 import repeatData from "@/queries/repeatData";
 import ItemDelete from "@/components/Item/Delete";
-import ItemRepeatWithProductOrMeal from "@/components/Item/RepeatWithProductOrMeal";
+import ItemRepeat from "@/components/Item/Repeat";
 
 import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
@@ -37,7 +37,7 @@ export default function Tab() {
         data={data}
         keyExtractor={(item) => item.uuid}
         renderItem={({ item }) => (
-          <ItemRepeatWithProductOrMeal
+          <ItemRepeat
             item={item}
             onPress={() => {
               router.push({

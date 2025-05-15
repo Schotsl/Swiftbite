@@ -6,6 +6,8 @@ import { ServingData } from "@/schemas/serving";
 import { getMacrosFromProduct } from "@/helper";
 
 type ItemProductProps = {
+  icon?: boolean;
+  small?: boolean;
   border?: boolean;
   product: Product;
   serving?: ServingData | null;
@@ -13,11 +15,12 @@ type ItemProductProps = {
 };
 
 export default function ItemProduct({
-  border = true,
   product,
   serving,
   onSelect,
+  ...props
 }: ItemProductProps) {
+  const icon = props.icon ? product.icon_id : undefined;
   const macros = serving ? getMacrosFromProduct(product, serving) : null;
 
   const overwriteTop = macros?.calories ? `${macros.calories} kcal` : null;
@@ -31,8 +34,9 @@ export default function ItemProduct({
 
     return (
       <Item
+        {...props}
+        iconId={icon}
         title={title}
-        border={border}
         subtitle={subtitle}
         subtitleIcon="apple-whole"
         rightTop={overwriteTop}
@@ -54,8 +58,9 @@ export default function ItemProduct({
 
     return (
       <Item
+        {...props}
+        iconId={icon}
         title={title}
-        border={border}
         subtitle={subtitle}
         subtitleIcon={processing ? "globe" : undefined}
         rightTop={overwriteTop || quantity}
@@ -70,7 +75,7 @@ export default function ItemProduct({
 
     // If we have no title we'll show a skeleton
     if (!title) {
-      return <ItemSkeleton border={border} />;
+      return <ItemSkeleton {...props} />;
     }
 
     const subtitleIcon = processing ? "spinner" : "wand-magic-sparkles";
@@ -80,8 +85,9 @@ export default function ItemProduct({
 
     return (
       <Item
+        {...props}
+        iconId={icon}
         title={title}
-        border={border}
         subtitle={subtitle}
         subtitleIcon={subtitleIcon}
         subtitleIconSpinning={processing}
@@ -95,8 +101,9 @@ export default function ItemProduct({
   if (product.type === "manual") {
     return (
       <Item
+        {...props}
+        iconId={icon}
         title={product.title}
-        border={border}
         subtitle={"Handmatige inschatting"}
         subtitleIcon="wand-magic-sparkles"
         rightTop={overwriteTop}
@@ -110,8 +117,9 @@ export default function ItemProduct({
     const subtitle = product.brand || "Onbekend merk";
     return (
       <Item
+        {...props}
+        iconId={icon}
         title={title}
-        border={border}
         subtitle={subtitle}
         subtitleIcon="barcode"
         rightTop={overwriteTop}
@@ -123,8 +131,8 @@ export default function ItemProduct({
 
   return (
     <Item
+      {...props}
       title={"Undefined state"}
-      border={border}
       subtitle="Undefined state"
       onPress={() => {}}
     />

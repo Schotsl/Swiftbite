@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditMeal } from "@/context/MealContext";
@@ -11,10 +12,9 @@ import Input from "@/components/Input";
 import InputLabel from "@/components/Input/Label";
 import ItemDelete from "@/components/Item/Delete";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
-import ItemProductWithServing from "@/components/Item/ProductWithServing";
-import { useEffect } from "react";
 import ButtonOverlay from "@/components/Button/Overlay";
 import ButtonSmall from "@/components/Button/Small";
+import ItemProduct from "@/components/Item/Product";
 
 export default function DetailsScreen() {
   const router = useRouter();
@@ -25,8 +25,8 @@ export default function DetailsScreen() {
 
   const {
     title,
-    mealProducts,
     updating,
+    mealProducts,
     removeMealProduct,
     updateTitle,
     saveChanges,
@@ -99,22 +99,20 @@ export default function DetailsScreen() {
                   borderRadius: 8,
                 }}
                 data={mealProducts}
-                keyExtractor={(item) => item.product_id}
+                keyExtractor={(item) => item.product.uuid}
                 renderItem={({ item, index }) => {
-                  const length = mealProducts.length || 0;
-
                   return (
-                    <ItemProductWithServing
+                    <ItemProduct
                       icon={false}
                       small={true}
                       border={index !== length - 1}
-                      product={item.product_id}
+                      product={item.product}
                       serving={item.serving}
-                      onPress={() => {
+                      onSelect={() => {
                         router.push({
                           pathname: `/(tabs)/automations/meal/upsert/product`,
                           params: {
-                            product: item.product_id,
+                            product: item.product.uuid,
                           },
                         });
                       }}
@@ -150,7 +148,7 @@ export default function DetailsScreen() {
                   return (
                     <ItemDelete
                       border={index !== length - 1}
-                      onDelete={() => removeMealProduct(item.product_id)}
+                      onDelete={() => removeMealProduct(item.product.uuid)}
                     />
                   );
                 }}

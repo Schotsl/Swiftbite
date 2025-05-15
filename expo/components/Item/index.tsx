@@ -1,9 +1,9 @@
+import Icon from "../Icon";
+
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Href, router } from "expo-router";
-import { Text, TouchableOpacity, View, Animated, Easing } from "react-native";
-
-import Icon from "../Icon";
 import { useState, useEffect, useRef } from "react";
+import { Text, TouchableOpacity, View, Animated, Easing } from "react-native";
 
 type BaseProps = {
   title: string;
@@ -46,7 +46,9 @@ export default function Item({
   rightBottom,
 }: ItemProps) {
   const [width, setWidth] = useState(0);
-  const spinValue = useRef(new Animated.Value(0)).current;
+
+  const spinAnimated = new Animated.Value(0);
+  const spinValue = useRef(spinAnimated).current;
 
   useEffect(() => {
     if (subtitleIconSpinning) {
@@ -58,6 +60,7 @@ export default function Item({
             useNativeDriver: true,
             easing: Easing.linear,
           }),
+
           Animated.timing(spinValue, {
             toValue: 0,
             duration: 0,
@@ -65,10 +68,12 @@ export default function Item({
           }),
         ]),
       ).start();
-    } else {
-      spinValue.setValue(0);
+
+      return;
     }
-  }, [subtitleIconSpinning]);
+
+    spinValue.setValue(0);
+  }, [subtitleIconSpinning, spinValue]);
 
   const spin = spinValue.interpolate({
     inputRange: [0, 1],

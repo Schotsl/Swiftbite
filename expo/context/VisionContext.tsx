@@ -74,7 +74,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
     }
   }, []);
 
-  const handleClose = (event: CloseEvent) => {
+  const handleClose = () => {
     console.log("[VISION] Connection closed");
     console.log("[VISION] Attempting to reconnect in 5 seconds...");
 

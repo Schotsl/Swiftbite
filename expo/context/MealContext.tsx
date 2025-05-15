@@ -6,6 +6,7 @@ import useUpdateMeal from "@/mutations/useUpdateMeal";
 import useInsertMeal from "@/mutations/useInsertMeal";
 import useUpsertMealProduct from "@/mutations/useUpsertMealProduct";
 import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
+import { Product } from "@/types/product";
 
 type MealProductTemporary = Omit<MealProductInsert, "meal_id"> & {
   meal_id: string | null;
@@ -18,9 +19,9 @@ type MealContextType = {
 
   updateTitle: (title: string) => void;
 
+  updateMealProduct: (product: Product, serving: ServingData) => void;
+  insertMealProduct: (product: Product, serving: ServingData) => void;
   removeMealProduct: (productId: string) => void;
-  updateMealProduct: (productId: string, serving: ServingData) => void;
-  insertMealProduct: (productId: string, serving: ServingData) => void;
 
   saveChanges: () => Promise<void>;
 };
@@ -54,30 +55,30 @@ export const MealProvider: React.FC<MealProviderProps> = ({
     setTitle(title);
   };
 
-  const updateMealProduct = (productId: string, serving: ServingData) => {
+  const updateMealProduct = (product: Product, serving: ServingData) => {
     setMealProducts((prev) =>
       prev.map((mealProduct) =>
-        mealProduct.product_id === productId
+        mealProduct.product.uuid === product.uuid
           ? { ...mealProduct, serving }
           : mealProduct,
       ),
     );
   };
 
-  const insertMealProduct = (productId: string, serving: ServingData) => {
+  const insertMealProduct = (product: Product, serving: ServingData) => {
     setMealProducts((prev) => [
       ...prev,
       {
         serving,
         meal_id: null,
-        product_id: productId,
+        product: product,
       },
     ]);
   };
 
   const removeMealProduct = (productId: string) => {
     setMealProducts((prev) =>
-      prev.filter((mealProduct) => mealProduct.product_id !== productId),
+      prev.filter((mealProduct) => mealProduct.product.uuid !== productId),
     );
   };
 

@@ -2,7 +2,7 @@ import { Tables } from "./database.types";
 import { MacroData } from "./schemas/personal/goal";
 import { Weight } from "./schemas/personal/health";
 import { ServingData } from "./schemas/serving";
-import { Product, ProductInsert } from "./types/product";
+import { Product } from "./types/product";
 
 export type Repeat = Tables<"repeat">;
 export type RepeatWithProductOrMeal = Omit<Repeat, "serving" | "time"> & {
@@ -82,8 +82,9 @@ export type EntryWithMeal = Entry & {
 
 export type Meal = Tables<"meal">;
 export type MealProductBase = Tables<"meal_product">;
-export type MealProduct = MealProductBase & {
+export type MealProduct = Omit<MealProductBase, "product_id"> & {
   serving: ServingData;
+  product: Product;
 };
 
 export type MealProductWithProduct = MealProduct & { product: Product };
@@ -108,7 +109,7 @@ export type MealProductInsert = Omit<
 
 export type MealProductWithProductInsert = Omit<
   MealProductInsert & {
-    product: ProductInsert;
+    product: Product;
   },
   "user_id" | "created_at" | "updated_at"
 > &

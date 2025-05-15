@@ -16,7 +16,7 @@ export default function useUpdateMealProduct() {
       const { data, error } = await supabase
         .from("meal_product")
         .update(rest)
-        .eq("product_id", mealProduct.product_id)
+        .eq("product_id", mealProduct.product.uuid)
         .eq("meal_id", mealProduct.meal_id)
         .select()
         .single();
@@ -39,7 +39,7 @@ export default function useUpdateMealProduct() {
         // Replace the old product with the new one
         meal.meal_products =
           meal.meal_products?.map((product) => {
-            if (product.product_id !== mealProductInsert.product_id) {
+            if (product.product.uuid !== mealProductInsert.product.uuid) {
               return product;
             }
 

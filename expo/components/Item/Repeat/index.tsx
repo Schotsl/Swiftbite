@@ -3,15 +3,12 @@ import Item from "@/components/Item";
 import { getMacrosFromProduct } from "@/helper";
 import { RepeatWithProductOrMeal } from "@/types";
 
-type RepeatWithProductOrMealProps = {
+type RepeatRepeatProps = {
   item: RepeatWithProductOrMeal;
   onPress: () => void;
 };
 
-export default function ItemRepeatWithProductOrMeal({
-  item,
-  onPress,
-}: RepeatWithProductOrMealProps) {
+export default function ItemRepeat({ item, onPress }: RepeatRepeatProps) {
   const translations = {
     monday: "ma",
     sunday: "zo",
@@ -35,8 +32,8 @@ export default function ItemRepeatWithProductOrMeal({
 
   return (
     <Item
-      iconId={item.product?.icon_id ?? item.meal?.icon_id}
       title={item.product?.title ?? item.meal?.title ?? ""}
+      iconId={item.product?.icon_id ?? item.meal?.icon_id}
       subtitle={`Herhaald elke ${translationsJoined}`}
       subtitleIcon="repeat"
       rightTop={macros.calories ? `${macros.calories} kcal` : null}

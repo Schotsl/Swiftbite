@@ -51,7 +51,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.serving
+        !entry.serving,
     );
 
     const interval = processing ? 500 : false;
@@ -92,7 +92,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour
+      (section) => currentHour >= section.startHour,
     );
 
     // Populate active sections with data

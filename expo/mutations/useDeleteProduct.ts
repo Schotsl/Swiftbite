@@ -25,7 +25,7 @@ export default function useDeleteProduct() {
 
       // Optimistically update the UI by removing the deleted product
       queryClient.setQueryData<Product[]>(["productData"], (old = []) =>
-        old.filter((product) => product.uuid !== uuid)
+        old.filter((product) => product.uuid !== uuid),
       );
 
       return { previousProducts };

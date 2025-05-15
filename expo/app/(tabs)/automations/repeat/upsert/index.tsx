@@ -3,7 +3,6 @@ import InputLabel from "@/components/Input/Label";
 import InputTime from "@/components/Input/Time";
 import InputWeekday from "@/components/Input/Weekday";
 import ButtonOverlay from "@/components/Button/Overlay";
-import ItemProductWithServing from "@/components/Item/ProductWithServing";
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "expo-router";
@@ -13,6 +12,7 @@ import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
 import { Text, TouchableOpacity, View } from "react-native";
 import ButtonSmall from "@/components/Button/Small";
+import ItemProduct from "@/components/Item/Product";
 
 export default function AutomationRepeatUpsert() {
   const router = useRouter();
@@ -103,13 +103,13 @@ export default function AutomationRepeatUpsert() {
                     overflow: "hidden",
                   }}
                 >
-                  <ItemProductWithServing
+                  <ItemProduct
                     icon={false}
                     small={true}
                     border={false}
-                    product={product.uuid}
+                    product={product}
                     serving={serving}
-                    onPress={() => {
+                    onSelect={() => {
                       router.push("/(tabs)/automations/repeat/upsert/product");
                     }}
                   />
