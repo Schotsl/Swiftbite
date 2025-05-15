@@ -31,7 +31,7 @@ export default function PageSearch({
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(Type.PRODUCTS);
 
-  const { control, watch } = useForm<SearchData>({
+  const { control, watch, reset } = useForm<SearchData>({
     resolver: zodResolver(searchSchema),
   });
 
@@ -49,6 +49,13 @@ export default function PageSearch({
     setQuery(queryWatched);
   };
 
+  const handleTab = (type: Type) => {
+    reset({ query: "" });
+
+    setQuery("");
+    setSelected(type);
+  };
+
   const placeholder =
     selected === Type.PRODUCTS
       ? "Zoek naar een product..."
@@ -62,7 +69,7 @@ export default function PageSearch({
   return (
     <View style={{ flex: 1 }}>
       <Tabs
-        onSelect={(value) => setSelected(value as Type)}
+        onSelect={(value) => handleTab(value as Type)}
         value={selected}
         tabs={[
           { value: Type.PRODUCTS, title: "Producten" },

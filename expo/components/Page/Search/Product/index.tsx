@@ -1,7 +1,7 @@
 import { Enums } from "@/database.types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@/hooks/useSearch";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
@@ -43,13 +43,22 @@ export default function PageSearchProduct({
   const labelSingular = type === "search_product" ? "product" : "basisitem";
   const labelPlural = type === "search_product" ? "producten" : "basisitems";
 
+  const [previousQuery, setPreviousQuery] = useState(query);
+
   useEffect(() => {
     if (isSearchable) {
+      if (previousQuery === query) {
+        return;
+      }
+
       search(query, type);
-    } else {
-      reset();
+      setPreviousQuery(query);
+
+      return;
     }
-  }, [query, type]);
+
+    reset();
+  }, [query, type, isSearchable, previousQuery, search, reset]);
 
   if (loading && isEmpty) {
     return (
