@@ -15,7 +15,6 @@ type PageSearchProps = {
   type: Enums<"type">;
   query: string;
   queryWatched: string;
-  focused: boolean;
 
   onSelect: (product: string) => void;
 };
@@ -24,23 +23,25 @@ export default function PageSearchProduct({
   type,
   query,
   queryWatched,
-  focused,
   onSelect,
 }: PageSearchProps) {
   const { error, loading, products, overloaded, reset, search } = useSearch();
 
   const { data: favoriteProducts, isLoading: favoriteProductsLoading } =
-    useQuery(productData({ rpc: "product_favorite" }));
+    useQuery(productData({ rpc: "product_favorite", type }));
 
   const { data: mostRecentProducts, isLoading: mostRecentProductsLoading } =
-    useQuery(productData({ rpc: "product_most_recent" }));
+    useQuery(productData({ rpc: "product_most_recent", type }));
 
   const { data: mostUsedProducts, isLoading: mostUsedProductsLoading } =
-    useQuery(productData({ rpc: "product_most_used" }));
+    useQuery(productData({ rpc: "product_most_used", type }));
 
   const isEmpty = products.length === 0;
-  const isActive = focused || queryWatched?.length > 0;
+  const isActive = queryWatched?.length > 0;
   const isSearchable = query.length >= 4;
+
+  const labelSingular = type === "search_product" ? "product" : "basisitem";
+  const labelPlural = type === "search_product" ? "producten" : "basisitems";
 
   useEffect(() => {
     if (isSearchable) {
@@ -52,7 +53,9 @@ export default function PageSearchProduct({
 
   if (loading && isEmpty) {
     return (
-      <ProductStatus status="🕵️ We zijn het hele internet aan het zoeken naar jou product" />
+      <ProductStatus
+        status={`🕵️ We zijn het hele internet aan het zoeken naar ${labelPlural}`}
+      />
     );
   }
 
@@ -60,7 +63,7 @@ export default function PageSearchProduct({
     return (
       <ProductStatus
         active={false}
-        status="😔 Er is iets mis gegaan tijdens het zoeken naar jou product"
+        status={`😔 Er is iets mis gegaan tijdens het zoeken naar ${labelPlural}`}
       />
     );
   }
@@ -69,7 +72,7 @@ export default function PageSearchProduct({
     return (
       <ProductStatus
         active={false}
-        status="😲 Je hebt je dagelijkse zoek limiet overschreden"
+        status={`😲 Je hebt je dagelijkse zoek limiet overschreden`}
       />
     );
   }
@@ -78,7 +81,7 @@ export default function PageSearchProduct({
     return (
       <ProductStatus
         active={false}
-        status={"😔 We hebben geen producten gevonden met deze naam"}
+        status={`😔 We hebben geen ${labelPlural} gevonden met deze naam`}
       />
     );
   }
@@ -124,9 +127,7 @@ export default function PageSearchProduct({
     return (
       <ProductStatus
         active={false}
-        status={
-          "🥳 Start met zoeken door minimaal 4 letters te typen en druk op enter"
-        }
+        status={`🥳 Start met zoeken door minimaal 4 letters te typen en druk op enter`}
       />
     );
   }
@@ -134,32 +135,32 @@ export default function PageSearchProduct({
   return (
     <View style={{ flex: 1 }}>
       <SearchCollapsable
-        title="Mijn favoriete producten"
-        empty="😲 Je hebt nog geen maaltijden als favoriet ingesteld"
+        title={`Mijn favoriete ${labelPlural}`}
+        empty={`😲 Je hebt nog geen ${labelSingular} als favoriet ingesteld`}
         loading={favoriteProductsLoading}
         products={favoriteProducts}
         onSelect={onSelect}
       />
 
       <SearchCollapsable
-        title="Zelf toegevoegde producten"
-        empty="😲 Je hebt nog geen producten zelf toegevoegd"
+        title={`Zelf toegevoegde ${labelPlural}`}
+        empty={`😲 Je hebt nog geen ${labelPlural} zelf toegevoegd`}
         loading={false}
         products={[]}
         onSelect={onSelect}
       />
 
       <SearchCollapsable
-        title="Vaak gebruikte producten"
-        empty="😲 Je hebt nog geen vaak gebruikte producten"
+        title={`Vaak gebruikte ${labelPlural}`}
+        empty={`😲 Je hebt nog geen ${labelPlural} vaak gebruikt`}
         loading={mostUsedProductsLoading}
         products={mostUsedProducts}
         onSelect={onSelect}
       />
 
       <SearchCollapsable
-        title="Recent gebruikte producten"
-        empty="😲 Je hebt nog geen recent gebruikte producten"
+        title={`Recent gebruikte ${labelPlural}`}
+        empty={`😲 Je hebt nog geen ${labelPlural} gebruikt`}
         loading={mostRecentProductsLoading}
         products={mostRecentProducts}
         onSelect={onSelect}

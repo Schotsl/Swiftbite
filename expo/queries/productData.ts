@@ -1,11 +1,13 @@
 import { queryOptions } from "@tanstack/react-query";
-
 import { handleError } from "@/helper";
 import { Product } from "@/types";
+import { Enums } from "@/database.types";
+
 import supabase from "@/utils/supabase";
 
 type productDataType = {
   rpc?: "product_most_recent" | "product_most_used" | "product_favorite";
+  type?: Enums<"type">;
   uuid?: string;
   uuids?: string[];
   barcode?: string;
@@ -13,12 +15,13 @@ type productDataType = {
 
 export default function productData({
   rpc,
+  type,
   uuid,
   uuids,
   barcode,
 }: productDataType) {
   return queryOptions({
-    queryKey: ["productData", rpc, uuid, uuids, barcode],
+    queryKey: ["productData", rpc, type, uuid, uuids, barcode],
     queryFn: async () => {
       if (rpc) {
         const session = await supabase.auth.getSession();
@@ -26,6 +29,7 @@ export default function productData({
 
         const { data, error } = await supabase.rpc(rpc, {
           param_user_id: userId,
+          param_type: type,
         });
 
         handleError(error);

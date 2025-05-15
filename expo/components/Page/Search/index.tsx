@@ -29,7 +29,6 @@ export default function PageSearch({
   const focus = useIsFocused();
 
   const [query, setQuery] = useState("");
-  const [focused, setFocused] = useState(false);
   const [selected, setSelected] = useState(Type.PRODUCTS);
 
   const { control, watch } = useForm<SearchData>({
@@ -86,8 +85,6 @@ export default function PageSearch({
           control={control}
           placeholder={placeholder}
           onSubmit={handleSubmit}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
         />
       </View>
 
@@ -97,7 +94,6 @@ export default function PageSearch({
           type={type}
           query={query}
           queryWatched={queryWatched}
-          focused={focused}
           onSelect={onProductSelect}
         />
       )}
