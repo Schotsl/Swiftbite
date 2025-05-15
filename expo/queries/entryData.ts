@@ -4,20 +4,14 @@ import { handleError, mapMeal } from "@/helper";
 
 import supabase from "@/utils/supabase";
 
-type entryDataType = {
-  openfood?: string;
-};
-
-export default function entryData<T extends Entry>({
-  openfood,
-}: entryDataType) {
+export default function entryData<T extends Entry>() {
   return queryOptions({
-    queryKey: ["entryData", openfood],
+    queryKey: ["entryData"],
     queryFn: async () => {
       const { error, data } = await supabase
         .from("entry")
         .select(
-          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`,
+          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`
         )
         .order("created_at", { ascending: false });
 

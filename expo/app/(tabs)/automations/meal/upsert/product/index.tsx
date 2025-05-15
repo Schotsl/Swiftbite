@@ -1,6 +1,4 @@
 import productData from "@/queries/productData";
-import openfoodData from "@/queries/openfoodData";
-
 import PageProduct from "@/components/Page/Product";
 import ProductStatus from "@/components/Product/Status";
 import HeaderLoading from "@/components/Header/Loading";
@@ -19,34 +17,16 @@ export default function AddPreviewBarcodeScreen() {
     mealProducts,
   } = useEditMeal();
 
-  const {
-    title,
-    brand,
-    barcode,
-    product: productId,
-  } = useLocalSearchParams<{
-    title?: string;
-    brand?: string;
+  const { barcode, product: productId } = useLocalSearchParams<{
     barcode?: string;
     product?: string;
   }>();
 
-  const { data: productEdit, isLoading: isLoadingEdit } = useQuery({
-    ...productData({ barcode }),
-    select: (data) => data.find((product) => product.uuid === productId),
-    enabled: !!productId,
+  const { data: products, isLoading } = useQuery({
+    ...productData({ barcode, uuid: productId }),
   });
 
-  const { data: productOpenfood, isLoading: isLoadingOpenfood } = useQuery({
-    ...openfoodData({
-      title,
-      brand,
-      barcode,
-    }),
-    enabled: !productId,
-  });
-
-  if (isLoadingEdit || isLoadingOpenfood) {
+  if (isLoading) {
     return (
       <View style={{ padding: 32, minHeight: "100%" }}>
         <HeaderLoading />
@@ -56,14 +36,14 @@ export default function AddPreviewBarcodeScreen() {
     );
   }
 
-  const product = productEdit || productOpenfood?.[0];
+  const product = products?.[0];
 
   if (!product) {
     return <Redirect href="/(tabs)/automations/meal" />;
   }
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId,
+    (mealProduct) => mealProduct.product.uuid === productId
   );
 
   return (
