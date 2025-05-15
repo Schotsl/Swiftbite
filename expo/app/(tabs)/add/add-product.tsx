@@ -22,9 +22,14 @@ export default function AddPreviewBarcodeScreen() {
   const updateEntry = useUpdateEntry();
   const deleteEntry = useDeleteEntry();
 
-  const { entry: entryId, product: productId } = useLocalSearchParams<{
+  const {
+    barcode,
+    entry: entryId,
+    product: productId,
+  } = useLocalSearchParams<{
     entry: string;
     product: string;
+    barcode: string;
   }>();
 
   const { data: entry, isLoading: isLoadingEntry } = useQuery({
@@ -36,6 +41,7 @@ export default function AddPreviewBarcodeScreen() {
   const { data: productObject, isLoading: isLoadingProduct } = useQuery({
     ...productData({
       uuid: productId,
+      barcode: barcode,
     }),
     enabled: !entryId,
   });
@@ -75,7 +81,7 @@ export default function AddPreviewBarcodeScreen() {
     await insertEntry.mutateAsync({
       serving: returnedServing,
       meal_id: null,
-      product_id: productId,
+      product_id: product.uuid,
     });
 
     router.replace("/");

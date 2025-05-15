@@ -4,7 +4,7 @@ import { Divider } from "@/components/Divider";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ProductManual } from "@/types";
+import { Product } from "@/types/product";
 import { ManualData, manualSchema } from "@/schemas/insert/manual";
 
 import Input from "@/components/Input";
@@ -22,7 +22,7 @@ export default function PageEstimationManual({
   onDelete,
   onRepeat,
 }: {
-  product?: ProductManual;
+  product?: Product;
   onDelete?: () => void;
   onRepeat?: (serving: ServingData) => void;
 }) {
@@ -37,21 +37,20 @@ export default function PageEstimationManual({
   const { control, handleSubmit } = useForm<ManualData>({
     resolver: zodResolver(manualSchema),
     defaultValues: {
-      calorie_100g: 0,
-      protein_100g: 0,
-      carbohydrate_100g: 0,
-      carbohydrate_sugar_100g: 0,
-      fat_100g: 0,
-      fat_trans_100g: 0,
-      fat_saturated_100g: 0,
-      fat_unsaturated_100g: 0,
-      iron_100g: 0,
-      fiber_100g: 0,
-      sodium_100g: 0,
-      calcium_100g: 0,
-      potassium_100g: 0,
-      cholesterol_100g: 0,
-      ...product,
+      calorie_100g: product?.calorie_100g ?? 0,
+      protein_100g: product?.protein_100g ?? 0,
+      carbohydrate_100g: product?.carbohydrate_100g ?? 0,
+      carbohydrate_sugar_100g: product?.carbohydrate_sugar_100g ?? 0,
+      fat_100g: product?.fat_100g ?? 0,
+      fat_trans_100g: product?.fat_trans_100g ?? 0,
+      fat_saturated_100g: product?.fat_saturated_100g ?? 0,
+      fat_unsaturated_100g: product?.fat_unsaturated_100g ?? 0,
+      iron_100g: product?.iron_100g ?? 0,
+      fiber_100g: product?.fiber_100g ?? 0,
+      sodium_100g: product?.sodium_100g ?? 0,
+      calcium_100g: product?.calcium_100g ?? 0,
+      potassium_100g: product?.potassium_100g ?? 0,
+      cholesterol_100g: product?.cholesterol_100g ?? 0,
     },
   });
 
@@ -65,6 +64,11 @@ export default function PageEstimationManual({
     setSaving(true);
 
     if (product) {
+      // TODO:
+      if (product.type !== "manual") {
+        throw new Error("Product must be of type manual");
+      }
+
       await updateProduct.mutateAsync({
         ...product,
         ...data,
@@ -90,6 +94,7 @@ export default function PageEstimationManual({
       search: null,
       barcode: null,
       options: null,
+      category: null,
       embedding: null,
       estimated: false,
       processing: false,
@@ -116,7 +121,7 @@ export default function PageEstimationManual({
         }}
       >
         <Header
-          title={product ? product.title : "Handmatig inschatten"}
+          title={product?.title || "Handmatig inschatten"}
           content={
             product
               ? undefined

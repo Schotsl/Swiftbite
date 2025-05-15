@@ -2,40 +2,7 @@ import { Tables } from "./database.types";
 import { MacroData } from "./schemas/personal/goal";
 import { Weight } from "./schemas/personal/health";
 import { ServingData } from "./schemas/serving";
-
-export type ProductSearch = {
-  title: string;
-  brand: string;
-  quantity_original?: number | null;
-  quantity_original_unit?: string | null;
-};
-
-export type ProductBase = Tables<"product">;
-
-export type Product = Omit<ProductBase, "search" | "serving" | "quantity"> & {
-  search: ProductSearch | null;
-  serving: ServingData | null;
-  quantity: ServingData | null;
-};
-
-export type ProductManual = Product & {
-  type: "manual";
-  title: string;
-  calorie_100g: number;
-  protein_100g: number;
-  carbohydrate_100g: number;
-  carbohydrate_sugar_100g: number;
-  fat_100g: number;
-  fat_trans_100g: number;
-  fat_saturated_100g: number;
-  fat_unsaturated_100g: number;
-  iron_100g: number;
-  fiber_100g: number;
-  sodium_100g: number;
-  calcium_100g: number;
-  potassium_100g: number;
-  cholesterol_100g: number;
-};
+import { Product, ProductInsert } from "./types/product";
 
 export type Repeat = Tables<"repeat">;
 export type RepeatWithProductOrMeal = Omit<Repeat, "serving" | "time"> & {
@@ -81,11 +48,6 @@ export enum CameraSelected {
   Estimation = "Estimation",
 }
 
-export type ProductInsert = Omit<
-  Product,
-  "uuid" | "user_id" | "created_at" | "updated_at"
->;
-
 export type Generative = Tables<"generative">;
 
 export type UserBase = Tables<"user">;
@@ -116,10 +78,6 @@ export type EntryWithProduct = Entry & {
 export type EntryWithMeal = Entry & {
   meal: MealWithProduct;
   product: never;
-};
-
-export type EntryWithProductManual = Entry & {
-  product: ProductManual;
 };
 
 export type Meal = Tables<"meal">;

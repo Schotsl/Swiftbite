@@ -2,7 +2,7 @@ import supabase from "@/utils/supabase";
 
 import { fetch } from "expo/fetch";
 import { Enums } from "@/database.types";
-import { Product } from "@/types";
+import { Product } from "@/types/product";
 import { useRef, useState, useCallback } from "react";
 
 export function useSearch() {
@@ -57,7 +57,7 @@ export function useSearch() {
         {
           signal,
           headers,
-        },
+        }
       );
 
       if (response.status === 429) {
@@ -100,7 +100,7 @@ export function useSearch() {
 
       setLoading(false);
     },
-    [],
+    []
   );
 
   return { error, search, reset, products, loading, overloaded };

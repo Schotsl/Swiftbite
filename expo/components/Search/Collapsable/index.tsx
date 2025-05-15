@@ -1,12 +1,12 @@
 import ItemProduct from "@/components/Item/Product";
+import SearchCollapsableEmpty from "./Empty";
+import SearchCollapsableSkeleton from "./Skeleton";
 
-import { Product } from "@/types";
+import { FlatList } from "react-native-gesture-handler";
+import { Product } from "@/types/product";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useState, useRef } from "react";
 import { View, Text, Animated, TouchableOpacity } from "react-native";
-import { FlatList } from "react-native-gesture-handler";
-import SearchCollapsableEmpty from "./Empty";
-import SearchCollapsableSkeleton from "./Skeleton";
 
 type SearchCollapsableProps = {
   empty: string;

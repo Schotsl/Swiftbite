@@ -116,6 +116,7 @@ export default function PageEstimationAutomatic() {
       barcode: null,
       options: null,
       quantity: null,
+      category: null,
       estimated: true,
       embedding: null,
       processing: true,

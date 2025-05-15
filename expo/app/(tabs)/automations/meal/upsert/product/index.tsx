@@ -32,7 +32,7 @@ export default function AddPreviewBarcodeScreen() {
   }>();
 
   const { data: productEdit, isLoading: isLoadingEdit } = useQuery({
-    ...productData({}),
+    ...productData({ barcode }),
     select: (data) => data.find((product) => product.uuid === productId),
     enabled: !!productId,
   });
@@ -56,14 +56,14 @@ export default function AddPreviewBarcodeScreen() {
     );
   }
 
-  const product = productEdit || productOpenfood;
+  const product = productEdit || productOpenfood?.[0];
 
   if (!product) {
     return <Redirect href="/(tabs)/automations/meal" />;
   }
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product_id === productId,
+    (mealProduct) => mealProduct.product_id === productId
   );
 
   return (

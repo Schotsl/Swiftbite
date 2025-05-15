@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { transformImage } from "@/helper";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { EntryWithProductManual } from "@/types";
+import { EntryWithProduct } from "@/types";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import { ServingData } from "@/schemas/serving";
@@ -33,7 +33,7 @@ export default function Add2Preview() {
   }>();
 
   const { data: entry } = useQuery({
-    ...entryData<EntryWithProductManual>({}),
+    ...entryData<EntryWithProduct>({}),
     select: (entries) => entries.find((entry) => entry.uuid === entryId),
     enabled: !!entryId,
   });

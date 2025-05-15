@@ -4,8 +4,9 @@ import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { Product } from "@/types/product";
 import { EntryWithMeal, EntryWithProduct } from "@/types";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 import entryData from "@/queries/entryData";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
@@ -15,10 +16,9 @@ import HomeStreak from "@/components/Home/Streak";
 import HomeMacros from "@/components/Home/Macros";
 import HeaderTitle from "@/components/Header/Title";
 
-import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";
 import ItemDelete from "@/components/Item/Delete";
-import ItemProductWithServing from "@/components/Item/ProductWithServing";
+import ItemProduct from "@/components/Item/Product";
 
 export default function Index() {
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function Index() {
         !entry.product?.title ||
         !entry.product?.calorie_100g ||
         !entry.product?.icon_id ||
-        !entry.serving,
+        !entry.serving
     );
 
     const interval = processing ? 500 : false;
@@ -92,7 +92,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data
@@ -122,6 +122,8 @@ export default function Index() {
 
     return sectionsFiltered;
   }, [data]);
+
+  console.log(sections[0].data[0]);
 
   const handleDelete = (uuid: string) => {
     deleteEntry.mutate(uuid);
@@ -165,10 +167,10 @@ export default function Index() {
         sections={sections}
         renderItem={({ item }) => {
           return item.product ? (
-            <ItemProductWithServing
-              product={item.product.uuid}
+            <ItemProduct
+              product={item.product as Product}
               serving={item.serving}
-              onPress={() => {
+              onSelect={() => {
                 router.push({
                   pathname:
                     item.product?.type === "manual"
@@ -181,15 +183,16 @@ export default function Index() {
               }}
             />
           ) : (
-            <ItemMeal
-              meal={item.meal!}
-              onPress={() => {
-                router.push({
-                  pathname: "/(tabs)/add/add-meal",
-                  params: { entry: item.uuid },
-                });
-              }}
-            />
+            // <ItemMeal
+            //   // meal={item.meal!}
+            //   onPress={() => {
+            //     router.push({
+            //       pathname: "/(tabs)/add/add-meal",
+            //       params: { entry: item.uuid },
+            //     });
+            //   }}
+            // />
+            <Fragment />
           );
         }}
         renderHiddenItem={({ item }) => (

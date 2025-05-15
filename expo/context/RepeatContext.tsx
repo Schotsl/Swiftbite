@@ -1,7 +1,9 @@
 import React from "react";
 
 import { ServingData } from "@/schemas/serving";
-import { Product, RepeatWithProductOrMeal } from "../types";
+import { Product } from "@/types/product";
+
+import { RepeatWithProductOrMeal } from "@/types";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 import useUpdateRepeat from "@/mutations/useUpdateRepeat";

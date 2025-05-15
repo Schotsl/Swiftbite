@@ -1,9 +1,9 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Href, router } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View, Animated, Easing } from "react-native";
 
 import Icon from "../Icon";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 type BaseProps = {
   title: string;
@@ -15,6 +15,7 @@ type BaseProps = {
   rightTop?: string | null;
   rightBottom?: string | null;
   subtitleIcon?: string;
+  subtitleIconSpinning?: boolean;
 };
 
 type LinkProps = {
@@ -38,12 +39,41 @@ export default function Item({
   small = false,
   border = true,
   subtitleIcon,
+  subtitleIconSpinning = false,
   iconId,
 
   rightTop,
   rightBottom,
 }: ItemProps) {
   const [width, setWidth] = useState(0);
+  const spinValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (subtitleIconSpinning) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(spinValue, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true,
+            easing: Easing.linear,
+          }),
+          Animated.timing(spinValue, {
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: true,
+          }),
+        ]),
+      ).start();
+    } else {
+      spinValue.setValue(0);
+    }
+  }, [subtitleIconSpinning]);
+
+  const spin = spinValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "360deg"],
+  });
 
   const gap = 16;
   const icon = iconId ? 42 + 16 : 0;
@@ -118,12 +148,14 @@ export default function Item({
               }}
             >
               {subtitleIcon && (
-                <FontAwesome6
-                  name={subtitleIcon}
-                  size={12}
-                  style={{ opacity: 0.75 }}
-                  color="#545454"
-                />
+                <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                  <FontAwesome6
+                    name={subtitleIcon}
+                    size={12}
+                    style={{ opacity: 0.75 }}
+                    color="#545454"
+                  />
+                </Animated.View>
               )}
 
               <Text

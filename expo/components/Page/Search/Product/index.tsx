@@ -5,11 +5,11 @@ import { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
-import Item from "@/components/Item";
 import ProductStatus from "@/components/Product/Status";
 import SearchCollapsable from "@/components/Search/Collapsable";
 
 import productData from "@/queries/productData";
+import ItemProduct from "@/components/Item/Product";
 
 type PageSearchProps = {
   type: Enums<"type">;
@@ -92,19 +92,10 @@ export default function PageSearchProduct({
         <FlatList
           data={products}
           scrollEnabled={false}
-          keyExtractor={(item, index) => item.uuid}
-          renderItem={({ item }) => {
-            return (
-              // TODO: This could probably be fixed with a defined type for processing
-              <Item
-                title={(item.title || item.search?.title)!}
-                subtitle={(item.brand || item.search?.brand)!}
-                subtitleIcon={item.processing ? "globe" : undefined}
-                rightTop={`${item.quantity?.quantity || item.search?.quantity_original} ${item.quantity?.option || item.search?.quantity_original_unit}`}
-                onPress={() => onSelect(item.uuid)}
-              />
-            );
-          }}
+          keyExtractor={(item) => item.uuid}
+          renderItem={({ item }) => (
+            <ItemProduct product={item} onSelect={onSelect} />
+          )}
         />
 
         {loading && (

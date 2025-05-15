@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { handleError } from "@/helper";
-import { Product } from "@/types";
+import { Product } from "@/types/product";
 import supabase from "@/utils/supabase";
 
 export default function useDeleteProduct() {
@@ -25,7 +25,7 @@ export default function useDeleteProduct() {
 
       // Optimistically update the UI by removing the deleted product
       queryClient.setQueryData<Product[]>(["productData"], (old = []) =>
-        old.filter((product) => product.uuid !== uuid),
+        old.filter((product) => product.uuid !== uuid)
       );
 
       return { previousProducts };

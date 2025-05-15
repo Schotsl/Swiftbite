@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { handleError } from "@/helper";
-import { Product } from "@/types";
+import { Product } from "@/types/product";
 import { Enums } from "@/database.types";
 
 import supabase from "@/utils/supabase";
@@ -21,8 +21,28 @@ export default function productData({
   barcode,
 }: productDataType) {
   return queryOptions({
-    queryKey: ["productData", rpc, type, uuid, uuids, barcode],
-    queryFn: async () => {
+    queryKey: ["productData", rpc, uuid, uuids, barcode],
+    queryFn: async (): Promise<Product[]> => {
+      if (barcode) {
+        const session = await supabase.auth.getSession();
+        const bearer = session?.data.session?.access_token;
+        const headers = {
+          Authorization: `Bearer ${bearer}`,
+          "Content-Type": "application/json",
+        };
+
+        const url = `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/barcode?code=${barcode}&lang=nl`;
+        const response = await fetch(url, { headers });
+        const products = await response.json();
+
+        return [products];
+      }
+
+      // TODO: This should probably be handled by the type
+      if (!rpc && !type && !uuid && !uuids && !barcode) {
+        throw new Error("No parameters provided for productData");
+      }
+
       if (rpc) {
         const session = await supabase.auth.getSession();
         const userId = session.data.session?.user.id;
@@ -34,7 +54,7 @@ export default function productData({
 
         handleError(error);
 
-        return data as Product[];
+        return data;
       }
 
       let query = supabase
@@ -60,7 +80,7 @@ export default function productData({
 
       console.log(`[Query] fetched ${data?.length} products`);
 
-      return data as Product[];
+      return data || [];
     },
   });
 }
