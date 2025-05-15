@@ -1,17 +1,15 @@
 import { View } from "react-native";
+import { useForm } from "react-hook-form";
+import { ServingData } from "@/schemas/serving";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
-import { MealWithProduct, ProductSearch } from "@/types";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { SearchData, searchSchema } from "@/schemas/search";
 
 import Tabs from "@/components/Tabs";
 import Input from "@/components/Input";
 import PageSearchProduct from "./Product";
 import PageSearchMeal from "./Meal";
-
-import { useForm } from "react-hook-form";
-import { SearchData, searchSchema } from "@/schemas/search";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ServingData } from "@/schemas/serving";
 
 enum Type {
   MEALS = "meals",
@@ -59,6 +57,9 @@ export default function PageSearch({
         ? "Zoek naar een basisitem..."
         : "Zoek naar een maaltijd...";
 
+  const type = selected === Type.PRODUCTS ? "search_product" : "search_generic";
+  const product = selected === Type.PRODUCTS || selected === Type.BASICS;
+
   return (
     <View style={{ flex: 1 }}>
       <Tabs
@@ -91,8 +92,9 @@ export default function PageSearch({
       </View>
 
       {/* TODO: We'll just unmount the component to be sure no random requests get send */}
-      {focus && selected === Type.PRODUCTS && (
+      {focus && product && (
         <PageSearchProduct
+          type={type}
           query={query}
           queryWatched={queryWatched}
           focused={focused}

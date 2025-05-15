@@ -1,16 +1,18 @@
+import { Enums } from "@/database.types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@/hooks/useSearch";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { ActivityIndicator, FlatList, View } from "react-native";
-
-import productData from "@/queries/productData";
 
 import Item from "@/components/Item";
 import ProductStatus from "@/components/Product/Status";
 import SearchCollapsable from "@/components/Search/Collapsable";
 
+import productData from "@/queries/productData";
+
 type PageSearchProps = {
+  type: Enums<"type">;
   query: string;
   queryWatched: string;
   focused: boolean;
@@ -19,6 +21,7 @@ type PageSearchProps = {
 };
 
 export default function PageSearchProduct({
+  type,
   query,
   queryWatched,
   focused,
@@ -41,11 +44,11 @@ export default function PageSearchProduct({
 
   useEffect(() => {
     if (isSearchable) {
-      search(query);
+      search(query, type);
     } else {
       reset();
     }
-  }, [query]);
+  }, [query, type]);
 
   if (loading && isEmpty) {
     return (

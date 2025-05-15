@@ -45,7 +45,7 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid)
+    isProductFavorite(user, product.uuid),
   );
 
   const { watch, control, reset, setValue, handleSubmit } =
@@ -115,11 +115,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions({ product });
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity"
+      (option) => option.value === "quantity",
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving"
+      (option) => option.value === "serving",
     );
 
     if (optionsServing) {
