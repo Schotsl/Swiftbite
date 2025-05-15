@@ -7,6 +7,7 @@ import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
 import { fatsecretRequest, supabaseRequest } from "@/utils/internet";
 import { GenericSearchData, ProductSearchData } from "@/schema";
+import { processSearchGeneric, processSearchProduct } from "@/utils/processing";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
@@ -19,21 +20,21 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!type) {
     return NextResponse.json(
       { error: "Please provide a type" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -72,7 +73,7 @@ export async function GET(request: NextRequest) {
               quantity_original_unit: product.quantity?.option,
             })),
           },
-          request.signal,
+          request.signal
         )
       : await searchGenerics(
           user!,
@@ -84,10 +85,10 @@ export async function GET(request: NextRequest) {
           {
             generic: supabaseResponse.map((product: Product) => ({
               title: product.title,
-              category: product.brand,
+              category: product.category,
             })),
           },
-          request.signal,
+          request.signal
         );
 
   after(async () => {
@@ -99,45 +100,15 @@ export async function GET(request: NextRequest) {
     handleError(error);
 
     resultsMapped.forEach(async (result) => {
-      const params = new URLSearchParams({
-        uuid: result.uuid,
-        lang,
-        type,
-        title: result.search!.title,
-        brand: result.search!.brand,
-      });
+      if (result.type === "search_generic") {
+        const search = result.search as GenericSearchData;
+        processSearchGeneric(result.uuid, lang, search);
 
-      if (result.search!.quantity_original) {
-        params.set(
-          "quantity_original",
-          result.search!.quantity_original.toString(),
-        );
+        return;
       }
 
-      if (result.search!.quantity_original_unit) {
-        params.set(
-          "quantity_original_unit",
-          result.search!.quantity_original_unit,
-        );
-      }
-
-      const headers = {
-        "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
-      };
-
-      fetch(
-        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-data?${params.toString()}`,
-        {
-          headers,
-        },
-      );
-
-      fetch(
-        `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
-        {
-          headers,
-        },
-      );
+      const search = result.search as ProductSearchData;
+      processSearchProduct(result.uuid, lang, search);
     });
   });
 
@@ -191,20 +162,13 @@ const getProduct = (search: ProductSearchData | GenericSearchData): Product => {
       : search.title +
           search.brand +
           search.quantity_original +
-          search.quantity_original_unit,
+          search.quantity_original_unit
   );
-
-  const safeSearch = isGeneric
-    ? {
-        title: search.title,
-        brand: search.category,
-      }
-    : search;
 
   return {
     type: parsedType,
     uuid: parsedUuid,
-    search: safeSearch,
+    search,
     estimated: false,
     processing: true,
 
@@ -214,6 +178,7 @@ const getProduct = (search: ProductSearchData | GenericSearchData): Product => {
     serving: null,
     options: null,
     barcode: null,
+    category: null,
     quantity: null,
     embedding: null,
 

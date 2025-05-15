@@ -1,13 +1,8 @@
 import { Enums } from "@/database.types";
 import { supabase } from "@/utils/supabase";
-import { ProductData } from "@/schema";
 import { handleError } from "@/helper";
-import {
-  generateEmbedding,
-  searchGeneric,
-  searchProduct,
-} from "@/utils/openai";
 import { NextRequest, NextResponse } from "next/server";
+import { generateEmbedding, searchProduct } from "@/utils/openai";
 
 export async function GET(request: NextRequest) {
   const uuid = request.nextUrl.searchParams.get("uuid");
@@ -60,31 +55,13 @@ export async function GET(request: NextRequest) {
 
   console.log(`[PRODUCT/${title}] Searching product`);
 
-  let product: ProductData | null = null;
-
-  if (type === "search_product") {
-    product = await searchProduct({
-      lang,
-      brand,
-      title,
-      quantity_original: quantity_original ? Number(quantity_original) : null,
-      quantity_original_unit,
-    });
-  } else {
-    const generic = await searchGeneric({
-      lang,
-      title,
-      category: brand,
-    });
-
-    const { category, ...rest } = generic;
-
-    product = {
-      brand: category,
-      barcode: null,
-      ...rest,
-    };
-  }
+  const product = await searchProduct({
+    lang,
+    brand: brand!,
+    title,
+    quantity_original: quantity_original ? Number(quantity_original) : null,
+    quantity_original_unit,
+  });
 
   const {
     quantity_gram: quantityGram,
@@ -128,21 +105,21 @@ export async function GET(request: NextRequest) {
 
   handleError(errorProduct);
 
+  console.log(`[PRODUCT/${title}] Generating embedding`);
+
   let embeddingInput = `${title}`;
 
   // If the brand is not already in the title we'll add it
   const lowerBrand = brand.toLowerCase();
   const lowerTitle = title.toLowerCase();
 
-  if (!lowerTitle.includes(lowerBrand) && type === "search_product") {
+  if (!lowerTitle.includes(lowerBrand)) {
     embeddingInput += ` ${brand}`;
   }
 
   if (quantity) {
     embeddingInput += ` ${quantity.quantity} ${quantity.option}`;
   }
-
-  console.log(`[PRODUCT/${title}] Generating embedding`);
 
   const embedding = await generateEmbedding({ value: embeddingInput });
 
