@@ -4,8 +4,15 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { View, Text, ActivityIndicator } from "react-native";
 
-export default function HomeStreak() {
-  const { data, isLoading } = useQuery(streakData());
+type HomeStreakProps = {
+  focus: boolean;
+};
+
+export default function HomeStreak({ focus }: HomeStreakProps) {
+  const { data, isLoading } = useQuery({
+    ...streakData(),
+    enabled: focus,
+  });
 
   return (
     <View

@@ -20,20 +20,5 @@ export default function weekData() {
       console.log(data);
       return data;
     },
-    // Set timer until midnight and then revalidate every 24 hours
-    staleTime: getRemaining(),
-    gcTime: 86400000,
   });
-}
-
-function getRemaining(): number {
-  const dateNow = new Date();
-  const dateMidnight = new Date(dateNow);
-
-  dateMidnight.setHours(24, 0, 0, 0);
-
-  const timeNow = dateNow.getTime();
-  const timeMidnight = dateMidnight.getTime();
-
-  return timeMidnight - timeNow;
 }

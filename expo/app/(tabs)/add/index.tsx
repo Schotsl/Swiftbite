@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { getRange } from "@/helper";
 import { useRouter } from "expo-router";
+import { useIsFocused } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -22,6 +23,7 @@ import ItemProduct from "@/components/Item/Product";
 
 export default function Index() {
   const router = useRouter();
+  const focus = useIsFocused();
 
   const [date, setDate] = useState<Date>(new Date());
   const [interval, setInterval] = useState<number | false>(1000);
@@ -85,7 +87,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data
@@ -143,10 +145,10 @@ export default function Index() {
         >
           <HeaderTitle>Today</HeaderTitle>
 
-          <HomeStreak />
+          <HomeStreak focus={focus} />
         </View>
 
-        <HomeWeek date={date} onPress={setDate} />
+        <HomeWeek focus={focus} date={date} onPress={setDate} />
 
         <HomeMacros />
 

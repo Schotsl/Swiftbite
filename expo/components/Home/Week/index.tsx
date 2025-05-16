@@ -11,11 +11,15 @@ const getLetter = (date: Date): string => {
 
 type HomeWeekProps = {
   date: Date;
+  focus: boolean;
   onPress: (date: Date) => void;
 };
 
-export default function HomeWeek({ date, onPress }: HomeWeekProps) {
-  const { data } = useQuery(weekData());
+export default function HomeWeek({ date, focus, onPress }: HomeWeekProps) {
+  const { data } = useQuery({
+    ...weekData(),
+    enabled: focus,
+  });
 
   const dateArray = [];
   const dateNumber = date.getDate();
