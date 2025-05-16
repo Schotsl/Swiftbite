@@ -10,7 +10,6 @@ import {
 
 import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
-import { Product } from "@/types";
 
 export async function POST(request: Request) {
   const body = await request.json();
