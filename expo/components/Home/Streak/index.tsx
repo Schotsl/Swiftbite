@@ -1,7 +1,12 @@
+import streakData from "@/queries/streakData";
+
 import { FontAwesome6 } from "@expo/vector-icons";
-import { View, Text } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import { View, Text, ActivityIndicator } from "react-native";
 
 export default function HomeStreak() {
+  const { data, isLoading } = useQuery(streakData());
+
   return (
     <View
       style={{
@@ -18,9 +23,26 @@ export default function HomeStreak() {
       }}
     >
       <FontAwesome6 name="fire" size={16} color="#000000" />
-      <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
-        11
-      </Text>
+      <View
+        style={{
+          height: 22,
+          minWidth: 20,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {isLoading ? (
+          <ActivityIndicator
+            size="small"
+            color="#000000"
+            style={{ transform: [{ scale: 0.85 }] }}
+          />
+        ) : (
+          <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
+            {data}
+          </Text>
+        )}
+      </View>
     </View>
   );
 }
