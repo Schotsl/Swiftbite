@@ -48,10 +48,42 @@ export async function POST(request: Request) {
       visuals.title = productObject.title;
     }
 
+    const {
+      quantity_gram: quantityGram,
+      quantity_original: quantityOriginal,
+      quantity_original_unit: quantityOriginalUnit,
+      serving_gram: servingGram,
+      serving_original: servingOriginal,
+      serving_original_unit: servingOriginalUnit,
+      ...rest
+    } = nutrition;
+
+    const quantity =
+      quantityGram && quantityOriginalUnit && quantityOriginal
+        ? {
+            gram: quantityGram,
+            option: quantityOriginalUnit,
+            quantity: quantityOriginal,
+          }
+        : null;
+
+    const serving =
+      servingGram && servingOriginalUnit && servingOriginal
+        ? {
+            gram: servingGram,
+            option: servingOriginalUnit,
+            quantity: servingOriginal,
+          }
+        : null;
+
     // Update the product with nutritional data
     const { error: productError } = await supabase
       .from("product")
-      .update(nutrition)
+      .update({
+        ...rest,
+        quantity,
+        serving,
+      })
       .eq("uuid", productObject.uuid);
 
     handleError(productError);

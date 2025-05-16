@@ -10,6 +10,7 @@ import {
 
 import { supabase } from "@/utils/supabase";
 import { validateUsage } from "@/utils/usage";
+import { Product } from "@/types";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -74,11 +75,43 @@ export async function POST(request: Request) {
       fetchEntry(productObject.uuid),
     ]);
 
+    const {
+      quantity_gram: quantityGram,
+      quantity_original: quantityOriginal,
+      quantity_original_unit: quantityOriginalUnit,
+      serving_gram: servingGram,
+      serving_original: servingOriginal,
+      serving_original_unit: servingOriginalUnit,
+      ...rest
+    } = nutrition;
+
+    const quantity =
+      quantityGram && quantityOriginalUnit && quantityOriginal
+        ? {
+            gram: quantityGram,
+            option: quantityOriginalUnit,
+            quantity: quantityOriginal,
+          }
+        : null;
+
+    const serving =
+      servingGram && servingOriginalUnit && servingOriginal
+        ? {
+            gram: servingGram,
+            option: servingOriginalUnit,
+            quantity: servingOriginal,
+          }
+        : null;
+
     // TODO: These supabase updates could be run in parallel
     // Update the product with nutritional data
     const { error: productError } = await supabase
       .from("product")
-      .update(nutrition)
+      .update({
+        ...rest,
+        quantity,
+        serving,
+      })
       .eq("uuid", productObject.uuid);
 
     handleError(productError);
