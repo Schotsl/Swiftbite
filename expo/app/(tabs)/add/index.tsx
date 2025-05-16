@@ -34,6 +34,7 @@ export default function Index() {
     ...entryData<EntryWithProduct | EntryWithMeal>({}),
     refetchInterval: interval,
     select: (entries) => {
+      console.log("Refetching");
       const end = endDate.getTime();
       const start = startDate.getTime();
 
@@ -46,8 +47,7 @@ export default function Index() {
 
   // If any of the titles, calories, or consumed quantities are missing we'll keep polling
   useEffect(() => {
-    const processing = data.some((entry) => !entry.product?.processing);
-
+    const processing = data.some((entry) => entry.product?.processing);
     const interval = processing ? 500 : false;
 
     setInterval(interval);
@@ -116,8 +116,6 @@ export default function Index() {
 
     return sectionsFiltered;
   }, [data]);
-
-  console.log(sections[0].data[0]);
 
   const handleDelete = (uuid: string) => {
     deleteEntry.mutate(uuid);
