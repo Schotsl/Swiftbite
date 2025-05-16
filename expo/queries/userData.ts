@@ -9,20 +9,29 @@ export default function userData() {
   return queryOptions({
     queryKey: ["userData"],
     queryFn: async () => {
-      const { error, data } = await supabase.from("user").select(`*`).single();
+      const { data: authData, error: authError } =
+        await supabase.auth.getUser();
 
-      handleError(error);
+      handleError(authError);
+
+      const { error: userError, data: userData } = await supabase
+        .from("user")
+        .select(`*`)
+        .single();
+
+      handleError(userError);
 
       // We'll have to cast the Supabase strings into dates
-      const birth = new Date(data.birth);
-      const weight = data.weight.map((weight: Weight) => {
+      const birth = new Date(userData.birth);
+      const weight = userData.weight.map((weight: Weight) => {
         return {
           date: new Date(weight.date),
           weight: weight.weight,
         };
       });
 
-      const user = { ...data, birth, weight } as User;
+      const email = authData.user?.email;
+      const user = { ...userData, birth, weight, email } as User;
 
       return user;
     },

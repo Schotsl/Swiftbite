@@ -53,6 +53,7 @@ export type Generative = Tables<"generative">;
 export type UserBase = Tables<"user">;
 export type UserSetup = UserBase;
 export type User = Omit<UserBase, "birth" | "weight" | "macro"> & {
+  email: string;
   birth: Date;
   macro: MacroData;
   weight: Weight[];

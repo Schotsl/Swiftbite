@@ -25,7 +25,7 @@ export default function MyDetails() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { data: user } = useQuery(userData());
-  const { control, setValue, handleSubmit } = useForm<DetailsData>({
+  const { control, handleSubmit } = useForm<DetailsData>({
     resolver: zodResolver(detailsSchema),
     defaultValues: user,
   });
@@ -41,32 +41,12 @@ export default function MyDetails() {
 
     setIsLoading(true);
 
-    const { email, ...rest } = data;
-
-    updateUser.mutate({ ...user, ...rest });
+    updateUser.mutate({ ...user, ...data });
 
     router.replace("/(tabs)/personal");
 
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    const loadEmail = async () => {
-      const { data, error } = await supabase.auth.getUser();
-
-      handleError(error);
-
-      const email = data.user?.email;
-
-      if (!email) {
-        return;
-      }
-
-      setValue("email", email);
-    };
-
-    loadEmail();
-  }, [setValue]);
 
   return (
     <ScrollView>
