@@ -46,13 +46,7 @@ export default function Index() {
 
   // If any of the titles, calories, or consumed quantities are missing we'll keep polling
   useEffect(() => {
-    const processing = data.some(
-      (entry) =>
-        !entry.product?.title ||
-        !entry.product?.calorie_100g ||
-        !entry.product?.icon_id ||
-        !entry.serving,
-    );
+    const processing = data.some((entry) => !entry.product?.processing);
 
     const interval = processing ? 500 : false;
 
@@ -92,7 +86,7 @@ export default function Index() {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data

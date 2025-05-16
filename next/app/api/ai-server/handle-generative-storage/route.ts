@@ -108,8 +108,9 @@ export async function POST(request: Request) {
       .from("product")
       .update({
         ...rest,
-        quantity,
         serving,
+        quantity,
+        processing: false,
       })
       .eq("uuid", productObject.uuid);
 
