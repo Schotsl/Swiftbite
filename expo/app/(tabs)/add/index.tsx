@@ -31,10 +31,9 @@ export default function Index() {
   const { startDate, endDate } = getRange(date);
 
   const { data } = useSuspenseQuery({
-    ...entryData<EntryWithProduct | EntryWithMeal>({}),
+    ...entryData<EntryWithProduct | EntryWithMeal>(),
     refetchInterval: interval,
     select: (entries) => {
-      console.log("Refetching");
       const end = endDate.getTime();
       const start = startDate.getTime();
 
