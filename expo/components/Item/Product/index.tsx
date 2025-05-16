@@ -90,7 +90,7 @@ export default function ItemProduct({
         title={title}
         subtitle={subtitle}
         subtitleIcon={subtitleIcon}
-        subtitleIconSpinning={processing}
+        subtitleLoading={processing}
         rightTop={overwriteTop}
         rightBottom={overwriteBottom}
         onPress={() => onSelect(product.uuid)}

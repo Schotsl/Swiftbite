@@ -17,7 +17,7 @@ export default function weekData() {
       handleError(error);
 
       console.log(`[Query] fetched week`);
-      console.log(data);
+
       return data;
     },
   });
