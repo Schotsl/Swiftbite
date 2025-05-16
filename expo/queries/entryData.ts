@@ -4,11 +4,20 @@ import { handleError, mapMeal } from "@/helper";
 
 import supabase from "@/utils/supabase";
 
-type EntryDataProps = {
-  date?: Date;
-};
+type EntryDataProps =
+  | {
+      date: Date;
+      uuid?: never;
+    }
+  | {
+      uuid: string;
+      date?: never;
+    };
 
-export default function entryData<T extends Entry>({ date }: EntryDataProps) {
+export default function entryData<T extends Entry>({
+  date,
+  uuid,
+}: EntryDataProps) {
   return queryOptions({
     queryKey: ["entryData", getDate(date)],
     queryFn: async (): Promise<T[]> => {
@@ -23,6 +32,10 @@ export default function entryData<T extends Entry>({ date }: EntryDataProps) {
         query
           .lte("created_at", `${getDate(date)}T23:59:59.999Z`)
           .gte("created_at", `${getDate(date)}T00:00:00.000Z`);
+      }
+
+      if (uuid) {
+        query.eq("uuid", uuid);
       }
 
       const { data, error } = await query;
@@ -41,8 +54,7 @@ export default function entryData<T extends Entry>({ date }: EntryDataProps) {
         return entry;
       });
 
-      const dataParsed = dataMapped as T[];
-      return dataParsed;
+      return dataMapped as T[];
     },
   });
 }

@@ -4,6 +4,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { Href, router } from "expo-router";
 import { useState, Fragment } from "react";
 import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
+import { opacity } from "react-native-reanimated/lib/typescript/Colors";
 
 type BaseProps = {
   title: string;
@@ -126,10 +127,10 @@ export default function Item({
                   justifyContent: "center",
                 }}
               >
-                {!subtitleLoading ? (
+                {subtitleLoading ? (
                   <ActivityIndicator
                     size="small"
-                    style={{ transform: [{ scale: 0.65 }] }}
+                    style={{ transform: [{ scale: 0.65 }], opacity: 0.75 }}
                     color="#000000"
                   />
                 ) : (
@@ -138,7 +139,7 @@ export default function Item({
                       <FontAwesome6
                         name={subtitleIcon}
                         size={12}
-                        style={{ opacity: 0.75, backgroundColor: "red" }}
+                        style={{ opacity: 0.75 }}
                         color="#545454"
                       />
                     )}

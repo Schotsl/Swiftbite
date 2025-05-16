@@ -33,8 +33,9 @@ export default function Add2Preview() {
   }>();
 
   const { data: entry } = useQuery({
-    ...entryData<EntryWithProduct>({}),
-    select: (entries) => entries.find((entry) => entry.uuid === entryId),
+    // Less than ideal but if the query is enabled we know that the entryId is defined
+    ...entryData<EntryWithProduct>({ uuid: entryId as string }),
+    select: (entries) => entries[0],
     enabled: !!entryId,
   });
 
