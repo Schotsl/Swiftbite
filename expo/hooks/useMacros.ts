@@ -9,7 +9,7 @@ export default function useDailyMacros(): MacroAbsolute {
   const { startDate, endDate } = getRange();
 
   const { data: entries } = useSuspenseQuery({
-    ...entryData<EntryWithProduct | EntryWithMeal>({}),
+    ...entryData<EntryWithProduct | EntryWithMeal>(),
     select: (entries) => {
       const end = new Date(endDate).getTime();
       const start = new Date(startDate).getTime();

@@ -33,7 +33,7 @@ export default function AddPreviewBarcodeScreen() {
   }>();
 
   const { data: entry, isLoading: isLoadingEntry } = useQuery({
-    ...entryData<EntryWithProduct>({}),
+    ...entryData<EntryWithProduct>(),
     select: (entries) => entries.find((entry) => entry.uuid === entryId),
     enabled: !!entryId,
   });

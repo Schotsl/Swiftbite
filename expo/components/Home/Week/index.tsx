@@ -1,5 +1,8 @@
-import HomeWeekDay from "./Day";
 import { View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+
+import weekData from "@/queries/weekData";
+import HomeWeekDay from "./Day";
 
 const getLetter = (date: Date): string => {
   const weekdays = ["S", "M", "T", "W", "T", "F", "S"];
@@ -12,19 +15,35 @@ type HomeWeekProps = {
 };
 
 export default function HomeWeek({ date, onPress }: HomeWeekProps) {
+  const { data } = useQuery(weekData());
+
   const dateArray = [];
   const dateNumber = date.getDate();
+  const today = new Date();
 
   for (let i = -3; i <= 3; i++) {
-    const object = new Date(date);
+    const dateObject = new Date(date);
 
-    object.setDate(dateNumber + i);
+    dateObject.setDate(dateNumber + i);
+
+    const dateString = dateObject.toISOString().split("T")[0];
+
+    const isToday = dateObject.toDateString() === today.toDateString();
+    const isIncluded = Array.isArray(data) && data.includes(dateString);
+
+    let type: "thick" | "normal" | "dashed" = "normal";
+    if (isToday) {
+      type = "thick";
+    } else if (!isIncluded) {
+      type = "dashed";
+    }
 
     dateArray.push({
-      isToday: i === 0,
-      dateNumber: object.getDate(),
-      dateObject: object,
-      dateLetter: getLetter(object),
+      isToday,
+      dateNumber: dateObject.getDate(),
+      dateObject: dateObject,
+      dateLetter: getLetter(dateObject),
+      type,
     });
   }
 
@@ -38,7 +57,7 @@ export default function HomeWeek({ date, onPress }: HomeWeekProps) {
       {dateArray.map((day, index) => (
         <HomeWeekDay
           key={index}
-          type={day.isToday ? "thick" : "normal"}
+          type={day.type}
           date={day.dateNumber}
           weekday={day.dateLetter}
           onPress={() => onPress(day.dateObject)}

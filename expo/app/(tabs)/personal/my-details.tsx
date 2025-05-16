@@ -1,6 +1,5 @@
 import useUpdateUser from "@/mutations/useUpdateUser";
 import userData from "@/queries/userData";
-import supabase from "@/utils/supabase";
 
 import Button from "@/components/Button";
 import Header from "@/components/Header";
@@ -9,12 +8,11 @@ import InputDate from "@/components/Input/Date";
 
 import { View } from "react-native";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { handleError } from "@/helper";
-import { useEffect, useState } from "react";
 import { DetailsData, detailsSchema } from "@/schemas/personal/details";
 
 export default function MyDetails() {
