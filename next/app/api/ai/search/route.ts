@@ -20,21 +20,21 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!type) {
     return NextResponse.json(
       { error: "Please provide a type" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
               quantity_original_unit: product.quantity?.option,
             })),
           },
-          request.signal
+          request.signal,
         )
       : await searchGenerics(
           user!,
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
               category: product.category,
             })),
           },
-          request.signal
+          request.signal,
         );
 
   after(async () => {
@@ -162,7 +162,7 @@ const getProduct = (search: ProductSearchData | GenericSearchData): Product => {
       : search.title +
           search.brand +
           search.quantity_original +
-          search.quantity_original_unit
+          search.quantity_original_unit,
   );
 
   return {

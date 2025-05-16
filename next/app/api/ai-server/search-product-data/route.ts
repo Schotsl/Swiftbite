@@ -1,4 +1,3 @@
-import { Enums } from "@/database.types";
 import { supabase } from "@/utils/supabase";
 import { handleError } from "@/helper";
 import { NextRequest, NextResponse } from "next/server";
@@ -14,34 +13,34 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit"
+    "quantity_original_unit",
   );
 
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
