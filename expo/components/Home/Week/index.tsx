@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import weekData from "@/queries/weekData";
 import HomeWeekDay from "./Day";
+import { useIsFocused } from "@react-navigation/native";
 
 const getLetter = (date: Date): string => {
   const weekdays = ["S", "M", "T", "W", "T", "F", "S"];
@@ -11,11 +12,12 @@ const getLetter = (date: Date): string => {
 
 type HomeWeekProps = {
   date: Date;
-  focus: boolean;
   onPress: (date: Date) => void;
 };
 
-export default function HomeWeek({ date, focus, onPress }: HomeWeekProps) {
+export default function HomeWeek({ date, onPress }: HomeWeekProps) {
+  const focus = useIsFocused();
+
   const { data } = useQuery({
     ...weekData(),
     enabled: focus,

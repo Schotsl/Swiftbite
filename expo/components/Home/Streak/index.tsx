@@ -1,14 +1,13 @@
 import streakData from "@/queries/streakData";
 
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/native";
 import { useQuery } from "@tanstack/react-query";
 import { View, Text, ActivityIndicator } from "react-native";
 
-type HomeStreakProps = {
-  focus: boolean;
-};
+export default function HomeStreak() {
+  const focus = useIsFocused();
 
-export default function HomeStreak({ focus }: HomeStreakProps) {
   const { data, isLoading } = useQuery({
     ...streakData(),
     enabled: focus,

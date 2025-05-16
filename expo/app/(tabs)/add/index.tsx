@@ -2,7 +2,6 @@ import { View } from "react-native";
 import { router } from "expo-router";
 import { Product } from "@/types/product";
 import { useQuery } from "@tanstack/react-query";
-import { useIsFocused } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { EntryWithMeal, EntryWithProduct } from "@/types";
@@ -22,8 +21,6 @@ import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
 
 export default function Index() {
-  const focus = useIsFocused();
-
   const [date, setDate] = useState<Date>(new Date());
   const [interval, setInterval] = useState<number | false>(1000);
 
@@ -63,10 +60,10 @@ export default function Index() {
         >
           <HeaderTitle>Today</HeaderTitle>
 
-          <HomeStreak focus={focus} />
+          <HomeStreak />
         </View>
 
-        <HomeWeek focus={focus} date={date} onPress={setDate} />
+        <HomeWeek date={date} onPress={setDate} />
 
         <HomeMacros date={date} />
 

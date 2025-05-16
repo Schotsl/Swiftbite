@@ -1,11 +1,17 @@
-import { Text, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
+import { Text, View } from "react-native";
 
-import SettingHeaderAvatar from "./Avatar";
 import userData from "@/queries/userData";
+import SettingHeaderAvatar from "./Avatar";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function SettingHeader() {
-  const { data } = useQuery(userData());
+  const focus = useIsFocused();
+
+  const { data } = useQuery({
+    ...userData(),
+    enabled: focus,
+  });
 
   return (
     <View
@@ -32,7 +38,7 @@ export default function SettingHeader() {
             fontFamily: "OpenSans_400Regular",
           }}
         >
-          184 maaltijden geregistreerd
+          {data?.total} entries geregistreerd
         </Text>
       </View>
     </View>
