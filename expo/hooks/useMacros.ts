@@ -1,29 +1,20 @@
 import entryData from "../queries/entryData";
 
 import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
 import { EntryWithMeal, EntryWithProduct, MacroAbsolute } from "@/types";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { getMacrosFromMeal, getMacrosFromProduct, getRange } from "@/helper";
 
-export default function useDailyMacros(): MacroAbsolute {
-  const { startDate, endDate } = getRange();
-
-  const { data: entries } = useSuspenseQuery({
-    ...entryData<EntryWithProduct | EntryWithMeal>(),
-    select: (entries) => {
-      const end = new Date(endDate).getTime();
-      const start = new Date(startDate).getTime();
-
-      return entries.filter((entry) => {
-        const entryDate = new Date(entry.created_at);
-        const entryTime = entryDate.getTime();
-
-        return entryTime >= start && entryTime <= end;
-      });
-    },
-  });
+export default function useMacros(date: Date): MacroAbsolute {
+  const { data: entries } = useQuery(
+    entryData<EntryWithProduct | EntryWithMeal>({ date }),
+  );
 
   const totals = useMemo(() => {
+    if (!entries) {
+      return { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 };
+    }
+
     const macros = entries.map((entry) => {
       const { product, meal, serving } = entry;
 

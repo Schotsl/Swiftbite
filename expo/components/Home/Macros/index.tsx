@@ -5,8 +5,12 @@ import Progress from "@/components/Progress";
 import useMacros from "@/hooks/useMacros";
 import HomeMacrosProgress from "./Progress";
 
-export default function HomeMacros() {
-  const macros = useMacros();
+type HomeMacrosProps = {
+  date: Date;
+};
+
+export default function HomeMacros({ date }: HomeMacrosProps) {
+  const macros = useMacros(date);
 
   const { active } = useHealth();
 

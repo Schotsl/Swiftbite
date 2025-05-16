@@ -4,16 +4,28 @@ import { handleError, mapMeal } from "@/helper";
 
 import supabase from "@/utils/supabase";
 
-export default function entryData<T extends Entry>() {
+type EntryDataProps = {
+  date?: Date;
+};
+
+export default function entryData<T extends Entry>({ date }: EntryDataProps) {
   return queryOptions({
-    queryKey: ["entryData"],
-    queryFn: async () => {
-      const { error, data } = await supabase
+    queryKey: ["entryData", getDate(date)],
+    queryFn: async (): Promise<T[]> => {
+      const query = supabase
         .from("entry")
         .select(
           `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`
         )
         .order("created_at", { ascending: false });
+
+      if (date) {
+        query
+          .lte("created_at", `${getDate(date)}T23:59:59.999Z`)
+          .gte("created_at", `${getDate(date)}T00:00:00.000Z`);
+      }
+
+      const { data, error } = await query;
 
       handleError(error);
 
@@ -33,4 +45,12 @@ export default function entryData<T extends Entry>() {
       return dataParsed;
     },
   });
+}
+
+function getDate(date?: Date) {
+  if (!date) {
+    return undefined;
+  }
+
+  return date.toISOString().split("T")[0];
 }

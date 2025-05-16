@@ -135,29 +135,6 @@ export const macroToAbsolute = (
   };
 };
 
-export const getRange = (date = new Date()) => {
-  const startDate = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-  );
-
-  const endDate = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate(),
-    23,
-    59,
-    59,
-    999,
-  );
-
-  return {
-    endDate,
-    startDate,
-  };
-};
-
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
