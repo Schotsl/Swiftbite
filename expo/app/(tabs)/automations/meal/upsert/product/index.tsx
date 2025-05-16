@@ -22,8 +22,10 @@ export default function AddPreviewBarcodeScreen() {
     product?: string;
   }>();
 
-  const { data: products, isLoading } = useQuery({
-    ...productData({ barcode, uuid: productId }),
+  const { data: product, isLoading } = useQuery({
+    ...productData(productId ? { uuid: productId } : { barcode: barcode! }),
+    select: (products) => products[0],
+    enabled: !!productId || !!barcode,
   });
 
   if (isLoading) {
@@ -36,14 +38,12 @@ export default function AddPreviewBarcodeScreen() {
     );
   }
 
-  const product = products?.[0];
-
   if (!product) {
     return <Redirect href="/(tabs)/automations/meal" />;
   }
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId,
+    (mealProduct) => mealProduct.product.uuid === productId
   );
 
   return (

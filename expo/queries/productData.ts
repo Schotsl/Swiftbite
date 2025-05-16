@@ -5,13 +5,35 @@ import { Enums } from "@/database.types";
 
 import supabase from "@/utils/supabase";
 
-type productDataType = {
-  rpc?: "product_most_recent" | "product_most_used" | "product_favorite";
-  type?: Enums<"type">;
-  uuid?: string;
-  uuids?: string[];
-  barcode?: string;
-};
+type productDataType =
+  | {
+      rpc: "product_most_recent" | "product_most_used" | "product_favorite";
+      type: Enums<"type">;
+      uuid?: never;
+      uuids?: never;
+      barcode?: never;
+    }
+  | {
+      uuid: string;
+      rpc?: never;
+      type?: never;
+      uuids?: never;
+      barcode?: never;
+    }
+  | {
+      uuids: string[];
+      rpc?: never;
+      type?: never;
+      uuid?: never;
+      barcode?: never;
+    }
+  | {
+      barcode: string;
+      rpc?: never;
+      type?: never;
+      uuid?: never;
+      uuids?: never;
+    };
 
 export default function productData({
   rpc,

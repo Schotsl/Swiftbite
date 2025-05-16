@@ -39,10 +39,7 @@ export default function AddPreviewBarcodeScreen() {
   });
 
   const { data: productObject, isLoading: isLoadingProduct } = useQuery({
-    ...productData({
-      uuid: productId,
-      barcode: barcode,
-    }),
+    ...productData(productId ? { uuid: productId } : { barcode }),
     select: (products) => products[0],
     enabled: !entryId,
   });
