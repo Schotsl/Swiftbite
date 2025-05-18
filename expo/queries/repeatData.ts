@@ -1,8 +1,8 @@
 import supabase from "@/utils/supabase";
 
+import { Repeat } from "@/types/repeat";
 import { handleError } from "@/helper";
 import { queryOptions } from "@tanstack/react-query";
-import { RepeatWithProductOrMeal } from "@/types";
 
 export default function repeatData() {
   return queryOptions({
@@ -24,7 +24,7 @@ export default function repeatData() {
 
       console.log(`[Query] fetched ${data?.length} repeats`);
 
-      return mapped as RepeatWithProductOrMeal[];
+      return mapped as Repeat[];
     },
   });
 }

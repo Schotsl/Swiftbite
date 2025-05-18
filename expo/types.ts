@@ -4,22 +4,6 @@ import { Weight } from "./schemas/personal/health";
 import { ServingData } from "./schemas/serving";
 import { Product } from "./types/product";
 
-export type Repeat = Tables<"repeat">;
-export type RepeatWithProductOrMeal = Omit<Repeat, "serving" | "time"> & {
-  time: Date;
-  serving: ServingData;
-
-  meal?: Meal;
-  product?: Product;
-};
-
-export type RepeatInsert = Omit<
-  Repeat,
-  "uuid" | "user_id" | "created_at" | "updated_at" | "time"
-> & {
-  time: Date;
-};
-
 export type MacroAbsolute = {
   fat: number;
   carbs: number;

@@ -1,10 +1,10 @@
 import Item from "@/components/Item";
 
+import { Repeat } from "@/types/repeat";
 import { getMacrosFromProduct } from "@/helper";
-import { RepeatWithProductOrMeal } from "@/types";
 
 type RepeatRepeatProps = {
-  item: RepeatWithProductOrMeal;
+  item: Repeat;
   onPress: () => void;
 };
 

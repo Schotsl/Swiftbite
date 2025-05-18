@@ -1,9 +1,8 @@
 import React from "react";
 
-import { ServingData } from "@/schemas/serving";
+import { Repeat } from "@/types/repeat";
 import { Product } from "@/types/product";
-
-import { RepeatWithProductOrMeal } from "@/types";
+import { ServingData } from "@/schemas/serving";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 import useUpdateRepeat from "@/mutations/useUpdateRepeat";
@@ -31,7 +30,7 @@ type RepeatContextType = {
 const RepeatContext = createContext<RepeatContextType | undefined>(undefined);
 
 type RepeatProviderProps = {
-  initial?: RepeatWithProductOrMeal;
+  initial?: Repeat;
   children: ReactNode;
 };
 

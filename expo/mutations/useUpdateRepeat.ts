@@ -1,6 +1,6 @@
+import { Repeat } from "@/types/repeat";
 import { handleError } from "@/helper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Repeat, RepeatWithProductOrMeal } from "@/types";
 
 import supabase from "@/utils/supabase";
 
@@ -8,7 +8,7 @@ export default function useUpdateRepeat() {
   const query = useQueryClient();
 
   return useMutation({
-    mutationFn: async (repeat: RepeatWithProductOrMeal): Promise<Repeat> => {
+    mutationFn: async (repeat: Repeat): Promise<Repeat> => {
       const { product, meal, ...rest } = repeat;
 
       const { data, error } = await supabase
@@ -25,15 +25,13 @@ export default function useUpdateRepeat() {
     onMutate: async (repeatUpdate) => {
       await query.cancelQueries({ queryKey: ["repeatData"] });
 
-      const previous = query.getQueryData<RepeatWithProductOrMeal[]>([
-        "repeatData",
-      ]);
+      const previous = query.getQueryData<Repeat[]>(["repeatData"]);
 
       const updated = previous?.map((repeat) =>
-        repeat.uuid === repeatUpdate.uuid ? repeatUpdate : repeat,
+        repeat.uuid === repeatUpdate.uuid ? repeatUpdate : repeat
       );
 
-      query.setQueryData<RepeatWithProductOrMeal[]>(["repeatData"], updated);
+      query.setQueryData<Repeat[]>(["repeatData"], updated);
 
       return { previous };
     },

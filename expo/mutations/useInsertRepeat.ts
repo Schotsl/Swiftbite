@@ -2,8 +2,8 @@ import * as crypto from "expo-crypto";
 
 import supabase from "@/utils/supabase";
 
+import { Repeat, RepeatInsert } from "@/types/repeat";
 import { handleError } from "@/helper";
-import { Repeat, RepeatInsert } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function useInsertRepeat() {
@@ -25,11 +25,11 @@ export default function useInsertRepeat() {
     onMutate: async (repeatInsert) => {
       await query.cancelQueries({ queryKey: ["repeatData"] });
 
-      const repeat = {
+      const repeat: Repeat = {
         ...repeatInsert,
 
         uuid: crypto.randomUUID(),
-        time: repeatInsert.time.toISOString(),
+        time: repeatInsert.time,
 
         updated_at: null,
         created_at: new Date().toISOString(),
