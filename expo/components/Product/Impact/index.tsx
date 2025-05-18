@@ -5,11 +5,12 @@ import { Product } from "@/types/product";
 import { ServingData } from "@/schemas/serving";
 import { MealWithProduct } from "@/types/meal";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Fragment, Suspense } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
+import { Fragment, Suspense, useState } from "react";
+import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import {
   getMacrosFromMeal,
   getMacrosFromProduct,
+  getOptions,
   macroToAbsolute,
 } from "@/helper";
 
@@ -30,26 +31,57 @@ export default function ProductImpact({
   product,
   serving,
 }: ProductImpactProps) {
+  const [per100, setPer100] = useState(false);
+
   const { data } = useSuspenseQuery(userData());
   const { calories: userCalories, macro: userMacro } = data!;
 
-  const macros = product
-    ? getMacrosFromProduct(product, serving)
-    : getMacrosFromMeal(meal);
+  const options = getOptions({ meal, product });
+  const option = options.find((option) => option.value === serving.option);
 
-  const macrosTarget = macroToAbsolute(userMacro, userCalories);
+  const servingAdjusted = per100
+    ? {
+        gram: 100,
+        option: "100-gram",
+        quantity: 1,
+      }
+    : serving;
+
+  const macrosAdjusted = product
+    ? getMacrosFromProduct(product, servingAdjusted)
+    : getMacrosFromMeal(meal, servingAdjusted);
+
+  const target = macroToAbsolute(userMacro, userCalories);
+
+  const handleSwitch = () => {
+    setPer100((previous) => !previous);
+  };
 
   return (
     <View>
-      <Text
-        style={{
-          fontSize: 16,
-          fontFamily: "OpenSans_600SemiBold",
-          marginBottom: 16,
-        }}
-      >
-        Impact op je budget
-      </Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "OpenSans_600SemiBold",
+            marginBottom: 16,
+          }}
+        >
+          Impact op je budget
+        </Text>
+
+        <TouchableOpacity onPress={handleSwitch}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "OpenSans_400Regular",
+              textDecorationLine: "underline",
+            }}
+          >
+            {per100 ? "Per 100g" : `Per ${serving.quantity} ${option?.title}`}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       <View
         style={{
@@ -75,15 +107,15 @@ export default function ProductImpact({
             >
               <Progress
                 label="Calorieën"
-                value={macros.calories}
-                target={macrosTarget.calories}
+                value={macrosAdjusted.calories}
+                target={target.calories}
                 type="kcal"
               />
 
               <Progress
                 label="Eiwitten"
-                value={macros.protein}
-                target={macrosTarget.protein}
+                value={macrosAdjusted.protein}
+                target={target.protein}
               />
             </View>
 
@@ -95,14 +127,14 @@ export default function ProductImpact({
             >
               <Progress
                 label="Carbs"
-                value={macros.carbs}
-                target={macrosTarget.carbs}
+                value={macrosAdjusted.carbs}
+                target={target.carbs}
               />
 
               <Progress
                 label="Vetten"
-                value={macros.fat}
-                target={macrosTarget.fat}
+                value={macrosAdjusted.fat}
+                target={target.fat}
               />
             </View>
           </Fragment>

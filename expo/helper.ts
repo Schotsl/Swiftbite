@@ -9,7 +9,7 @@ import { Macro, MacroExpanded, OptionWithGram } from "./types";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean,
+  compressed: boolean
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -102,7 +102,7 @@ export const getOptions = ({
 export const singleMacroToAbsolute = (
   type: keyof MacroData,
   value: number,
-  calories: number,
+  calories: number
 ) => {
   let divider = 4;
 
@@ -131,7 +131,7 @@ export const macroToAbsolute = (macro: MacroData, calories: number): Macro => {
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true,
+  rounded = true
 ): MacroExpanded & { gram: number } {
   const gram = serving.gram || 0;
 
@@ -186,7 +186,9 @@ export function getMacrosFromProduct(
 
 export function getMacrosFromMeal(
   meal: MealWithProduct,
-): Macro & { gram: number } {
+  serving: ServingData,
+  rounded = true
+): MacroExpanded & { gram: number } {
   const products = meal.meal_products || [];
   const macros = products.reduce(
     (acc, product) => {
@@ -194,23 +196,79 @@ export function getMacrosFromMeal(
       const macros = getMacrosFromProduct(product.product, serving);
 
       return {
-        fat: acc.fat + macros.fat,
         gram: acc.gram + macros.gram,
+
+        fat: acc.fat + macros.fat,
+        fatSaturated: acc.fatSaturated + macros.fatSaturated,
+        fatUnsaturated: acc.fatUnsaturated + macros.fatUnsaturated,
+
         carbs: acc.carbs + macros.carbs,
+        carbsSugars: acc.carbsSugars + macros.carbsSugars,
+
+        salt: acc.salt + macros.salt,
+        fiber: acc.fiber + macros.fiber,
         protein: acc.protein + macros.protein,
         calories: acc.calories + macros.calories,
       };
     },
     {
-      fat: 0,
       gram: 0,
+
+      fat: 0,
+      fatSaturated: 0,
+      fatUnsaturated: 0,
+
       carbs: 0,
+      carbsSugars: 0,
+
+      salt: 0,
+      fiber: 0,
       protein: 0,
       calories: 0,
-    },
+    }
   );
 
-  return macros;
+  return {
+    gram: rounded
+      ? Math.round((macros.gram / macros.gram) * serving.gram)
+      : (macros.gram / macros.gram) * serving.gram,
+
+    fat: rounded
+      ? Math.round((macros.fat / macros.gram) * serving.gram)
+      : (macros.fat / macros.gram) * serving.gram,
+
+    fatSaturated: rounded
+      ? Math.round((macros.fatSaturated / macros.gram) * serving.gram)
+      : (macros.fatSaturated / macros.gram) * serving.gram,
+
+    fatUnsaturated: rounded
+      ? Math.round((macros.fatUnsaturated / macros.gram) * serving.gram)
+      : (macros.fatUnsaturated / macros.gram) * serving.gram,
+
+    carbs: rounded
+      ? Math.round((macros.carbs / macros.gram) * serving.gram)
+      : (macros.carbs / macros.gram) * serving.gram,
+
+    carbsSugars: rounded
+      ? Math.round((macros.carbsSugars / macros.gram) * serving.gram)
+      : (macros.carbsSugars / macros.gram) * serving.gram,
+
+    salt: rounded
+      ? Math.round((macros.salt / macros.gram) * serving.gram)
+      : (macros.salt / macros.gram) * serving.gram,
+
+    fiber: rounded
+      ? Math.round((macros.fiber / macros.gram) * serving.gram)
+      : (macros.fiber / macros.gram) * serving.gram,
+
+    protein: rounded
+      ? Math.round((macros.protein / macros.gram) * serving.gram)
+      : (macros.protein / macros.gram) * serving.gram,
+
+    calories: rounded
+      ? Math.round((macros.calories / macros.gram) * serving.gram)
+      : (macros.calories / macros.gram) * serving.gram,
+  };
 }
 
 export const transformDate = (date: Date | string | number): string => {
@@ -225,7 +283,7 @@ export const transformDate = (date: Date | string | number): string => {
 export const transformImage = (
   uri?: string,
   width?: string,
-  height?: string,
+  height?: string
 ) => {
   const complete = uri && width && height;
 
@@ -241,12 +299,12 @@ export const transformImage = (
 };
 
 export const mapMeal = (
-  meal: Omit<MealWithProduct, "quantity_gram">,
+  meal: Omit<MealWithProduct, "quantity_gram">
 ): MealWithProduct => {
   const total =
     meal.meal_products?.reduce(
       (sum: number, item: MealProductBase) => sum + item.serving.gram,
-      0,
+      0
     ) || 0;
 
   return { ...meal, quantity_gram: total };
@@ -254,7 +312,7 @@ export const mapMeal = (
 
 export function isProductFavorite(
   user: User | undefined,
-  product: string,
+  product: string
 ): boolean {
   if (!user) {
     return false;
@@ -273,7 +331,7 @@ export function isMealFavorite(user: User | undefined, meal: string): boolean {
 
 export function toggleProductFavorite(
   user: User | undefined,
-  product: string,
+  product: string
 ): string[] {
   if (!user) {
     return [product];
@@ -289,7 +347,7 @@ export function toggleProductFavorite(
 
 export function toggleMealFavorite(
   user: User | undefined,
-  meal: string,
+  meal: string
 ): string[] {
   if (!user) {
     return [meal];

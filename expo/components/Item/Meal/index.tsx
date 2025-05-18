@@ -5,6 +5,7 @@ import { getMacrosFromMeal } from "@/helper";
 
 type ItemMealProps = {
   meal: MealWithProduct;
+
   icon?: boolean;
   border?: boolean;
 
@@ -13,13 +14,20 @@ type ItemMealProps = {
 
 export default function ItemMeal({
   meal,
+
   icon = true,
   border = true,
 
   onPress,
 }: ItemMealProps) {
   const length = meal.meal_products?.length || 0;
-  const macros = getMacrosFromMeal(meal);
+  const serving = {
+    gram: meal.quantity_gram,
+    quantity: 1,
+    option: "meal",
+  };
+
+  const macros = getMacrosFromMeal(meal, serving);
 
   return (
     <Item

@@ -1,72 +1,116 @@
 import { Product } from "@/types/product";
-import { View, Text } from "react-native";
+import { useState } from "react";
 import { ServingData } from "@/schemas/serving";
-import { getMacrosFromProduct } from "@/helper";
+import { MealWithProduct } from "@/types/meal";
+import { View, Text, TouchableOpacity } from "react-native";
+import { getMacrosFromMeal, getMacrosFromProduct, getOptions } from "@/helper";
 
-type ProductNutritionProps = {
-  product: Product;
-  serving: ServingData;
-};
+type ProductNutritionProps =
+  | {
+      meal?: never;
+      product: Product;
+      serving: ServingData;
+    }
+  | {
+      meal: MealWithProduct;
+      product?: never;
+      serving: ServingData;
+    };
 
 export default function ProductNutrition({
+  meal,
   product,
   serving,
 }: ProductNutritionProps) {
-  const macros = getMacrosFromProduct(product, serving);
+  const [per100, setPer100] = useState(false);
+
+  const options = getOptions({ meal, product });
+  const option = options.find((option) => option.value === serving.option);
+
+  const servingAdjusted = per100
+    ? {
+        gram: 100,
+        option: "100-gram",
+        quantity: 1,
+      }
+    : serving;
+
+  const macrosAdjusted = product
+    ? getMacrosFromProduct(product, servingAdjusted)
+    : getMacrosFromMeal(meal, servingAdjusted);
+
   const items = [
     {
       name: "Calorieën",
-      value: macros.calories,
+      value: macrosAdjusted.calories,
     },
     {
       name: "Eiwitten",
-      value: macros.protein,
+      value: macrosAdjusted.protein,
     },
     {
       name: "Vetten",
-      value: macros.fat,
+      value: macrosAdjusted.fat,
       items: [
         {
           name: "Waarvan verzadigd vet",
-          value: macros.fatSaturated,
+          value: macrosAdjusted.fatSaturated,
         },
         {
           name: "Waarvan onverzadigd vet",
-          value: macros.fatUnsaturated,
+          value: macrosAdjusted.fatUnsaturated,
         },
       ],
     },
     {
       name: "Koolhydraten",
-      value: macros.carbs,
+      value: macrosAdjusted.carbs,
       items: [
         {
           name: "Waarvan suikers",
-          value: macros.carbsSugars,
+          value: macrosAdjusted.carbsSugars,
         },
       ],
     },
     {
       name: "Vezels",
-      value: macros.fiber,
+      value: macrosAdjusted.fiber,
     },
     {
       name: "Zout",
-      value: macros.salt,
+      value: macrosAdjusted.salt,
     },
   ];
 
+  const handleSwitch = () => {
+    setPer100((previous) => !previous);
+  };
+
   return (
     <View>
-      <Text
-        style={{
-          fontSize: 16,
-          fontFamily: "OpenSans_600SemiBold",
-          marginBottom: 16,
-        }}
-      >
-        Voedingswaarde
-      </Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text
+          style={{
+            fontSize: 16,
+            fontFamily: "OpenSans_600SemiBold",
+            marginBottom: 16,
+          }}
+        >
+          Voedingswaarde
+        </Text>
+
+        <TouchableOpacity onPress={handleSwitch}>
+          <Text
+            style={{
+              fontSize: 14,
+              fontFamily: "OpenSans_400Regular",
+              textDecorationLine: "underline",
+            }}
+          >
+            {per100 ? "Per 100g" : `Per ${serving.quantity} ${option?.title}`}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       <View
         style={{
