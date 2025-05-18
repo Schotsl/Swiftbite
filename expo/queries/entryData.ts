@@ -1,4 +1,4 @@
-import { Entry } from "@/types";
+import { Entry } from "@/types/entry";
 import { queryOptions } from "@tanstack/react-query";
 import { handleError, mapMeal } from "@/helper";
 

@@ -1,5 +1,5 @@
+import { Entry } from "@/types/entry";
 import { handleError } from "@/helper";
-import { Entry, EntryWithProduct } from "@/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import supabase from "@/utils/supabase";
@@ -25,12 +25,12 @@ export default function useUpdateEntry() {
     onMutate: async (entryUpdate) => {
       await query.cancelQueries({ queryKey: ["entryData"] });
 
-      const previous = query.getQueryData<EntryWithProduct[]>(["entryData"]);
+      const previous = query.getQueryData<Entry[]>(["entryData"]);
       const updated = previous?.map((entry) =>
-        entry.uuid === entryUpdate.uuid ? { ...entry, ...entryUpdate } : entry,
+        entry.uuid === entryUpdate.uuid ? { ...entry, ...entryUpdate } : entry
       );
 
-      query.setQueryData<EntryWithProduct[]>(["entryData"], updated);
+      query.setQueryData<Entry[]>(["entryData"], updated);
 
       return { previous };
     },

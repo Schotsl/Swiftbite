@@ -1,9 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import supabase from "@/utils/supabase";
+
 import * as Crypto from "expo-crypto";
 
 import { handleError } from "@/helper";
-import { Entry, EntryInsert } from "@/types";
-import supabase from "@/utils/supabase";
+import { Entry, EntryInsert } from "@/types/entry";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function useInsertEntry() {
   const queryClient = useQueryClient();

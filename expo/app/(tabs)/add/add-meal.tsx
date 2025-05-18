@@ -9,9 +9,9 @@ import HeaderLoading from "@/components/Header/Loading";
 import ProductStatus from "@/components/Product/Status";
 
 import { View } from "react-native";
+import { Entry } from "@/types/entry";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
-import { EntryWithMeal } from "@/types";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 
 export default function AddPreviewBarcodeScreen() {
@@ -26,7 +26,7 @@ export default function AddPreviewBarcodeScreen() {
   }>();
 
   const { data: entry, isLoading } = useQuery({
-    ...entryData<EntryWithMeal>({ uuid: entryId }),
+    ...entryData<Entry>({ uuid: entryId }),
     select: (entries) => entries[0],
     enabled: !!entryId,
   });

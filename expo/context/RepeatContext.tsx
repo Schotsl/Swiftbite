@@ -100,7 +100,7 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
     }
 
     await insertRepeat.mutateAsync({
-      time,
+      time: time.toISOString(),
       weekdays,
 
       // TODO: Could probably be fancier but until I add meals it will work

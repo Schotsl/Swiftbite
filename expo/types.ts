@@ -1,6 +1,4 @@
 import { Tables } from "./database.types";
-import { MacroData } from "./schemas/personal/goal";
-import { Weight } from "./schemas/personal/health";
 import { ServingData } from "./schemas/serving";
 import { Product } from "./types/product";
 
@@ -33,21 +31,6 @@ export enum CameraSelected {
 }
 
 export type Generative = Tables<"generative">;
-
-export type EntryBase = Tables<"entry">;
-export type Entry = Omit<EntryBase, "serving"> & {
-  serving: ServingData | null;
-};
-
-export type EntryWithProduct = Entry & {
-  meal: never;
-  product: Product;
-};
-
-export type EntryWithMeal = Entry & {
-  meal: MealWithProduct;
-  product: never;
-};
 
 export type Meal = Tables<"meal">;
 export type MealProductBase = Tables<"meal_product">;
@@ -96,11 +79,6 @@ export type MealWithProductInsert = Omit<
 
 export type GenerativeInsert = Omit<
   Generative,
-  "uuid" | "user_id" | "created_at" | "updated_at"
->;
-
-export type EntryInsert = Omit<
-  Entry,
   "uuid" | "user_id" | "created_at" | "updated_at"
 >;
 

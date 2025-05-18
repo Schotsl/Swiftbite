@@ -1,14 +1,13 @@
 import entryData from "../queries/entryData";
 
+import { Entry } from "@/types/entry";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { MacroAbsolute } from "@/types";
 import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
-import { EntryWithMeal, EntryWithProduct, MacroAbsolute } from "@/types";
 
 export default function useMacros(date: Date): MacroAbsolute {
-  const { data: entries } = useQuery(
-    entryData<EntryWithProduct | EntryWithMeal>({ date }),
-  );
+  const { data: entries } = useQuery(entryData<Entry>({ date }));
 
   const totals = useMemo(() => {
     if (!entries) {
@@ -55,7 +54,7 @@ export default function useMacros(date: Date): MacroAbsolute {
           calories: acc.calories + macro.calories,
         };
       },
-      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 },
+      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 }
     );
   }, [entries]);
 

@@ -5,14 +5,15 @@ import PageEstimationManual from "@/components/Page/Estimation/Manual";
 import PageEstimationAutomatic from "@/components/Page/Estimation/Automatic";
 
 import { View } from "react-native";
+import { Entry } from "@/types/entry";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { ServingData } from "@/schemas/serving";
 import { transformImage } from "@/helper";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { EntryWithProduct } from "@/types";
+
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 import useInsertEntry from "@/mutations/useInsertEntry";
-import { ServingData } from "@/schemas/serving";
 
 export default function Add2Preview() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function Add2Preview() {
 
   const { data: entry } = useQuery({
     // Less than ideal but if the query is enabled we know that the entryId is defined
-    ...entryData<EntryWithProduct>({ uuid: entryId as string }),
+    ...entryData<Entry>({ uuid: entryId as string }),
     select: (entries) => entries[0],
     enabled: !!entryId,
   });

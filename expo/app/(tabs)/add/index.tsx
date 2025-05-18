@@ -1,10 +1,10 @@
 import { View } from "react-native";
+import { Entry } from "@/types/entry";
 import { router } from "expo-router";
 import { Product } from "@/types/product";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { EntryWithMeal, EntryWithProduct } from "@/types";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
 import entryData from "@/queries/entryData";
@@ -25,7 +25,7 @@ export default function Index() {
   const [interval, setInterval] = useState<number | false>(1000);
 
   const { data, isLoading } = useQuery({
-    ...entryData<EntryWithProduct | EntryWithMeal>({ date }),
+    ...entryData<Entry>({ date }),
     refetchInterval: interval,
   });
 
@@ -79,7 +79,7 @@ function IndexList({
   entries,
   loading,
 }: {
-  entries: (EntryWithProduct | EntryWithMeal)[];
+  entries: Entry[];
   loading: boolean;
 }) {
   const deleteEntry = useDeleteEntry();
@@ -94,25 +94,25 @@ function IndexList({
         title: "Night",
         subtitle: "21:00 - 06:00",
         startHour: 21,
-        data: [] as (EntryWithProduct | EntryWithMeal)[],
+        data: [] as Entry[],
       },
       {
         title: "Evening",
         subtitle: "17:00 - 21:00",
         startHour: 17,
-        data: [] as (EntryWithProduct | EntryWithMeal)[],
+        data: [] as Entry[],
       },
       {
         title: "Afternoon",
         subtitle: "12:00 - 17:00",
         startHour: 12,
-        data: [] as (EntryWithProduct | EntryWithMeal)[],
+        data: [] as Entry[],
       },
       {
         title: "Morning",
         subtitle: "06:00 - 12:00",
         startHour: 6,
-        data: [] as (EntryWithProduct | EntryWithMeal)[],
+        data: [] as Entry[],
       },
     ];
 

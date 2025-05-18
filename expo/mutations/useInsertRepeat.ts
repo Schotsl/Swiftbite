@@ -29,7 +29,7 @@ export default function useInsertRepeat() {
         ...repeatInsert,
 
         uuid: crypto.randomUUID(),
-        time: repeatInsert.time,
+        time: new Date(repeatInsert.time),
 
         updated_at: null,
         created_at: new Date().toISOString(),

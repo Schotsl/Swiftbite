@@ -23,6 +23,6 @@ export type RepeatWithMeal = RepeatBase & {
 export type Repeat = RepeatWithProduct | RepeatWithMeal;
 
 export type RepeatInsert = Omit<
-  Repeat,
-  "uuid" | "user_id" | "created_at" | "updated_at" | "meal" | "product"
+  RepeatTable,
+  "uuid" | "user_id" | "created_at" | "updated_at"
 >;
