@@ -9,7 +9,7 @@ export default function useUpdateMealProduct() {
 
   return useMutation({
     mutationFn: async (
-      mealProduct: MealProductBase
+      mealProduct: MealProductBase,
     ): Promise<MealProductBase> => {
       const { product, ...rest } = mealProduct;
 

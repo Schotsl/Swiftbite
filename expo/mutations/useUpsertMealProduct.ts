@@ -14,7 +14,7 @@ export default function useUpsertMealProduct() {
 
   return useMutation({
     mutationFn: async (
-      mealProduct: MealProductInsert
+      mealProduct: MealProductInsert,
     ): Promise<MealProduct | null> => {
       const { data, error } = await supabase
         .from("meal_product")

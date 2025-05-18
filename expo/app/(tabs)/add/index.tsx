@@ -121,7 +121,7 @@ function IndexList({
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour
+      (section) => currentHour >= section.startHour,
     );
 
     // Populate active sections with data
