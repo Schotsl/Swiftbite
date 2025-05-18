@@ -1,12 +1,11 @@
 import entryData from "../queries/entryData";
 
-import { Entry } from "@/types/entry";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { MacroAbsolute } from "@/types";
+import { Macro } from "@/types";
 import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
 
-export default function useMacros(date: Date): MacroAbsolute {
+export default function useMacros(date: Date): Macro {
   const { data: entries } = useQuery(entryData({ date }));
 
   const totals = useMemo(() => {

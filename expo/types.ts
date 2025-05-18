@@ -1,8 +1,16 @@
-export type MacroAbsolute = {
+export type Macro = {
   fat: number;
   carbs: number;
   protein: number;
   calories: number;
+};
+
+export type MacroExpanded = Macro & {
+  salt: number;
+  fiber: number;
+  carbsSugars: number;
+  fatSaturated: number;
+  fatUnsaturated: number;
 };
 
 export type Option = {

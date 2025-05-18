@@ -2,12 +2,12 @@ import Progress from "@/components/Progress";
 import { macroToAbsolute } from "@/helper";
 import userData from "@/queries/userData";
 
-import { MacroAbsolute } from "@/types";
+import { Macro } from "@/types";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Fragment, Suspense } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 
-type ProductImpactProps = MacroAbsolute;
+type ProductImpactProps = Macro;
 
 export default function ProductImpact({
   fat,

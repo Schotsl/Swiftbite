@@ -5,7 +5,7 @@ import { ServingData } from "./schemas/serving";
 import { Product, ProductInsert } from "@/types/product";
 import { MealWithProduct, MealProductBase } from "@/types/meal";
 import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
-import { MacroAbsolute, OptionWithGram } from "./types";
+import { Macro, MacroExpanded, OptionWithGram } from "./types";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
@@ -119,10 +119,7 @@ export const singleMacroToAbsolute = (
 };
 
 // TODO: Might wanna rename this to "macroToAbsolute" and "macrosToAbsolute" but I'd have to double check every where in the codebase for proper single and plural usage.
-export const macroToAbsolute = (
-  macro: MacroData,
-  calories: number,
-): MacroAbsolute => {
+export const macroToAbsolute = (macro: MacroData, calories: number): Macro => {
   return {
     fat: singleMacroToAbsolute("fat", macro.fat, calories),
     carbs: singleMacroToAbsolute("carbs", macro.carbs, calories),
@@ -135,23 +132,53 @@ export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
   rounded = true,
-): MacroAbsolute & { gram: number } {
+): MacroExpanded & { gram: number } {
   const gram = serving.gram || 0;
 
+  // Fields too add, waarvan verzadigd vet, waarvan onverzadigd vet, waarvan suikers, waarvan vezels, waarvan zout
+
   const fat = product?.fat_100g || 0;
+  const fatSaturated = product?.fat_saturated_100g || 0;
+  const fatUnsaturated = product?.fat_unsaturated_100g || 0;
+
   const carbs = product?.carbohydrate_100g || 0;
+  const carbsSugars = product?.carbohydrate_sugar_100g || 0;
+
+  const salt = product?.sodium_100g || 0;
+  const fiber = product?.fiber_100g || 0;
   const protein = product?.protein_100g || 0;
   const calories = product?.calorie_100g || 0;
 
   const fatCalculated = (fat / 100) * gram;
+  const fatSaturatedCalculated = (fatSaturated / 100) * gram;
+  const fatUnsaturatedCalculated = (fatUnsaturated / 100) * gram;
+
   const carbsCalculated = (carbs / 100) * gram;
+  const carbsSugarsCalculated = (carbsSugars / 100) * gram;
+
+  const saltCalculated = (salt / 100) * gram;
+  const fiberCalculated = (fiber / 100) * gram;
   const proteinCalculated = (protein / 100) * gram;
   const caloriesCalculated = (calories / 100) * gram;
 
   return {
-    fat: rounded ? Math.round(fatCalculated) : fatCalculated,
     gram: gram,
+
+    fat: rounded ? Math.round(fatCalculated) : fatCalculated,
+    fatSaturated: rounded
+      ? Math.round(fatSaturatedCalculated)
+      : fatSaturatedCalculated,
+    fatUnsaturated: rounded
+      ? Math.round(fatUnsaturatedCalculated)
+      : fatUnsaturatedCalculated,
+
     carbs: rounded ? Math.round(carbsCalculated) : carbsCalculated,
+    carbsSugars: rounded
+      ? Math.round(carbsSugarsCalculated)
+      : carbsSugarsCalculated,
+
+    salt: rounded ? Math.round(saltCalculated) : saltCalculated,
+    fiber: rounded ? Math.round(fiberCalculated) : fiberCalculated,
     protein: rounded ? Math.round(proteinCalculated) : proteinCalculated,
     calories: rounded ? Math.round(caloriesCalculated) : caloriesCalculated,
   };
@@ -159,7 +186,7 @@ export function getMacrosFromProduct(
 
 export function getMacrosFromMeal(
   meal: MealWithProduct,
-): MacroAbsolute & { gram: number } {
+): Macro & { gram: number } {
   const products = meal.meal_products || [];
   const macros = products.reduce(
     (acc, product) => {

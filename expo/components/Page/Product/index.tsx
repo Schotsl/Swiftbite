@@ -23,6 +23,7 @@ import Input from "@/components/Input";
 import InputDropdown from "@/components/Input/Dropdown";
 import ProductInfo from "@/components/Product/Info";
 import ProductImpact from "@/components/Product/Impact";
+import ProductNutrition from "@/components/Product/Nutrition";
 import ButtonOverlay from "@/components/Button/Overlay";
 import InputTime from "@/components/Input/Time";
 
@@ -54,7 +55,7 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid)
+    isProductFavorite(user, product.uuid),
   );
 
   const { watch, control, reset, setValue, handleSubmit } =
@@ -126,11 +127,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions({ product });
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity"
+      (option) => option.value === "quantity",
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving"
+      (option) => option.value === "serving",
     );
 
     if (optionsServing) {
@@ -213,6 +214,8 @@ export default function PageProduct({
           )}
 
           <ProductImpact {...macros} />
+
+          <ProductNutrition product={product} serving={serving} />
         </View>
       </ScrollView>
 
