@@ -1,12 +1,15 @@
 import InputLabel from "@/components/Input/Label";
 import EstimationImageButton from "./Button";
 
-import { Image as ImageType } from "@/types";
 import { Image, Text, View } from "react-native";
 
 type EstimationImageProps = {
-  image: ImageType | null;
   required?: boolean;
+  image: {
+    uri: string;
+    width: number;
+    height: number;
+  } | null;
 
   onAdd: () => void;
   onEdit: () => void;

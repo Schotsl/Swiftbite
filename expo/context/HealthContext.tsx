@@ -8,12 +8,18 @@ import React, {
 } from "react";
 
 import HealthService from "@/service/HealthService";
-import { HealthStatus } from "@/types";
 
 // Keys for local storage
 const WEIGHT_STORAGE_KEY = "@health_weight";
 const CALORIES_STORAGE_KEY = "@health_calories";
 const ACTIVE_CALORIES_STORAGE_KEY = "@health_active_calories";
+
+enum HealthStatus {
+  Ready = "ready",
+  Error = "error",
+  Loading = "loading",
+  Refreshing = "refreshing",
+}
 
 type HealthContextType = {
   weight: number | null;

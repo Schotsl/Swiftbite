@@ -1,8 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import supabase from "@/utils/supabase";
 
 import { handleError } from "@/helper";
-import { Generative, GenerativeInsert } from "@/types";
-import supabase from "@/utils/supabase";
+import { useMutation } from "@tanstack/react-query";
+import { Generative, GenerativeInsert } from "@/types/generative";
 
 export default function useInsertGenerative() {
   return useMutation({
