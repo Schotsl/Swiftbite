@@ -5,8 +5,19 @@ export const servingSchema = z.object({
   quantity: z.coerce.number().min(1, "Quantity is required"),
 });
 
+export type ServingInput = z.infer<typeof servingSchema>;
+export type ServingData = z.infer<typeof servingSchema> & {
+  gram: number;
+};
+
 export const mealSchema = z.object({
   title: z.string().min(1, "Title is required"),
+});
+
+export type MealData = z.infer<typeof mealSchema>;
+
+export const createdSchema = z.object({
+  created_at: z.date({ required_error: "Voer een tijd in" }),
 });
 
 export const estimationSchema = z.object({
@@ -14,10 +25,10 @@ export const estimationSchema = z.object({
   content: z.string().optional(),
 });
 
-export type MealData = z.infer<typeof mealSchema>;
 export type EstimationData = z.infer<typeof estimationSchema>;
 
-export type ServingInput = z.infer<typeof servingSchema>;
-export type ServingData = z.infer<typeof servingSchema> & {
-  gram: number;
-};
+export const productPageSchema = servingSchema.merge(createdSchema);
+export type ProductPageData = z.infer<typeof productPageSchema>;
+
+export const mealPageSchema = servingSchema.merge(createdSchema);
+export type MealPageData = z.infer<typeof mealPageSchema>;

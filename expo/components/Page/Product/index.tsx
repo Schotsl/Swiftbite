@@ -6,7 +6,11 @@ import { useIsFocused } from "@react-navigation/native";
 import { ScrollView, Text, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { getMacrosFromProduct, getOptions } from "@/helper";
-import { ServingData, ServingInput, servingSchema } from "@/schemas/serving";
+import {
+  ProductPageData,
+  productPageSchema,
+  ServingData,
+} from "@/schemas/serving";
 import { isProductFavorite, toggleProductFavorite } from "@/helper";
 
 import userData from "@/queries/userData";
@@ -20,19 +24,24 @@ import InputDropdown from "@/components/Input/Dropdown";
 import ProductInfo from "@/components/Product/Info";
 import ProductImpact from "@/components/Product/Impact";
 import ButtonOverlay from "@/components/Button/Overlay";
+import InputTime from "@/components/Input/Time";
 
 export type PageProductProps = {
   product: Product;
   serving?: ServingData | null;
+  created?: Date | null;
+  createdVisible?: boolean;
 
-  onSave: (serving: ServingData) => void;
+  onSave: (serving: ServingData, created: Date) => void;
   onDelete?: () => void;
   onRepeat?: (serving: ServingData) => void;
 };
 
 export default function PageProduct({
-  serving: servingProp,
   product,
+  serving: propServing,
+  created: propCreated,
+  createdVisible = false,
   onSave,
   onDelete,
   onRepeat,
@@ -45,15 +54,16 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const { watch, control, reset, setValue, handleSubmit } =
-    useForm<ServingInput>({
-      resolver: zodResolver(servingSchema),
+    useForm<ProductPageData>({
+      resolver: zodResolver(productPageSchema),
       defaultValues: {
-        option: servingProp?.option || "100-gram",
-        quantity: servingProp?.quantity || 1,
+        option: propServing?.option || "100-gram",
+        quantity: propServing?.quantity || 1,
+        created_at: propCreated || new Date(),
       },
     });
 
@@ -66,15 +76,16 @@ export default function PageProduct({
     }
 
     reset({
-      option: servingProp?.option || "100-gram",
-      quantity: servingProp?.quantity || 1,
+      option: propServing?.option || "100-gram",
+      quantity: propServing?.quantity || 1,
+      created_at: propCreated || new Date(),
     });
-  }, [focus, servingProp, reset]);
+  }, [focus, propServing, propCreated, reset]);
 
-  const handleSave = async (data: ServingInput) => {
+  const handleSave = async (data: ProductPageData) => {
     setSaving(true);
 
-    onSave(serving);
+    onSave(serving, data.created_at);
   };
 
   const handleFavorite = async () => {
@@ -115,11 +126,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions({ product });
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity",
+      (option) => option.value === "quantity"
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving",
+      (option) => option.value === "serving"
     );
 
     if (optionsServing) {
@@ -135,6 +146,7 @@ export default function PageProduct({
 
   const serving = useMemo(() => {
     const selected = options.find((object) => object.value === option)!;
+
     const gram = selected.gram * quantity;
 
     return { option, quantity, gram };
@@ -188,12 +200,24 @@ export default function PageProduct({
             />
           </View>
 
+          {createdVisible && (
+            <View style={{ gap: variables.gapSmall }}>
+              <Text
+                style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
+              >
+                Tijd
+              </Text>
+
+              <InputTime name="created_at" label="Tijd" control={control} />
+            </View>
+          )}
+
           <ProductImpact {...macros} />
         </View>
       </ScrollView>
 
       <ButtonOverlay
-        title={servingProp ? "Product wijzigen" : "Product opslaan"}
+        title={propServing ? "Product wijzigen" : "Product opslaan"}
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}

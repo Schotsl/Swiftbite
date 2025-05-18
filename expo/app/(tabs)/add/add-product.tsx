@@ -10,7 +10,6 @@ import HeaderLoading from "@/components/Header/Loading";
 import ProductStatus from "@/components/Product/Status";
 
 import { View } from "react-native";
-import { Entry } from "@/types/entry";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
@@ -62,12 +61,16 @@ export default function AddPreviewBarcodeScreen() {
     return <Redirect href="/" />;
   }
 
-  const handleSave = async (returnedServing: ServingData) => {
+  const handleSave = async (
+    returnedServing: ServingData,
+    returnedCreated: Date
+  ) => {
     if (entry) {
       // If we have a existing entry we'll update it
       await updateEntry.mutateAsync({
         ...entry,
         serving: returnedServing,
+        created_at: returnedCreated,
       });
 
       router.replace("/");
@@ -77,9 +80,10 @@ export default function AddPreviewBarcodeScreen() {
 
     // Otherwise we'll create a new entry
     await insertEntry.mutateAsync({
-      serving: returnedServing,
       meal_id: null,
+      serving: returnedServing,
       product_id: product.uuid,
+      created_at: returnedCreated,
     });
 
     router.replace("/");
@@ -101,9 +105,10 @@ export default function AddPreviewBarcodeScreen() {
     }
 
     await insertEntry.mutateAsync({
-      serving,
       meal_id: null,
+      serving,
       product_id: product.uuid,
+      created_at: new Date(),
     });
 
     router.replace("/");
@@ -113,6 +118,8 @@ export default function AddPreviewBarcodeScreen() {
     <PageProduct
       product={product}
       serving={serving}
+      created={entry?.created_at}
+      createdVisible={true}
       onSave={handleSave}
       onDelete={entry ? handleDelete : undefined}
       onRepeat={entry ? handleRepeat : undefined}

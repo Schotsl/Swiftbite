@@ -41,14 +41,12 @@ export default function entryData({ date, uuid }: EntryDataProps) {
 
       // We'll have to map the meal to get the total_grams
       const dataMapped = data?.map((entry: any) => {
-        if (entry.meal) {
-          return {
-            ...entry,
-            meal: mapMeal(entry.meal),
-          };
-        }
-
-        return entry;
+        return {
+          ...entry,
+          meal: entry.meal ? mapMeal(entry.meal) : null,
+          created_at: new Date(entry.created_at),
+          updated_at: entry.updated_at ? new Date(entry.updated_at) : null,
+        };
       });
 
       return dataMapped || [];

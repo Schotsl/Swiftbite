@@ -10,7 +10,7 @@ import {
   isMealFavorite,
   toggleMealFavorite,
 } from "@/helper";
-import { ServingData, ServingInput, servingSchema } from "@/schemas/serving";
+import { MealPageData, mealPageSchema, ServingData } from "@/schemas/serving";
 import { useQuery } from "@tanstack/react-query";
 
 import userData from "@/queries/userData";
@@ -24,19 +24,24 @@ import InputDropdown from "@/components/Input/Dropdown";
 import ProductInfo from "@/components/Product/Info";
 import ProductImpact from "@/components/Product/Impact";
 import ButtonOverlay from "@/components/Button/Overlay";
+import InputTime from "@/components/Input/Time";
 
 export type PageMealProps = {
   meal: MealWithProduct;
   serving: ServingData;
+  created: Date;
+  createdVisible?: boolean;
 
-  onSave: (serving: ServingData) => void;
+  onSave: (serving: ServingData, created: Date) => void;
   onDelete?: () => void;
   onRepeat?: (serving: ServingData) => void;
 };
 
 export default function PageMeal({
-  serving: servingProp,
   meal,
+  serving: propServing,
+  created: propCreated,
+  createdVisible = false,
   onSave,
   onDelete,
   onRepeat,
@@ -51,11 +56,12 @@ export default function PageMeal({
   const [favorite, setFavorite] = useState(isMealFavorite(user, meal.uuid));
 
   const { watch, control, reset, setValue, handleSubmit } =
-    useForm<ServingInput>({
-      resolver: zodResolver(servingSchema),
+    useForm<MealPageData>({
+      resolver: zodResolver(mealPageSchema),
       defaultValues: {
-        option: servingProp?.option || "100-gram",
-        quantity: servingProp?.quantity || 1,
+        option: propServing?.option || "100-gram",
+        quantity: propServing?.quantity || 1,
+        created_at: propCreated || new Date(),
       },
     });
 
@@ -68,15 +74,16 @@ export default function PageMeal({
     }
 
     reset({
-      option: servingProp?.option || "100-gram",
-      quantity: servingProp?.quantity || 1,
+      option: propServing?.option || "100-gram",
+      quantity: propServing?.quantity || 1,
+      created_at: propCreated || new Date(),
     });
-  }, [focus, servingProp, reset]);
+  }, [focus, propServing, propCreated, reset]);
 
-  const handleSave = async (data: ServingInput) => {
+  const handleSave = async (data: MealPageData) => {
     setSaving(true);
 
-    onSave(serving);
+    onSave(serving, data.created_at);
   };
 
   const handleFavorite = () => {
@@ -146,7 +153,7 @@ export default function PageMeal({
               title={meal.title}
               favorite={favorite}
               onDelete={onDelete}
-              onRepeat={onRepeat && (() => onRepeat(servingProp))}
+              onRepeat={onRepeat && (() => onRepeat(propServing))}
               onFavorite={handleFavorite}
             />
 
@@ -175,12 +182,24 @@ export default function PageMeal({
             />
           </View>
 
+          {createdVisible && (
+            <View style={{ gap: variables.gapSmall }}>
+              <Text
+                style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
+              >
+                Tijd
+              </Text>
+
+              <InputTime name="created_at" label="Tijd" control={control} />
+            </View>
+          )}
+
           <ProductImpact {...macros} />
         </View>
       </ScrollView>
 
       <ButtonOverlay
-        title={servingProp ? "Product wijzigen" : "Product opslaan"}
+        title={propServing ? "Product wijzigen" : "Product opslaan"}
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}
