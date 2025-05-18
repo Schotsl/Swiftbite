@@ -13,6 +13,8 @@ import {
   getOptions,
   macroToAbsolute,
 } from "@/helper";
+import { MacroData } from "@/schemas/personal/goal";
+import { Macro } from "@/types";
 
 type ProductImpactProps =
   | {
@@ -25,6 +27,34 @@ type ProductImpactProps =
       product?: never;
       serving: ServingData;
     };
+
+export const macroToCalories = (
+  type: keyof MacroData,
+  value: number,
+  calories: number
+) => {
+  let divider = 4;
+
+  if (type === "protein") {
+    divider = 4;
+  } else if (type === "fat") {
+    divider = 9;
+  }
+
+  const grams = (calories * value) / divider;
+  const gramsRounded = Math.round(grams);
+
+  return gramsRounded;
+};
+
+export const macrosToCalories = (macro: MacroData, calories: number): Macro => {
+  return {
+    fat: macroToCalories("fat", macro.fat, calories),
+    carbs: macroToCalories("carbs", macro.carbs, calories),
+    protein: macroToCalories("protein", macro.protein, calories),
+    calories: calories,
+  };
+};
 
 export default function ProductImpact({
   meal,

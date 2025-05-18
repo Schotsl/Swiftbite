@@ -99,35 +99,6 @@ export const getOptions = ({
   return options;
 };
 
-export const singleMacroToAbsolute = (
-  type: keyof MacroData,
-  value: number,
-  calories: number
-) => {
-  let divider = 4;
-
-  if (type === "protein") {
-    divider = 4;
-  } else if (type === "fat") {
-    divider = 9;
-  }
-
-  const grams = (calories * value) / divider;
-  const gramsRounded = Math.round(grams);
-
-  return gramsRounded;
-};
-
-// TODO: Might wanna rename this to "macroToAbsolute" and "macrosToAbsolute" but I'd have to double check every where in the codebase for proper single and plural usage.
-export const macroToAbsolute = (macro: MacroData, calories: number): Macro => {
-  return {
-    fat: singleMacroToAbsolute("fat", macro.fat, calories),
-    carbs: singleMacroToAbsolute("carbs", macro.carbs, calories),
-    protein: singleMacroToAbsolute("protein", macro.protein, calories),
-    calories: calories,
-  };
-};
-
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,

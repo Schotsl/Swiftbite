@@ -20,6 +20,7 @@ import ProductInfo from "@/components/Product/Info";
 import ProductImpact from "@/components/Product/Impact";
 import ButtonOverlay from "@/components/Button/Overlay";
 import InputTime from "@/components/Input/Time";
+import ProductNutrition from "@/components/Product/Nutrition";
 
 export type PageMealProps = {
   meal: MealWithProduct;
@@ -188,6 +189,8 @@ export default function PageMeal({
           )}
 
           <ProductImpact meal={meal} serving={serving} />
+
+          <ProductNutrition meal={meal} serving={serving} />
         </View>
       </ScrollView>
 
