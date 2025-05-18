@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
-import { MealWithProduct } from "@/types";
+import { MealWithProduct } from "@/types/meal";
 import { ScrollView, Text, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import {

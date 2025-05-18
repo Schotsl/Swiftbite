@@ -2,8 +2,9 @@ import { Tables } from "@/database.types";
 import { Weight } from "@/schemas/personal/health";
 import { MacroData } from "@/schemas/personal/goal";
 
-export type UserTable = Tables<"user">;
-export type UserStripped = Omit<UserTable, "birth" | "weight" | "macro">;
+type UserTable = Tables<"user">;
+type UserStripped = Omit<UserTable, "birth" | "weight" | "macro">;
+
 export type User = UserStripped & {
   total: number;
   email: string;

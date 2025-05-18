@@ -1,20 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import { handleError } from "@/helper";
 import * as crypto from "expo-crypto";
 
-import { Meal, MealInsert } from "@/types";
 import supabase from "@/utils/supabase";
+
+import { handleError } from "@/helper";
+import { Meal, MealInsert } from "@/types/meal";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function useInsertMeal() {
   const query = useQueryClient();
 
   return useMutation({
     mutationFn: async (mealInsert: MealInsert): Promise<Meal> => {
-      const { uuid, title } = mealInsert;
+      const { title } = mealInsert;
       const { data, error } = await supabase
         .from("meal")
-        .insert({ uuid, title })
+        .insert({ title })
         .select()
         .single();
 

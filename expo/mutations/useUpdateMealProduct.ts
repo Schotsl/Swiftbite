@@ -1,16 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import supabase from "@/utils/supabase";
 
 import { handleError } from "@/helper";
-import { MealProductWithProduct, MealWithProduct } from "@/types";
-import supabase from "@/utils/supabase";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { MealProductBase, MealWithProduct } from "@/types/meal";
 
 export default function useUpdateMealProduct() {
   const query = useQueryClient();
 
   return useMutation({
     mutationFn: async (
-      mealProduct: MealProductWithProduct,
-    ): Promise<MealProductWithProduct> => {
+      mealProduct: MealProductBase
+    ): Promise<MealProductBase> => {
       const { product, ...rest } = mealProduct;
 
       const { data, error } = await supabase
@@ -25,7 +25,7 @@ export default function useUpdateMealProduct() {
 
       return data;
     },
-    onMutate: async (mealProductInsert: MealProductWithProduct) => {
+    onMutate: async (mealProductInsert: MealProductBase) => {
       // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await query.cancelQueries({ queryKey: ["mealData"] });
       const previous = query.getQueryData<MealWithProduct[]>(["mealData"]);

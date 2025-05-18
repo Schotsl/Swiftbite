@@ -32,51 +32,6 @@ export enum CameraSelected {
 
 export type Generative = Tables<"generative">;
 
-export type Meal = Tables<"meal">;
-export type MealProductBase = Tables<"meal_product">;
-export type MealProduct = Omit<MealProductBase, "product_id"> & {
-  serving: ServingData;
-  product: Product;
-};
-
-export type MealProductWithProduct = MealProduct & { product: Product };
-export type MealWithProduct = Meal & {
-  quantity_gram: number;
-  meal_products: MealProductWithProduct[] | null;
-};
-
-export type MealInsert = Omit<
-  Meal,
-  "uuid" | "user_id" | "created_at" | "updated_at" | "icon_id"
-> &
-  Partial<
-    Pick<Meal, "uuid" | "user_id" | "created_at" | "updated_at" | "icon_id">
-  >;
-
-export type MealProductInsert = Omit<
-  MealProduct,
-  "user_id" | "created_at" | "updated_at"
-> &
-  Partial<Pick<MealProduct, "user_id" | "created_at" | "updated_at">>;
-
-export type MealProductWithProductInsert = Omit<
-  MealProductInsert & {
-    product: Product;
-  },
-  "user_id" | "created_at" | "updated_at"
-> &
-  Partial<Pick<MealProduct, "user_id" | "created_at" | "updated_at">>;
-
-export type MealWithProductInsert = Omit<
-  MealInsert & {
-    meal_products: MealProductWithProductInsert[] | null;
-  },
-  "uuid" | "user_id" | "created_at" | "updated_at" | "icon_id"
-> &
-  Partial<
-    Pick<Meal, "uuid" | "user_id" | "created_at" | "updated_at" | "icon_id">
-  >;
-
 export type GenerativeInsert = Omit<
   Generative,
   "uuid" | "user_id" | "created_at" | "updated_at"

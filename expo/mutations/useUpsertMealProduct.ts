@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { handleError } from "@/helper";
 import {
-  MealProduct,
   MealProductInsert,
-  MealProductWithProduct,
+  MealProductBase,
   MealWithProduct,
-} from "@/types";
+  MealProduct,
+} from "@/types/meal";
 import supabase from "@/utils/supabase";
 
 export default function useUpsertMealProduct() {
@@ -14,7 +14,7 @@ export default function useUpsertMealProduct() {
 
   return useMutation({
     mutationFn: async (
-      mealProduct: MealProductInsert,
+      mealProduct: MealProductInsert
     ): Promise<MealProduct | null> => {
       const { data, error } = await supabase
         .from("meal_product")
@@ -36,7 +36,7 @@ export default function useUpsertMealProduct() {
         }
 
         // Construct a partial optimistic update for the UI
-        const optimisticProduct: Partial<MealProductWithProduct> = {
+        const optimisticProduct: Partial<MealProductBase> = {
           ...mealProductInsert,
           // We are missing the full 'product' details here.
           // The full MealContext state handles the richer optimistic update.
@@ -50,7 +50,7 @@ export default function useUpsertMealProduct() {
         // Create a new array with the optimistic product added
         const updatedMealProduct = [
           ...(meal.meal_products || []),
-          optimisticProduct as MealProductWithProduct,
+          optimisticProduct as MealProductBase,
         ];
 
         return { ...meal, meal_product: updatedMealProduct };

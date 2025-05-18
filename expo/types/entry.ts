@@ -1,7 +1,7 @@
 import { Tables } from "@/database.types";
 import { Product } from "./product";
 import { ServingData } from "@/schemas/serving";
-import { MealWithProduct } from "@/types";
+import { MealWithProduct } from "@/types/meal";
 
 type EntryTable = Tables<"entry">;
 type EntryStripped = Omit<EntryTable, "serving">;
@@ -20,7 +20,6 @@ type EntryWithMeal = EntryBase & {
 };
 
 export type Entry = EntryWithProduct | EntryWithMeal;
-
 export type EntryInsert = Omit<
   EntryTable,
   "uuid" | "user_id" | "created_at" | "updated_at"

@@ -1,8 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import supabase from "@/utils/supabase";
 
 import { handleError } from "@/helper";
-import { Meal, MealWithProduct } from "@/types";
-import supabase from "@/utils/supabase";
+import { Meal, MealWithProduct } from "@/types/meal";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function useUpdateMeal() {
   const query = useQueryClient();
@@ -27,7 +27,7 @@ export default function useUpdateMeal() {
 
       const previous = query.getQueryData<MealWithProduct[]>(["mealData"]);
       const updated = previous?.map((meal) =>
-        meal.uuid === mealUpdate.uuid ? { ...meal, ...mealUpdate } : meal,
+        meal.uuid === mealUpdate.uuid ? { ...meal, ...mealUpdate } : meal
       );
 
       query.setQueryData<MealWithProduct[]>(["mealData"], updated);

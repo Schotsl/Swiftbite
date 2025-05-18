@@ -3,13 +3,9 @@ import { RowMap } from "react-native-swipe-list-view";
 import { MacroData } from "./schemas/personal/goal";
 import { ServingData } from "./schemas/serving";
 import { Product, ProductInsert } from "@/types/product";
+import { MealWithProduct, MealProductBase } from "@/types/meal";
 import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
-import {
-  MealWithProduct,
-  MacroAbsolute,
-  OptionWithGram,
-  MealProduct,
-} from "./types";
+import { MacroAbsolute, OptionWithGram } from "./types";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
@@ -222,7 +218,7 @@ export const mapMeal = (
 ): MealWithProduct => {
   const total =
     meal.meal_products?.reduce(
-      (sum: number, item: MealProduct) => sum + item.serving.gram,
+      (sum: number, item: MealProductBase) => sum + item.serving.gram,
       0
     ) || 0;
 

@@ -1,12 +1,14 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React from "react";
+
+import { Product } from "@/types/product";
 import { ServingData } from "@/schemas/serving";
-import { MealProductInsert, MealWithProduct } from "../types";
+import { MealProductInsert, MealWithProduct } from "@/types/meal";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 import useUpdateMeal from "@/mutations/useUpdateMeal";
 import useInsertMeal from "@/mutations/useInsertMeal";
 import useUpsertMealProduct from "@/mutations/useUpsertMealProduct";
 import useDeleteMealProduct from "@/mutations/useDeleteMealProduct";
-import { Product } from "@/types/product";
 
 type MealProductTemporary = Omit<MealProductInsert, "meal_id"> & {
   meal_id: string | null;
@@ -60,8 +62,8 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       prev.map((mealProduct) =>
         mealProduct.product.uuid === product.uuid
           ? { ...mealProduct, serving }
-          : mealProduct,
-      ),
+          : mealProduct
+      )
     );
   };
 
@@ -72,13 +74,14 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         serving,
         meal_id: null,
         product: product,
+        product_id: product.uuid,
       },
     ]);
   };
 
   const removeMealProduct = (productId: string) => {
     setMealProducts((prev) =>
-      prev.filter((mealProduct) => mealProduct.product.uuid !== productId),
+      prev.filter((mealProduct) => mealProduct.product.uuid !== productId)
     );
   };
 
@@ -100,7 +103,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
         upsertMealProductMutation.mutateAsync({
           ...mealProduct,
           meal_id: uuid,
-        }),
+        })
       );
 
       await Promise.all(promiseArray);
@@ -116,7 +119,7 @@ export const MealProvider: React.FC<MealProviderProps> = ({
       upsertMealProductMutation.mutateAsync({
         ...mealProduct,
         meal_id: uuid,
-      }),
+      })
     );
 
     await Promise.all(promiseArray);

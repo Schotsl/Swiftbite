@@ -1,6 +1,6 @@
 import Item from "@/components/Item";
 
-import { MealWithProduct } from "@/types";
+import { MealWithProduct } from "@/types/meal";
 import { getMacrosFromMeal } from "@/helper";
 
 type ItemMealProps = {
