@@ -20,7 +20,7 @@ export default function ItemProduct({
   onSelect,
   ...props
 }: ItemProductProps) {
-  const icon = props.icon ? product.icon_id : undefined;
+  const icon = props.icon === false ? undefined : product.icon_id;
   const macros = serving ? getMacrosFromProduct(product, serving) : null;
 
   const overwriteTop = macros?.calories ? `${macros.calories} kcal` : null;
