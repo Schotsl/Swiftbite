@@ -7,7 +7,7 @@ import { MacroAbsolute } from "@/types";
 import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
 
 export default function useMacros(date: Date): MacroAbsolute {
-  const { data: entries } = useQuery(entryData<Entry>({ date }));
+  const { data: entries } = useQuery(entryData({ date }));
 
   const totals = useMemo(() => {
     if (!entries) {
@@ -54,7 +54,7 @@ export default function useMacros(date: Date): MacroAbsolute {
           calories: acc.calories + macro.calories,
         };
       },
-      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 },
+      { fat: 0, gram: 0, carbs: 0, protein: 0, calories: 0 }
     );
   }, [entries]);
 

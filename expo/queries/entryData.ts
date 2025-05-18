@@ -14,17 +14,14 @@ type EntryDataProps =
       date?: never;
     };
 
-export default function entryData<T extends Entry>({
-  date,
-  uuid,
-}: EntryDataProps) {
+export default function entryData({ date, uuid }: EntryDataProps) {
   return queryOptions({
     queryKey: ["entryData", getDate(date)],
-    queryFn: async (): Promise<T[]> => {
+    queryFn: async (): Promise<Entry[]> => {
       const query = supabase
         .from("entry")
         .select(
-          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`,
+          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`
         )
         .order("created_at", { ascending: false });
 
@@ -54,8 +51,9 @@ export default function entryData<T extends Entry>({
         return entry;
       });
 
-      return dataMapped as T[];
+      return dataMapped || [];
     },
+    refetchInterval: 60000,
   });
 }
 

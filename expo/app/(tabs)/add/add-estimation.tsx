@@ -35,7 +35,7 @@ export default function Add2Preview() {
 
   const { data: entry } = useQuery({
     // Less than ideal but if the query is enabled we know that the entryId is defined
-    ...entryData<Entry>({ uuid: entryId as string }),
+    ...entryData({ uuid: entryId as string }),
     select: (entries) => entries[0],
     enabled: !!entryId,
   });

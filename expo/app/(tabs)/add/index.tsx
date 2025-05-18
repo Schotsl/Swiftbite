@@ -25,7 +25,7 @@ export default function Index() {
   const [interval, setInterval] = useState<number | false>(1000);
 
   const { data, isLoading } = useQuery({
-    ...entryData<Entry>({ date }),
+    ...entryData({ date }),
     refetchInterval: interval,
   });
 
@@ -121,7 +121,7 @@ function IndexList({
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data
