@@ -120,32 +120,34 @@ export default function Item({
                 justifyContent: "flex-start",
               }}
             >
-              <View
-                style={{
-                  width: 13,
-                  height: 13,
-                  justifyContent: "center",
-                }}
-              >
-                {subtitleLoading ? (
-                  <ActivityIndicator
-                    size="small"
-                    style={{ transform: [{ scale: 0.65 }], opacity: 0.75 }}
-                    color="#000000"
-                  />
-                ) : (
-                  <Fragment>
-                    {subtitleIcon && (
-                      <FontAwesome6
-                        name={subtitleIcon}
-                        size={12}
-                        style={{ opacity: 0.75 }}
-                        color="#545454"
-                      />
-                    )}
-                  </Fragment>
-                )}
-              </View>
+              {(subtitleIcon || subtitleLoading) && (
+                <View
+                  style={{
+                    width: 13,
+                    height: 13,
+                    justifyContent: "center",
+                  }}
+                >
+                  {subtitleLoading ? (
+                    <ActivityIndicator
+                      size="small"
+                      style={{ transform: [{ scale: 0.65 }], opacity: 0.75 }}
+                      color="#000000"
+                    />
+                  ) : (
+                    <Fragment>
+                      {subtitleIcon && (
+                        <FontAwesome6
+                          name={subtitleIcon}
+                          size={12}
+                          style={{ opacity: 0.75 }}
+                          color="#545454"
+                        />
+                      )}
+                    </Fragment>
+                  )}
+                </View>
+              )}
 
               <Text
                 style={{
