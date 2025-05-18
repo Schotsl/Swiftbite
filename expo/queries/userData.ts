@@ -1,6 +1,6 @@
 import supabase from "@/utils/supabase";
 
-import { User } from "@/types";
+import { User } from "@/types/user";
 import { Weight } from "@/schemas/personal/health";
 import { handleError } from "@/helper";
 import { queryOptions } from "@tanstack/react-query";

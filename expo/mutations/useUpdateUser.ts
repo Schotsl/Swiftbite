@@ -1,4 +1,4 @@
-import { User } from "@/types";
+import { User } from "@/types/user";
 import { handleError } from "@/helper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 

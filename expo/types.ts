@@ -34,23 +34,6 @@ export enum CameraSelected {
 
 export type Generative = Tables<"generative">;
 
-export type UserBase = Tables<"user">;
-export type UserSetup = UserBase;
-export type User = Omit<UserBase, "birth" | "weight" | "macro"> & {
-  total: number;
-  email: string;
-  birth: Date;
-  macro: MacroData;
-  weight: Weight[];
-  length: number;
-  language: string;
-  calories: number;
-  last_name: string;
-  first_name: string;
-  favorite_meals: string[];
-  favorite_products: string[];
-};
-
 export type EntryBase = Tables<"entry">;
 export type Entry = Omit<EntryBase, "serving"> & {
   serving: ServingData | null;
