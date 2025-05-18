@@ -1,7 +1,8 @@
-import { supabase } from "./supabase";
-import { generateEmbedding } from "./openai";
-import { Product } from "@/types";
 import { Enums } from "@/database.types";
+import { Product } from "@/types";
+import { supabase } from "./supabase";
+import { handleError } from "@/helper";
+import { generateEmbedding } from "./openai";
 
 export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
   const timeStart = performance.now();
@@ -38,7 +39,7 @@ export const googleRequest = async (query: string, signal: AbortSignal) => {
 export const openfoodRequest = async (
   query: string,
   lang: string,
-  signal: AbortSignal,
+  signal: AbortSignal
 ) => {
   const timeStart = performance.now();
 
@@ -100,8 +101,7 @@ export const openfoodRequest = async (
     const brandsCombined = [...brands, ...brandsTags];
     const brandsUnique = brandsCombined.filter(
       (brand, index, self) =>
-        index ===
-        self.findIndex((t) => t.toLowerCase() === brand.toLowerCase()),
+        index === self.findIndex((t) => t.toLowerCase() === brand.toLowerCase())
     );
 
     delete item.brands_tags;
@@ -120,17 +120,19 @@ export const openfoodRequest = async (
 
 export const supabaseRequest = async (
   value: string,
-  type: Enums<"type">,
+  type: Enums<"type">
 ): Promise<Product[]> => {
   const vector = await generateEmbedding({ value });
 
-  const { data: results } = await supabase.rpc("product_match", {
+  const { data, error } = await supabase.rpc("product_match", {
     query_embedding: vector,
     query_type: type,
-    match_threshold: 0.25,
+    match_threshold: 0.5,
     match_count: 8,
   });
 
-  const resultsSafe = results || [];
+  handleError(error);
+
+  const resultsSafe = data || [];
   return resultsSafe;
 };
