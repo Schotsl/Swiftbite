@@ -1,5 +1,6 @@
 import { Tables } from "@/database.types";
 import { handleError } from "@/helper";
+import { EntryInsert } from "@/types";
 import { createClient as createClientSupabase } from "@supabase/supabase-js";
 
 export const supabase = createClientSupabase(
@@ -102,6 +103,15 @@ export const fetchGenerative = async (
   return data;
 };
 
+export const fetchRepeat = async (): Promise<Tables<"repeat">[]> => {
+  const { data, error } = await supabase.from("repeat").select("*");
+
+  handleError(error);
+
+  const repeats = data || [];
+  return repeats;
+};
+
 export const fetchIcon = async (title: string) => {
   const { error, data } = await supabase
     .from("icon")
@@ -139,6 +149,17 @@ export const uploadIcon = async (uuid: string, array: Uint8Array) => {
   });
 
   handleError(error);
+};
+
+export const insertEntry = async (entry: EntryInsert) => {
+  const { error, data } = await supabase
+    .from("entry")
+    .insert(entry)
+    .select("*");
+
+  handleError(error);
+
+  return data;
 };
 
 export const insertIcon = async (title: string) => {

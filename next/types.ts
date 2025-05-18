@@ -12,6 +12,7 @@ export type ServingData = {
   option: string;
   quantity: number;
 };
+
 export type ProductBase = Tables<"product">;
 export type Product = Omit<
   ProductBase,
@@ -27,3 +28,6 @@ export type ProductInsert = Omit<
   Product,
   "uuid" | "options" | "user_id" | "created_at" | "updated_at"
 >;
+
+export type Entry = Tables<"entry">;
+export type EntryInsert = Omit<Entry, "uuid" | "created_at" | "updated_at">;
