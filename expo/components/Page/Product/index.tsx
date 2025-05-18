@@ -1,17 +1,17 @@
 import { useForm } from "react-hook-form";
 import { Product } from "@/types/product";
 import { useQuery } from "@tanstack/react-query";
+import { getOptions } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { ScrollView, Text, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
-import { getMacrosFromProduct, getOptions } from "@/helper";
+import { isProductFavorite, toggleProductFavorite } from "@/helper";
 import {
   ProductPageData,
   productPageSchema,
   ServingData,
 } from "@/schemas/serving";
-import { isProductFavorite, toggleProductFavorite } from "@/helper";
 
 import userData from "@/queries/userData";
 import useUpdateUser from "@/mutations/useUpdateUser";
@@ -153,8 +153,6 @@ export default function PageProduct({
     return { option, quantity, gram };
   }, [option, quantity, options]);
 
-  const macros = getMacrosFromProduct(product, serving);
-
   return (
     <View>
       <ScrollView>
@@ -213,7 +211,7 @@ export default function PageProduct({
             </View>
           )}
 
-          <ProductImpact {...macros} />
+          <ProductImpact product={product} serving={serving} />
 
           <ProductNutrition product={product} serving={serving} />
         </View>

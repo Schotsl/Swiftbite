@@ -5,7 +5,6 @@ import PageEstimationManual from "@/components/Page/Estimation/Manual";
 import PageEstimationAutomatic from "@/components/Page/Estimation/Automatic";
 
 import { View } from "react-native";
-import { Entry } from "@/types/entry";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";

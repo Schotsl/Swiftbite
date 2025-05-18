@@ -1,17 +1,12 @@
 import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { MealWithProduct } from "@/types/meal";
 import { ScrollView, Text, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
-import {
-  getMacrosFromMeal,
-  getOptions,
-  isMealFavorite,
-  toggleMealFavorite,
-} from "@/helper";
 import { MealPageData, mealPageSchema, ServingData } from "@/schemas/serving";
-import { useQuery } from "@tanstack/react-query";
+import { getOptions, isMealFavorite, toggleMealFavorite } from "@/helper";
 
 import userData from "@/queries/userData";
 import useUpdateUser from "@/mutations/useUpdateUser";
@@ -135,8 +130,6 @@ export default function PageMeal({
     return { option, quantity, gram };
   }, [option, quantity, options]);
 
-  const macros = getMacrosFromMeal(meal);
-
   return (
     <View>
       <ScrollView>
@@ -194,7 +187,7 @@ export default function PageMeal({
             </View>
           )}
 
-          <ProductImpact {...macros} />
+          <ProductImpact meal={meal} serving={serving} />
         </View>
       </ScrollView>
 

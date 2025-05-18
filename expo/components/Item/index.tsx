@@ -4,7 +4,6 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { Href, router } from "expo-router";
 import { useState, Fragment } from "react";
 import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
-import { opacity } from "react-native-reanimated/lib/typescript/Colors";
 
 type BaseProps = {
   title: string;

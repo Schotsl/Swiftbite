@@ -1,24 +1,43 @@
 import Progress from "@/components/Progress";
-import { macroToAbsolute } from "@/helper";
 import userData from "@/queries/userData";
 
-import { Macro } from "@/types";
+import { Product } from "@/types/product";
+import { ServingData } from "@/schemas/serving";
+import { MealWithProduct } from "@/types/meal";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Fragment, Suspense } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
+import {
+  getMacrosFromMeal,
+  getMacrosFromProduct,
+  macroToAbsolute,
+} from "@/helper";
 
-type ProductImpactProps = Macro;
+type ProductImpactProps =
+  | {
+      meal?: never;
+      product: Product;
+      serving: ServingData;
+    }
+  | {
+      meal: MealWithProduct;
+      product?: never;
+      serving: ServingData;
+    };
 
 export default function ProductImpact({
-  fat,
-  carbs,
-  protein,
-  calories,
+  meal,
+  product,
+  serving,
 }: ProductImpactProps) {
   const { data } = useSuspenseQuery(userData());
   const { calories: userCalories, macro: userMacro } = data!;
 
-  const macrosAbsolute = macroToAbsolute(userMacro, userCalories);
+  const macros = product
+    ? getMacrosFromProduct(product, serving)
+    : getMacrosFromMeal(meal);
+
+  const macrosTarget = macroToAbsolute(userMacro, userCalories);
 
   return (
     <View>
@@ -56,15 +75,15 @@ export default function ProductImpact({
             >
               <Progress
                 label="Calorieën"
-                value={calories}
-                target={macrosAbsolute.calories}
+                value={macros.calories}
+                target={macrosTarget.calories}
                 type="kcal"
               />
 
               <Progress
                 label="Eiwitten"
-                value={protein}
-                target={macrosAbsolute.protein}
+                value={macros.protein}
+                target={macrosTarget.protein}
               />
             </View>
 
@@ -76,14 +95,14 @@ export default function ProductImpact({
             >
               <Progress
                 label="Carbs"
-                value={carbs}
-                target={macrosAbsolute.carbs}
+                value={macros.carbs}
+                target={macrosTarget.carbs}
               />
 
               <Progress
                 label="Vetten"
-                value={fat}
-                target={macrosAbsolute.fat}
+                value={macros.fat}
+                target={macrosTarget.fat}
               />
             </View>
           </Fragment>
