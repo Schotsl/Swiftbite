@@ -10,19 +10,20 @@ import { ManualData, manualSchema } from "@/schemas/insert/manual";
 import Input from "@/components/Input";
 import Header from "@/components/Header";
 import ButtonOverlay from "@/components/Button/Overlay";
-
-import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useUpdateProduct from "@/mutations/useUpdateProduct";
+
 import { ScrollView } from "react-native-gesture-handler";
 import { ServingData } from "@/schemas/serving";
 
 export default function PageEstimationManual({
   product,
+  onSave,
   onDelete,
   onRepeat,
 }: {
   product?: Product;
+  onSave: (product: Product, serving: ServingData, created: Date) => void;
   onDelete?: () => void;
   onRepeat?: (serving: ServingData) => void;
 }) {
@@ -30,7 +31,6 @@ export default function PageEstimationManual({
 
   const [saving, setSaving] = useState(false);
 
-  const insertEntry = useInsertEntry();
   const insertProduct = useInsertProduct();
   const updateProduct = useUpdateProduct();
 
@@ -104,13 +104,7 @@ export default function PageEstimationManual({
       ...data,
     });
 
-    await insertEntry.mutateAsync({
-      serving,
-      meal_id: null,
-      product_id: insert.uuid,
-    });
-
-    router.replace("/");
+    onSave(insert, serving, new Date());
   };
 
   return (

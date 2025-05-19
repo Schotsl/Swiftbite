@@ -13,11 +13,17 @@ type PageEstimationProps = {
   product?: Product;
   onDelete?: () => void;
   onRepeat?: (serving: ServingData) => void;
+  onSave?: (
+    product: Product,
+    serving: ServingData | null,
+    created: Date
+  ) => void;
 };
 
 export default function PageEstimation({
   image,
   product,
+  onSave,
   onDelete,
   onRepeat,
 }: PageEstimationProps) {
@@ -43,10 +49,11 @@ export default function PageEstimation({
       )}
 
       {tab === "automatic" ? (
-        <PageEstimationAutomatic />
+        <PageEstimationAutomatic onSave={onSave} />
       ) : (
         <PageEstimationManual
           product={product}
+          onSave={onSave}
           onDelete={onDelete}
           onRepeat={onRepeat}
         />

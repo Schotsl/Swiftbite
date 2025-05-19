@@ -8,15 +8,12 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import PageEstimation from "@/components/Page/Estimation";
-import useUpdateEntry from "@/mutations/useUpdateEntry";
-import { Product } from "@/types/product";
 
-export default function Add2Preview() {
+export default function AutomationsRepeatUpsertEstimation() {
   const router = useRouter();
 
   const deleteEntry = useDeleteEntry();
   const insertEntry = useInsertEntry();
-  const updateEntry = useUpdateEntry();
 
   const {
     uri,
@@ -39,35 +36,6 @@ export default function Add2Preview() {
 
   const image = transformImage(uri, width, height);
   const product = entry?.product;
-
-  const handleSave = async (
-    returnedProduct: Product,
-    returnedServing: ServingData | null,
-    returnedCreated: Date
-  ) => {
-    if (entry) {
-      // If we have a existing entry we'll update it
-      await updateEntry.mutateAsync({
-        ...entry,
-        serving: returnedServing,
-        created_at: returnedCreated,
-      });
-
-      router.replace("/");
-
-      return;
-    }
-
-    // Otherwise we'll create a new entry
-    await insertEntry.mutateAsync({
-      meal_id: null,
-      serving: returnedServing,
-      product_id: returnedProduct.uuid,
-      created_at: returnedCreated,
-    });
-
-    router.replace("/");
-  };
 
   const handleDelete = async () => {
     if (!product) {
@@ -97,7 +65,6 @@ export default function Add2Preview() {
     <PageEstimation
       image={image}
       product={product}
-      onSave={handleSave}
       onDelete={product ? handleDelete : undefined}
       onRepeat={product ? handleRepeat : undefined}
     />

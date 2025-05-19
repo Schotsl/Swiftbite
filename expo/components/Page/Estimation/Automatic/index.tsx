@@ -7,7 +7,11 @@ import { useIsFocused } from "@react-navigation/native";
 import { ImageManipulator } from "expo-image-manipulator";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { EstimationData, estimationSchema } from "@/schemas/serving";
+import {
+  EstimationData,
+  estimationSchema,
+  ServingData,
+} from "@/schemas/serving";
 import { handleError, renderToBase64, transformImage } from "@/helper";
 
 import supabase from "@/utils/supabase";
@@ -15,12 +19,22 @@ import supabase from "@/utils/supabase";
 import Input from "@/components/Input";
 import Header from "@/components/Header";
 import EstimationImage from "@/components/Estimation/Image";
-import useInsertEntry from "@/mutations/useInsertEntry";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useInsertGenerative from "@/mutations/useInsertGenerative";
 import ButtonOverlay from "@/components/Button/Overlay";
+import { Product } from "@/types/product";
 
-export default function PageEstimationAutomatic() {
+type PageEstimationAutomaticProps = {
+  onSave: (
+    product: Product,
+    serving: ServingData | null,
+    created: Date
+  ) => void;
+};
+
+export default function PageEstimationAutomatic({
+  onSave,
+}: PageEstimationAutomaticProps) {
   const focus = useIsFocused();
   const router = useRouter();
 
@@ -37,7 +51,6 @@ export default function PageEstimationAutomatic() {
   const [smallImage, setSmallImage] = useState<string | null>(null);
   const [largeImage, setLargeImage] = useState<string | null>(null);
 
-  const insertEntry = useInsertEntry();
   const insertProduct = useInsertProduct();
   const insertGenerative = useInsertGenerative();
 
@@ -138,24 +151,16 @@ export default function PageEstimationAutomatic() {
       sodium_100g: null,
     });
 
-    const entryPromise = insertEntry.mutateAsync({
-      meal_id: null,
-      product_id: product.uuid,
-      serving: null,
-    });
-
-    const generativePromise = insertGenerative.mutateAsync({
+    const generative = await insertGenerative.mutateAsync({
       image: !!image,
       content: data.content ?? null,
       product_id: product.uuid,
     });
 
-    const [generative] = await Promise.all([generativePromise, entryPromise]);
-
     if (!image) {
       console.log("[DEVICE] No image has been selected so skipping upload");
 
-      router.replace("/");
+      onSave(product, null, new Date());
 
       return;
     }
@@ -167,7 +172,7 @@ export default function PageEstimationAutomatic() {
 
     console.log("[DEVICE] All images uploaded");
 
-    router.replace("/");
+    onSave(product, null, new Date());
   };
 
   const uploadImage = async (name: string, base64: string) => {
