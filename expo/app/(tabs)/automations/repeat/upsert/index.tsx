@@ -1,18 +1,19 @@
 import Header from "@/components/Header";
-import InputLabel from "@/components/Input/Label";
 import InputTime from "@/components/Input/Time";
+import InputLabel from "@/components/Input/Label";
+import EmptySmall from "@/components/Empty/Small";
+import ButtonSmall from "@/components/Button/Small";
+import ItemProduct from "@/components/Item/Product";
 import InputWeekday from "@/components/Input/Weekday";
 import ButtonOverlay from "@/components/Button/Overlay";
 
+import { View } from "react-native";
 import { useForm } from "react-hook-form";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
-import { Text, TouchableOpacity, View } from "react-native";
-import ButtonSmall from "@/components/Button/Small";
-import ItemProduct from "@/components/Item/Product";
 
 export default function AutomationRepeatUpsert() {
   const router = useRouter();
@@ -75,6 +76,19 @@ export default function AutomationRepeatUpsert() {
     setIsDeleting(false);
   };
 
+  const handleSelect = (product: string) => {
+    router.push({
+      pathname: `/(tabs)/automations/repeat/upsert/product`,
+      params: { product },
+    });
+  };
+
+  const handleSearch = () => {
+    router.push({
+      pathname: `/(tabs)/automations/repeat/upsert/search`,
+    });
+  };
+
   return (
     <View style={{ padding: 32 }}>
       <Header
@@ -93,57 +107,31 @@ export default function AutomationRepeatUpsert() {
             <View>
               <InputLabel label="Ingrediënt" />
 
-              {product && serving ? (
-                <View
-                  style={{
-                    marginTop: 2,
-                    borderWidth: 2,
-                    borderColor: "#000",
-                    borderRadius: 8,
-                    overflow: "hidden",
-                  }}
-                >
+              <View
+                style={{
+                  overflow: "hidden",
+                  marginTop: 2,
+                  borderWidth: 2,
+                  borderColor: "#000",
+                  borderRadius: 8,
+                }}
+              >
+                {product && serving ? (
                   <ItemProduct
                     icon={false}
                     small={true}
                     border={false}
                     product={product}
                     serving={serving}
-                    onSelect={() => {
-                      router.push("/(tabs)/automations/repeat/upsert/product");
-                    }}
+                    onSelect={handleSelect}
                   />
-                </View>
-              ) : (
-                // TODO: Make a empty state component
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() =>
-                    router.push("/(tabs)/automations/repeat/upsert/search")
-                  }
-                  style={{
-                    height: 80,
-                    borderWidth: 2,
-                    borderColor: "#000",
-                    borderRadius: 8,
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      opacity: 0.25,
-                      maxWidth: 200,
-                      textAlign: "center",
-
-                      fontSize: 14,
-                      fontWeight: "semibold",
-                    }}
-                  >
-                    Nog geen ingrediënt geselecteerd
-                  </Text>
-                </TouchableOpacity>
-              )}
+                ) : (
+                  <EmptySmall
+                    content="Je hebt nog geen ingrediënt geselecteerd"
+                    onPress={handleSearch}
+                  />
+                )}
+              </View>
             </View>
 
             <ButtonSmall
@@ -151,9 +139,7 @@ export default function AutomationRepeatUpsert() {
               title={
                 product && serving ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"
               }
-              onPress={() => {
-                router.push("/(tabs)/automations/repeat/upsert/search");
-              }}
+              onPress={handleSearch}
             />
           </View>
         </View>

@@ -8,13 +8,10 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Fragment, Suspense, useState } from "react";
 import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import {
+  macrosToCalories,
   getMacrosFromMeal,
   getMacrosFromProduct,
-  getOptions,
-  macroToAbsolute,
 } from "@/helper";
-import { MacroData } from "@/schemas/personal/goal";
-import { Macro } from "@/types";
 
 type ProductImpactProps =
   | {
@@ -28,34 +25,6 @@ type ProductImpactProps =
       serving: ServingData;
     };
 
-export const macroToCalories = (
-  type: keyof MacroData,
-  value: number,
-  calories: number
-) => {
-  let divider = 4;
-
-  if (type === "protein") {
-    divider = 4;
-  } else if (type === "fat") {
-    divider = 9;
-  }
-
-  const grams = (calories * value) / divider;
-  const gramsRounded = Math.round(grams);
-
-  return gramsRounded;
-};
-
-export const macrosToCalories = (macro: MacroData, calories: number): Macro => {
-  return {
-    fat: macroToCalories("fat", macro.fat, calories),
-    carbs: macroToCalories("carbs", macro.carbs, calories),
-    protein: macroToCalories("protein", macro.protein, calories),
-    calories: calories,
-  };
-};
-
 export default function ProductImpact({
   meal,
   product,
@@ -65,9 +34,6 @@ export default function ProductImpact({
 
   const { data } = useSuspenseQuery(userData());
   const { calories: userCalories, macro: userMacro } = data!;
-
-  const options = getOptions({ meal, product });
-  const option = options.find((option) => option.value === serving.option);
 
   const servingAdjusted = per100
     ? {
@@ -81,7 +47,7 @@ export default function ProductImpact({
     ? getMacrosFromProduct(product, servingAdjusted)
     : getMacrosFromMeal(meal, servingAdjusted);
 
-  const target = macroToAbsolute(userMacro, userCalories);
+  const target = macrosToCalories(userMacro, userCalories);
 
   const handleSwitch = () => {
     setPer100((previous) => !previous);
@@ -108,7 +74,7 @@ export default function ProductImpact({
               textDecorationLine: "underline",
             }}
           >
-            {per100 ? "Per 100g" : `Per ${serving.quantity} ${option?.title}`}
+            {per100 ? "Per 100g" : `Per ${servingAdjusted.gram}g`}
           </Text>
         </TouchableOpacity>
       </View>

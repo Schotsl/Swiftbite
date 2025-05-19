@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ServingData } from "@/schemas/serving";
 import { MealWithProduct } from "@/types/meal";
 import { View, Text, TouchableOpacity } from "react-native";
-import { getMacrosFromMeal, getMacrosFromProduct, getOptions } from "@/helper";
+import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
 
 type ProductNutritionProps =
   | {
@@ -23,9 +23,6 @@ export default function ProductNutrition({
   serving,
 }: ProductNutritionProps) {
   const [per100, setPer100] = useState(false);
-
-  const options = getOptions({ meal, product });
-  const option = options.find((option) => option.value === serving.option);
 
   const servingAdjusted = per100
     ? {
@@ -107,7 +104,7 @@ export default function ProductNutrition({
               textDecorationLine: "underline",
             }}
           >
-            {per100 ? "Per 100g" : `Per ${serving.quantity} ${option?.title}`}
+            {per100 ? "Per 100g" : `Per ${servingAdjusted.gram}g`}
           </Text>
         </TouchableOpacity>
       </View>

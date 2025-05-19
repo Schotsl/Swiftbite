@@ -2,10 +2,10 @@ import { View } from "react-native";
 import { Entry } from "@/types/entry";
 import { router } from "expo-router";
 import { Product } from "@/types/product";
-import { useQuery } from "@tanstack/react-query";
 import { ScrollView } from "react-native-gesture-handler";
 import { SwipeListView } from "react-native-swipe-list-view";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { Suspense, useEffect, useMemo, useState } from "react";
 
 import entryData from "@/queries/entryData";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
@@ -19,12 +19,13 @@ import ItemHeader from "@/components/Item/Header";
 import ItemDelete from "@/components/Item/Delete";
 import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
+import ItemMeal from "@/components/Item/Meal";
 
-export default function Index() {
+export default function Add() {
   const [date, setDate] = useState<Date>(new Date());
   const [interval, setInterval] = useState<number | false>(1000);
 
-  const { data, isLoading } = useQuery({
+  const { data } = useSuspenseQuery({
     ...entryData({ date }),
     refetchInterval: interval,
   });
@@ -70,22 +71,30 @@ export default function Index() {
         <HeaderTitle>Logs</HeaderTitle>
       </View>
 
-      <IndexList entries={data || []} loading={isLoading} />
+      <Suspense fallback={<AddListLoading />}>
+        <AddList entries={data} />
+      </Suspense>
     </ScrollView>
   );
 }
 
-function IndexList({
-  entries,
-  loading,
-}: {
+type AddListProps = {
   entries: Entry[];
-  loading: boolean;
-}) {
+};
+
+function AddList({ entries }: AddListProps) {
   const deleteEntry = useDeleteEntry();
 
   const handleDelete = (uuid: string) => {
     deleteEntry.mutate(uuid);
+  };
+
+  const handleSelect = (entry: string, type: "product" | "meal") => {
+    router.push({
+      params: { entry },
+      pathname:
+        type === "product" ? "/(tabs)/add/add-product" : "/(tabs)/add/add-meal",
+    });
   };
 
   const sections = useMemo(() => {
@@ -152,69 +161,28 @@ function IndexList({
     return sectionsFiltered;
   }, [entries]);
 
-  if (!loading) {
-    return (
-      <SwipeListView
-        style={{ marginBottom: -2 }}
-        sections={sections}
-        renderItem={({ item }) => {
-          return item.product ? (
-            <ItemProduct
-              product={item.product as Product}
-              serving={item.serving}
-              onSelect={() => {
-                router.push({
-                  pathname:
-                    item.product?.type === "manual"
-                      ? "/(tabs)/add/add-estimation"
-                      : "/(tabs)/add/add-product",
-                  params: {
-                    entry: item.uuid,
-                  },
-                });
-              }}
-            />
-          ) : (
-            // <ItemMeal
-            //   // meal={item.meal!}
-            //   onPress={() => {
-            //     router.push({
-            //       pathname: "/(tabs)/add/add-meal",
-            //       params: { entry: item.uuid },
-            //     });
-            //   }}
-            // />
-            <Fragment />
-          );
-        }}
-        renderHiddenItem={({ item }) => (
-          <ItemDelete onDelete={() => handleDelete(item.uuid)} />
-        )}
-        renderSectionHeader={({ section }) => (
-          <ItemHeader title={section.title} subtitle={section.subtitle} />
-        )}
-        scrollEnabled={false}
-        rightOpenValue={-75}
-        useSectionList
-        disableRightSwipe
-      />
-    );
-  }
-
   return (
     <SwipeListView
       style={{ marginBottom: -2 }}
-      sections={[
-        {
-          title: "Morning",
-          subtitle: "06:00 - 12:00",
-          startHour: 6,
-          data: [1, 2, 3, 4],
-        },
-      ]}
+      sections={sections}
       renderItem={({ item }) => {
-        return <ItemSkeleton />;
+        return item.product ? (
+          <ItemProduct
+            product={item.product as Product}
+            serving={item.serving}
+            onSelect={() => handleSelect(item.uuid, "product")}
+          />
+        ) : (
+          <ItemMeal
+            meal={item.meal}
+            serving={item.serving}
+            onSelect={() => handleSelect(item.uuid, "meal")}
+          />
+        );
       }}
+      renderHiddenItem={({ item }) => (
+        <ItemDelete onDelete={() => handleDelete(item.uuid)} />
+      )}
       renderSectionHeader={({ section }) => (
         <ItemHeader title={section.title} subtitle={section.subtitle} />
       )}
@@ -223,5 +191,17 @@ function IndexList({
       useSectionList
       disableRightSwipe
     />
+  );
+}
+
+function AddListLoading() {
+  return (
+    <View>
+      <ItemHeader title="Morning" subtitle="06:00 - 12:00" />
+      <ItemSkeleton />
+      <ItemSkeleton />
+      <ItemSkeleton />
+      <ItemSkeleton />
+    </View>
   );
 }

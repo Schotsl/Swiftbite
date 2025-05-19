@@ -5,10 +5,10 @@ import { getMacrosFromProduct } from "@/helper";
 
 type RepeatRepeatProps = {
   item: Repeat;
-  onPress: () => void;
+  onSelect: (repeat: string) => void;
 };
 
-export default function ItemRepeat({ item, onPress }: RepeatRepeatProps) {
+export default function ItemRepeat({ item, onSelect }: RepeatRepeatProps) {
   const translations = {
     monday: "ma",
     sunday: "zo",
@@ -33,12 +33,11 @@ export default function ItemRepeat({ item, onPress }: RepeatRepeatProps) {
   return (
     <Item
       title={item.product?.title ?? item.meal?.title ?? ""}
-      iconId={item.product?.icon_id ?? item.meal?.icon_id}
       subtitle={`Herhaald elke ${translationsJoined}`}
       subtitleIcon="repeat"
       rightTop={macros.calories ? `${macros.calories} kcal` : null}
       rightBottom={macros.gram ? `${macros.gram} g` : null}
-      onPress={onPress}
+      onPress={() => onSelect(item.uuid)}
     />
   );
 }

@@ -2,32 +2,36 @@ import Item from "@/components/Item";
 
 import { MealWithProduct } from "@/types/meal";
 import { getMacrosFromMeal } from "@/helper";
+import { ServingData } from "@/schemas/serving";
 
 type ItemMealProps = {
   meal: MealWithProduct;
+  serving?: ServingData | null;
 
   icon?: boolean;
   border?: boolean;
 
-  onPress: () => void;
+  onSelect: (meal: string) => void;
 };
 
 export default function ItemMeal({
   meal,
-
+  serving,
   icon = true,
   border = true,
 
-  onPress,
+  onSelect,
 }: ItemMealProps) {
   const length = meal.meal_products?.length || 0;
-  const serving = {
-    gram: meal.quantity_gram,
-    quantity: 1,
-    option: "meal",
-  };
+  const adjusted = serving
+    ? serving
+    : {
+        gram: meal.quantity_gram,
+        quantity: 1,
+        option: "meal",
+      };
 
-  const macros = getMacrosFromMeal(meal, serving);
+  const macros = getMacrosFromMeal(meal, adjusted);
 
   return (
     <Item
@@ -38,7 +42,7 @@ export default function ItemMeal({
       subtitleIcon="bowl-food"
       rightTop={macros.calories ? `${macros.calories} kcal` : null}
       rightBottom={macros.gram ? `${macros.gram} g` : null}
-      onPress={onPress}
+      onPress={() => onSelect(meal.uuid)}
     />
   );
 }

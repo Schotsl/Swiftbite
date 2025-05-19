@@ -1,21 +1,36 @@
 import Tabs from "@/components/Tabs";
+import Empty from "@/components/Empty";
 import repeatData from "@/queries/repeatData";
+import useDeleteRepeat from "@/mutations/useDeleteRepeat";
+
 import ItemDelete from "@/components/Item/Delete";
 import ItemRepeat from "@/components/Item/Repeat";
+import ItemSkeleton from "@/components/Item/Skeleton";
 
 import { View } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { Suspense } from "react";
+import { rowTimeout } from "@/helper";
 import { SwipeListView } from "react-native-swipe-list-view";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "expo-router";
 
-export default function Tab() {
+export default function AutomationsRepeat() {
   const path = usePathname();
   const router = useRouter();
 
-  const { data } = useQuery(repeatData());
+  const { data } = useSuspenseQuery(repeatData());
+
+  const deleteRepeat = useDeleteRepeat();
 
   const handleDelete = (uuid: string) => {
-    // TODO: Implement delete
+    deleteRepeat.mutate(uuid);
+  };
+
+  const handleSelect = (repeat: string) => {
+    router.push({
+      pathname: `/(tabs)/automations/repeat/upsert`,
+      params: { repeat },
+    });
   };
 
   return (
@@ -33,34 +48,38 @@ export default function Tab() {
         ]}
       />
 
-      <SwipeListView
-        data={data}
-        keyExtractor={(item) => item.uuid}
-        renderItem={({ item }) => (
-          <ItemRepeat
-            item={item}
-            onPress={() => {
-              router.push({
-                pathname: `/(tabs)/automations/repeat/upsert`,
-                params: {
-                  repeat: item.uuid,
-                },
-              });
-            }}
-          />
-        )}
-        renderHiddenItem={({ item }) => (
-          <ItemDelete onDelete={() => handleDelete(item.uuid)} />
-        )}
-        onRowDidOpen={(rowKey, rowMap) => {
-          setTimeout(() => {
-            rowMap[rowKey]?.closeRow();
-          }, 500);
-        }}
-        rightOpenValue={-75}
-        useNativeDriver
-        disableRightSwipe
-      />
+      <Suspense fallback={<AutomationsRepeatLoading />}>
+        <SwipeListView
+          data={data}
+          keyExtractor={(item) => item.uuid}
+          ListEmptyComponent={<AutomationsRepeatEmpty />}
+          renderItem={({ item }) => (
+            <ItemRepeat item={item} onSelect={handleSelect} />
+          )}
+          renderHiddenItem={({ item }) => (
+            <ItemDelete onDelete={() => handleDelete(item.uuid)} />
+          )}
+          onRowDidOpen={rowTimeout}
+          rightOpenValue={-75}
+          useNativeDriver={true}
+          disableRightSwipe={true}
+        />
+      </Suspense>
     </View>
   );
+}
+
+function AutomationsRepeatLoading() {
+  return (
+    <View>
+      <ItemSkeleton />
+      <ItemSkeleton />
+      <ItemSkeleton />
+      <ItemSkeleton />
+    </View>
+  );
+}
+
+function AutomationsRepeatEmpty() {
+  return <Empty emoji="🔁" content="Je hebt nog geen herhalingen toegevoegd" />;
 }

@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Text, View } from "react-native";
 import { transformDate } from "@/helper";
 import { Control, useController } from "react-hook-form";
+import EmptySmall from "@/components/Empty/Small";
 
 type InputWeightsProps = {
   name: string;
@@ -70,44 +71,16 @@ export default function InputWeights({
       <Label label={label} />
 
       <View style={{ marginTop: -12 }}>
-        {sorted.map((entry: Weight, index: number) => (
-          <View
-            key={index}
-            style={{
-              alignItems: "center",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              paddingVertical: 12,
-
-              borderColor: "#000",
-              borderBottomWidth: 2,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              {entry.weight.toFixed(1)} kg
-            </Text>
-
-            <Text
-              style={{
-                fontSize: 18,
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              {transformDate(entry.date)}
-            </Text>
-
-            <ButtonSmall
-              icon="trash"
-              onPress={() => handleDelete(index)}
-              nano
-            />
-          </View>
-        ))}
+        {sorted.length === 0 ? (
+          <EmptySmall
+            left={true}
+            style={{ marginBottom: -12 }}
+            content="Je hebt nog geen gewicht aan je account toegevoegd"
+            onPress={handleOpen}
+          />
+        ) : (
+          <InputWeightsList weights={sorted} onDelete={handleDelete} />
+        )}
 
         <View
           style={{
@@ -140,6 +113,52 @@ export default function InputWeights({
           ))}
         </Picker>
       </Modal>
+    </View>
+  );
+}
+
+type InputWeightsListProps = {
+  weights: Weight[];
+  onDelete: (index: number) => void;
+};
+
+function InputWeightsList({ weights, onDelete }: InputWeightsListProps) {
+  return (
+    <View>
+      {weights.map((entry: Weight, index: number) => (
+        <View
+          key={index}
+          style={{
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingVertical: 12,
+
+            borderColor: "#000",
+            borderBottomWidth: 2,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: "OpenSans_400Regular",
+            }}
+          >
+            {entry.weight.toFixed(1)} kg
+          </Text>
+
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: "OpenSans_400Regular",
+            }}
+          >
+            {transformDate(entry.date)}
+          </Text>
+
+          <ButtonSmall icon="trash" onPress={() => onDelete(index)} nano />
+        </View>
+      ))}
     </View>
   );
 }

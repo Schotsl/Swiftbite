@@ -1,8 +1,8 @@
 import { View, Text } from "react-native";
+import { macroToCalories } from "@/helper";
 
 import Label from "@/components/Input/Label";
 import Slider from "@react-native-community/slider";
-import { singleMacroToAbsolute } from "@/helper";
 
 type InputMacroSliderProps = {
   type: "carbs" | "protein" | "fat";
@@ -19,7 +19,7 @@ export default function InputMacroSlider({
   calories,
   onChange,
 }: InputMacroSliderProps) {
-  const grams = singleMacroToAbsolute(type, value, calories);
+  const grams = macroToCalories(type, value, calories);
 
   const percentage = value * 100;
   const percentageRounded = Math.round(percentage);

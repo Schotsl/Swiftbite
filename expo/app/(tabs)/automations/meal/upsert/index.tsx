@@ -1,6 +1,7 @@
+import { View } from "react-native";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { Text, View } from "react-native";
+import { rowTimeout } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditMeal } from "@/context/MealContext";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -15,8 +16,9 @@ import useDeleteMeal from "@/mutations/useDeleteMeal";
 import ButtonOverlay from "@/components/Button/Overlay";
 import ButtonSmall from "@/components/Button/Small";
 import ItemProduct from "@/components/Item/Product";
+import EmptySmall from "@/components/Empty/Small";
 
-export default function DetailsScreen() {
+export default function AutomationsMealUpsert() {
   const router = useRouter();
 
   const deleteMeal = useDeleteMeal();
@@ -62,6 +64,19 @@ export default function DetailsScreen() {
     router.replace("/(tabs)/automations");
   };
 
+  const handleSelect = (product: string) => {
+    router.push({
+      pathname: `/(tabs)/automations/meal/upsert/product`,
+      params: { product },
+    });
+  };
+
+  const handleSearch = () => {
+    router.push({
+      pathname: `/(tabs)/automations/meal/upsert/search`,
+    });
+  };
+
   return (
     <View
       style={{
@@ -100,77 +115,45 @@ export default function DetailsScreen() {
                 }}
                 data={mealProducts}
                 keyExtractor={(item) => item.product.uuid}
+                ListEmptyComponent={() => {
+                  return (
+                    <EmptySmall
+                      content="Je hebt nog geen ingrediënten toegevoegd"
+                      onPress={handleSearch}
+                    />
+                  );
+                }}
                 renderItem={({ item, index }) => {
                   return (
                     <ItemProduct
                       icon={false}
                       small={true}
-                      border={index !== length - 1}
+                      border={index !== mealProducts.length - 1}
                       product={item.product}
                       serving={item.serving}
-                      onSelect={() => {
-                        router.push({
-                          pathname: `/(tabs)/automations/meal/upsert/product`,
-                          params: {
-                            product: item.product.uuid,
-                          },
-                        });
-                      }}
+                      onSelect={handleSelect}
                     />
                   );
                 }}
-                ListEmptyComponent={() => (
-                  <View
-                    style={{
-                      height: 80,
-                      width: "100%",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        opacity: 0.25,
-                        maxWidth: 200,
-                        textAlign: "center",
-
-                        fontSize: 14,
-                        fontWeight: "semibold",
-                      }}
-                    >
-                      Nog geen ingrediënten toegevoegd
-                    </Text>
-                  </View>
-                )}
                 renderHiddenItem={({ item, index }) => {
-                  const length = mealProducts.length || 0;
-
                   return (
                     <ItemDelete
-                      border={index !== length - 1}
+                      border={index !== mealProducts.length - 1}
                       onDelete={() => removeMealProduct(item.product.uuid)}
                     />
                   );
                 }}
-                onRowDidOpen={(rowKey, rowMap) => {
-                  setTimeout(() => {
-                    rowMap[rowKey]?.closeRow();
-                  }, 500);
-                }}
+                onRowDidOpen={rowTimeout}
                 rightOpenValue={-75}
-                useNativeDriver
-                disableRightSwipe
+                useNativeDriver={true}
+                disableRightSwipe={true}
               />
             </View>
 
             <ButtonSmall
               icon="plus"
-              onPress={() => {
-                router.push({
-                  pathname: `/(tabs)/automations/meal/upsert/search`,
-                });
-              }}
               title="Ingrediënt toevoegen"
+              onPress={handleSearch}
             />
           </View>
         </View>
