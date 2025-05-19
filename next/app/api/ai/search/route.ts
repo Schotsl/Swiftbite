@@ -1,8 +1,12 @@
+import * as crypto from "crypto";
+
+import getUUID from "uuid-by-string";
+
 import { Enums } from "@/database.types";
 import { Product } from "@/types";
 import { getUser, supabase } from "@/utils/supabase";
-import { searchGenerics, searchProducts } from "@/utils/openai";
 import { handleError, streamToResponse } from "@/helper";
+import { searchGenerics, searchProducts } from "@/utils/openai";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
 import { fatsecretRequest, supabaseRequest } from "@/utils/internet";
@@ -13,6 +17,7 @@ export async function GET(request: NextRequest) {
   const user = await getUser(request);
   const signal = request.signal;
 
+  const seed = crypto.randomUUID();
   const lang = request.nextUrl.searchParams.get("lang");
   const type = request.nextUrl.searchParams.get("type") as Enums<"type">;
   const query = request.nextUrl.searchParams.get("query");
@@ -20,21 +25,21 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!type) {
     return NextResponse.json(
       { error: "Please provide a type" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -73,7 +78,7 @@ export async function GET(request: NextRequest) {
               quantity_original_unit: product.quantity?.option,
             })),
           },
-          request.signal,
+          request.signal
         )
       : await searchGenerics(
           user!,
@@ -88,12 +93,12 @@ export async function GET(request: NextRequest) {
               category: product.category,
             })),
           },
-          request.signal,
+          request.signal
         );
 
   after(async () => {
     const results = await generativeStream.object;
-    const resultsMapped = results.map(getProduct);
+    const resultsMapped = results.map((search) => getProduct(search, seed));
 
     const { error } = await supabase.from("product").insert(resultsMapped);
 
@@ -125,7 +130,7 @@ export async function GET(request: NextRequest) {
           continue;
         }
 
-        const mapped = chunk.map(getProduct);
+        const mapped = chunk.map((search) => getProduct(search, seed));
 
         yield [...supabaseResponse, ...mapped];
       }
@@ -140,30 +145,29 @@ export async function GET(request: NextRequest) {
 }
 
 // Get UUID from title, brand, quantity_original and quantity_original_unit
-// This function will take these search params and generate a UUID and store it in a local object so we can return the same uuid if it's requested later again
+// This is probably very less than ideal
+const getUUIDfromKey = (key: string, seed: string): string => {
+  const keyArray = [key, seed];
+  const keyJoined = keyArray.join("");
 
-const uuids: { [key: string]: string } = {};
-
-const getUUID = (key: string): string => {
-  const uuid = crypto.randomUUID();
-
-  uuids[key] = uuid;
-
-  return uuid;
+  return getUUID(keyJoined);
 };
 
-const getProduct = (search: ProductSearchData | GenericSearchData): Product => {
+const getProduct = (
+  search: ProductSearchData | GenericSearchData,
+  seed: string
+): Product => {
   const isGeneric = "category" in search;
 
   const parsedType = isGeneric ? "search_generic" : "search_product";
-  const parsedUuid = getUUID(
-    isGeneric
-      ? search.title + search.category
-      : search.title +
-          search.brand +
-          search.quantity_original +
-          search.quantity_original_unit,
-  );
+  const parsedKey = isGeneric
+    ? search.title + search.category
+    : search.title +
+      search.brand +
+      search.quantity_original +
+      search.quantity_original_unit;
+
+  const parsedUuid = getUUIDfromKey(parsedKey, seed);
 
   return {
     type: parsedType,
