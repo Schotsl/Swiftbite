@@ -20,6 +20,7 @@ import ItemDelete from "@/components/Item/Delete";
 import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
 import ItemMeal from "@/components/Item/Meal";
+import { transformDate } from "@/helper";
 
 export default function Add() {
   const [date, setDate] = useState<Date>(new Date());
@@ -37,6 +38,11 @@ export default function Add() {
 
     setInterval(interval);
   }, [data]);
+
+  // If date is today then we'll return "Vandaag", ortherwise we'll turn the date to a locale string
+  const labelDate = transformDate(date);
+  const labelToday = transformDate(new Date());
+  const label = labelDate === labelToday ? "Vandaag" : labelDate;
 
   return (
     <ScrollView
@@ -59,7 +65,7 @@ export default function Add() {
             justifyContent: "space-between",
           }}
         >
-          <HeaderTitle>Today</HeaderTitle>
+          <HeaderTitle>{label}</HeaderTitle>
 
           <HomeStreak />
         </View>
@@ -130,7 +136,7 @@ function AddList({ entries }: AddListProps) {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour,
+      (section) => currentHour >= section.startHour
     );
 
     // Populate active sections with data

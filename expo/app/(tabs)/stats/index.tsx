@@ -11,7 +11,7 @@ export default function Tab() {
           textAlign: "center",
         }}
       >
-        This page is under construction and won't be around for a while 👷
+        Deze pagina is nog in ontwikkeling, we zien je later graag terug! 👷
       </Text>
     </View>
   );
