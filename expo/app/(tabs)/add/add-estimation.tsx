@@ -1,11 +1,5 @@
-import Tabs from "@/components/Tabs";
 import entryData from "@/queries/entryData";
 
-import PageEstimationManual from "@/components/Page/Estimation/Manual";
-import PageEstimationAutomatic from "@/components/Page/Estimation/Automatic";
-
-import { View } from "react-native";
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
 import { transformImage } from "@/helper";
@@ -13,6 +7,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 import useInsertEntry from "@/mutations/useInsertEntry";
+import PageEstimation from "@/components/Page/Estimation";
 
 export default function Add2Preview() {
   const router = useRouter();
@@ -42,8 +37,6 @@ export default function Add2Preview() {
   const image = transformImage(uri, width, height);
   const product = entry?.product;
 
-  const [tab, setTab] = useState(product ? "manual" : "automatic");
-
   const handleDelete = async () => {
     if (!product) {
       return;
@@ -69,33 +62,11 @@ export default function Add2Preview() {
   };
 
   return (
-    <View>
-      {!image && !product && (
-        <Tabs
-          tabs={[
-            {
-              title: "Automatisch",
-              value: "automatic",
-            },
-            {
-              title: "Handmatig",
-              value: "manual",
-            },
-          ]}
-          value={tab}
-          onSelect={setTab}
-        />
-      )}
-
-      {tab === "automatic" ? (
-        <PageEstimationAutomatic />
-      ) : (
-        <PageEstimationManual
-          product={product}
-          onDelete={product ? handleDelete : undefined}
-          onRepeat={product ? handleRepeat : undefined}
-        />
-      )}
-    </View>
+    <PageEstimation
+      image={image}
+      product={product}
+      onDelete={product ? handleDelete : undefined}
+      onRepeat={product ? handleRepeat : undefined}
+    />
   );
 }

@@ -76,6 +76,7 @@ export default function AutomationsMealUpsert() {
       params: { product },
     });
   };
+  console.log(mealProducts);
 
   return (
     <View

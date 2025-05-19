@@ -10,6 +10,12 @@ export type Position = {
   y: number;
 };
 
+export type Image = {
+  uri: string;
+  width: number;
+  height: number;
+};
+
 export type MacroExpanded = Macro & {
   salt: number;
   fiber: number;
