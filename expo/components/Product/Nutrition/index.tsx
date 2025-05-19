@@ -1,8 +1,8 @@
 import { Product } from "@/types/product";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { ServingData } from "@/schemas/serving";
 import { MealWithProduct } from "@/types/meal";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
 
 type ProductNutritionProps =
@@ -10,17 +10,20 @@ type ProductNutritionProps =
       meal?: never;
       product: Product;
       serving: ServingData;
+      processing?: boolean;
     }
   | {
       meal: MealWithProduct;
       product?: never;
       serving: ServingData;
+      processing?: boolean;
     };
 
 export default function ProductNutrition({
   meal,
   product,
   serving,
+  processing,
 }: ProductNutritionProps) {
   const [per100, setPer100] = useState(false);
 
@@ -111,11 +114,13 @@ export default function ProductNutrition({
 
       <View
         style={{
+          position: "relative",
           borderWidth: 2,
           borderColor: "#000",
           borderRadius: 8,
         }}
       >
+        {processing && <ProductNutritionProcessing />}
         {items.map((item, index) => (
           <View
             key={item.name}
@@ -183,5 +188,48 @@ export default function ProductNutrition({
         ))}
       </View>
     </View>
+  );
+}
+
+export function ProductNutritionProcessing() {
+  return (
+    <Fragment>
+      <View
+        style={{
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 2,
+          position: "absolute",
+
+          gap: 12,
+          padding: 16,
+          alignItems: "flex-start",
+          flexDirection: "column",
+        }}
+      >
+        <ActivityIndicator size="small" color="#000" />
+
+        <Text style={{ fontSize: 14, fontFamily: "OpenSans_600SemiBold" }}>
+          We zijn de voedingswaarden van dit product online aan het controleren.
+        </Text>
+      </View>
+
+      <View
+        style={{
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 1,
+          position: "absolute",
+
+          opacity: 0.96,
+          borderRadius: 8,
+          backgroundColor: "#fff",
+        }}
+      />
+    </Fragment>
   );
 }

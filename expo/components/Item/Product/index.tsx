@@ -39,6 +39,7 @@ export default function ItemProduct({
         title={title}
         subtitle={subtitle}
         subtitleIcon="apple-whole"
+        subtitleLoading={processing}
         rightTop={overwriteTop}
         rightBottom={overwriteBottom}
         onPress={() => onSelect(product.uuid)}
@@ -63,6 +64,7 @@ export default function ItemProduct({
         title={title}
         subtitle={subtitle}
         subtitleIcon={processing ? "globe" : undefined}
+        subtitleLoading={processing}
         rightTop={overwriteTop || quantity}
         rightBottom={overwriteBottom}
         onPress={() => onSelect(product.uuid)}

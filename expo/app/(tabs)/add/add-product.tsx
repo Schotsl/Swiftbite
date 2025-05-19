@@ -13,8 +13,11 @@ import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 
 export default function AddPreviewBarcodeScreen() {
+  const [interval, setInterval] = useState<number | false>(false);
+
   const router = useRouter();
 
   const insertEntry = useInsertEntry();
@@ -41,7 +44,15 @@ export default function AddPreviewBarcodeScreen() {
     ...productData(productId ? { uuid: productId } : { barcode }),
     select: (products) => products[0],
     enabled: !entryId,
+    refetchInterval: interval,
   });
+
+  useEffect(() => {
+    const processing = productObject?.processing;
+    const interval = processing ? 500 : false;
+
+    setInterval(interval);
+  }, [productObject]);
 
   if (isLoadingEntry || isLoadingProduct) {
     return (

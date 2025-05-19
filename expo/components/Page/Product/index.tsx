@@ -58,6 +58,9 @@ export default function PageProduct({
     isProductFavorite(user, product.uuid),
   );
 
+  const isGeneric = product.type === "search_generic";
+  const isProcessing = product.processing;
+
   const { watch, control, reset, setValue, handleSubmit } =
     useForm<ProductPageData>({
       resolver: zodResolver(productPageSchema),
@@ -153,6 +156,15 @@ export default function PageProduct({
     return { option, quantity, gram };
   }, [option, quantity, options]);
 
+  const title = isProcessing ? product.search.title : product.title;
+  const content = isProcessing
+    ? isGeneric
+      ? product.search.category
+      : product.search.brand
+    : isGeneric
+      ? product.category
+      : product.brand;
+
   return (
     <View>
       <ScrollView>
@@ -166,8 +178,8 @@ export default function PageProduct({
           <View>
             <Header
               small={true}
-              title={product.title!}
-              content={product.brand || "No brand"}
+              title={`${title}`}
+              content={content}
               favorite={favorite}
               onDelete={onDelete}
               onRepeat={onRepeat && (() => onRepeat(serving))}
@@ -211,9 +223,17 @@ export default function PageProduct({
             </View>
           )}
 
-          <ProductImpact product={product} serving={serving} />
+          <ProductImpact
+            product={product}
+            serving={serving}
+            processing={isProcessing}
+          />
 
-          <ProductNutrition product={product} serving={serving} />
+          <ProductNutrition
+            product={product}
+            serving={serving}
+            processing={isProcessing}
+          />
         </View>
       </ScrollView>
 
