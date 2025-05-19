@@ -19,7 +19,6 @@ type RepeatContextType = {
   updating: boolean;
 
   removeMeal: () => void;
-  removeRepeat: () => void;
   removeProduct: () => void;
 
   updateTime: (time: Date) => void;
@@ -44,7 +43,6 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
 }) => {
   const updating = !!initial;
 
-  const deleteRepeat = useDeleteRepeat();
   const updateRepeat = useUpdateRepeat();
   const insertRepeat = useInsertRepeat();
 
@@ -70,13 +68,6 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
   const removeProduct = () => {
     setProduct(null);
     setServing(null);
-  };
-
-  const removeRepeat = async () => {
-    if (!updating) {
-      return;
-    }
-    deleteRepeat.mutateAsync(initial?.uuid);
   };
 
   const updateTime = (time: Date) => {
@@ -136,7 +127,6 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
         updating,
 
         removeMeal,
-        removeRepeat,
         removeProduct,
 
         updateTime,

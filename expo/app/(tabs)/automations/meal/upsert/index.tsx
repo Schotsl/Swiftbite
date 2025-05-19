@@ -24,10 +24,12 @@ import NavigationAddList from "@/components/Navigation/Add/List";
 export default function AutomationsMealUpsert() {
   const router = useRouter();
 
+  const deleteMeal = useDeleteMeal();
+
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
 
-  const deleteMeal = useDeleteMeal();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
 
@@ -42,8 +44,8 @@ export default function AutomationsMealUpsert() {
 
   const {
     watch,
-    control,
     handleSubmit,
+    control,
     formState: { isSubmitting },
   } = useForm<MealData>({
     resolver: zodResolver(mealSchema),
@@ -65,7 +67,15 @@ export default function AutomationsMealUpsert() {
   };
 
   const handleDelete = async () => {
-    await deleteMeal.mutateAsync(mealId);
+    if (isDeleting) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    if (updating) {
+      await deleteMeal.mutateAsync(mealId);
+    }
 
     router.replace("/(tabs)/automations");
   };
@@ -76,7 +86,6 @@ export default function AutomationsMealUpsert() {
       params: { product },
     });
   };
-  console.log(mealProducts);
 
   return (
     <View
@@ -170,8 +179,8 @@ export default function AutomationsMealUpsert() {
       <ButtonOverlay
         title="Wijzigingen opslaan"
         onPress={handleSubmit(handleSave)}
-        disabled={isSubmitting}
         loading={isSubmitting}
+        disabled={isSubmitting || isDeleting}
       />
     </View>
   );

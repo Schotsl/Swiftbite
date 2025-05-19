@@ -13,7 +13,7 @@ import NavigationAddList from "@/components/Navigation/Add/List";
 import { Product } from "@/types/product";
 import { useForm } from "react-hook-form";
 import { Position } from "@/types";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { ServingData } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, View } from "react-native";
@@ -21,15 +21,19 @@ import { useEditRepeat } from "@/context/RepeatContext";
 import { MealWithProduct } from "@/types/meal";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
+import useDeleteRepeat from "@/mutations/useDeleteRepeat";
 
 export default function AutomationRepeatUpsert() {
   const router = useRouter();
 
+  const deleteRepeat = useDeleteRepeat();
+
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const { repeat: repeatId } = useLocalSearchParams<{ repeat: string }>();
 
   const {
     time,
@@ -39,12 +43,16 @@ export default function AutomationRepeatUpsert() {
     weekdays,
     updating,
     saveChanges,
-    removeRepeat,
     updateTime,
     updateWeekdays,
   } = useEditRepeat();
 
-  const { control, watch, handleSubmit } = useForm<RepeatData>({
+  const {
+    watch,
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+  } = useForm<RepeatData>({
     resolver: zodResolver(repeatSchema),
     defaultValues: {
       time,
@@ -63,24 +71,18 @@ export default function AutomationRepeatUpsert() {
     updateWeekdays(watchWeekdays);
   }, [watchWeekdays, updateWeekdays]);
 
-  const handleSave = () => {
-    if (isLoading) {
-      return;
-    }
-
-    setIsLoading(true);
-
-    saveChanges();
+  const handleSave = async () => {
+    await saveChanges();
 
     router.replace("/(tabs)/automations/repeat");
-
-    setIsLoading(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setIsDeleting(true);
 
-    removeRepeat();
+    if (updating) {
+      await deleteRepeat.mutateAsync(repeatId);
+    }
 
     router.replace("/(tabs)/automations/repeat");
 
@@ -153,8 +155,8 @@ export default function AutomationRepeatUpsert() {
       <ButtonOverlay
         title="Herhaling opslaan"
         onPress={handleSubmit(handleSave)}
-        loading={isLoading}
-        disabled={isLoading || isDeleting}
+        loading={isSubmitting}
+        disabled={isSubmitting || isDeleting}
       />
     </View>
   );
