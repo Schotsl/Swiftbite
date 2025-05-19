@@ -1,5 +1,12 @@
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
-import { TouchableOpacity, StyleProp, ViewStyle, Text } from "react-native";
+import { useRef } from "react";
+import {
+  Text,
+  View,
+  ViewStyle,
+  StyleProp,
+  TouchableOpacity,
+} from "react-native";
 
 type ButtonSmallBase = {
   nano?: boolean;
@@ -7,6 +14,7 @@ type ButtonSmallBase = {
   style?: StyleProp<ViewStyle>;
   title?: string;
   onPress: () => void;
+  onPosition?: (position: { x: number; y: number }) => void;
 };
 
 type ButtonSmallFontAwesomeProps = ButtonSmallBase & {
@@ -31,10 +39,28 @@ export default function ButtonSmall({
   style,
   title,
   onPress,
+  onPosition,
 }: ButtonSmallProps) {
+  const handleLayout = () => {
+    if (!marker.current) {
+      return;
+    }
+
+    if (!onPosition) {
+      return;
+    }
+
+    marker.current.measure((x, y, width, height, pageX, pageY) => {
+      onPosition({ x: pageX, y: pageY });
+    });
+  };
+
+  const marker = useRef<View>(null);
   return (
     <TouchableOpacity
+      ref={marker}
       onPress={onPress}
+      onLayout={handleLayout}
       style={[
         {
           gap: 8,
@@ -43,8 +69,9 @@ export default function ButtonSmall({
 
           alignSelf: "flex-start",
           alignItems: "center",
-          justifyContent: "center",
           flexDirection: "row",
+          justifyContent: "center",
+          backgroundColor: "#fff",
           paddingHorizontal: title ? 16 : 0,
 
           borderRadius: 100,

@@ -6,17 +6,23 @@ import ButtonSmall from "@/components/Button/Small";
 import ItemProduct from "@/components/Item/Product";
 import InputWeekday from "@/components/Input/Weekday";
 import ButtonOverlay from "@/components/Button/Overlay";
+import ModalBackground from "@/components/Modal/Background";
+import NavigationAddList from "@/components/Navigation/Add/List";
 
-import { View } from "react-native";
 import { useForm } from "react-hook-form";
+import { Position } from "@/types";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Modal, View } from "react-native";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
 
 export default function AutomationRepeatUpsert() {
   const router = useRouter();
+
+  const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
 
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -89,6 +95,8 @@ export default function AutomationRepeatUpsert() {
     });
   };
 
+  const isSet = !!product && !!serving;
+
   return (
     <View style={{ padding: 32 }}>
       <Header
@@ -135,11 +143,17 @@ export default function AutomationRepeatUpsert() {
             </View>
 
             <ButtonSmall
-              icon={product && serving ? "pencil" : "plus"}
-              title={
-                product && serving ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"
-              }
-              onPress={handleSearch}
+              icon={isSet ? "pencil" : "plus"}
+              title={isSet ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"}
+              onPress={() => setOpen(true)}
+              onPosition={setPosition}
+            />
+
+            <AutomationRepeatUpsertAdd
+              set={isSet}
+              open={open}
+              position={position}
+              onClose={() => setOpen(false)}
             />
           </View>
         </View>
@@ -152,5 +166,50 @@ export default function AutomationRepeatUpsert() {
         disabled={isLoading || isDeleting}
       />
     </View>
+  );
+}
+
+type AutomationRepeatUpsertAddProps = {
+  set: boolean;
+  open: boolean;
+  position: Position;
+  onClose: () => void;
+};
+
+function AutomationRepeatUpsertAdd({
+  set,
+  open,
+  position,
+  onClose,
+}: AutomationRepeatUpsertAddProps) {
+  return (
+    <Modal
+      visible={open}
+      transparent={true}
+      animationType="none"
+      onRequestClose={onClose}
+    >
+      <ModalBackground onPress={onClose} />
+
+      <View
+        style={{
+          gap: 18,
+          top: position.y - 153,
+          left: position.x,
+          position: "absolute",
+        }}
+      >
+        <NavigationAddList
+          onClose={() => {}}
+          style={{ position: "relative", bottom: 0 }}
+        />
+
+        <ButtonSmall
+          icon={set ? "pencil" : "plus"}
+          title={set ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"}
+          onPress={() => onClose()}
+        />
+      </View>
+    </Modal>
   );
 }

@@ -19,7 +19,7 @@ enum Type {
 
 type PageSearchProps =
   | {
-      meal: true;
+      meal?: true;
       onMealSelect: (meal: string, serving: ServingData) => void;
       onProductSelect: (product: string) => void;
     }
@@ -120,7 +120,7 @@ export default function PageSearch({
         />
       )}
 
-      {selected === Type.MEALS && (
+      {selected === Type.MEALS && onMealSelect && (
         <PageSearchMeal query={query} onSelect={onMealSelect} />
       )}
     </View>

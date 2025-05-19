@@ -5,6 +5,11 @@ export type Macro = {
   calories: number;
 };
 
+export type Position = {
+  x: number;
+  y: number;
+};
+
 export type MacroExpanded = Macro & {
   salt: number;
   fiber: number;

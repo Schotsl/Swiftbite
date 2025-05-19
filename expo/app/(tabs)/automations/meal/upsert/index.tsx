@@ -1,25 +1,31 @@
-import { View } from "react-native";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { Position } from "@/types";
 import { rowTimeout } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditMeal } from "@/context/MealContext";
+import { Modal, View } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
+import { useEffect, useState } from "react";
 import { MealData, mealSchema } from "@/schemas/serving";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import Header from "@/components/Header";
 import Input from "@/components/Input";
+import EmptySmall from "@/components/Empty/Small";
 import InputLabel from "@/components/Input/Label";
 import ItemDelete from "@/components/Item/Delete";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
 import ButtonOverlay from "@/components/Button/Overlay";
 import ButtonSmall from "@/components/Button/Small";
 import ItemProduct from "@/components/Item/Product";
-import EmptySmall from "@/components/Empty/Small";
+import ModalBackground from "@/components/Modal/Background";
+import NavigationAddList from "@/components/Navigation/Add/List";
 
 export default function AutomationsMealUpsert() {
   const router = useRouter();
+
+  const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
 
   const deleteMeal = useDeleteMeal();
 
@@ -153,7 +159,14 @@ export default function AutomationsMealUpsert() {
             <ButtonSmall
               icon="plus"
               title="Ingrediënt toevoegen"
-              onPress={handleSearch}
+              onPress={() => setOpen(true)}
+              onPosition={setPosition}
+            />
+
+            <AutomationsMealUpsertAdd
+              open={open}
+              position={position}
+              onClose={() => setOpen(false)}
             />
           </View>
         </View>
@@ -166,5 +179,52 @@ export default function AutomationsMealUpsert() {
         loading={isSubmitting}
       />
     </View>
+  );
+}
+
+type AutomationsMealUpsertAddProps = {
+  open: boolean;
+  position: Position;
+  onClose: () => void;
+};
+
+function AutomationsMealUpsertAdd({
+  open,
+  position,
+  onClose,
+}: AutomationsMealUpsertAddProps) {
+  return (
+    <Modal
+      visible={open}
+      transparent={true}
+      animationType="none"
+      onRequestClose={onClose}
+    >
+      <ModalBackground onPress={onClose} />
+
+      <View
+        style={{
+          gap: 18,
+          top: position.y - 153,
+          left: position.x,
+          position: "absolute",
+        }}
+      >
+        <NavigationAddList
+          onClose={() => {}}
+          style={{
+            left: 88,
+            bottom: 0,
+            position: "relative",
+          }}
+        />
+
+        <ButtonSmall
+          icon={"plus"}
+          title={"Ingrediënt toevoegen"}
+          onPress={() => onClose()}
+        />
+      </View>
+    </Modal>
   );
 }

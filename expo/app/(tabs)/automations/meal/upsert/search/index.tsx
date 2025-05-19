@@ -12,7 +12,5 @@ export default function AddText() {
     });
   };
 
-  return (
-    <PageSearch onProductSelect={handleProductSelect} onMealSelect={() => {}} />
-  );
+  return <PageSearch onProductSelect={handleProductSelect} meal={false} />;
 }
