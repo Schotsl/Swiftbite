@@ -200,12 +200,13 @@ function AutomationsMealUpsertAdd({
       <View
         style={{
           gap: 18,
-          top: position.y - 153,
+          top: position.y - 87,
           left: position.x,
           position: "absolute",
         }}
       >
         <NavigationAddList
+          camera="/automations/meal/upsert/product"
           search="/automations/meal/upsert/search"
           onClose={onClose}
           style={{

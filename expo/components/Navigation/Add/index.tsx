@@ -19,7 +19,12 @@ export default function NavigationAdd() {
       >
         <ModalBackground onPress={() => setOpen(false)} />
 
-        <NavigationAddList onClose={() => setOpen(false)} />
+        <NavigationAddList
+          camera="/add/add-product"
+          search="/add/add-search"
+          estimation="/add/add-estimation"
+          onClose={() => setOpen(false)}
+        />
 
         <View
           style={{

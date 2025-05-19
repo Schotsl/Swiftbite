@@ -6,7 +6,11 @@ import CameraShortcuts from "@/components/Camera/Shortcuts";
 import ImageResizer from "@bam.tech/react-native-image-resizer";
 
 import { useVision } from "@/context/VisionContext";
-import { useRouter } from "expo-router";
+import {
+  RelativePathString,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 import { useRunOnJS } from "react-native-worklets-core";
 import { Alert, View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
@@ -34,6 +38,13 @@ import { Image } from "expo-image";
 
 export default function AddAI() {
   const debug = false;
+
+  const { productPath, estimationPath } = useLocalSearchParams<{
+    productPath: RelativePathString;
+    estimationPath?: RelativePathString;
+  }>();
+
+  const estimationEnabled = !!estimationPath;
 
   const [flash, setFlash] = useState<boolean>(false);
   const [facing, setFacing] = useState<CameraPosition>("back");
@@ -66,6 +77,10 @@ export default function AddAI() {
       return;
     }
 
+    if (!estimationEnabled) {
+      return;
+    }
+
     if (processing) {
       return;
     }
@@ -92,10 +107,8 @@ export default function AddAI() {
       return;
     }
 
-    const pathname = "/add/add-estimation";
-
     router.push({
-      pathname,
+      pathname: estimationPath,
       params: { uri: params.path, width: params.width, height: params.height },
     });
 
@@ -131,15 +144,19 @@ export default function AddAI() {
       }
 
       router.push({
-        pathname: "/add/add-product",
+        pathname: productPath,
         params: { barcode },
       });
 
       return;
     }
 
+    if (!estimationEnabled) {
+      return;
+    }
+
     router.push({
-      pathname: "/add/add-estimation",
+      pathname: estimationPath,
       params: { uri: asset.uri, width: asset.width, height: asset.height },
     });
   }
@@ -161,7 +178,7 @@ export default function AddAI() {
       base64: string,
       width: number,
       height: number,
-      orientation: number,
+      orientation: number
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -184,7 +201,7 @@ export default function AddAI() {
         newHeight,
         "JPEG",
         50,
-        orientation,
+        orientation
       );
 
       sendImage(data.uri);
@@ -196,7 +213,7 @@ export default function AddAI() {
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    [],
+    []
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -244,7 +261,6 @@ export default function AddAI() {
       {device && hasPermission ? (
         <Camera
           ref={camera}
-          // format={format}
           photo={true}
           device={device!}
           isActive={true}
@@ -294,7 +310,7 @@ export default function AddAI() {
       {isEstimation && <CameraVision />}
 
       <View style={{ marginTop: "auto", gap: 24 }}>
-        <CameraSelector onSelect={setSelected} />
+        <CameraSelector onSelect={setSelected} estimation={estimationEnabled} />
 
         <CameraControls
           onFlip={handleFlip}

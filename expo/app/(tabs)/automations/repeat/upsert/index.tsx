@@ -234,13 +234,14 @@ function AutomationRepeatUpsertAdd({
       <View
         style={{
           gap: 18,
-          top: position.y - 153,
+          top: position.y - 87,
           left: position.x,
           position: "absolute",
         }}
       >
         <NavigationAddList
           search="/automations/repeat/upsert/search"
+          camera="/automations/repeat/upsert/product"
           onClose={onClose}
           style={{ position: "relative", bottom: 0 }}
         />

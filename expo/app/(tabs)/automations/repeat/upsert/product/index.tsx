@@ -19,12 +19,13 @@ export default function AutomationRepeatUpsertProduct() {
     updateServing,
   } = useEditRepeat();
 
-  const { product: productId } = useLocalSearchParams<{
-    product: string;
+  const { product: productId, barcode } = useLocalSearchParams<{
+    product?: string;
+    barcode?: string;
   }>();
 
   const { data: productSearch, isLoading: isLoadingSearch } = useQuery({
-    ...productData({ uuid: productId }),
+    ...productData(productId ? { uuid: productId! } : { barcode: barcode! }),
     select: (products) => products[0],
     enabled: !productEditing,
   });

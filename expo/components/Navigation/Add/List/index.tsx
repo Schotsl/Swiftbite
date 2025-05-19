@@ -5,14 +5,20 @@ import { Alert, StyleProp, View, ViewStyle } from "react-native";
 import Button from "@/components/Button";
 
 type NavigationAddListProps = {
-  search?: Href;
+  camera: Href;
+  search: Href;
+  estimation?: Href;
+
   style?: StyleProp<ViewStyle>;
 
   onClose: () => void;
 };
 
 export default function NavigationAddList({
-  search = "/add/add-search",
+  camera,
+  search,
+  estimation,
+
   style,
   onClose,
 }: NavigationAddListProps) {
@@ -29,7 +35,7 @@ export default function NavigationAddList({
   const handleEstimate = () => {
     onClose();
 
-    router.push("/add/add-estimation");
+    router.push(estimation!);
   };
 
   const handleCamera = async () => {
@@ -46,9 +52,15 @@ export default function NavigationAddList({
 
     onClose();
 
-    router.push("/camera");
+    router.push({
+      pathname: "/camera",
+      params: {
+        productPath: camera.toString(),
+        estimationPath: estimation?.toString(),
+      },
+    });
   };
-
+  console.log(estimation);
   return (
     <View
       style={[
@@ -63,15 +75,19 @@ export default function NavigationAddList({
         style,
       ]}
     >
-      <Button icon="camera" title="Camera" onPress={handleCamera} />
+      {camera && <Button icon="camera" title="Camera" onPress={handleCamera} />}
 
-      <Button icon="magnifying-glass" title="Zoeken" onPress={handleSearch} />
+      {search && (
+        <Button icon="magnifying-glass" title="Zoeken" onPress={handleSearch} />
+      )}
 
-      <Button
-        icon="wand-magic-sparkles"
-        title="Inschatting"
-        onPress={handleEstimate}
-      />
+      {estimation && (
+        <Button
+          icon="wand-magic-sparkles"
+          title="Inschatting"
+          onPress={handleEstimate}
+        />
+      )}
     </View>
   );
 }

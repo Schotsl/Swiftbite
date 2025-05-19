@@ -8,10 +8,14 @@ import CameraSelectorItem from "./Item";
 import CameraSelectorGradient from "./Gradient";
 
 type CameraSelectorProps = {
+  estimation: boolean;
   onSelect: (item: CameraSelected) => void;
 };
 
-export default function CameraSelector({ onSelect }: CameraSelectorProps) {
+export default function CameraSelector({
+  estimation,
+  onSelect,
+}: CameraSelectorProps) {
   const { width } = useWindowDimensions();
 
   const [isDragging, setIsDragging] = useState(false);
@@ -26,11 +30,16 @@ export default function CameraSelector({ onSelect }: CameraSelectorProps) {
   const containerWidth = width + widthItem * 2;
   const containerPadding = width / 2 - widthItem / 2;
 
-  const snapPoints = {
-    [CameraSelected.Estimation]: widthItem * 0,
-    [CameraSelected.Barcode]: widthItem * 1,
-    [CameraSelected.Label]: widthItem * 2,
-  };
+  const snapPoints = estimation
+    ? {
+        [CameraSelected.Estimation]: widthItem * 0,
+        [CameraSelected.Barcode]: widthItem * 1,
+        [CameraSelected.Label]: widthItem * 2,
+      }
+    : {
+        [CameraSelected.Barcode]: widthItem * 0,
+        [CameraSelected.Label]: widthItem * 1,
+      };
 
   const handleOverlayScroll = (event: any) => {
     const x = event.nativeEvent.contentOffset.x;
@@ -112,16 +121,18 @@ export default function CameraSelector({ onSelect }: CameraSelectorProps) {
               }}
               horizontal={true}
               scrollEnabled={false}
-              contentOffset={{ x: widthItem, y: 0 }}
+              contentOffset={{ x: estimation ? widthItem : 0, y: 0 }}
               contentContainerStyle={{ alignItems: "center", height: 60 }}
             >
               <View style={{ width: containerPadding }} />
 
-              <CameraSelectorItem
-                width={widthItem}
-                title="Inschatting"
-                active={activeItem === CameraSelected.Label}
-              />
+              {estimation && (
+                <CameraSelectorItem
+                  width={widthItem}
+                  title="Inschatting"
+                  active={activeItem === CameraSelected.Estimation}
+                />
+              )}
 
               <CameraSelectorItem
                 width={widthItem}
@@ -132,7 +143,7 @@ export default function CameraSelector({ onSelect }: CameraSelectorProps) {
               <CameraSelectorItem
                 width={widthItem}
                 title="Voedingsetiket"
-                active={activeItem === CameraSelected.Estimation}
+                active={activeItem === CameraSelected.Label}
               />
 
               <View style={{ width: containerPadding }} />
@@ -157,7 +168,7 @@ export default function CameraSelector({ onSelect }: CameraSelectorProps) {
           position: "absolute",
         }}
         horizontal={true}
-        contentOffset={{ x: widthItem, y: 0 }}
+        contentOffset={{ x: estimation ? widthItem : 0, y: 0 }}
         snapToOffsets={Object.values(snapPoints)}
         snapToAlignment="center"
         decelerationRate="fast"
