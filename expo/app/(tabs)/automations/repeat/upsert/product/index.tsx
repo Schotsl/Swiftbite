@@ -60,7 +60,7 @@ export default function AutomationRepeatUpsertProduct() {
 
   return (
     <PageProduct
-      product={productEditing || productSearch!}
+      product={product}
       serving={serving}
       onSave={handleSave}
       onDelete={handleDelete}

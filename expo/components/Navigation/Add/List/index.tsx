@@ -1,16 +1,18 @@
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useCameraPermission } from "react-native-vision-camera";
 import { Alert, StyleProp, View, ViewStyle } from "react-native";
 
 import Button from "@/components/Button";
 
 type NavigationAddListProps = {
+  search?: Href;
   style?: StyleProp<ViewStyle>;
 
   onClose: () => void;
 };
 
 export default function NavigationAddList({
+  search = "/add/add-search",
   style,
   onClose,
 }: NavigationAddListProps) {
@@ -21,7 +23,7 @@ export default function NavigationAddList({
   const handleSearch = () => {
     onClose();
 
-    router.push("/add/add-search");
+    router.push(search);
   };
 
   const handleEstimate = () => {

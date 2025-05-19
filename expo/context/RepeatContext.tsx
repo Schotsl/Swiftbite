@@ -3,6 +3,7 @@ import React from "react";
 import { Repeat } from "@/types/repeat";
 import { Product } from "@/types/product";
 import { ServingData } from "@/schemas/serving";
+import { MealWithProduct } from "@/types/meal";
 import { createContext, ReactNode, useContext, useState } from "react";
 
 import useUpdateRepeat from "@/mutations/useUpdateRepeat";
@@ -11,18 +12,21 @@ import useDeleteRepeat from "@/mutations/useDeleteRepeat";
 
 type RepeatContextType = {
   time: Date;
+  meal: MealWithProduct | null;
   product: Product | null;
   serving: ServingData | null;
   weekdays: string[];
   updating: boolean;
 
+  removeMeal: () => void;
   removeRepeat: () => void;
   removeProduct: () => void;
 
   updateTime: (time: Date) => void;
-  updateWeekdays: (weekdays: string[]) => void;
+  updateMeal: (meal: MealWithProduct) => void;
   updateProduct: (product: Product) => void;
   updateServing: (serving: ServingData) => void;
+  updateWeekdays: (weekdays: string[]) => void;
 
   saveChanges: () => Promise<void>;
 };
@@ -47,14 +51,21 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
   const initialTime = initial?.time || new Date();
   const initialWeekdays = initial?.weekdays || [];
 
+  const initialMeal = initial?.meal || null;
   const initialProduct = initial?.product || null;
   const initialServing = initial?.serving || null;
 
   const [time, setTime] = useState(initialTime);
   const [weekdays, setWeekdays] = useState(initialWeekdays);
 
+  const [meal, setMeal] = useState(initialMeal);
   const [product, setProduct] = useState(initialProduct);
   const [serving, setServing] = useState(initialServing);
+
+  const removeMeal = () => {
+    setMeal(null);
+    setServing(null);
+  };
 
   const removeProduct = () => {
     setProduct(null);
@@ -76,6 +87,10 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
     setWeekdays(weekdays);
   };
 
+  const updateMeal = (meal: MealWithProduct) => {
+    setMeal(meal);
+  };
+
   const updateProduct = (product: Product) => {
     setProduct(product);
   };
@@ -91,9 +106,9 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
         time,
         weekdays,
 
-        // TODO: Could probably be fancier but until I add meals it will work
         serving: serving!,
-        product_id: product!.uuid,
+        meal_id: meal?.uuid || null,
+        product_id: product?.uuid || null,
       });
 
       return;
@@ -105,8 +120,8 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
 
       // TODO: Could probably be fancier but until I add meals it will work
       serving: serving!,
-      meal_id: null,
-      product_id: product!.uuid,
+      meal_id: meal?.uuid || null,
+      product_id: product?.uuid || null,
     });
   };
 
@@ -114,15 +129,18 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
     <RepeatContext.Provider
       value={{
         time,
+        meal,
         product,
         serving,
         weekdays,
         updating,
 
+        removeMeal,
         removeRepeat,
         removeProduct,
 
         updateTime,
+        updateMeal,
         updateWeekdays,
         updateProduct,
         updateServing,

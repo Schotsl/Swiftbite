@@ -5,6 +5,13 @@ import PageSearch from "@/components/Page/Search";
 export default function AutomationRepeatUpsertSearch() {
   const router = useRouter();
 
+  const handleMealSelect = (meal: string) => {
+    router.push({
+      pathname: `/(tabs)/automations/repeat/upsert/meal`,
+      params: { meal },
+    });
+  };
+
   const handleProductSelect = (product: string) => {
     router.push({
       pathname: `/(tabs)/automations/repeat/upsert/product`,
@@ -12,5 +19,10 @@ export default function AutomationRepeatUpsertSearch() {
     });
   };
 
-  return <PageSearch onProductSelect={handleProductSelect} meal={false} />;
+  return (
+    <PageSearch
+      onMealSelect={handleMealSelect}
+      onProductSelect={handleProductSelect}
+    />
+  );
 }

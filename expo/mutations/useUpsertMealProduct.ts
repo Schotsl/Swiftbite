@@ -16,9 +16,10 @@ export default function useUpsertMealProduct() {
     mutationFn: async (
       mealProduct: MealProductInsert,
     ): Promise<MealProduct | null> => {
+      const { product, ...rest } = mealProduct;
       const { data, error } = await supabase
         .from("meal_product")
-        .upsert(mealProduct)
+        .upsert(rest)
         .select()
         .single();
 

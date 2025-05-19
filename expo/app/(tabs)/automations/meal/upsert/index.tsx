@@ -77,12 +77,6 @@ export default function AutomationsMealUpsert() {
     });
   };
 
-  const handleSearch = () => {
-    router.push({
-      pathname: `/(tabs)/automations/meal/upsert/search`,
-    });
-  };
-
   return (
     <View
       style={{
@@ -125,7 +119,7 @@ export default function AutomationsMealUpsert() {
                   return (
                     <EmptySmall
                       content="Je hebt nog geen ingrediënten toegevoegd"
-                      onPress={handleSearch}
+                      onPress={() => setOpen(true)}
                     />
                   );
                 }}
@@ -211,7 +205,8 @@ function AutomationsMealUpsertAdd({
         }}
       >
         <NavigationAddList
-          onClose={() => {}}
+          search="/automations/meal/upsert/search"
+          onClose={onClose}
           style={{
             left: 88,
             bottom: 0,

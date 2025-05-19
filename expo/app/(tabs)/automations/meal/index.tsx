@@ -21,7 +21,7 @@ export default function AutomationsMeal() {
   const deleteMeal = useDeleteMeal();
 
   const { data } = useSuspenseQuery({
-    ...mealData(),
+    ...mealData({}),
   });
 
   const handleDelete = (uuid: string) => {

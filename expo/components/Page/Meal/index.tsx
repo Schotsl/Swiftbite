@@ -24,8 +24,8 @@ import ProductNutrition from "@/components/Product/Nutrition";
 
 export type PageMealProps = {
   meal: MealWithProduct;
-  serving: ServingData;
-  created: Date;
+  serving?: ServingData | null;
+  created?: Date | null;
   createdVisible?: boolean;
 
   onSave: (serving: ServingData, created: Date) => void;
@@ -147,7 +147,7 @@ export default function PageMeal({
               title={meal.title}
               favorite={favorite}
               onDelete={onDelete}
-              onRepeat={onRepeat && (() => onRepeat(propServing))}
+              onRepeat={onRepeat && (() => onRepeat(serving))}
               onFavorite={handleFavorite}
             />
 

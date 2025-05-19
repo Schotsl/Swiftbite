@@ -1,7 +1,7 @@
-import { Meal } from "@/types/meal";
 import { Tables } from "@/database.types";
 import { Product } from "./product";
 import { ServingData } from "@/schemas/serving";
+import { MealWithProduct } from "@/types/meal";
 
 type RepeatTable = Tables<"repeat">;
 type RepeatStripped = Omit<RepeatTable, "serving" | "time">;
@@ -16,7 +16,7 @@ type RepeatWithProduct = RepeatBase & {
 };
 
 type RepeatWithMeal = RepeatBase & {
-  meal: Meal;
+  meal: MealWithProduct;
   product: never;
 };
 

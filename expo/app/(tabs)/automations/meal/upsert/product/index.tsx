@@ -9,7 +9,7 @@ import { useEditMeal } from "@/context/MealContext";
 import { ServingData } from "@/schemas/serving";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
 
-export default function AddPreviewBarcodeScreen() {
+export default function AutomationsMealUpsertProduct() {
   const {
     updateMealProduct,
     insertMealProduct,

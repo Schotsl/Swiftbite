@@ -325,7 +325,7 @@ export function isMealFavorite(user: User | undefined, meal: string): boolean {
     return false;
   }
 
-  return user.favorite_meals.includes(meal);
+  return user.favorite_meals?.includes(meal);
 }
 
 export function toggleProductFavorite(

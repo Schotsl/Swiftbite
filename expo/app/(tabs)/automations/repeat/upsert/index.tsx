@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import ItemMeal from "@/components/Item/Meal";
 import InputTime from "@/components/Input/Time";
 import InputLabel from "@/components/Input/Label";
 import EmptySmall from "@/components/Empty/Small";
@@ -9,12 +10,15 @@ import ButtonOverlay from "@/components/Button/Overlay";
 import ModalBackground from "@/components/Modal/Background";
 import NavigationAddList from "@/components/Navigation/Add/List";
 
+import { Product } from "@/types/product";
 import { useForm } from "react-hook-form";
 import { Position } from "@/types";
 import { useRouter } from "expo-router";
+import { ServingData } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, View } from "react-native";
 import { useEditRepeat } from "@/context/RepeatContext";
+import { MealWithProduct } from "@/types/meal";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
 
@@ -29,14 +33,15 @@ export default function AutomationRepeatUpsert() {
 
   const {
     time,
+    meal,
     product,
     serving,
     weekdays,
     updating,
+    saveChanges,
     removeRepeat,
     updateTime,
     updateWeekdays,
-    saveChanges,
   } = useEditRepeat();
 
   const { control, watch, handleSubmit } = useForm<RepeatData>({
@@ -89,12 +94,6 @@ export default function AutomationRepeatUpsert() {
     });
   };
 
-  const handleSearch = () => {
-    router.push({
-      pathname: `/(tabs)/automations/repeat/upsert/search`,
-    });
-  };
-
   const isSet = !!product && !!serving;
 
   return (
@@ -124,21 +123,13 @@ export default function AutomationRepeatUpsert() {
                   borderRadius: 8,
                 }}
               >
-                {product && serving ? (
-                  <ItemProduct
-                    icon={false}
-                    small={true}
-                    border={false}
-                    product={product}
-                    serving={serving}
-                    onSelect={handleSelect}
-                  />
-                ) : (
-                  <EmptySmall
-                    content="Je hebt nog geen ingrediënt geselecteerd"
-                    onPress={handleSearch}
-                  />
-                )}
+                <AutomationRepeatUpsertItem
+                  meal={meal}
+                  product={product}
+                  serving={serving}
+                  onOpen={() => setOpen(true)}
+                  onSelect={handleSelect}
+                />
               </View>
             </View>
 
@@ -166,6 +157,55 @@ export default function AutomationRepeatUpsert() {
         disabled={isLoading || isDeleting}
       />
     </View>
+  );
+}
+
+type AutomationRepeatUpsertItemProps = {
+  meal?: MealWithProduct | null;
+  product?: Product | null;
+  serving?: ServingData | null;
+  onOpen: () => void;
+  onSelect: (product: string) => void;
+};
+
+function AutomationRepeatUpsertItem({
+  meal,
+  product,
+  serving,
+  onOpen,
+  onSelect,
+}: AutomationRepeatUpsertItemProps) {
+  if (meal && serving) {
+    return (
+      <ItemMeal
+        meal={meal}
+        icon={false}
+        small={true}
+        border={false}
+        serving={serving}
+        onSelect={onSelect}
+      />
+    );
+  }
+
+  if (product && serving) {
+    return (
+      <ItemProduct
+        icon={false}
+        small={true}
+        border={false}
+        product={product}
+        serving={serving}
+        onSelect={onSelect}
+      />
+    );
+  }
+
+  return (
+    <EmptySmall
+      content="Je hebt nog geen ingrediënt geselecteerd"
+      onPress={onOpen}
+    />
   );
 }
 
@@ -200,7 +240,8 @@ function AutomationRepeatUpsertAdd({
         }}
       >
         <NavigationAddList
-          onClose={() => {}}
+          search="/automations/repeat/upsert/search"
+          onClose={onClose}
           style={{ position: "relative", bottom: 0 }}
         />
 

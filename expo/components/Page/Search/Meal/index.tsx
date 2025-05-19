@@ -20,7 +20,7 @@ export default function PageSearchMeal({
   const queryLower = query.toLowerCase();
 
   const { data, isError, isLoading } = useSuspenseQuery({
-    ...mealData(),
+    ...mealData({}),
     select: (data) =>
       data?.filter((meal) => {
         const titleLower = meal.title.toLowerCase();

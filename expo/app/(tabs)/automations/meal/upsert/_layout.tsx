@@ -9,8 +9,8 @@ export default function MealLayout() {
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
 
   const { data, isLoading } = useQuery({
-    ...mealData(),
-    select: (data) => data?.find((meal) => meal.uuid === mealId),
+    ...mealData({ uuid: mealId }),
+    select: (data) => data[0],
     enabled: !!mealId,
   });
 

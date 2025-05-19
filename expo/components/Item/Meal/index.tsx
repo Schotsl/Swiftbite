@@ -9,6 +9,7 @@ type ItemMealProps = {
   serving?: ServingData | null;
 
   icon?: boolean;
+  small?: boolean;
   border?: boolean;
 
   onSelect: (meal: string) => void;
@@ -18,8 +19,8 @@ export default function ItemMeal({
   meal,
   serving,
   icon = true,
+  small = false,
   border = true,
-
   onSelect,
 }: ItemMealProps) {
   const length = meal.meal_products?.length || 0;
@@ -35,6 +36,7 @@ export default function ItemMeal({
 
   return (
     <Item
+      small={small}
       title={meal.title}
       border={border}
       iconId={icon ? meal.icon_id : undefined}
