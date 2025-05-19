@@ -7,23 +7,25 @@ import ButtonSmall from "@/components/Button/Small";
 import ItemProduct from "@/components/Item/Product";
 import InputWeekday from "@/components/Input/Weekday";
 import ButtonOverlay from "@/components/Button/Overlay";
+import useDeleteRepeat from "@/mutations/useDeleteRepeat";
 import ModalBackground from "@/components/Modal/Background";
 import NavigationAddList from "@/components/Navigation/Add/List";
 
 import { Product } from "@/types/product";
 import { useForm } from "react-hook-form";
 import { Position } from "@/types";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { ServingData } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { MealWithProduct } from "@/types/meal";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
-import useDeleteRepeat from "@/mutations/useDeleteRepeat";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 export default function AutomationRepeatUpsert() {
+  const focus = useIsFocused();
   const router = useRouter();
 
   const deleteRepeat = useDeleteRepeat();
@@ -135,12 +137,14 @@ export default function AutomationRepeatUpsert() {
               </View>
             </View>
 
-            <ButtonSmall
-              icon={isSet ? "pencil" : "plus"}
-              title={isSet ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"}
-              onPress={() => setOpen(true)}
-              onPosition={setPosition}
-            />
+            {focus && (
+              <ButtonSmall
+                icon={isSet ? "pencil" : "plus"}
+                title={isSet ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"}
+                onPress={() => setOpen(true)}
+                onPosition={setPosition}
+              />
+            )}
 
             <AutomationRepeatUpsertAdd
               set={isSet}

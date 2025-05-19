@@ -16,7 +16,7 @@ type PageEstimationProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date
+    created: Date,
   ) => void;
 };
 

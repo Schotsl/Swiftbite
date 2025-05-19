@@ -1,8 +1,8 @@
-import { FontAwesome6 } from "@expo/vector-icons";
-import { Href, Link } from "expo-router";
 import { Fragment } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Href, Link } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
+import { FontAwesome6 } from "@expo/vector-icons";
+import { Pressable, Text, View } from "react-native";
 
 type LinkTab = {
   href: Href;
@@ -18,12 +18,19 @@ type Tab = LinkTab | ActionTab;
 
 type TabsProps = {
   add?: Href;
+  back?: boolean;
   tabs: Tab[];
   value: string;
   onSelect?: (value: string) => void;
 };
 
-export default function Tabs({ add, tabs, value, onSelect }: TabsProps) {
+export default function Tabs({
+  add,
+  back = false,
+  tabs,
+  value,
+  onSelect,
+}: TabsProps) {
   return (
     <View>
       <View
@@ -46,6 +53,28 @@ export default function Tabs({ add, tabs, value, onSelect }: TabsProps) {
               justifyContent: "center",
             }}
           >
+            {back && (
+              <Link
+                href={"/(tabs)/add"}
+                style={{
+                  width: 28,
+                  height: 28,
+
+                  borderWidth: 2,
+                  borderColor: "#000000",
+                  borderRadius: 100,
+
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                asChild
+              >
+                <Pressable>
+                  <FontAwesome6 name="arrow-left" size={12} color="#000000" />
+                </Pressable>
+              </Link>
+            )}
+
             {tabs.map((tab, index) => {
               const isLast = index === tabs.length - 1;
               const isActive =
@@ -93,12 +122,13 @@ export default function Tabs({ add, tabs, value, onSelect }: TabsProps) {
           </View>
         </ScrollView>
       </View>
+
       {add && (
         <Link
           href={add}
           style={{
-            top: 10,
-            right: 22,
+            top: 12,
+            right: 32,
             position: "absolute",
 
             width: 28,

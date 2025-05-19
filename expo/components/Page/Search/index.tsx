@@ -8,8 +8,8 @@ import { SearchData, searchSchema } from "@/schemas/search";
 
 import Tabs from "@/components/Tabs";
 import Input from "@/components/Input";
-import PageSearchProduct from "./Product";
 import PageSearchMeal from "./Meal";
+import PageSearchProduct from "./Product";
 
 enum Type {
   MEALS = "meals",
@@ -77,6 +77,7 @@ export default function PageSearch({
   return (
     <View style={{ flex: 1 }}>
       <Tabs
+        back={true}
         onSelect={(value) => handleTab(value as Type)}
         value={selected}
         tabs={

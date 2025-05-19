@@ -4,6 +4,7 @@ import { rowTimeout } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditMeal } from "@/context/MealContext";
 import { Modal, View } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useEffect, useState } from "react";
 import { MealData, mealSchema } from "@/schemas/serving";
@@ -22,6 +23,7 @@ import ModalBackground from "@/components/Modal/Background";
 import NavigationAddList from "@/components/Navigation/Add/List";
 
 export default function AutomationsMealUpsert() {
+  const focus = useIsFocused();
   const router = useRouter();
 
   const deleteMeal = useDeleteMeal();
@@ -160,12 +162,14 @@ export default function AutomationsMealUpsert() {
               />
             </View>
 
-            <ButtonSmall
-              icon="plus"
-              title="Ingrediënt toevoegen"
-              onPress={() => setOpen(true)}
-              onPosition={setPosition}
-            />
+            {focus && (
+              <ButtonSmall
+                icon="plus"
+                title="Ingrediënt toevoegen"
+                onPress={() => setOpen(true)}
+                onPosition={setPosition}
+              />
+            )}
 
             <AutomationsMealUpsertAdd
               open={open}
