@@ -11,7 +11,7 @@ import PageEstimation from "@/components/Page/Estimation";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
 import { Product } from "@/types/product";
 
-export default function Add2Preview() {
+export default function AddEstimation() {
   const router = useRouter();
 
   const deleteEntry = useDeleteEntry();

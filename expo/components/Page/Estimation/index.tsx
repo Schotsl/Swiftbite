@@ -13,7 +13,7 @@ type PageEstimationProps = {
   product?: Product;
   onDelete?: () => void;
   onRepeat?: (serving: ServingData) => void;
-  onSave?: (
+  onSave: (
     product: Product,
     serving: ServingData | null,
     created: Date
