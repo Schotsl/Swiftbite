@@ -12,7 +12,5 @@ export default function AutomationRepeatUpsertSearch() {
     });
   };
 
-  return (
-    <PageSearch onProductSelect={handleProductSelect} onMealSelect={() => {}} />
-  );
+  return <PageSearch onProductSelect={handleProductSelect} meal={false} />;
 }

@@ -17,12 +17,20 @@ enum Type {
   PRODUCTS = "products",
 }
 
-type PageSearchProps = {
-  onMealSelect: (meal: string, serving: ServingData) => void;
-  onProductSelect: (product: string) => void;
-};
+type PageSearchProps =
+  | {
+      meal: true;
+      onMealSelect: (meal: string, serving: ServingData) => void;
+      onProductSelect: (product: string) => void;
+    }
+  | {
+      meal: false;
+      onMealSelect?: never;
+      onProductSelect: (product: string) => void;
+    };
 
 export default function PageSearch({
+  meal = true,
   onMealSelect,
   onProductSelect,
 }: PageSearchProps) {
@@ -71,11 +79,18 @@ export default function PageSearch({
       <Tabs
         onSelect={(value) => handleTab(value as Type)}
         value={selected}
-        tabs={[
-          { value: Type.PRODUCTS, title: "Producten" },
-          { value: Type.BASICS, title: "Basisitems" },
-          { value: Type.MEALS, title: "Maaltijden" },
-        ]}
+        tabs={
+          meal
+            ? [
+                { value: Type.PRODUCTS, title: "Producten" },
+                { value: Type.BASICS, title: "Basisitems" },
+                { value: Type.MEALS, title: "Maaltijden" },
+              ]
+            : [
+                { value: Type.PRODUCTS, title: "Producten" },
+                { value: Type.BASICS, title: "Basisitems" },
+              ]
+        }
       />
       <View
         style={{
