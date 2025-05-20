@@ -42,20 +42,26 @@ export const productGenerativeNutritionSchema = nutritionSchema.extend({
   serving_gram: z
     .number()
     .describe(
-      `Numeric value of the recommended serving size converted to grams`,
+      `Numeric value of the recommended serving size converted to grams`
     ),
 
   quantity_original: z
     .number()
-    .describe("Numeric value of the total quantity in the product's packaging"),
+    .describe("Numeric value of the total quantity in the product's packaging")
+    .optional()
+    .nullable(),
   quantity_original_unit: z
     .string()
-    .describe(`Unit of the total quantity in the product's packaging`),
+    .describe(`Unit of the total quantity in the product's packaging`)
+    .optional()
+    .nullable(),
   quantity_gram: z
     .number()
     .describe(
-      `Numeric value of the total quantity in the product's packaging converted to grams`,
-    ),
+      `Numeric value of the total quantity in the product's packaging converted to grams`
+    )
+    .optional()
+    .nullable(),
 });
 
 export type ProductGenerativeNutritionData = z.infer<
@@ -69,7 +75,7 @@ export const productSchema = nutritionSchema.extend({
   estimated: z
     .boolean()
     .describe(
-      `True if nutritional values are estimated due to not being able to find the product`,
+      `True if nutritional values are estimated due to not being able to find the product`
     ),
 
   serving_original: z
@@ -85,7 +91,7 @@ export const productSchema = nutritionSchema.extend({
   serving_gram: z
     .number()
     .describe(
-      `Numeric value of the recommended serving size converted to grams`,
+      `Numeric value of the recommended serving size converted to grams`
     )
     .optional()
     .nullable(),
@@ -103,7 +109,7 @@ export const productSchema = nutritionSchema.extend({
   quantity_gram: z
     .number()
     .describe(
-      `Numeric value of the total quantity in the product's packaging converted to grams`,
+      `Numeric value of the total quantity in the product's packaging converted to grams`
     )
     .optional()
     .nullable(),
@@ -111,24 +117,27 @@ export const productSchema = nutritionSchema.extend({
 
 export type ProductData = z.infer<typeof productSchema>;
 
-export const productSearchSchema = z.object({
-  title: z
-    .string()
-    .describe("Product title, this shouldn't include the quantity or unit"),
-  brand: z.string().describe("Product brand"),
-  quantity_original: z
-    .number()
-    .describe("Quantity of the product in the packaging")
-    .optional()
-    .nullable(),
-  quantity_original_unit: z
-    .string()
-    .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
-    )
-    .optional()
-    .nullable(),
-});
+export const productSearchSchema = z
+  .object({
+    title: z
+      .string()
+      .describe("Product title, this shouldn't include the quantity or unit"),
+    brand: z.string().describe("Product brand"),
+    quantity_original: z
+      .number()
+      .describe("Quantity of the product in the packaging")
+      .optional()
+      .nullable(),
+    quantity_original_unit: z
+      .string()
+      .describe(
+        `Unit for the quantity of the product in the packaging (e.g., g, ml)`
+      )
+      .optional()
+      .nullable(),
+  })
+  .optional()
+  .nullable();
 
 export type ProductSearchData = z.infer<typeof productSearchSchema>;
 
@@ -138,7 +147,7 @@ export const genericSchema = nutritionSchema.extend({
   estimated: z
     .boolean()
     .describe(
-      `True if nutritional values are estimated due to not being able to find the product`,
+      `True if nutritional values are estimated due to not being able to find the product`
     ),
 });
 
@@ -172,7 +181,7 @@ export const optionSchema = z.object({
   gram: z
     .number()
     .describe(
-      "An estimate of the amount of grams in the option, for example 100",
+      "An estimate of the amount of grams in the option, for example 100"
     ),
 });
 

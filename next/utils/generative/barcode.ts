@@ -1,39 +1,40 @@
 import { after } from "next/server";
-import { google } from "@ai-sdk/google";
 import { insertUsage } from "../usage";
 import { generateObject } from "ai";
 import { ProductSearchData } from "@/schema";
 import { productSearchSchema } from "@/schema";
+import { providerOptions, temperature } from "@/variables";
 
-import promptSearchBarcodeQuick from "@/prompts/search-barcode-quick";
+import { google as googleModel } from "@ai-sdk/google";
 
-export async function searchBarcodeQuick(
+import promptSearchBarcodeQuick from "@/prompts/search-barcode";
+
+export async function searchBarcode(
   user: string,
   data: {
     lang: string;
-    google: string;
     barcode: string;
-    openfood: string;
-    fatsecret: string;
+
+    google: unknown[];
+    openfood: unknown[];
+    fatsecret: unknown[];
   },
   signal?: AbortSignal
 ): Promise<ProductSearchData> {
-  const task = "search-barcode-quick";
-  const model = google("gemini-2.5-pro-preview-03-25");
+  const task = "search-barcode";
+  const model = googleModel("gemini-2.5-pro-preview-03-25");
+
+  const { google, openfood, fatsecret, barcode } = data;
 
   const { object, usage } = await generateObject({
     model,
+    temperature,
+    providerOptions,
+
     output: "object",
     schema: productSearchSchema,
-    temperature: 0,
     abortSignal: signal,
-    providerOptions: {
-      google: {
-        thinkingConfig: {
-          thinkingBudget: 0,
-        },
-      },
-    },
+
     messages: [
       {
         role: "system",
@@ -41,29 +42,36 @@ export async function searchBarcodeQuick(
       },
       {
         role: "system",
-        content: `Open Food Facts results: ${JSON.stringify(data.openfood)}`,
+        content:
+          openfood.length > 0
+            ? `Open Food Facts results: ${JSON.stringify(openfood)}`
+            : "No Open Food Facts results found for this barcode",
       },
       {
         role: "system",
-        content: `Google results: ${JSON.stringify(data.google)}`,
+        content:
+          google.length > 0
+            ? `Google results: ${JSON.stringify(google)}`
+            : "No Google results found for this barcode",
       },
       {
         role: "system",
-        content: `Fatsecret results: ${JSON.stringify(data.fatsecret)}`,
+        content:
+          fatsecret.length > 0
+            ? `Fatsecret results: ${JSON.stringify(fatsecret)}`
+            : "No Fatsecret results found for this barcode",
       },
       {
         role: "user",
         content: JSON.stringify({
           lang: "Dutch",
-          barcode: data.barcode,
+          barcode,
           location: "Amsterdam",
           measurement: "Metric",
         }),
       },
     ],
   });
-
-  console.log(object);
 
   after(async () => {
     await Promise.all([

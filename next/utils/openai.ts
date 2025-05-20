@@ -552,6 +552,7 @@ export async function generateOptions(data: {
   lang: string;
   title: string;
   brand: string;
+  category: string;
 }): Promise<OptionData[]> {
   const model = "gpt-4.1-mini";
 
