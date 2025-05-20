@@ -76,7 +76,7 @@ export function useProduct({
         {
           text: "Naar zoeken",
           onPress: () => {
-            router.push("/(tabs)/add/add-search");
+            router.replace("/(tabs)/add/add-search");
           },
         },
       ]);
@@ -91,15 +91,18 @@ export function useProduct({
         {
           text: "Ok",
           onPress: () => {
-            router.push("/(tabs)/add/add-search");
+            router.replace("/(tabs)/add/add-search");
           },
         },
-      ],
+      ]
     );
   }, [product, isLoading, search, router, barcodeId]);
 
+  const loadingProduct = isLoading;
+  const loadingBarcode = isLoading || (!search && !product);
+
   return {
     product,
-    isLoading,
+    isLoading: productId ? loadingProduct : loadingBarcode,
   };
 }
