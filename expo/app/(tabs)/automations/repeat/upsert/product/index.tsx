@@ -1,15 +1,12 @@
-import PageProduct from "@/components/Page/Product";
-
 import { View } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { useProduct } from "@/hooks/useProduct";
 import { ServingData } from "@/schemas/serving";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
 
-import productData from "@/queries/productData";
+import PageProduct from "@/components/Page/Product";
 import HeaderLoading from "@/components/Header/Loading";
 import ProductStatus from "@/components/Product/Status";
-import { useProduct } from "@/hooks/useProduct";
 
 export default function AutomationRepeatUpsertProduct() {
   const {

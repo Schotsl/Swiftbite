@@ -25,7 +25,7 @@ export async function estimateNutrition(
     title?: string;
     content?: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = googleModel("gemini-2.5-pro-preview-03-25");
@@ -90,7 +90,7 @@ export async function estimateVisuals(
     title?: string;
     content?: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = googleModel("gemini-2.5-flash-preview-05-20");

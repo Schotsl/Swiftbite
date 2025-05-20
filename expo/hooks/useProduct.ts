@@ -94,7 +94,7 @@ export function useProduct({
             router.replace("/(tabs)/add/add-search");
           },
         },
-      ]
+      ],
     );
   }, [product, isLoading, search, router, barcodeId]);
 

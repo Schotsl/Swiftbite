@@ -1,4 +1,3 @@
-import productData from "@/queries/productData";
 import PageProduct from "@/components/Page/Product";
 import ProductStatus from "@/components/Product/Status";
 import HeaderLoading from "@/components/Header/Loading";
