@@ -1,6 +1,6 @@
 import { supabase } from "@/utils/supabase";
 import { generateSlug, handleError } from "@/helper";
-import { generateOptions } from "@/utils/openai";
+import { generateOptions } from "@/utils/generative/generate";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest) {
 
   console.log(`[OPTIONS/${title}] Generating options`);
 
-  const options = await generateOptions({ title, lang, brand });
+  const options = await generateOptions({ title, brand });
   const optionsMapped = options.map((option) => ({
     value: generateSlug(option.title),
     title: option.title,

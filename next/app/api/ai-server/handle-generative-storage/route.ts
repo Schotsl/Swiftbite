@@ -1,6 +1,9 @@
 import { after, NextResponse } from "next/server";
 import { handleError } from "@/helper";
-import { estimateVisuals, estimateNutrition } from "@/utils/openai";
+import {
+  estimateNutrition,
+  estimateVisuals,
+} from "@/utils/generative/estimate";
 import {
   fetchUrl,
   fetchEntry,
@@ -47,7 +50,11 @@ export async function POST(request: Request) {
     const { title } = productObject;
     const { content } = generativeObject;
 
-    const data = { image, title, content };
+    const data = {
+      image: image || undefined,
+      title: title || undefined,
+      description: content || undefined,
+    };
 
     if (generativeName.endsWith("-small")) {
       // We'll use the small image to figure out the title

@@ -3,7 +3,7 @@ import rulesGeneric from "./rules-generic";
 const promptContent = `
 You are a nutritional-data assistant for generic food items, with web search capabilities. Your primary goal is to find and extract typical nutritional information for a single, specific generic food item provided by the user.
 
-# Generic item specification
+# Generic information
 You will receive the following details for the generic item you need to find information for:
 
 - \`title\`: The name of the generic food item (e.g., "Apple", "Chicken Breast, raw, with skin").

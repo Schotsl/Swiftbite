@@ -1,4 +1,5 @@
-import { normalizeTitle, generateIcon } from "@/utils/openai";
+import { normalizeTitle } from "@/utils/generative/normalize";
+import { generateIcon } from "@/utils/generative/generate";
 import { after } from "next/server";
 import {
   fetchIcon,

@@ -1,10 +1,11 @@
 import { ProductV2 } from "@openfoodfacts/openfoodfacts-nodejs";
+import { generateOptions } from "./generative/generate";
+import { normalizeQuantity } from "./generative/normalize";
 import { Option, ProductInsert } from "@/types";
 import { generateSlug, roundNumber } from "@/helper";
-import { generateOptions, normalizeQuantity } from "./openai";
 
-export function getTitle(product: ProductV2, lang: string) {
-  const preferenceKey = `product_name_${lang}`;
+export function getTitle(product: ProductV2) {
+  const preferenceKey = `product_name_nl`;
 
   if (product[preferenceKey]) {
     return product[preferenceKey];
@@ -31,12 +32,11 @@ export function getTitle(product: ProductV2, lang: string) {
 
 export async function mapProduct(
   user: string,
-  product: ProductV2,
-  lang: string,
+  product: ProductV2
 ): Promise<ProductInsert & { options: Option[] }> {
   const { nutriments } = product;
 
-  const title = getTitle(product, lang);
+  const title = getTitle(product);
   const brand = product.brands;
 
   const [quantity, serving, options] = await Promise.all([
@@ -53,7 +53,6 @@ export async function mapProduct(
     }),
 
     generateOptions({
-      lang,
       title,
       brand,
     }),
@@ -69,7 +68,7 @@ export async function mapProduct(
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans,
+    nutritionFats - nutritionSaturated - nutritionTrans
   );
 
   const quantityParsed =

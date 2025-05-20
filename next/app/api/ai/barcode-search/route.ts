@@ -5,7 +5,7 @@ import * as crypto from "crypto";
 import { Product } from "@/types";
 import { handleError } from "@/helper";
 import { fatsecretRequest } from "@/utils/internet";
-import { searchBarcodeQuick } from "@/utils/generative/barcode";
+import { searchBarcode } from "@/utils/generative/barcode";
 import { processSearchProduct } from "@/utils/processing";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
@@ -24,14 +24,14 @@ export async function GET(request: NextRequest) {
   if (!barcode) {
     return NextResponse.json(
       { error: "Please provide a barcode" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -50,9 +50,8 @@ export async function GET(request: NextRequest) {
   const [google, openfood, fatsecret] = await Promise.all(promises);
 
   // Fetch product from supabase and openfood in parallel
-  const productSearch = await searchBarcodeQuick(user!, {
+  const productSearch = await searchBarcode(user!, {
     barcode,
-    lang,
     google,
     openfood,
     fatsecret,
@@ -87,7 +86,7 @@ const getUUIDfromKey = (key: string, seed: string): string => {
 const getProduct = (
   search: ProductSearchData | GenericSearchData,
   seed: string,
-  barcode: string
+  barcode: string,
 ): Product => {
   const isGeneric = "category" in search;
 

@@ -1,7 +1,7 @@
 const promptContent = `
 You are a meal title normalization assistant. Your goal is to generate a concise, generic, and normalized title for a meal, suitable for caching and potentially generating generic icons or images.
 
-# Input
+# Meal information
 You will receive:
 
 - An original meal title (\`title\`), which may be in any language, specific, branded, or vague.

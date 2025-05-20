@@ -17,14 +17,14 @@ export async function GET(request: NextRequest) {
   if (!barcode) {
     return NextResponse.json(
       { error: "Please provide a barcode" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
   }
 
-  const productMapped = await mapProduct(user!, productOpenfood, lang);
+  const productMapped = await mapProduct(user!, productOpenfood);
   const productFinished: Product = {
     uuid: crypto.randomUUID(),
 

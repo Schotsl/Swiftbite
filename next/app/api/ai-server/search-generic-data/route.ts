@@ -1,6 +1,7 @@
 import { supabase } from "@/utils/supabase";
 import { handleError } from "@/helper";
-import { generateEmbedding, searchGeneric } from "@/utils/openai";
+import { generateEmbedding } from "@/utils/generative/generate";
+import { searchGeneric } from "@/utils/generative/generic";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -40,7 +41,6 @@ export async function GET(request: NextRequest) {
   console.log(`[PRODUCT/${title}] Searching product`);
 
   const product = await searchGeneric({
-    lang,
     title,
     category: category!,
   });

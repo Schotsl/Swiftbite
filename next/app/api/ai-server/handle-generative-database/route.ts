@@ -1,5 +1,8 @@
 import { handleError } from "@/helper";
-import { estimateNutrition, estimateVisuals } from "@/utils/openai";
+import {
+  estimateNutrition,
+  estimateVisuals,
+} from "@/utils/generative/estimate";
 import { after, NextResponse } from "next/server";
 
 import { supabase } from "@/utils/supabase";
@@ -34,9 +37,13 @@ export async function POST(request: Request) {
     ]);
 
     const title = productObject.title;
-    const content = body.record.content;
+    const description = body.record.content;
 
-    const data = { title, content, image: null };
+    const data = {
+      image: undefined,
+      title: title || undefined,
+      description: description || undefined,
+    };
 
     const [visuals, nutrition] = await Promise.all([
       estimateVisuals(user, data),

@@ -1,4 +1,5 @@
-import { generateIcon, normalizeMeal } from "@/utils/openai";
+import { generateIcon } from "@/utils/generative/generate";
+import { normalizeMeal } from "@/utils/generative/normalize";
 import { validateUsage } from "@/utils/usage";
 import { after, NextResponse } from "next/server";
 import {

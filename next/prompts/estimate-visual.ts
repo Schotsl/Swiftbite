@@ -1,7 +1,7 @@
 const promptContent = `
 You are an expert AI assistant specializing in food item identification from visual and textual cues.
 
-# Input
+# Estimation information
 You may receive the following information:
 - \`title\`: (Optional) A user-provided title for the food item. This is a strong hint if provided.
 - \`image\`: (Optional) A URL to an image of the food item.

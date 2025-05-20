@@ -1,7 +1,8 @@
 import { supabase } from "@/utils/supabase";
 import { handleError } from "@/helper";
 import { NextRequest, NextResponse } from "next/server";
-import { generateEmbedding, searchProduct } from "@/utils/openai";
+import { generateEmbedding } from "@/utils/generative/generate";
+import { searchProduct } from "@/utils/generative/product";
 
 export async function GET(request: NextRequest) {
   const uuid = request.nextUrl.searchParams.get("uuid");
@@ -14,46 +15,47 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit"
+    "quantity_original_unit",
   );
 
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   console.log(`[PRODUCT/${title}] Searching product`);
 
   const product = await searchProduct({
-    lang,
     brand: brand!,
     title,
-    barcode,
-    quantity_original: quantity_original ? Number(quantity_original) : null,
-    quantity_original_unit,
+    barcode: barcode || undefined,
+    quantity_original: quantity_original
+      ? Number(quantity_original)
+      : undefined,
+    quantity_original_unit: quantity_original_unit || undefined,
   });
 
   const {

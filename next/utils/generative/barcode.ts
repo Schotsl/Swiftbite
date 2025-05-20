@@ -11,20 +11,21 @@ import promptSearchBarcodeQuick from "@/prompts/search-barcode";
 
 export async function searchBarcode(
   user: string,
-  data: {
-    lang: string;
+  {
+    barcode,
+    google,
+    openfood,
+    fatsecret,
+  }: {
     barcode: string;
-
     google: unknown[];
     openfood: unknown[];
     fatsecret: unknown[];
   },
-  signal?: AbortSignal
-): Promise<ProductSearchData> {
+  signal?: AbortSignal,
+): Promise<ProductSearchData | null> {
   const task = "search-barcode";
   const model = googleModel("gemini-2.5-pro-preview-03-25");
-
-  const { google, openfood, fatsecret, barcode } = data;
 
   const { object, usage } = await generateObject({
     model,
@@ -32,7 +33,7 @@ export async function searchBarcode(
     providerOptions,
 
     output: "object",
-    schema: productSearchSchema,
+    schema: productSearchSchema.optional().nullable(),
     abortSignal: signal,
 
     messages: [
@@ -63,12 +64,22 @@ export async function searchBarcode(
       },
       {
         role: "user",
-        content: JSON.stringify({
-          lang: "Dutch",
-          barcode,
+        content: [
+          {
+            type: "text",
+            text: `Product information: ${JSON.stringify({
+              barcode,
+            })}`,
+          },
+        ],
+      },
+      {
+        role: "user",
+        content: `User information: ${JSON.stringify({
+          language: "Dutch",
           location: "Amsterdam",
           measurement: "Metric",
-        }),
+        })}`,
       },
     ],
   });
@@ -84,5 +95,5 @@ export async function searchBarcode(
     ]);
   });
 
-  return object;
+  return object || null;
 }

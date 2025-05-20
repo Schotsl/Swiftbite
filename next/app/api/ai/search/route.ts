@@ -6,7 +6,8 @@ import { Enums } from "@/database.types";
 import { Product } from "@/types";
 import { getUser, supabase } from "@/utils/supabase";
 import { handleError, streamToResponse } from "@/helper";
-import { searchGenerics, searchProducts } from "@/utils/openai";
+import { searchGenerics } from "@/utils/generative/generic";
+import { searchProducts } from "@/utils/generative/product";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
 import { fatsecretRequest, supabaseRequest } from "@/utils/internet";
@@ -65,10 +66,9 @@ export async function GET(request: NextRequest) {
           user!,
           {
             query,
-            lang,
-            google: JSON.stringify(googleResponse),
-            openfood: JSON.stringify(openfoodResponse),
-            fatsecret: JSON.stringify(fatsecretResponse),
+            google: googleResponse,
+            openfood: openfoodResponse,
+            fatsecret: fatsecretResponse,
           },
           {
             products: supabaseResponse.map((product: Product) => ({
@@ -84,11 +84,10 @@ export async function GET(request: NextRequest) {
           user!,
           {
             query,
-            lang,
-            google: JSON.stringify(googleResponse),
+            google: googleResponse,
           },
           {
-            generic: supabaseResponse.map((product: Product) => ({
+            generics: supabaseResponse.map((product: Product) => ({
               title: product.title,
               category: product.category,
             })),
