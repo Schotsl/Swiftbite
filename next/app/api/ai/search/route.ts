@@ -1,13 +1,12 @@
 import * as crypto from "crypto";
 
-import getUUID from "uuid-by-string";
-
 import { Enums } from "@/database.types";
 import { Product } from "@/types";
-import { getUser, supabase } from "@/utils/supabase";
-import { handleError, streamToResponse } from "@/helper";
 import { searchGenerics } from "@/utils/generative/generic";
 import { searchProducts } from "@/utils/generative/product";
+import { streamToResponse } from "@/helper";
+import { getProductFromSearch } from "@/utils/search";
+import { getUser, insertProduct } from "@/utils/supabase";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
 import { fatsecretRequest, supabaseRequest } from "@/utils/internet";
@@ -17,6 +16,10 @@ import { processSearchGeneric, processSearchProduct } from "@/utils/processing";
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
   const signal = request.signal;
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const seed = crypto.randomUUID();
   const lang = request.nextUrl.searchParams.get("lang");
@@ -51,45 +54,40 @@ export async function GET(request: NextRequest) {
     promises.push(fatsecretRequest(query, signal));
   }
 
-  // Get all the data first
-  const [
-    googleResponse,
-    supabaseResponse,
-    openfoodResponse,
-    fatsecretResponse,
-  ] = await Promise.all(promises);
+  // Get all the data in parallel first
+  const [google, supabase, openfood, fatsecret] = await Promise.all(promises);
 
   // Create a stream for AI results
   const generativeStream =
     type === "search_product"
       ? await searchProducts(
-          user!,
+          user,
           {
             query,
-            google: googleResponse,
-            openfood: openfoodResponse,
-            fatsecret: fatsecretResponse,
+            google,
+            openfood,
+            fatsecret,
           },
           {
-            products: supabaseResponse.map((product: Product) => ({
-              title: product.title,
-              brand: product.brand,
-              quantity_original: product.quantity?.quantity,
-              quantity_original_unit: product.quantity?.option,
+            products: supabase.map(({ title, brand, quantity }: Product) => ({
+              title,
+              brand,
+              quantity_original: quantity?.quantity,
+              quantity_original_unit: quantity?.option,
             })),
           },
           request.signal,
         )
       : await searchGenerics(
-          user!,
+          user,
           {
             query,
-            google: googleResponse,
+            google,
           },
           {
-            generics: supabaseResponse.map((product: Product) => ({
-              title: product.title,
-              category: product.category,
+            generics: supabase.map(({ title, category }: Product) => ({
+              title,
+              category,
             })),
           },
           request.signal,
@@ -97,22 +95,27 @@ export async function GET(request: NextRequest) {
 
   after(async () => {
     const results = await generativeStream.object;
-    const resultsMapped = results.map((search) => getProduct(search, seed));
+    const resultsMapped = results.map((search) =>
+      getProductFromSearch({ search, seed }),
+    );
 
-    const { error } = await supabase.from("product").insert(resultsMapped);
-
-    handleError(error);
+    // Normally we await the insert but since we won't automatically redirect to the user to product I'm assuming we'll insert before they click
+    await insertProduct(resultsMapped);
 
     resultsMapped.forEach(async (result) => {
       if (result.type === "search_generic") {
+        const uuid = result.uuid;
         const search = result.search as GenericSearchData;
-        processSearchGeneric(result.uuid, lang, search);
+
+        processSearchGeneric({ uuid, lang, search });
 
         return;
       }
 
+      const uuid = result.uuid;
       const search = result.search as ProductSearchData;
-      processSearchProduct(result.uuid, lang, search);
+
+      processSearchProduct({ uuid, lang, search });
     });
   });
 
@@ -121,17 +124,15 @@ export async function GET(request: NextRequest) {
       console.log("[SEARCH] Yielding Supabase results");
 
       // First yield the Supabase results
-      yield supabaseResponse;
+      yield supabase;
 
       // Then yield combined results as AI results come in
       for await (const chunk of generativeStream.partialObjectStream) {
-        if (chunk.length === 0) {
-          continue;
-        }
+        const mapped = chunk.map((search) =>
+          getProductFromSearch({ search, seed }),
+        );
 
-        const mapped = chunk.map((search) => getProduct(search, seed));
-
-        yield [...supabaseResponse, ...mapped];
+        yield [...supabase, ...mapped];
       }
 
       // Close the stream after the last chunk
@@ -142,67 +143,3 @@ export async function GET(request: NextRequest) {
   const response = streamToResponse(combinedStream);
   return response;
 }
-
-// Get UUID from title, brand, quantity_original and quantity_original_unit
-// This is probably very less than ideal
-const getUUIDfromKey = (key: string, seed: string): string => {
-  const keyArray = [key, seed];
-  const keyJoined = keyArray.join("");
-
-  return getUUID(keyJoined);
-};
-
-const getProduct = (
-  search: ProductSearchData | GenericSearchData,
-  seed: string,
-): Product => {
-  const isGeneric = "category" in search;
-
-  const parsedType = isGeneric ? "search_generic" : "search_product";
-  const parsedKey = isGeneric
-    ? search.title + search.category
-    : search.title +
-      search.brand +
-      search.quantity_original +
-      search.quantity_original_unit;
-
-  const parsedUuid = getUUIDfromKey(parsedKey, seed);
-
-  return {
-    type: parsedType,
-    uuid: parsedUuid,
-    search,
-    estimated: false,
-    processing: true,
-
-    title: null,
-    brand: null,
-    user_id: null,
-    serving: null,
-    options: null,
-    barcode: null,
-    category: null,
-    quantity: null,
-    embedding: null,
-
-    icon_id: null,
-    iron_100g: null,
-    fiber_100g: null,
-    sodium_100g: null,
-    protein_100g: null,
-    calorie_100g: null,
-    calcium_100g: null,
-    potassium_100g: null,
-    cholesterol_100g: null,
-    carbohydrate_100g: null,
-    carbohydrate_sugar_100g: null,
-
-    fat_100g: null,
-    fat_trans_100g: null,
-    fat_saturated_100g: null,
-    fat_unsaturated_100g: null,
-
-    updated_at: null,
-    created_at: new Date().toISOString(),
-  };
-};

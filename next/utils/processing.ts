@@ -4,12 +4,17 @@ const headers = {
   "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
 };
 
-export function processSearchProduct(
-  uuid: string,
-  lang: string,
-  search: ProductSearchData,
-  barcode?: string,
-) {
+export function processSearchProduct({
+  uuid,
+  lang,
+  search,
+  barcode,
+}: {
+  uuid: string;
+  lang: string;
+  search: ProductSearchData;
+  barcode?: string;
+}) {
   const params = new URLSearchParams({
     uuid,
     lang,
@@ -44,11 +49,15 @@ export function processSearchProduct(
   );
 }
 
-export function processSearchGeneric(
-  uuid: string,
-  lang: string,
-  search: GenericSearchData,
-) {
+export function processSearchGeneric({
+  uuid,
+  lang,
+  search,
+}: {
+  uuid: string;
+  lang: string;
+  search: GenericSearchData;
+}) {
   const params = new URLSearchParams({
     uuid,
     lang,

@@ -1,10 +1,27 @@
+import OpenFoodFacts from "@openfoodfacts/openfoodfacts-nodejs";
+
 import { ProductV2 } from "@openfoodfacts/openfoodfacts-nodejs";
 import { generateOptions } from "./generative/generate";
 import { normalizeQuantity } from "./generative/normalize";
 import { Option, ProductInsert } from "@/types";
 import { generateSlug, roundNumber } from "@/helper";
 
-export function getTitle(product: ProductV2) {
+export async function fetchProductFromOpenfood(
+  user: string,
+  barcode: string,
+): Promise<(ProductInsert & { options: Option[] }) | null> {
+  const client = new OpenFoodFacts(fetch);
+  const product = await client.getProduct(barcode);
+
+  if (!product) {
+    return null;
+  }
+
+  const mapped = await mapProduct(user, product);
+  return mapped;
+}
+
+function getTitle(product: ProductV2) {
   const preferenceKey = `product_name_nl`;
 
   if (product[preferenceKey]) {
@@ -30,9 +47,9 @@ export function getTitle(product: ProductV2) {
   throw new Error(`No product name found for ${product.code}`);
 }
 
-export async function mapProduct(
+async function mapProduct(
   user: string,
-  product: ProductV2
+  product: ProductV2,
 ): Promise<ProductInsert & { options: Option[] }> {
   const { nutriments } = product;
 
@@ -68,7 +85,7 @@ export async function mapProduct(
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans
+    nutritionFats - nutritionSaturated - nutritionTrans,
   );
 
   const quantityParsed =

@@ -1,6 +1,6 @@
 import { Tables } from "@/database.types";
 import { handleError } from "@/helper";
-import { EntryInsert } from "@/types";
+import { EntryInsert, Product, ProductInsert } from "@/types";
 import { createClient as createClientSupabase } from "@supabase/supabase-js";
 
 export const supabase = createClientSupabase(
@@ -156,6 +156,20 @@ export const insertEntry = async (entry: EntryInsert) => {
     .from("entry")
     .insert(entry)
     .select("*");
+
+  handleError(error);
+
+  return data;
+};
+
+export const insertProduct = async (
+  product: ProductInsert | ProductInsert[],
+): Promise<Product> => {
+  const { error, data } = await supabase
+    .from("product")
+    .insert(product)
+    .select("*")
+    .single();
 
   handleError(error);
 

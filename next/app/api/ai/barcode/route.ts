@@ -1,15 +1,17 @@
-import OpenFoodFacts from "@openfoodfacts/openfoodfacts-nodejs";
-
-import { Product } from "@/types";
-import { mapProduct } from "@/utils/openfood";
-import { handleError } from "@/helper";
-import { after, NextRequest, NextResponse } from "next/server";
-import { fetchProductByBarcode, getUser, supabase } from "@/utils/supabase";
-
-const client = new OpenFoodFacts(fetch);
+import { fetchProductFromOpenfood } from "@/utils/openfood";
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUser,
+  insertProduct,
+  fetchProductByBarcode,
+} from "@/utils/supabase";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const lang = request.nextUrl.searchParams.get("lang");
   const barcode = request.nextUrl.searchParams.get("barcode");
@@ -28,39 +30,22 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  // Fetch product from supabase and openfood in parallel
-  const [productSupabase, productOpenfood] = await Promise.all([
-    fetchProductByBarcode(barcode),
-    client.getProduct(barcode),
-  ]);
-
   // If product is already in supabase return it
+  const productSupabase = await fetchProductByBarcode(barcode);
+
   if (productSupabase) {
     return NextResponse.json(productSupabase);
   }
+
+  // Otherwise we'll look for it on openfood
+  const productOpenfood = await fetchProductFromOpenfood(user, barcode);
 
   if (!productOpenfood) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
   }
 
-  const productMapped = await mapProduct(user!, productOpenfood);
-  const productFinished: Product = {
-    uuid: crypto.randomUUID(),
+  // Insert the product into supabase and then return it
+  const productInserted = await insertProduct(productOpenfood);
 
-    user_id: user!,
-
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-
-    ...productMapped,
-  };
-
-  after(async () => {
-    // Idk why we insert after the response is sent
-    const { error } = await supabase.from("product").insert(productFinished);
-
-    handleError(error);
-  });
-
-  return NextResponse.json(productFinished);
+  return NextResponse.json(productInserted);
 }

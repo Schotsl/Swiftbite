@@ -7,7 +7,9 @@ export async function GET(request: NextRequest) {
   const uuid = request.nextUrl.searchParams.get("uuid");
   const lang = request.nextUrl.searchParams.get("lang");
   const title = request.nextUrl.searchParams.get("title");
-  const brand = request.nextUrl.searchParams.get("brand");
+
+  const brand = request.nextUrl.searchParams.get("brand") || undefined;
+  const category = request.nextUrl.searchParams.get("category") || undefined;
 
   if (!uuid) {
     return NextResponse.json(
@@ -30,16 +32,9 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  if (!brand) {
-    return NextResponse.json(
-      { error: "Please provide a brand" },
-      { status: 400 },
-    );
-  }
-
   console.log(`[OPTIONS/${title}] Generating options`);
 
-  const options = await generateOptions({ title, brand });
+  const options = await generateOptions({ title, brand, category });
   const optionsMapped = options.map((option) => ({
     value: generateSlug(option.title),
     title: option.title,

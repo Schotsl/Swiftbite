@@ -1,19 +1,23 @@
-import getUUID from "uuid-by-string";
-
 import * as crypto from "crypto";
 
-import { Product } from "@/types";
-import { handleError } from "@/helper";
-import { fatsecretRequest } from "@/utils/internet";
 import { searchBarcode } from "@/utils/generative/barcode";
+import { fatsecretRequest } from "@/utils/internet";
+import { getProductFromSearch } from "@/utils/search";
 import { processSearchProduct } from "@/utils/processing";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
-import { GenericSearchData, ProductSearchData } from "@/schema";
-import { fetchProductByBarcode, getUser, supabase } from "@/utils/supabase";
+import {
+  getUser,
+  insertProduct,
+  fetchProductByBarcode,
+} from "@/utils/supabase";
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const lang = request.nextUrl.searchParams.get("lang");
   const barcode = request.nextUrl.searchParams.get("barcode");
@@ -49,92 +53,36 @@ export async function GET(request: NextRequest) {
 
   const [google, openfood, fatsecret] = await Promise.all(promises);
 
-  // Fetch product from supabase and openfood in parallel
-  const productSearch = await searchBarcode(user!, {
+  const search = await searchBarcode(user, {
     barcode,
     google,
     openfood,
     fatsecret,
   });
 
-  if (!productSearch) {
+  if (!search) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
   }
 
-  const product = getProduct(productSearch, seed, barcode);
+  const product = getProductFromSearch({
+    seed,
+    search,
+    barcode,
+  });
 
-  const { error } = await supabase.from("product").insert(product);
-
-  handleError(error);
+  // The UUID has already been generated but we'll await anyway so we're certain the user can fetch it
+  await insertProduct(product);
 
   after(async () => {
-    processSearchProduct(product.uuid, lang, productSearch, barcode);
+    const { uuid } = product;
+
+    processSearchProduct({
+      uuid,
+      lang,
+      search,
+      barcode,
+    });
   });
 
   return NextResponse.json(product);
 }
-
-// Get UUID from title, brand, quantity_original and quantity_original_unit
-// This is probably very less than ideal
-const getUUIDfromKey = (key: string, seed: string): string => {
-  const keyArray = [key, seed];
-  const keyJoined = keyArray.join("");
-
-  return getUUID(keyJoined);
-};
-
-const getProduct = (
-  search: ProductSearchData | GenericSearchData,
-  seed: string,
-  barcode: string,
-): Product => {
-  const isGeneric = "category" in search;
-
-  const parsedType = isGeneric ? "search_generic" : "search_product";
-  const parsedKey = isGeneric
-    ? search.title + search.category
-    : search.title +
-      search.brand +
-      search.quantity_original +
-      search.quantity_original_unit;
-
-  const parsedUuid = getUUIDfromKey(parsedKey, seed);
-
-  return {
-    type: parsedType,
-    uuid: parsedUuid,
-    search,
-    estimated: false,
-    processing: true,
-
-    title: null,
-    brand: null,
-    user_id: null,
-    serving: null,
-    options: null,
-    barcode: barcode,
-    category: null,
-    quantity: null,
-    embedding: null,
-
-    icon_id: null,
-    iron_100g: null,
-    fiber_100g: null,
-    sodium_100g: null,
-    protein_100g: null,
-    calorie_100g: null,
-    calcium_100g: null,
-    potassium_100g: null,
-    cholesterol_100g: null,
-    carbohydrate_100g: null,
-    carbohydrate_sugar_100g: null,
-
-    fat_100g: null,
-    fat_trans_100g: null,
-    fat_saturated_100g: null,
-    fat_unsaturated_100g: null,
-
-    updated_at: null,
-    created_at: new Date().toISOString(),
-  };
-};
