@@ -4,7 +4,7 @@ import ProductStatus from "@/components/Product/Status";
 import HeaderLoading from "@/components/Header/Loading";
 
 import { View } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+import { useProduct } from "@/hooks/useProduct";
 import { useEditMeal } from "@/context/MealContext";
 import { ServingData } from "@/schemas/serving";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
@@ -17,15 +17,15 @@ export default function AutomationsMealUpsertProduct() {
     mealProducts,
   } = useEditMeal();
 
-  const { barcode, product: productId } = useLocalSearchParams<{
+  const { barcode: barcodeId, product: productId } = useLocalSearchParams<{
     barcode?: string;
     product?: string;
   }>();
 
-  const { data: product, isLoading } = useQuery({
-    ...productData(productId ? { uuid: productId } : { barcode: barcode! }),
-    select: (products) => products[0],
-    enabled: !!productId || !!barcode,
+  const { product, isLoading } = useProduct({
+    productId,
+    barcodeId,
+    enabled: !!productId || !!barcodeId,
   });
 
   if (isLoading) {
@@ -43,7 +43,7 @@ export default function AutomationsMealUpsertProduct() {
   }
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId,
+    (mealProduct) => mealProduct.product.uuid === productId
   );
 
   return (

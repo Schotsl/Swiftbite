@@ -9,6 +9,7 @@ import { Redirect, router, useLocalSearchParams } from "expo-router";
 import productData from "@/queries/productData";
 import HeaderLoading from "@/components/Header/Loading";
 import ProductStatus from "@/components/Product/Status";
+import { useProduct } from "@/hooks/useProduct";
 
 export default function AutomationRepeatUpsertProduct() {
   const {
@@ -19,14 +20,14 @@ export default function AutomationRepeatUpsertProduct() {
     updateServing,
   } = useEditRepeat();
 
-  const { product: productId, barcode } = useLocalSearchParams<{
+  const { product: productId, barcode: barcodeId } = useLocalSearchParams<{
     product?: string;
     barcode?: string;
   }>();
 
-  const { data: productSearch, isLoading: isLoadingSearch } = useQuery({
-    ...productData(productId ? { uuid: productId! } : { barcode: barcode! }),
-    select: (products) => products[0],
+  const { product: productSearch, isLoading: isLoadingSearch } = useProduct({
+    productId,
+    barcodeId,
     enabled: !productEditing,
   });
 
