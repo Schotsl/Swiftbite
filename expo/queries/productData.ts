@@ -11,28 +11,21 @@ type productDataType =
       type: Enums<"type">;
       uuid?: never;
       uuids?: never;
-      barcode?: never;
+      search?: never;
     }
   | {
       uuid: string;
       rpc?: never;
       type?: never;
       uuids?: never;
-      barcode?: never;
+      search?: never;
     }
   | {
       uuids: string[];
       rpc?: never;
       type?: never;
       uuid?: never;
-      barcode?: never;
-    }
-  | {
-      barcode: string;
-      rpc?: never;
-      type?: never;
-      uuid?: never;
-      uuids?: never;
+      search?: never;
     };
 
 export default function productData({
@@ -40,28 +33,13 @@ export default function productData({
   type,
   uuid,
   uuids,
-  barcode,
+  search,
 }: productDataType) {
   return queryOptions({
-    queryKey: ["productData", rpc, uuid, uuids, barcode],
+    queryKey: ["productData", rpc, uuid, uuids, search],
     queryFn: async (): Promise<Product[]> => {
-      if (barcode) {
-        const session = await supabase.auth.getSession();
-        const bearer = session?.data.session?.access_token;
-        const headers = {
-          Authorization: `Bearer ${bearer}`,
-          "Content-Type": "application/json",
-        };
-
-        const url = `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/barcode?code=${barcode}&lang=nl`;
-        const response = await fetch(url, { headers });
-        const products = await response.json();
-
-        return [products];
-      }
-
       // TODO: This should probably be handled by the type
-      if (!rpc && !type && !uuid && !uuids && !barcode) {
+      if (!rpc && !type && !uuid && !uuids && !search) {
         throw new Error("No parameters provided for productData");
       }
 
@@ -84,8 +62,8 @@ export default function productData({
         .select(`*`)
         .order("created_at", { ascending: false });
 
-      if (barcode) {
-        query = query.eq("barcode", barcode);
+      if (search) {
+        query = query.eq("search", search);
       }
 
       if (uuid) {

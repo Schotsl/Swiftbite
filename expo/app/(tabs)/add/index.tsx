@@ -149,7 +149,7 @@ function AddList({ entries, today }: AddListProps) {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => !today || currentHour >= section.startHour
+      (section) => !today || currentHour >= section.startHour,
     );
 
     // Populate active sections with data

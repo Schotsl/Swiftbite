@@ -1,9 +1,8 @@
 import entryData from "@/queries/entryData";
-import productData from "@/queries/productData";
-
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
+import { useProduct } from "@/hooks/useProduct";
 
 import PageProduct from "@/components/Page/Product";
 import HeaderLoading from "@/components/Header/Loading";
@@ -13,11 +12,8 @@ import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
 
 export default function AddPreviewBarcodeScreen() {
-  const [interval, setInterval] = useState<number | false>(false);
-
   const router = useRouter();
 
   const insertEntry = useInsertEntry();
@@ -25,9 +21,9 @@ export default function AddPreviewBarcodeScreen() {
   const deleteEntry = useDeleteEntry();
 
   const {
-    barcode,
     entry: entryId,
     product: productId,
+    barcode: barcodeId,
   } = useLocalSearchParams<{
     entry: string;
     product: string;
@@ -40,19 +36,11 @@ export default function AddPreviewBarcodeScreen() {
     enabled: !!entryId,
   });
 
-  const { data: productObject, isLoading: isLoadingProduct } = useQuery({
-    ...productData(productId ? { uuid: productId } : { barcode }),
-    select: (products) => products[0],
+  const { product: productObject, isLoading: isLoadingProduct } = useProduct({
+    productId,
+    barcodeId,
     enabled: !entryId,
-    refetchInterval: interval,
   });
-
-  useEffect(() => {
-    const processing = productObject?.processing;
-    const interval = processing ? 500 : false;
-
-    setInterval(interval);
-  }, [productObject]);
 
   if (isLoadingEntry || isLoadingProduct) {
     return (

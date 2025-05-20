@@ -60,7 +60,7 @@ export default function NavigationAddList({
       },
     });
   };
-  console.log(estimation);
+
   return (
     <View
       style={[

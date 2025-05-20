@@ -56,7 +56,7 @@ export default function AddEstimation() {
   const handleSave = async (
     returnedProduct: Product,
     returnedServing: ServingData | null,
-    returnedCreated: Date
+    returnedCreated: Date,
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it

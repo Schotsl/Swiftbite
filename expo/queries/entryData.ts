@@ -21,7 +21,7 @@ export default function entryData({ date, uuid }: EntryDataProps) {
       const query = supabase
         .from("entry")
         .select(
-          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`
+          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`,
         )
         .order("created_at", { ascending: false });
 
