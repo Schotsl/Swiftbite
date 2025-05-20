@@ -3,6 +3,7 @@ import { Entry } from "@/types/entry";
 import { Product } from "@/types/product";
 import { ScrollView } from "react-native-gesture-handler";
 import { Href, router } from "expo-router";
+import { transformDate } from "@/helper";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense, useEffect, useMemo, useState } from "react";
@@ -20,7 +21,6 @@ import ItemDelete from "@/components/Item/Delete";
 import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
 import ItemMeal from "@/components/Item/Meal";
-import { transformDate } from "@/helper";
 
 export default function Add() {
   const [date, setDate] = useState<Date>(new Date());
@@ -42,7 +42,10 @@ export default function Add() {
   // If date is today then we'll return "Vandaag", ortherwise we'll turn the date to a locale string
   const labelDate = transformDate(date);
   const labelToday = transformDate(new Date());
-  const label = labelDate === labelToday ? "Vandaag" : labelDate;
+
+  const isToday = labelDate === labelToday;
+
+  const label = isToday ? "Vandaag" : labelDate;
 
   return (
     <ScrollView
@@ -78,17 +81,18 @@ export default function Add() {
       </View>
 
       <Suspense fallback={<AddListLoading />}>
-        <AddList entries={data} />
+        <AddList entries={data} today={isToday} />
       </Suspense>
     </ScrollView>
   );
 }
 
 type AddListProps = {
+  today: boolean;
   entries: Entry[];
 };
 
-function AddList({ entries }: AddListProps) {
+function AddList({ entries, today }: AddListProps) {
   const deleteEntry = useDeleteEntry();
 
   const handleDelete = (uuid: string) => {
@@ -145,7 +149,7 @@ function AddList({ entries }: AddListProps) {
 
     // Filter sections based on the current time
     const sectionsFiltered = sections.filter(
-      (section) => currentHour >= section.startHour
+      (section) => !today || currentHour >= section.startHour
     );
 
     // Populate active sections with data
@@ -175,7 +179,7 @@ function AddList({ entries }: AddListProps) {
 
     return sectionsFiltered;
   }, [entries]);
-
+  console.log(sections);
   return (
     <SwipeListView
       style={{ marginBottom: -2 }}
