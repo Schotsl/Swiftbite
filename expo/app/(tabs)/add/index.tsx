@@ -16,11 +16,11 @@ import HomeStreak from "@/components/Home/Streak";
 import HomeMacros from "@/components/Home/Macros";
 import HeaderTitle from "@/components/Header/Title";
 
+import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";
 import ItemDelete from "@/components/Item/Delete";
 import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
-import ItemMeal from "@/components/Item/Meal";
 
 export default function Add() {
   const [date, setDate] = useState<Date>(new Date());
@@ -178,8 +178,8 @@ function AddList({ entries, today }: AddListProps) {
     sectionsFiltered.sort((a, b) => b.startHour - a.startHour);
 
     return sectionsFiltered;
-  }, [entries]);
-  console.log(sections);
+  }, [entries, today]);
+
   return (
     <SwipeListView
       style={{ marginBottom: -2 }}

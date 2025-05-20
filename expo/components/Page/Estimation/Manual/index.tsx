@@ -61,7 +61,7 @@ export default function PageEstimationManual({
 
   const serving = {
     gram: 100,
-    option: "g",
+    option: "100-gram",
     quantity: 1,
   };
 
@@ -84,15 +84,9 @@ export default function PageEstimationManual({
       onSave(product, serving, created_at);
     }
 
-    const quantity: ServingData = {
-      gram: 100,
-      option: "g",
-      quantity: 1,
-    };
-
     const insert = await insertProduct.mutateAsync({
-      serving,
-      quantity,
+      serving: null,
+      quantity: null,
 
       type: "manual",
       brand: null,
