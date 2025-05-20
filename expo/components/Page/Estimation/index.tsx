@@ -11,18 +11,20 @@ import { ServingData } from "@/schemas/serving";
 type PageEstimationProps = {
   image?: Image | null;
   product?: Product;
+  created?: Date;
   onDelete?: () => void;
   onRepeat?: (serving: ServingData) => void;
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
 export default function PageEstimation({
   image,
   product,
+  created,
   onSave,
   onDelete,
   onRepeat,
@@ -53,6 +55,8 @@ export default function PageEstimation({
       ) : (
         <PageEstimationManual
           product={product}
+          created={created}
+          createdVisible={true}
           onSave={onSave}
           onDelete={onDelete}
           onRepeat={onRepeat}

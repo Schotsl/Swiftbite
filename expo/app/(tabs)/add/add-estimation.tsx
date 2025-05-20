@@ -1,5 +1,7 @@
 import entryData from "@/queries/entryData";
 
+import { View } from "react-native";
+import { Product } from "@/types/product";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
 import { transformImage } from "@/helper";
@@ -9,7 +11,8 @@ import useDeleteEntry from "@/mutations/useDeleteEntry";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import PageEstimation from "@/components/Page/Estimation";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
-import { Product } from "@/types/product";
+import HeaderLoading from "@/components/Header/Loading";
+import ProductStatus from "@/components/Product/Status";
 
 export default function AddEstimation() {
   const router = useRouter();
@@ -30,12 +33,22 @@ export default function AddEstimation() {
     entry?: string;
   }>();
 
-  const { data: entry } = useQuery({
+  const { data: entry, isLoading } = useQuery({
     // Less than ideal but if the query is enabled we know that the entryId is defined
     ...entryData({ uuid: entryId! }),
     select: (entries) => entries[0],
     enabled: !!entryId,
   });
+
+  if (isLoading) {
+    return (
+      <View style={{ padding: 32, minHeight: "100%" }}>
+        <HeaderLoading />
+
+        <ProductStatus status="We zijn de inschatting in onze database aan het zoeken" />
+      </View>
+    );
+  }
 
   const image = transformImage(uri, width, height);
   const product = entry?.product;
@@ -43,7 +56,7 @@ export default function AddEstimation() {
   const handleSave = async (
     returnedProduct: Product,
     returnedServing: ServingData | null,
-    returnedCreated: Date,
+    returnedCreated: Date
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it
@@ -97,6 +110,7 @@ export default function AddEstimation() {
     <PageEstimation
       image={image}
       product={product}
+      created={entry?.created_at}
       onSave={handleSave}
       onDelete={product ? handleDelete : undefined}
       onRepeat={product ? handleRepeat : undefined}

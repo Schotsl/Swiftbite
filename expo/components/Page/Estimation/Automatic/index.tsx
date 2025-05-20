@@ -5,14 +5,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { ImageManipulator } from "expo-image-manipulator";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
+import { handleError, renderToBase64, transformImage } from "@/helper";
 import {
   EstimationData,
   estimationSchema,
   ServingData,
 } from "@/schemas/serving";
-import { handleError, renderToBase64, transformImage } from "@/helper";
 
 import supabase from "@/utils/supabase";
 
@@ -28,7 +28,7 @@ type PageEstimationAutomaticProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
@@ -36,7 +36,6 @@ export default function PageEstimationAutomatic({
   onSave,
 }: PageEstimationAutomaticProps) {
   const focus = useIsFocused();
-  const router = useRouter();
 
   const { uri, width, height } = useLocalSearchParams<{
     uri?: string;
@@ -188,6 +187,16 @@ export default function PageEstimationAutomatic({
     handleError(error);
   };
 
+  const handleCamera = () => {
+    router.push({
+      pathname: "/camera",
+      params: {
+        productPath: "add/add-product",
+        estimationPath: "add/add-estimation",
+      },
+    });
+  };
+
   useEffect(() => {
     if (focus) {
       return;
@@ -215,8 +224,8 @@ export default function PageEstimationAutomatic({
               image={image}
               required={!!image}
               // TODO: This should be done with a parameter storing the title or content
-              onAdd={() => router.push("/camera")}
-              onEdit={() => router.push("/camera")}
+              onAdd={handleCamera}
+              onEdit={handleCamera}
               onDelete={() => {}}
             />
 

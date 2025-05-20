@@ -1,8 +1,8 @@
 import { View } from "react-native";
 import { Entry } from "@/types/entry";
-import { router } from "expo-router";
 import { Product } from "@/types/product";
 import { ScrollView } from "react-native-gesture-handler";
+import { Href, router } from "expo-router";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense, useEffect, useMemo, useState } from "react";
@@ -95,11 +95,20 @@ function AddList({ entries }: AddListProps) {
     deleteEntry.mutate(uuid);
   };
 
-  const handleSelect = (entry: string, type: "product" | "meal") => {
+  const handleSelect = (entry: string, type: string) => {
+    let pathname: Href = "/(tabs)/add/add-product";
+
+    if (type === "meal") {
+      pathname = "/(tabs)/add/add-meal";
+    }
+
+    if (type === "manual") {
+      pathname = "/(tabs)/add/add-estimation";
+    }
+
     router.push({
       params: { entry },
-      pathname:
-        type === "product" ? "/(tabs)/add/add-product" : "/(tabs)/add/add-meal",
+      pathname,
     });
   };
 
@@ -176,7 +185,7 @@ function AddList({ entries }: AddListProps) {
           <ItemProduct
             product={item.product as Product}
             serving={item.serving}
-            onSelect={() => handleSelect(item.uuid, "product")}
+            onSelect={() => handleSelect(item.uuid, item.product.type)}
           />
         ) : (
           <ItemMeal

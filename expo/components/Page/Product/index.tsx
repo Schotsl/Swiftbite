@@ -55,7 +55,7 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const isGeneric = product.type === "search_generic";
@@ -130,11 +130,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions({ product });
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity",
+      (option) => option.value === "quantity"
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving",
+      (option) => option.value === "serving"
     );
 
     if (optionsServing) {
@@ -216,7 +216,7 @@ export default function PageProduct({
               <Text
                 style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
               >
-                Tijd
+                Overige informatie
               </Text>
 
               <InputTime name="created_at" label="Tijd" control={control} />

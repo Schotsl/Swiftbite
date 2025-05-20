@@ -69,6 +69,8 @@ export const manualSchema = z.object({
     .number({ required_error: "Voer cholesterol in" })
     .min(0, "Voer minimaal 0 cholesterol in")
     .max(1, "Voer maximaal 10000 cholesterol in"),
+
+  created_at: z.date({ required_error: "Voer een datum in" }),
 });
 
 export type ManualData = z.infer<typeof manualSchema>;

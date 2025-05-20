@@ -1,34 +1,37 @@
-import { View } from "react-native";
 import { useForm } from "react-hook-form";
 import { Divider } from "@/components/Divider";
 import { useState } from "react";
-import { useRouter } from "expo-router";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Product } from "@/types/product";
+import { Text, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ServingData } from "@/schemas/serving";
 import { ManualData, manualSchema } from "@/schemas/insert/manual";
 
 import Input from "@/components/Input";
 import Header from "@/components/Header";
+import variables from "@/variables";
+import InputTime from "@/components/Input/Time";
 import ButtonOverlay from "@/components/Button/Overlay";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useUpdateProduct from "@/mutations/useUpdateProduct";
 
-import { ScrollView } from "react-native-gesture-handler";
-import { ServingData } from "@/schemas/serving";
-
 export default function PageEstimationManual({
   product,
+  created: propCreated,
+  createdVisible = false,
   onSave,
   onDelete,
   onRepeat,
 }: {
   product?: Product;
+  created?: Date;
+  createdVisible?: boolean;
+
   onSave: (product: Product, serving: ServingData, created: Date) => void;
   onDelete?: () => void;
   onRepeat?: (serving: ServingData) => void;
 }) {
-  const router = useRouter();
-
   const [saving, setSaving] = useState(false);
 
   const insertProduct = useInsertProduct();
@@ -37,6 +40,8 @@ export default function PageEstimationManual({
   const { control, handleSubmit } = useForm<ManualData>({
     resolver: zodResolver(manualSchema),
     defaultValues: {
+      title: product?.title ?? "",
+      created_at: propCreated ?? new Date(),
       calorie_100g: product?.calorie_100g ?? 0,
       protein_100g: product?.protein_100g ?? 0,
       carbohydrate_100g: product?.carbohydrate_100g ?? 0,
@@ -69,14 +74,14 @@ export default function PageEstimationManual({
         throw new Error("Product must be of type manual");
       }
 
+      const { created_at, ...rest } = data;
+
       await updateProduct.mutateAsync({
         ...product,
-        ...data,
+        ...rest,
       });
 
-      router.replace("/");
-
-      return;
+      onSave(product, serving, created_at);
     }
 
     const quantity: ServingData = {
@@ -126,14 +131,12 @@ export default function PageEstimationManual({
         />
 
         <View style={{ gap: 48 }}>
-          {!product && (
-            <Input
-              name="title"
-              label="Titel"
-              control={control}
-              placeholder="Wrap"
-            />
-          )}
+          <Input
+            name="title"
+            label="Titel"
+            control={control}
+            placeholder="Wrap"
+          />
 
           <View style={{ gap: 24 }}>
             <View style={{ gap: 18 }}>
@@ -272,6 +275,18 @@ export default function PageEstimationManual({
               />
             </View>
           </View>
+
+          {createdVisible && (
+            <View style={{ gap: variables.gapSmall }}>
+              <Text
+                style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
+              >
+                Overige informatie
+              </Text>
+
+              <InputTime name="created_at" label="Tijd" control={control} />
+            </View>
+          )}
         </View>
       </ScrollView>
 

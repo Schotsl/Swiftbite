@@ -181,7 +181,7 @@ export default function PageMeal({
               <Text
                 style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
               >
-                Tijd
+                Overige informatie
               </Text>
 
               <InputTime name="created_at" label="Tijd" control={control} />
