@@ -5,18 +5,19 @@ import CameraShortcuts from "@/components/Camera/Shortcuts";
 
 import ImageResizer from "@bam.tech/react-native-image-resizer";
 
+import { Image } from "expo-image";
 import { useVision } from "@/context/VisionContext";
-import {
-  RelativePathString,
-  useLocalSearchParams,
-  useRouter,
-} from "expo-router";
 import { useRunOnJS } from "react-native-worklets-core";
 import { Alert, View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
 import { detectBarcodes } from "react-native-barcodes-detector";
 import { useEffect, useRef, useState } from "react";
+import {
+  RelativePathString,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
 
 // TODO: vision-camera-base64-v3 is a GitHub fork of mine
 // @ts-ignore
@@ -34,14 +35,17 @@ import {
 } from "react-native-vision-camera";
 
 import * as ImagePicker from "expo-image-picker";
-import { Image } from "expo-image";
 
 export default function AddAI() {
   const debug = false;
 
-  const { productPath, estimationPath } = useLocalSearchParams<{
+  const { title, content, productPath, estimationPath } = useLocalSearchParams<{
     productPath: RelativePathString;
     estimationPath?: RelativePathString;
+
+    // By redirecting with the title and content we can keep the same state when returning from the estimation screen
+    title?: string;
+    content?: string;
   }>();
 
   const estimationEnabled = !!estimationPath;
@@ -155,9 +159,11 @@ export default function AddAI() {
       return;
     }
 
+    const { uri, width, height } = asset;
+
     router.push({
       pathname: estimationPath,
-      params: { uri: asset.uri, width: asset.width, height: asset.height },
+      params: { uri, width, height, title, content },
     });
   }
 
@@ -178,7 +184,7 @@ export default function AddAI() {
       base64: string,
       width: number,
       height: number,
-      orientation: number,
+      orientation: number
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -201,7 +207,7 @@ export default function AddAI() {
         newHeight,
         "JPEG",
         50,
-        orientation,
+        orientation
       );
 
       sendImage(data.uri);
@@ -213,7 +219,7 @@ export default function AddAI() {
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    [],
+    []
   );
 
   const handleFrame = useFrameProcessor((frame) => {

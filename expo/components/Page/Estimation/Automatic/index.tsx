@@ -28,7 +28,7 @@ type PageEstimationAutomaticProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
@@ -37,10 +37,13 @@ export default function PageEstimationAutomatic({
 }: PageEstimationAutomaticProps) {
   const focus = useIsFocused();
 
-  const { uri, width, height } = useLocalSearchParams<{
+  const { uri, width, height, title, content } = useLocalSearchParams<{
     uri?: string;
     width?: string;
     height?: string;
+
+    title?: string;
+    content?: string;
   }>();
 
   const image = transformImage(uri, width, height);
@@ -55,6 +58,7 @@ export default function PageEstimationAutomatic({
 
   const { control, setError, handleSubmit } = useForm<EstimationData>({
     resolver: zodResolver(estimationSchema),
+    defaultValues: { title, content },
   });
 
   const handleResize = useCallback(async () => {
@@ -109,6 +113,19 @@ export default function PageEstimationAutomatic({
     }
 
     return true;
+  };
+
+  const handleCamera = () => {
+    router.push({
+      pathname: "/camera",
+      params: {
+        productPath: "add/add-product",
+        estimationPath: "add/add-estimation",
+
+        title,
+        content,
+      },
+    });
   };
 
   const handleSave = async (data: EstimationData) => {
@@ -185,16 +202,6 @@ export default function PageEstimationAutomatic({
       });
 
     handleError(error);
-  };
-
-  const handleCamera = () => {
-    router.push({
-      pathname: "/camera",
-      params: {
-        productPath: "add/add-product",
-        estimationPath: "add/add-estimation",
-      },
-    });
   };
 
   useEffect(() => {
