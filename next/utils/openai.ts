@@ -54,7 +54,7 @@ export async function estimateNutrition(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = "gpt-4o";
@@ -117,7 +117,7 @@ export async function estimateVisuals(
     title: string | null;
     content: string | null;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = google("gemini-2.5-pro-preview-03-25");
@@ -179,6 +179,7 @@ export async function searchProduct(data: {
   title: string;
   quantity_original: number | null;
   quantity_original_unit: string | null;
+  barcode: string | null;
 }): Promise<ProductData> {
   const searchModel = google("gemini-2.5-pro-preview-03-25", {
     useSearchGrounding: true,
@@ -217,7 +218,7 @@ export async function searchProducts(
   system: {
     products: ProductSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -255,15 +256,15 @@ export async function searchProducts(
       },
       {
         role: "system",
-        content: `Open Food Facts results: ${data.openfood}`,
+        content: `Open Food Facts results: ${JSON.stringify(data.openfood)}`,
       },
       {
         role: "system",
-        content: `Google results: ${data.google}`,
+        content: `Google results: ${JSON.stringify(data.google)}`,
       },
       {
         role: "system",
-        content: `Fatsecret results: ${data.fatsecret}`,
+        content: `Fatsecret results: ${JSON.stringify(data.fatsecret)}`,
       },
       {
         role: "user",
@@ -337,7 +338,7 @@ export async function searchGenerics(
   system: {
     generic: GenericSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     GenericSearchData[],
@@ -375,7 +376,7 @@ export async function searchGenerics(
       },
       {
         role: "system",
-        content: `Google results: ${data.google}`,
+        content: `Google results: ${JSON.stringify(data.google)}`,
       },
       {
         role: "user",
@@ -409,7 +410,7 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-meal";
   const model = "gpt-4.1-mini";
@@ -455,7 +456,7 @@ export async function normalizeTitle(
   data: {
     title: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const model = "gpt-4.1-mini";
 
@@ -502,7 +503,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<QuantitySchema> {
   // If no combined or unit is provided there is no way to know the original unit
   if (!data.combined && !data.unit) {

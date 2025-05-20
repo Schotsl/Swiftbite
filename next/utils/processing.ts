@@ -8,6 +8,7 @@ export function processSearchProduct(
   uuid: string,
   lang: string,
   search: ProductSearchData,
+  barcode?: string
 ) {
   const params = new URLSearchParams({
     uuid,
@@ -24,25 +25,29 @@ export function processSearchProduct(
     params.set("quantity_original_unit", search.quantity_original_unit);
   }
 
+  if (barcode) {
+    params.set("barcode", barcode);
+  }
+
   fetch(
     `${process.env.SWIFTBITE_API_URL}/api/ai-server/search-product-data?${params.toString()}`,
     {
       headers,
-    },
+    }
   );
 
   fetch(
     `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
     {
       headers,
-    },
+    }
   );
 }
 
 export function processSearchGeneric(
   uuid: string,
   lang: string,
-  search: GenericSearchData,
+  search: GenericSearchData
 ) {
   const params = new URLSearchParams({
     uuid,
@@ -55,13 +60,13 @@ export function processSearchGeneric(
     `${process.env.SWIFTBITE_API_URL}/api/ai-server/search-generic-data?${params.toString()}`,
     {
       headers,
-    },
+    }
   );
 
   fetch(
     `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
     {
       headers,
-    },
+    }
   );
 }

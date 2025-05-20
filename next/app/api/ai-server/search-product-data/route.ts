@@ -8,39 +8,40 @@ export async function GET(request: NextRequest) {
   const lang = request.nextUrl.searchParams.get("lang");
   const title = request.nextUrl.searchParams.get("title");
   const brand = request.nextUrl.searchParams.get("brand");
+  const barcode = request.nextUrl.searchParams.get("barcode");
 
   const quantity_original =
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit",
+    "quantity_original_unit"
   );
 
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -50,6 +51,7 @@ export async function GET(request: NextRequest) {
     lang,
     brand: brand!,
     title,
+    barcode,
     quantity_original: quantity_original ? Number(quantity_original) : null,
     quantity_original_unit,
   });

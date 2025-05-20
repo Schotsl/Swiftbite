@@ -22,19 +22,13 @@ export default function barcodeData({
         "Content-Type": "application/json",
       };
 
-      const params = new URLSearchParams();
+      const url = search
+        ? `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/barcode-search?barcode=${barcode}&lang=nl`
+        : `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/barcode?barcode=${barcode}&lang=nl`;
 
-      params.append("code", barcode);
-      params.append("lang", "nl");
-
-      if (search) {
-        params.append("search", "true");
-      }
-
-      const url = `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/barcode?${params.toString()}`;
       const response = await fetch(url, { headers });
 
-      if (!response.ok) {
+      if (response.status === 404) {
         return [];
       }
 
