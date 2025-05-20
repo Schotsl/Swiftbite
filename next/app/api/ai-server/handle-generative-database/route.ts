@@ -36,13 +36,14 @@ export async function POST(request: Request) {
       fetchEntry(generativeProduct),
     ]);
 
-    const title = productObject.title;
-    const description = body.record.content;
+    const image = undefined;
+    const title = productObject.title || undefined;
+    const content = body.record.content || undefined;
 
     const data = {
-      image: undefined,
-      title: title || undefined,
-      description: description || undefined,
+      image,
+      title,
+      content,
     };
 
     const [visuals, nutrition] = await Promise.all([

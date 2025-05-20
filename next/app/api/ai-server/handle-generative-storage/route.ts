@@ -53,7 +53,7 @@ export async function POST(request: Request) {
     const data = {
       image: image || undefined,
       title: title || undefined,
-      description: content || undefined,
+      content: content || undefined,
     };
 
     if (generativeName.endsWith("-small")) {

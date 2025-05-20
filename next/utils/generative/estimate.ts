@@ -19,13 +19,13 @@ export async function estimateNutrition(
   {
     image,
     title,
-    description,
+    content,
   }: {
     image?: string;
     title?: string;
-    description?: string;
+    content?: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = googleModel("gemini-2.5-pro-preview-03-25");
@@ -44,8 +44,8 @@ export async function estimateNutrition(
       role: "user",
       content: `Estimation information: ${JSON.stringify({
         title,
+        content,
         language: "Dutch",
-        description,
       })}`,
     });
   }
@@ -84,13 +84,13 @@ export async function estimateVisuals(
   {
     image,
     title,
-    description,
+    content,
   }: {
     image?: string;
     title?: string;
-    description?: string;
+    content?: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
@@ -109,8 +109,8 @@ export async function estimateVisuals(
       role: "user",
       content: `Estimation information: ${JSON.stringify({
         title,
+        content,
         language: "Dutch",
-        description,
       })}`,
     });
   }
