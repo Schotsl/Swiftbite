@@ -79,6 +79,14 @@ export function useProduct({
             router.replace("/(tabs)/add/search");
           },
         },
+        {
+          text: "Annuleren",
+          style: "cancel",
+          onPress: () => {
+            router.back();
+            return;
+          },
+        },
       ]);
 
       return;
@@ -93,7 +101,7 @@ export function useProduct({
         {
           text: "Ok",
         },
-      ],
+      ]
     );
   }, [product, isLoading, search, router, barcodeId]);
 
