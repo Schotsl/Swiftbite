@@ -128,6 +128,7 @@ export async function GET(request: NextRequest) {
 
       // Then yield combined results as AI results come in
       for await (const chunk of generativeStream.partialObjectStream) {
+        console.log(chunk);
         const mapped = chunk.map((search) =>
           getProductFromSearch({ search, seed })
         );

@@ -32,7 +32,7 @@ export async function searchProducts(
   }: {
     products: ProductSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -41,7 +41,7 @@ export async function searchProducts(
   >
 > {
   const task = "search-products";
-  const model = googleModel("gemini-2.5-pro-preview-03-25");
+  const model = googleModel("gemini-2.5-pro-preview-05-06");
 
   const stream = streamObject({
     model,
@@ -130,7 +130,7 @@ export async function searchProduct({
   quantity_original?: number;
   quantity_original_unit?: string;
 }): Promise<ProductData> {
-  const model = googleModel("gemini-2.5-pro-preview-03-25", {
+  const model = googleModel("gemini-2.5-pro-preview-05-06", {
     useSearchGrounding: true,
   });
 
