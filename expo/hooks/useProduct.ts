@@ -84,17 +84,16 @@ export function useProduct({
       return;
     }
 
+    router.replace("/(tabs)/add/add-search");
+
     Alert.alert(
       "Product niet gevonden",
-      "We hebben het product ook niet online gevonden.",
+      "We hebben het product ook niet online gevonden, je kan het hier handmatig toevoegen.",
       [
         {
           text: "Ok",
-          onPress: () => {
-            router.replace("/(tabs)/add/add-search");
-          },
         },
-      ],
+      ]
     );
   }, [product, isLoading, search, router, barcodeId]);
 
