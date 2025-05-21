@@ -10,6 +10,7 @@ import { User } from "@/types/user";
 import { View } from "react-native";
 import { useForm } from "react-hook-form";
 import { Suspense } from "react";
+import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -33,7 +34,7 @@ export default function PersonalHealth() {
 
 function PersonalHealthLoading() {
   return (
-    <ProductStatus status="We zijn je gezondheidsgegevens aan het laden..." />
+    <ProductStatus status="We zijn je gezondheidsgegevens aan het laden uit onze database" />
   );
 }
 
@@ -42,6 +43,8 @@ type PersonalHealthFormProps = {
 };
 
 function PersonalHealthForm({ user }: PersonalHealthFormProps) {
+  const router = useRouter();
+
   const updateUser = useUpdateUser();
 
   const {
@@ -55,6 +58,8 @@ function PersonalHealthForm({ user }: PersonalHealthFormProps) {
 
   const handleSave = (data: HealthData) => {
     updateUser.mutate({ ...user, ...data });
+
+    router.back();
   };
 
   return (

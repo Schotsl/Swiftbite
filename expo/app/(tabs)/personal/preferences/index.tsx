@@ -12,9 +12,10 @@ import { User } from "@/types/user";
 import { View } from "react-native";
 import { useForm } from "react-hook-form";
 import { Suspense } from "react";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import {
   PreferenceData,
@@ -61,7 +62,9 @@ export default function PersonalPreferences() {
 }
 
 function PersonalPreferencesLoading() {
-  return <ProductStatus status="We zijn je voorkeuren aan het laden..." />;
+  return (
+    <ProductStatus status="We zijn je voorkeuren aan het laden uit onze database" />
+  );
 }
 
 type PersonalPreferencesFormProps = {
@@ -69,6 +72,7 @@ type PersonalPreferencesFormProps = {
 };
 
 function PersonalPreferencesForm({ user }: PersonalPreferencesFormProps) {
+  const router = useRouter();
   const updateUser = useUpdateUser();
 
   const {
@@ -86,6 +90,8 @@ function PersonalPreferencesForm({ user }: PersonalPreferencesFormProps) {
 
   const handleSave = (data: PreferenceData) => {
     updateUser.mutate({ ...user, ...data });
+
+    router.back();
   };
 
   return (

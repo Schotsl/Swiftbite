@@ -11,6 +11,7 @@ import { User } from "@/types/user";
 import { View } from "react-native";
 import { useForm } from "react-hook-form";
 import { Suspense } from "react";
+import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -33,7 +34,9 @@ export default function PersonalGoals() {
 }
 
 function PersonalGoalsLoading() {
-  return <ProductStatus status="We zijn je doelen aan het laden..." />;
+  return (
+    <ProductStatus status="We zijn je doelen aan het laden uit onze database" />
+  );
 }
 
 type PersonalGoalsFormProps = {
@@ -41,6 +44,8 @@ type PersonalGoalsFormProps = {
 };
 
 function PersonalGoalsForm({ user }: PersonalGoalsFormProps) {
+  const router = useRouter();
+
   const updateUser = useUpdateUser();
 
   const {
@@ -55,6 +60,8 @@ function PersonalGoalsForm({ user }: PersonalGoalsFormProps) {
 
   const handleSave = (data: GoalData) => {
     updateUser.mutate({ ...user, ...data });
+
+    router.back();
   };
 
   const calories = watch("calories");

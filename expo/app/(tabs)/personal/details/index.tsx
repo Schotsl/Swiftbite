@@ -11,6 +11,7 @@ import { User } from "@/types/user";
 import { View } from "react-native";
 import { useForm } from "react-hook-form";
 import { Suspense } from "react";
+import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -43,6 +44,8 @@ type PersonalDetailsFormProps = {
 };
 
 function PersonalDetailsForm({ user }: PersonalDetailsFormProps) {
+  const router = useRouter();
+
   const updateUser = useUpdateUser();
 
   const {
@@ -56,6 +59,8 @@ function PersonalDetailsForm({ user }: PersonalDetailsFormProps) {
 
   const handleSave = (data: DetailsData) => {
     updateUser.mutate({ ...user, ...data });
+
+    router.back();
   };
 
   return (

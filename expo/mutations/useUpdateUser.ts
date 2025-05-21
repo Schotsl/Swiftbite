@@ -9,9 +9,10 @@ export default function useUpdateUser() {
 
   return useMutation({
     mutationFn: async (user: User): Promise<User> => {
+      const { email, total, ...rest } = user;
       const { data, error } = await supabase
         .from("user")
-        .update(user)
+        .update(rest)
         .eq("uuid", user.uuid)
         .select()
         .single();
