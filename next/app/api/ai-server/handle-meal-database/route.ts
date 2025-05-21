@@ -25,15 +25,22 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: response }, { status: 429 });
   }
 
-  const uuid = body.record.uuid;
-  const title = body.record.title;
+  const mealIcon = body.record.icon_id;
+  const mealUuid = body.record.uuid;
+  const mealTitle = body.record.title;
+
+  // If the product already has a title and icon we don't need to do anything
+  if (mealTitle && mealIcon) {
+    return new Response("{}", { status: 200 });
+  }
 
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[MEAL] Normalizing title`);
-    const iconIngredients = await fetchIngredients(uuid);
+
+    const iconIngredients = await fetchIngredients(mealUuid);
     const iconTitle = await normalizeMeal(user, {
-      title: title,
+      title: mealTitle,
       ingredients: iconIngredients,
     });
 
@@ -43,7 +50,7 @@ export async function POST(request: Request) {
     // If the icon already exists we'll update the product
     if (iconUuid) {
       console.log(`[MEAL] Updating meal with icon`);
-      await updateMeal(uuid, iconUuid);
+      await updateMeal(mealUuid, iconUuid);
 
       return;
     }
@@ -59,7 +66,7 @@ export async function POST(request: Request) {
 
     console.log(`[ICON] Uploading icon to storage`);
     await uploadIcon(`${newIconUuid}-256`, newIconResized);
-    await updateMeal(uuid, newIconUuid);
+    await updateMeal(mealUuid, newIconUuid);
     await uploadIcon(`${newIconUuid}`, newIconBuffer);
   });
 
