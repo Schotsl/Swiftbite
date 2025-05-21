@@ -247,7 +247,7 @@ function AutomationRepeatUpsertAdd({
       >
         <NavigationAddList
           search="/automations/repeat/upsert/search"
-          camera="/automations/repeat/upsert/product"
+          camera="/automations/repeat/upsert/camera"
           onClose={onClose}
           style={{ position: "relative", bottom: 0 }}
         />

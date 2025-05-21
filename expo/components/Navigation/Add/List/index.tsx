@@ -52,13 +52,7 @@ export default function NavigationAddList({
 
     onClose();
 
-    router.push({
-      pathname: "/camera",
-      params: {
-        productPath: camera.toString(),
-        estimationPath: estimation?.toString(),
-      },
-    });
+    router.push(camera);
   };
 
   return (

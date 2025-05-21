@@ -13,11 +13,6 @@ import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
 import { detectBarcodes } from "react-native-barcodes-detector";
 import { useEffect, useRef, useState } from "react";
-import {
-  RelativePathString,
-  useLocalSearchParams,
-  useRouter,
-} from "expo-router";
 
 // TODO: vision-camera-base64-v3 is a GitHub fork of mine
 // @ts-ignore
@@ -36,19 +31,18 @@ import {
 
 import * as ImagePicker from "expo-image-picker";
 
-export default function AddAI() {
+type PageCameraProps = {
+  onBarcode: (barcode: string) => void;
+  onEstimation?: (uri: string, width: number, height: number) => void;
+};
+
+export default function PageCamera({
+  onBarcode,
+  onEstimation,
+}: PageCameraProps) {
   const debug = false;
 
-  const { title, content, productPath, estimationPath } = useLocalSearchParams<{
-    productPath: RelativePathString;
-    estimationPath?: RelativePathString;
-
-    // By redirecting with the title and content we can keep the same state when returning from the estimation screen
-    title?: string;
-    content?: string;
-  }>();
-
-  const estimationEnabled = !!estimationPath;
+  const estimationEnabled = !!onEstimation;
 
   const [flash, setFlash] = useState<boolean>(false);
   const [facing, setFacing] = useState<CameraPosition>("back");
@@ -56,7 +50,6 @@ export default function AddAI() {
   const [processing, setProcessing] = useState<boolean>(false);
 
   const focus = useIsFocused();
-  const router = useRouter();
   const camera = useRef<Camera>(null);
   const device = useCameraDevice(facing);
 
@@ -111,10 +104,7 @@ export default function AddAI() {
       return;
     }
 
-    router.push({
-      pathname: estimationPath,
-      params: { uri: params.path, width: params.width, height: params.height },
-    });
+    onEstimation(params.path, params.width, params.height);
 
     setProcessing(false);
   }
@@ -147,10 +137,7 @@ export default function AddAI() {
         return;
       }
 
-      router.push({
-        pathname: productPath,
-        params: { barcode },
-      });
+      onBarcode(barcode);
 
       return;
     }
@@ -161,10 +148,7 @@ export default function AddAI() {
 
     const { uri, width, height } = asset;
 
-    router.push({
-      pathname: estimationPath,
-      params: { uri, width, height, title, content },
-    });
+    onEstimation(uri, width, height);
   }
 
   // Reset the page's state when is the screen is unfocused
@@ -184,7 +168,7 @@ export default function AddAI() {
       base64: string,
       width: number,
       height: number,
-      orientation: number
+      orientation: number,
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -207,7 +191,7 @@ export default function AddAI() {
         newHeight,
         "JPEG",
         50,
-        orientation
+        orientation,
       );
 
       sendImage(data.uri);
@@ -219,7 +203,7 @@ export default function AddAI() {
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    []
+    [],
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -249,12 +233,9 @@ export default function AddAI() {
   const codeScanner = useCodeScanner({
     codeTypes: ["qr", "ean-13", "ean-8", "code-128", "code-39"],
     onCodeScanned: (codes) => {
-      const barcode = codes[0].value;
+      const barcode = codes[0].value!;
 
-      router.push({
-        pathname: productPath,
-        params: { barcode },
-      });
+      onBarcode(barcode);
     },
   });
 
@@ -263,8 +244,10 @@ export default function AddAI() {
   }
 
   return (
-    <View style={{ flex: 1, gap: 24, paddingBottom: 64 }}>
-      {device && hasPermission ? (
+    <View
+      style={{ flex: 1, gap: 24, paddingBottom: 64, backgroundColor: "#000" }}
+    >
+      {device && hasPermission && (
         <Camera
           ref={camera}
           photo={true}
@@ -279,17 +262,6 @@ export default function AddAI() {
             right: 0,
             bottom: 0,
             position: "absolute",
-          }}
-        />
-      ) : (
-        <View
-          style={{
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            position: "absolute",
-            backgroundColor: "#000",
           }}
         />
       )}

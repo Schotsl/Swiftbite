@@ -1,7 +1,7 @@
-import { VisionProvider } from "@/context/VisionContext";
 import { Slot } from "expo-router";
+import { VisionProvider } from "@/context/VisionContext";
 
-export default function CameraLayout() {
+export default function AddCameraLayout() {
   return (
     <VisionProvider>
       <Slot />

@@ -93,7 +93,7 @@ export function useProduct({
         {
           text: "Ok",
         },
-      ]
+      ],
     );
   }, [product, isLoading, search, router, barcodeId]);
 

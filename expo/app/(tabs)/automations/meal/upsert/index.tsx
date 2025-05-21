@@ -219,7 +219,7 @@ function AutomationsMealUpsertAdd({
         }}
       >
         <NavigationAddList
-          camera="/automations/meal/upsert/product"
+          camera="/automations/meal/upsert/camera"
           search="/automations/meal/upsert/search"
           onClose={onClose}
           style={{

@@ -1,12 +1,13 @@
-import { runOnJS } from "react-native-reanimated";
-import { useEffect, useState } from "react";
+import useCamera from "@/hooks/useCamera";
 
+import { runOnJS } from "react-native-reanimated";
 import { isRunningInExpoGo } from "expo";
+import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack, useNavigationContainerRef, useRouter } from "expo-router";
+import { Stack, useRouter, useNavigationContainerRef } from "expo-router";
 import {
-  Directions,
   Gesture,
+  Directions,
   GestureDetector,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
@@ -46,6 +47,7 @@ function RootLayout() {
   const query = new QueryClient();
 
   const router = useRouter();
+  const camera = useCamera();
   const container = useNavigationContainerRef();
 
   const [configured, setConfigured] = useState(false);
@@ -102,14 +104,11 @@ function RootLayout() {
             screenOptions={{
               animation: "none",
               headerShown: false,
+              contentStyle: { backgroundColor: camera ? "#000" : "#FFF" },
               gestureEnabled: true,
-              contentStyle: {
-                backgroundColor: "#FFFFFF",
-              },
             }}
           >
             <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="camera" />
             <Stack.Screen name="sign-in" />
             <Stack.Screen name="sign-up" />
           </Stack>
