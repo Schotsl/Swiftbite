@@ -2,6 +2,7 @@ import { Product } from "@/types/product";
 import { queryOptions } from "@tanstack/react-query";
 
 import supabase from "@/utils/supabase";
+import { Alert } from "react-native";
 
 type barcodeDataType = {
   search?: boolean;
@@ -29,6 +30,15 @@ export default function barcodeData({
       const response = await fetch(url, { headers });
 
       if (response.status === 404) {
+        return [];
+      }
+
+      if (response.status === 429) {
+        Alert.alert(
+          "Oeps!",
+          "Je hebt te veel aanvragen gedaan, de app kan raar gaan werken. Probeer het later nog eens."
+        );
+
         return [];
       }
 
