@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Product } from "@/types/product";
 import { useQuery } from "@tanstack/react-query";
-import { getOptions } from "@/helper";
+import { getOption, getOptions } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { ScrollView, Text, View } from "react-native";
@@ -55,21 +55,20 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const isGeneric = product.type === "search_generic";
   const isProcessing = product.processing;
 
-  const { watch, control, reset, setValue, handleSubmit } =
-    useForm<ProductPageData>({
-      resolver: zodResolver(productPageSchema),
-      defaultValues: {
-        option: propServing?.option || "100-gram",
-        quantity: propServing?.quantity || 1,
-        created_at: propCreated || new Date(),
-      },
-    });
+  const { watch, control, reset, handleSubmit } = useForm<ProductPageData>({
+    resolver: zodResolver(productPageSchema),
+    defaultValues: {
+      option: propServing?.option || getOption(product),
+      quantity: propServing?.quantity || 1,
+      created_at: propCreated || new Date(),
+    },
+  });
 
   const option = watch("option");
   const quantity = watch("quantity");
@@ -80,11 +79,11 @@ export default function PageProduct({
     }
 
     reset({
-      option: propServing?.option || "100-gram",
+      option: propServing?.option || getOption(product),
       quantity: propServing?.quantity || 1,
       created_at: propCreated || new Date(),
     });
-  }, [focus, propServing, propCreated, reset]);
+  }, [focus, product, propServing, propCreated, reset]);
 
   const handleSave = async (data: ProductPageData) => {
     setSaving(true);
@@ -139,27 +138,7 @@ export default function PageProduct({
     return items;
   }, [product]);
 
-  const options = useMemo(() => {
-    const optionsObject = getOptions({ product });
-    const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity",
-    );
-
-    const optionsServing = optionsObject.find(
-      (option) => option.value === "serving",
-    );
-
-    if (optionsServing) {
-      setValue("option", optionsServing.value);
-    } else if (optionsQuantity) {
-      setValue("option", optionsQuantity.value);
-    } else {
-      setValue("option", "100-gram");
-    }
-
-    return optionsObject;
-  }, [product, setValue]);
-
+  const options = getOptions({ product });
   const serving = useMemo(() => {
     const selected = options.find((object) => object.value === option)!;
 
