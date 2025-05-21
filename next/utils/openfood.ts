@@ -8,7 +8,7 @@ import { generateSlug, roundNumber } from "@/helper";
 
 export async function fetchProductFromOpenfood(
   user: string,
-  barcode: string
+  barcode: string,
 ): Promise<(ProductInsert & { options: Option[] }) | null> {
   const client = new OpenFoodFacts(fetch);
   const product = await client.getProduct(barcode);
@@ -49,7 +49,7 @@ function getTitle(product: ProductV2) {
 
 async function mapProduct(
   user: string,
-  product: ProductV2
+  product: ProductV2,
 ): Promise<ProductInsert & { options: Option[] }> {
   const { nutriments } = product;
 
@@ -85,7 +85,7 @@ async function mapProduct(
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans
+    nutritionFats - nutritionSaturated - nutritionTrans,
   );
 
   const quantityParsed =

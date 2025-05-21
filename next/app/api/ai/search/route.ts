@@ -6,7 +6,7 @@ import { searchGenerics } from "@/utils/generative/generic";
 import { searchProducts } from "@/utils/generative/product";
 import { streamToResponse } from "@/helper";
 import { getProductFromSearch } from "@/utils/search";
-import { getUser, insertProduct } from "@/utils/supabase";
+import { getUser, insertProducts } from "@/utils/supabase";
 import { googleRequest, openfoodRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
 import { fatsecretRequest, supabaseRequest } from "@/utils/internet";
@@ -29,21 +29,21 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!type) {
     return NextResponse.json(
       { error: "Please provide a type" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -76,7 +76,7 @@ export async function GET(request: NextRequest) {
               quantity_original_unit: quantity?.option,
             })),
           },
-          request.signal,
+          request.signal
         )
       : await searchGenerics(
           user,
@@ -90,17 +90,17 @@ export async function GET(request: NextRequest) {
               category,
             })),
           },
-          request.signal,
+          request.signal
         );
 
   after(async () => {
     const results = await generativeStream.object;
     const resultsMapped = results.map((search) =>
-      getProductFromSearch({ search, seed }),
+      getProductFromSearch({ search, seed })
     );
 
     // Normally we await the insert but since we won't automatically redirect to the user to product I'm assuming we'll insert before they click
-    await insertProduct(resultsMapped);
+    await insertProducts(resultsMapped);
 
     resultsMapped.forEach(async (result) => {
       if (result.type === "search_generic") {
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
       // Then yield combined results as AI results come in
       for await (const chunk of generativeStream.partialObjectStream) {
         const mapped = chunk.map((search) =>
-          getProductFromSearch({ search, seed }),
+          getProductFromSearch({ search, seed })
         );
 
         yield [...supabase, ...mapped];
