@@ -56,7 +56,7 @@ export default function ProductImpact({
     setPer100((previous) => !previous);
   };
 
-  const isDifferent = servingAdjusted.gram !== 100;
+  const isDifferent = serving.gram !== 100;
 
   return (
     <View>
