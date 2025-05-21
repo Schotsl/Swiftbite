@@ -36,6 +36,7 @@ Your task is to find up to 6 specific, single-item products matching the user's 
   - This prevents creating duplicates that would be regenerated in future searches
   - Example: If user searches for "Coca Cola" and database has "Coca-Cola Classic", "Coca-Cola Zero", "Coca-Cola Cherry", return [] as these already cover the query
   - Example: If user searches for "Coca Cola" and database has "Pepsi", "Fanta", "Sprite", search for more Coca-Cola variants
+  - Conversely, if the database returns no relevant results, or results that are clearly not what the user is looking for (like the Pepsi example for a "Coca Cola" query), you should actively search for products matching the query. If the query is broad (e.g., "brand + product type" like "Unox hotdogs"), try to suggest a few common variants of that product.
   
 - Important exception for quantities:
   - If the user specifies a quantity (e.g., "Coca-Cola 1L") and the database only has different quantities (e.g., "Coca-Cola 330ml", "Coca-Cola 1.5L"), still search for the requested quantity
