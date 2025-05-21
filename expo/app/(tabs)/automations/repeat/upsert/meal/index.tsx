@@ -9,7 +9,7 @@ import { ServingData } from "@/schemas/serving";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { useLocalSearchParams, Redirect, router } from "expo-router";
 
-export default function AutomationRepeatUpsertMeal() {
+export default function AutomationsRepeatUpsertMeal() {
   const {
     meal: mealEditing,
     serving,

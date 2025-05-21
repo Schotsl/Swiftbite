@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 
-export default function RootLayout() {
+export default function AutomationsLayout() {
   return (
     <Stack
       screenOptions={{
@@ -13,6 +13,8 @@ export default function RootLayout() {
       }}
     >
       <Stack.Screen name="index" />
+      <Stack.Screen name="meal" />
+      <Stack.Screen name="repeat" />
     </Stack>
   );
 }

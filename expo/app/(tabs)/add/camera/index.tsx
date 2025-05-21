@@ -15,14 +15,14 @@ export default function AddCameraLayout() {
 
   const handleBarcode = (barcode: string) => {
     router.push({
-      pathname: "/add/add-product",
+      pathname: "/add/product",
       params: { barcode },
     });
   };
 
   const handleEstimation = (uri: string, width: number, height: number) => {
     router.push({
-      pathname: "/add/add-estimation",
+      pathname: "/add/estimation",
       params: { uri, width, height, title, content },
     });
   };

@@ -15,7 +15,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DetailsData, detailsSchema } from "@/schemas/personal/details";
 
-export default function MyDetails() {
+export default function PersonalDetails() {
   const router = useRouter();
 
   const updateUser = useUpdateUser();

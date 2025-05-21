@@ -14,7 +14,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HealthData, healthSchema } from "@/schemas/personal/health";
 
-export default function MyHealth() {
+export default function PersonalHealth() {
   const router = useRouter();
 
   const updateUser = useUpdateUser();

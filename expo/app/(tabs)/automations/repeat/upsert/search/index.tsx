@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 
 import PageSearch from "@/components/Page/Search";
 
-export default function AutomationRepeatUpsertSearch() {
+export default function AutomationsRepeatUpsertSearch() {
   const router = useRouter();
 
   const handleMealSelect = (meal: string) => {

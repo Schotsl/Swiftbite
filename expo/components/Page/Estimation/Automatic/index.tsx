@@ -119,8 +119,8 @@ export default function PageEstimationAutomatic({
     router.push({
       pathname: "/add/camera",
       params: {
-        productPath: "add/add-product",
-        estimationPath: "add/add-estimation",
+        productPath: "add/product",
+        estimationPath: "add/estimation",
 
         title,
         content,

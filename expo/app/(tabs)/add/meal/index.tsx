@@ -1,10 +1,10 @@
 import entryData from "@/queries/entryData";
+
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
-import { useProduct } from "@/hooks/useProduct";
 
-import PageProduct from "@/components/Page/Product";
+import PageMeal from "@/components/Page/Meal";
 import HeaderLoading from "@/components/Header/Loading";
 import ProductStatus from "@/components/Product/Status";
 
@@ -13,50 +13,37 @@ import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 
-export default function AddPreviewBarcodeScreen() {
+export default function AddMeal() {
   const router = useRouter();
 
-  const insertEntry = useInsertEntry();
   const updateEntry = useUpdateEntry();
   const deleteEntry = useDeleteEntry();
+  const insertEntry = useInsertEntry();
 
-  const {
-    entry: entryId,
-    product: productId,
-    barcode: barcodeId,
-  } = useLocalSearchParams<{
+  const { entry: entryId } = useLocalSearchParams<{
     entry: string;
-    product: string;
-    barcode: string;
   }>();
 
-  const { data: entry, isLoading: isLoadingEntry } = useQuery({
+  const { data: entry, isLoading } = useQuery({
     ...entryData({ uuid: entryId }),
     select: (entries) => entries[0],
     enabled: !!entryId,
   });
 
-  const { product: productObject, isLoading: isLoadingProduct } = useProduct({
-    productId,
-    barcodeId,
-    enabled: !entryId,
-  });
-
-  if (isLoadingEntry || isLoadingProduct) {
+  if (isLoading) {
     return (
       <View style={{ padding: 32, minHeight: "100%" }}>
         <HeaderLoading />
 
-        <ProductStatus status="We zijn het product in onze database aan het zoeken" />
+        <ProductStatus status="We zijn de maaltijd in onze database aan het zoeken" />
       </View>
     );
   }
 
-  const productEntry = entry?.product;
-  const product = productEntry || productObject;
+  const meal = entry?.meal;
   const serving = entry?.serving;
 
-  if (!product) {
+  if (!meal || !serving) {
     return <Redirect href="/" />;
   }
 
@@ -79,9 +66,9 @@ export default function AddPreviewBarcodeScreen() {
 
     // Otherwise we'll create a new entry
     await insertEntry.mutateAsync({
-      meal_id: null,
+      meal_id: meal.uuid,
       serving: returnedServing,
-      product_id: product.uuid,
+      product_id: null,
       created_at: returnedCreated,
     });
 
@@ -104,18 +91,17 @@ export default function AddPreviewBarcodeScreen() {
     }
 
     await insertEntry.mutateAsync({
-      meal_id: null,
       serving,
-      product_id: product.uuid,
-      created_at: new Date(),
+      meal_id: meal.uuid,
+      product_id: null,
     });
 
     router.replace("/");
   };
 
   return (
-    <PageProduct
-      product={product}
+    <PageMeal
+      meal={meal}
       serving={serving}
       created={entry?.created_at}
       createdVisible={true}

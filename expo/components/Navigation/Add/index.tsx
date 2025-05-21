@@ -21,8 +21,8 @@ export default function NavigationAdd() {
 
         <NavigationAddList
           camera="/add/camera"
-          search="/add/add-search"
-          estimation="/add/add-estimation"
+          search="/add/search"
+          estimation="/add/estimation"
           onClose={() => setOpen(false)}
         />
 

@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import { Alert, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function ExportData() {
+export default function PersonalExport() {
   const handleExport = () => {
     Alert.alert(
       "Dit is helaas nog niet mogelijk",

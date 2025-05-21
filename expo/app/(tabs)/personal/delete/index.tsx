@@ -14,7 +14,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Alert, View } from "react-native";
 import { DeleteData, deleteSchema } from "@/schemas/personal/delete";
 
-export default function DeleteAccount() {
+export default function PersonalDelete() {
   const router = useRouter();
 
   const deleteAccount = useDeleteAccount();

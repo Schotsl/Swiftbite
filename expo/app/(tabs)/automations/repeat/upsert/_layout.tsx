@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { RepeatProvider } from "@/context/RepeatContext";
 import { Slot, useLocalSearchParams } from "expo-router";
 
-export default function RepeatUpsertLayout() {
+export default function AutomationsRepeatUpsertLayout() {
   const { repeat: repeatId } = useLocalSearchParams<{
     repeat: string;
   }>();

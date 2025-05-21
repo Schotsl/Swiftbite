@@ -12,7 +12,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordData, passwordSchema } from "@/schemas/personal/password";
 
-export default function ChangePassword() {
+export default function PersonalPassword() {
   const router = useRouter();
 
   const updatePassword = useUpdatePassword();

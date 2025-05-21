@@ -4,14 +4,14 @@ import { ServingData } from "@/schemas/serving";
 import PageSearch from "@/components/Page/Search";
 import useInsertEntry from "@/mutations/useInsertEntry";
 
-export default function AddText() {
+export default function AddSearch() {
   const router = useRouter();
 
   const insertEntry = useInsertEntry();
 
   const handleProductSelect = (product: string) => {
     router.push({
-      pathname: "/add/add-product",
+      pathname: "/add/product",
       params: { product },
     });
   };

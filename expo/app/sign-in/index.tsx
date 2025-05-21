@@ -9,10 +9,10 @@ import useSignInWithApple from "@/mutations/useSignInWithApple";
 import useSignInWithEmail from "@/mutations/useSignInWithEmail";
 import { AuthData, authSchema } from "@/schemas/auth";
 
-import Button from "../components/Button";
-import Input from "../components/Input";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 
-export default function SignInScreen() {
+export default function SignIn() {
   const signInMutation = useSignInWithEmail();
   const signInWithAppleMutation = useSignInWithApple();
 

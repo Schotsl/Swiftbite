@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 
-export default function RootLayout() {
+export default function PersonalLayout() {
   return (
     <Stack
       screenOptions={{
@@ -13,17 +13,13 @@ export default function RootLayout() {
       }}
     >
       <Stack.Screen name="index" />
-
-      <Stack.Screen name="my-details" />
-      <Stack.Screen name="my-health" />
-      <Stack.Screen name="my-preferences" />
-
-      <Stack.Screen name="change-goals" />
-      <Stack.Screen name="change-password" />
-
-      <Stack.Screen name="export-data" />
-
-      <Stack.Screen name="delete-account" />
+      <Stack.Screen name="delete" />
+      <Stack.Screen name="details" />
+      <Stack.Screen name="export" />
+      <Stack.Screen name="goals" />
+      <Stack.Screen name="health" />
+      <Stack.Screen name="password" />
+      <Stack.Screen name="preferences" />
     </Stack>
   );
 }

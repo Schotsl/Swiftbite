@@ -12,7 +12,7 @@ import NavigationAdd from "@/components/Navigation/Add";
 
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
+export default function TabsLayout() {
   const camera = useCamera();
 
   const [loading, setLoading] = useState(true);

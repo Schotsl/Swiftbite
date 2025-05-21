@@ -100,14 +100,14 @@ function AddList({ entries, today }: AddListProps) {
   };
 
   const handleSelect = (entry: string, type: string) => {
-    let pathname: Href = "/(tabs)/add/add-product";
+    let pathname: Href = "/(tabs)/add/product";
 
     if (type === "meal") {
-      pathname = "/(tabs)/add/add-meal";
+      pathname = "/(tabs)/add/meal";
     }
 
     if (type === "manual") {
-      pathname = "/(tabs)/add/add-estimation";
+      pathname = "/(tabs)/add/estimation";
     }
 
     router.push({

@@ -5,7 +5,7 @@ import { MealProvider } from "@/context/MealContext";
 import { ActivityIndicator } from "react-native";
 import { Slot, useLocalSearchParams } from "expo-router";
 
-export default function MealLayout() {
+export default function AutomationsMealUpsertLayout() {
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
 
   const { data, isLoading } = useQuery({

@@ -76,7 +76,7 @@ export function useProduct({
         {
           text: "Naar zoeken",
           onPress: () => {
-            router.replace("/(tabs)/add/add-search");
+            router.replace("/(tabs)/add/search");
           },
         },
       ]);
@@ -84,7 +84,7 @@ export function useProduct({
       return;
     }
 
-    router.replace("/(tabs)/add/add-search");
+    router.replace("/(tabs)/add/search");
 
     Alert.alert(
       "Product niet gevonden",

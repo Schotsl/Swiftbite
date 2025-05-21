@@ -43,7 +43,7 @@ const languages = [
   { value: "hr", title: "Hrvatski" },
 ];
 
-export default function MyPreferences() {
+export default function PersonalPreferences() {
   const router = useRouter();
 
   const updateUser = useUpdateUser();

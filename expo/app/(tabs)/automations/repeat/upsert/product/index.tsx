@@ -8,7 +8,7 @@ import PageProduct from "@/components/Page/Product";
 import HeaderLoading from "@/components/Header/Loading";
 import ProductStatus from "@/components/Product/Status";
 
-export default function AutomationRepeatUpsertProduct() {
+export default function AutomationsRepeatUpsertProduct() {
   const {
     product: productEditing,
     serving,

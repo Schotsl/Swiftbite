@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-export default function AutomationRepeatUpsert() {
+export default function AutomationsRepeatUpsert() {
   const focus = useIsFocused();
   const router = useRouter();
 
@@ -127,7 +127,7 @@ export default function AutomationRepeatUpsert() {
                   borderRadius: 8,
                 }}
               >
-                <AutomationRepeatUpsertItem
+                <AutomationsRepeatUpsertItem
                   meal={meal}
                   product={product}
                   serving={serving}
@@ -146,7 +146,7 @@ export default function AutomationRepeatUpsert() {
               />
             )}
 
-            <AutomationRepeatUpsertAdd
+            <AutomationsRepeatUpsertAdd
               set={isSet}
               open={open}
               position={position}
@@ -166,7 +166,7 @@ export default function AutomationRepeatUpsert() {
   );
 }
 
-type AutomationRepeatUpsertItemProps = {
+type AutomationsRepeatUpsertItemProps = {
   meal?: MealWithProduct | null;
   product?: Product | null;
   serving?: ServingData | null;
@@ -174,13 +174,13 @@ type AutomationRepeatUpsertItemProps = {
   onSelect: (product: string) => void;
 };
 
-function AutomationRepeatUpsertItem({
+function AutomationsRepeatUpsertItem({
   meal,
   product,
   serving,
   onOpen,
   onSelect,
-}: AutomationRepeatUpsertItemProps) {
+}: AutomationsRepeatUpsertItemProps) {
   if (meal && serving) {
     return (
       <ItemMeal
@@ -215,19 +215,19 @@ function AutomationRepeatUpsertItem({
   );
 }
 
-type AutomationRepeatUpsertAddProps = {
+type AutomationsRepeatUpsertAddProps = {
   set: boolean;
   open: boolean;
   position: Position;
   onClose: () => void;
 };
 
-function AutomationRepeatUpsertAdd({
+function AutomationsRepeatUpsertAdd({
   set,
   open,
   position,
   onClose,
-}: AutomationRepeatUpsertAddProps) {
+}: AutomationsRepeatUpsertAddProps) {
   return (
     <Modal
       visible={open}

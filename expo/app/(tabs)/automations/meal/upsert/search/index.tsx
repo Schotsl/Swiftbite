@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 
 import PageSearch from "@/components/Page/Search";
 
-export default function AddText() {
+export default function AutomationsMealUpsertSearch() {
   const router = useRouter();
 
   const handleProductSelect = (product: string) => {

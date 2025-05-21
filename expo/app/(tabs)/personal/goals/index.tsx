@@ -15,7 +15,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GoalData, goalSchema } from "@/schemas/personal/goal";
 
-export default function ChangeGoals() {
+export default function PersonalGoals() {
   const router = useRouter();
 
   const updateUser = useUpdateUser();

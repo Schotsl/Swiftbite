@@ -8,10 +8,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import useSignUpWithEmail from "@/mutations/useSignUpWithEmail";
 import { AuthData, authSchema } from "@/schemas/auth";
 
-import Button from "../components/Button";
-import Input from "../components/Input";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
 
-export default function SignUpScreen() {
+export default function SignUp() {
   const signUpMutation = useSignUpWithEmail();
 
   const isLoading = signUpMutation.isPending;

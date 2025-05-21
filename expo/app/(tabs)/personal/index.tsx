@@ -7,7 +7,7 @@ import supabase from "@/utils/supabase";
 import SettingHeader from "@/components/Setting/Header";
 import SettingBlock from "@/components/Setting/Block";
 
-export default function Tab() {
+export default function Personal() {
   const [isLoading, setIsLoading] = useState(false);
 
   async function handleSignout() {
@@ -32,18 +32,18 @@ export default function Tab() {
           <SettingBlock
             items={[
               {
-                href: "/(tabs)/personal/my-details",
+                href: "/(tabs)/personal/details",
                 title: "Mijn gegevens",
                 content: "Wijzig gegevens zoals voornaam, achternaam, etc.",
               },
               {
-                href: "/(tabs)/personal/my-health",
+                href: "/(tabs)/personal/health",
                 title: "Mijn gezondheid",
                 content:
                   "Lichaamsmetingen en -geschiedenis, zoals gewicht en lengte.",
               },
               {
-                href: "/(tabs)/personal/my-preferences",
+                href: "/(tabs)/personal/preferences",
                 title: "Mijn voorkeur",
                 content: "Verander taal, meetsysteem en andere instellingen.",
               },
@@ -53,12 +53,12 @@ export default function Tab() {
           <SettingBlock
             items={[
               {
-                href: "/(tabs)/personal/change-password",
+                href: "/(tabs)/personal/password",
                 title: "Verander je wachtwoord",
                 content: "Verander je accountwachtwoord.",
               },
               {
-                href: "/(tabs)/personal/change-goals",
+                href: "/(tabs)/personal/goals",
                 title: "Verander je doel",
                 content: "Verander je calorieën of macrodoelen.",
               },
@@ -68,7 +68,7 @@ export default function Tab() {
           <SettingBlock
             items={[
               {
-                href: "/(tabs)/personal/export-data",
+                href: "/(tabs)/personal/export",
                 title: "Exporteer gegevens",
                 content:
                   "Exporteer je dieetdata om te delen met een voedingscoach.",
@@ -79,7 +79,7 @@ export default function Tab() {
           <SettingBlock
             items={[
               {
-                href: "/(tabs)/personal/delete-account",
+                href: "/(tabs)/personal/delete",
                 title: "Verwijder je account",
                 content: "Verwijder je account definitief.",
               },
