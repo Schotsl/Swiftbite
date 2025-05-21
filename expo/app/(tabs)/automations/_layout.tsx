@@ -13,8 +13,8 @@ export default function AutomationsLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="meal" />
-      <Stack.Screen name="repeat" />
+      <Stack.Screen name="meal/index" />
+      <Stack.Screen name="repeat/index" />
     </Stack>
   );
 }

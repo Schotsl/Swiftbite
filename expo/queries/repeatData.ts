@@ -12,7 +12,9 @@ export default function repeatData({ uuid }: RepeatDataProps) {
   return queryOptions({
     queryKey: ["repeatData", uuid],
     queryFn: async (): Promise<Repeat[]> => {
-      const select = uuid ? `*, product(*), meal(*)` : `*`;
+      const select = uuid
+        ? `*, product(*), meal(*)`
+        : `*, product(title), meal(title)`;
 
       const query = supabase
         .from("repeat")
