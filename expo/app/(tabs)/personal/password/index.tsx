@@ -6,7 +6,6 @@ import useUpdatePassword from "@/mutations/useUpdatePassword";
 
 import { View } from "react-native";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,31 +16,25 @@ export default function PersonalPassword() {
 
   const updatePassword = useUpdatePassword();
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { control, handleSubmit, setError } = useForm<PasswordData>({
+  const {
+    setError,
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+  } = useForm<PasswordData>({
     resolver: zodResolver(passwordSchema),
   });
 
   const handleSave = async (data: PasswordData) => {
-    if (isLoading) {
-      return;
-    }
-
-    setIsLoading(true);
-
     const success = await updatePassword.mutateAsync(data);
 
     if (!success) {
       setError("password", { message: "Je huidige wachtwoord is incorrect" });
-      setIsLoading(false);
 
       return;
     }
 
     router.back();
-
-    setIsLoading(false);
   };
 
   return (
@@ -81,8 +74,8 @@ export default function PersonalPassword() {
           <Button
             title="Wijzigen opslaan"
             onPress={handleSubmit(handleSave)}
-            loading={isLoading}
-            disabled={isLoading}
+            loading={isSubmitting}
+            disabled={isSubmitting}
           />
         </View>
       </View>
