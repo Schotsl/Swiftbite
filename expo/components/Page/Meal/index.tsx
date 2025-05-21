@@ -55,7 +55,7 @@ export default function PageMeal({
     useForm<MealPageData>({
       resolver: zodResolver(mealPageSchema),
       defaultValues: {
-        option: propServing?.option || "100-gram",
+        option: propServing?.option || "meal",
         quantity: propServing?.quantity || 1,
         created_at: propCreated || new Date(),
       },
@@ -70,7 +70,7 @@ export default function PageMeal({
     }
 
     reset({
-      option: propServing?.option || "100-gram",
+      option: propServing?.option || "meal",
       quantity: propServing?.quantity || 1,
       created_at: propCreated || new Date(),
     });
@@ -116,14 +116,7 @@ export default function PageMeal({
     return items;
   }, [meal]);
 
-  const options = useMemo(() => {
-    const optionsObject = getOptions({ meal });
-
-    setValue("option", "meal");
-
-    return optionsObject;
-  }, [meal, setValue]);
-
+  const options = getOptions({ meal });
   const serving = useMemo(() => {
     const selected = options.find((object) => object.value === option)!;
     const gram = selected.gram * quantity;
