@@ -1,14 +1,13 @@
-import { View } from "react-native";
-import { useQuery } from "@tanstack/react-query";
+// HAPPY
+
+import HomeWeekDay from "./Day";
 
 import weekData from "@/queries/weekData";
-import HomeWeekDay from "./Day";
-import { useIsFocused } from "@react-navigation/native";
 
-const getLetter = (date: Date): string => {
-  const weekdays = ["S", "M", "T", "W", "T", "F", "S"];
-  return weekdays[date.getDay()];
-};
+import { View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
+import { useIsFocused } from "@react-navigation/native";
+import { getDay, getLetter } from "./helper";
 
 type HomeWeekProps = {
   date: Date;
@@ -23,33 +22,23 @@ export default function HomeWeek({ date, onPress }: HomeWeekProps) {
     enabled: focus,
   });
 
-  const dateArray = [];
-  const dateNumber = date.getDate();
+  const datesUsed = (data as string[] | undefined) || [];
+  const datesArray = [];
+
   const today = new Date();
+  const current = date.getDate();
 
   for (let i = -3; i <= 3; i++) {
-    const dateObject = new Date(date);
+    const dateItem = new Date(date);
+    dateItem.setDate(current + i);
 
-    dateObject.setDate(dateNumber + i);
+    const day = getDay(dateItem, today, date, datesUsed);
 
-    const dateString = dateObject.toISOString().split("T")[0];
-
-    const isToday = dateObject.toDateString() === today.toDateString();
-    const isIncluded = Array.isArray(data) && data.includes(dateString);
-
-    let type: "thick" | "normal" | "dashed" = "normal";
-    if (isToday) {
-      type = "thick";
-    } else if (!isIncluded) {
-      type = "dashed";
-    }
-
-    dateArray.push({
-      isToday,
-      dateNumber: dateObject.getDate(),
-      dateObject: dateObject,
-      dateLetter: getLetter(dateObject),
-      type,
+    datesArray.push({
+      dateNumber: dateItem.getDate(),
+      dateObject: dateItem,
+      dateLetter: getLetter(dateItem),
+      day,
     });
   }
 
@@ -60,13 +49,17 @@ export default function HomeWeek({ date, onPress }: HomeWeekProps) {
         justifyContent: "space-between",
       }}
     >
-      {dateArray.map((day, index) => (
+      {datesArray.map(({ day, dateNumber, dateObject, dateLetter }, index) => (
         <HomeWeekDay
           key={index}
-          type={day.type}
-          date={day.dateNumber}
-          weekday={day.dateLetter}
-          onPress={() => onPress(day.dateObject)}
+          day={day}
+          date={dateNumber}
+          weekday={dateLetter}
+          onPress={() => {
+            if (!day.isFuture) {
+              onPress(dateObject);
+            }
+          }}
         />
       ))}
     </View>

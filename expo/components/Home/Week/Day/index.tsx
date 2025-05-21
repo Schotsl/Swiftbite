@@ -1,18 +1,26 @@
-import { View, Text, TouchableOpacity } from "react-native";
+// HAPPY
+
+import TextBodyBold from "@/components/Text/Body/Bold";
+
+import { Day } from "../types";
+import { getStyle } from "./helper";
+import { TouchableOpacity, View } from "react-native";
 
 type HomeWeekDayProps = {
-  type: "normal" | "thick" | "dashed";
+  day: Day;
   date: number;
   weekday: string;
   onPress: () => void;
 };
 
 export default function HomeWeekDay({
-  type,
+  day,
   date,
   weekday,
   onPress,
 }: HomeWeekDayProps) {
+  const style = getStyle(day);
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -21,28 +29,11 @@ export default function HomeWeekDay({
         alignItems: "center",
       }}
     >
-      <View
-        style={{
-          width: 36,
-          height: 36,
-
-          borderColor: "#000",
-          borderWidth: type === "thick" ? 3 : 2,
-          borderStyle: type === "dashed" ? "dashed" : "solid",
-          borderRadius: 100,
-
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Text style={{ fontSize: 16, fontFamily: "OpenSans_700Bold" }}>
-          {weekday}
-        </Text>
+      <View style={style}>
+        <TextBodyBold>{weekday}</TextBodyBold>
       </View>
 
-      <Text style={{ fontSize: 16, fontFamily: "OpenSans_700Bold" }}>
-        {date}
-      </Text>
+      <TextBodyBold>{date}</TextBodyBold>
     </TouchableOpacity>
   );
 }

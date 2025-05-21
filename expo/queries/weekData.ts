@@ -6,7 +6,7 @@ import { queryOptions } from "@tanstack/react-query";
 export default function weekData() {
   return queryOptions({
     queryKey: ["weekData"],
-    queryFn: async (): Promise<number> => {
+    queryFn: async (): Promise<string[]> => {
       const session = await supabase.auth.getSession();
       const userId = session.data.session?.user.id;
 
