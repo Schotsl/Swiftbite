@@ -106,25 +106,6 @@ export async function POST(request: Request) {
       quantity: servingOriginal,
     };
 
-    // TODO: These supabase updates could be run in parallel
-    // Update the product with nutritional data
-    const { error: productError } = await supabase
-      .from("product")
-      .update({
-        ...rest,
-        serving,
-        quantity,
-        processing: false,
-      })
-      .eq("uuid", productObject.uuid);
-
-    handleError(productError);
-
-    // If the entry doesn't exist we can't do anything
-    if (!entry) {
-      return;
-    }
-
     // Update the entry with the estimated serving size
     const { error: entryUpdateError } = await supabase
       .from("entry")
@@ -138,6 +119,19 @@ export async function POST(request: Request) {
       .eq("uuid", entry.uuid);
 
     handleError(entryUpdateError);
+
+    // Update the product with nutritional data
+    const { error: productError } = await supabase
+      .from("product")
+      .update({
+        ...rest,
+        serving,
+        quantity,
+        processing: false,
+      })
+      .eq("uuid", productObject.uuid);
+
+    handleError(productError);
 
     return;
   });
