@@ -59,7 +59,17 @@ export default function Input({
   onFocus,
   onSubmit,
 }: InputProps) {
-  const height = label ? 78 : 48;
+  // let height = 48;
+
+  // if (label) {
+  //   height = 78;
+  // }
+
+  // if (error) {
+
+  // }
+
+  // // const height = label ? 78 : 48;
 
   return (
     <Controller
@@ -83,7 +93,7 @@ export default function Input({
         };
 
         return (
-          <View style={{ flex: 1, minHeight: height }}>
+          <View>
             {label && <InputLabel label={label} required={required} />}
 
             <View style={{ position: "relative" }}>

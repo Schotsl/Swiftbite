@@ -96,7 +96,7 @@ export default function PageSearch({
       <View
         style={{
           padding: 16,
-          flexDirection: "row",
+          flexDirection: "column",
           paddingHorizontal: 32,
           borderBottomWidth: 2,
           borderBottomColor: "#000000",
