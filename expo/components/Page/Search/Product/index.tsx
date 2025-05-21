@@ -47,7 +47,8 @@ export default function PageSearchProduct({
 
   useEffect(() => {
     if (isSearchable) {
-      if (previousQuery === query) {
+      // We'll only allow the user to query the same product again if there's a error or overloaded
+      if (previousQuery === query && !overloaded && !error) {
         return;
       }
 
@@ -103,7 +104,7 @@ export default function PageSearchProduct({
           scrollEnabled={false}
           keyExtractor={(item) => item.uuid}
           renderItem={({ item }) => (
-            <ItemProduct product={item} onSelect={onSelect} />
+            <ItemProduct icon={false} product={item} onSelect={onSelect} />
           )}
         />
 
