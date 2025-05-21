@@ -3,19 +3,21 @@ import productData from "@/queries/productData";
 
 import { Alert } from "react-native";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
+import { Href, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
 type UseProductProps = {
   productId?: string;
   barcodeId?: string;
   enabled?: boolean;
+  redirect: Href;
 };
 
 export function useProduct({
   productId,
   barcodeId,
   enabled = true,
+  redirect,
 }: UseProductProps) {
   const router = useRouter();
 
@@ -76,7 +78,7 @@ export function useProduct({
         {
           text: "Naar zoeken",
           onPress: () => {
-            router.replace("/(tabs)/add/search");
+            router.replace(redirect);
           },
         },
         {

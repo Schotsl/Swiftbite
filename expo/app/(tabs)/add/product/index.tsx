@@ -40,6 +40,7 @@ export default function AddProduct() {
     productId,
     barcodeId,
     enabled: !entryId,
+    redirect: "/(tabs)/add/search",
   });
 
   if (isLoadingEntry || isLoadingProduct) {
@@ -62,7 +63,7 @@ export default function AddProduct() {
 
   const handleSave = async (
     returnedServing: ServingData,
-    returnedCreated: Date,
+    returnedCreated: Date
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it

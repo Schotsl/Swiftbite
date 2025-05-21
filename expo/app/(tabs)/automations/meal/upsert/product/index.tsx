@@ -25,6 +25,7 @@ export default function AutomationsMealUpsertProduct() {
     productId,
     barcodeId,
     enabled: !!productId || !!barcodeId,
+    redirect: "/(tabs)/automations/meal/upsert/search",
   });
 
   if (isLoading) {
@@ -42,7 +43,7 @@ export default function AutomationsMealUpsertProduct() {
   }
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId,
+    (mealProduct) => mealProduct.product.uuid === productId
   );
 
   return (

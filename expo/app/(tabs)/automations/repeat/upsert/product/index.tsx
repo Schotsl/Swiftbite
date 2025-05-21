@@ -26,6 +26,7 @@ export default function AutomationsRepeatUpsertProduct() {
     productId,
     barcodeId,
     enabled: !productEditing,
+    redirect: "/(tabs)/automations/repeat/upsert/search",
   });
 
   if (isLoadingSearch) {
