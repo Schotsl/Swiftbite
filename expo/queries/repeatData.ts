@@ -12,13 +12,9 @@ export default function repeatData({ uuid }: RepeatDataProps) {
   return queryOptions({
     queryKey: ["repeatData", uuid],
     queryFn: async (): Promise<Repeat[]> => {
-      const select = uuid
-        ? `*, product(*), meal(*)`
-        : `*, product(title), meal(title)`;
-
       const query = supabase
         .from("repeat")
-        .select(select)
+        .select(`*, product(title), meal(title)`)
         .order("created_at", { ascending: false });
 
       if (uuid) {
@@ -29,16 +25,14 @@ export default function repeatData({ uuid }: RepeatDataProps) {
 
       handleError(error);
 
-      // Very weird but if we paste "*, product:product(*), meal:meal(*)" into the select it's fine but the ternary causes a non-blocking syntax error
-      const repeats = data as unknown as Repeat[];
-      const mapped = repeats.map((repeat) => ({
+      const mapped = data?.map((repeat) => ({
         ...repeat,
         time: new Date(repeat.time),
       }));
 
       console.log(`[Query] fetched ${data?.length} repeats`);
 
-      return mapped;
+      return mapped as Repeat[];
     },
   });
 }
