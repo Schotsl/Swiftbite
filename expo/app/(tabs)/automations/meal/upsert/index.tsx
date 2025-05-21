@@ -21,6 +21,8 @@ import ButtonSmall from "@/components/Button/Small";
 import ItemProduct from "@/components/Item/Product";
 import ModalBackground from "@/components/Modal/Background";
 import NavigationAddList from "@/components/Navigation/Add/List";
+import { ScrollView } from "react-native-gesture-handler";
+import variables from "@/variables";
 
 export default function AutomationsMealUpsert() {
   const focus = useIsFocused();
@@ -90,95 +92,98 @@ export default function AutomationsMealUpsert() {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        padding: 32,
-        alignItems: "flex-start",
-        backgroundColor: "#fff",
-      }}
-    >
-      <Header
-        title={updating ? "Bewerk maaltijd" : "Maaltijd toevoegen"}
-        content="Een maaltijd is een combinatie van producten die je opslaat om later in één keer toe te voegen."
-        onDelete={handleDelete}
-      />
-
-      <View style={{ gap: 48, width: "100%" }}>
-        <View style={{ gap: 32 }}>
-          <Input
-            name="title"
-            control={control}
-            label="Titel"
-            placeholder="Maaltijd titel"
+    <View>
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gapLarge,
+            padding: variables.padding,
+            paddingBottom: variables.paddingOverlay,
+          }}
+        >
+          <Header
+            small={true}
+            title={updating ? "Bewerk maaltijd" : "Maaltijd toevoegen"}
+            content="Een maaltijd is een combinatie van producten die je opslaat om later in één keer toe te voegen."
+            onDelete={handleDelete}
           />
 
-          <View style={{ gap: 12 }}>
-            <View>
-              <InputLabel label="Ingrediënten" />
+          <View style={{ gap: 32 }}>
+            <Input
+              name="title"
+              control={control}
+              label="Titel"
+              placeholder="Maaltijd titel"
+            />
 
-              <SwipeListView
-                style={{
-                  width: "100%",
-                  flexDirection: "column",
-                  borderWidth: 2,
-                  borderColor: "#000000",
-                  borderRadius: 8,
-                }}
-                data={mealProducts}
-                keyExtractor={(item) => item.product.uuid}
-                ListEmptyComponent={() => {
-                  return (
-                    <EmptySmall
-                      content="Je hebt nog geen ingrediënten toegevoegd"
-                      onPress={() => setOpen(true)}
-                    />
-                  );
-                }}
-                renderItem={({ item, index }) => {
-                  return (
-                    <ItemProduct
-                      icon={false}
-                      small={true}
-                      border={index !== mealProducts.length - 1}
-                      product={item.product}
-                      serving={item.serving}
-                      onSelect={handleSelect}
-                    />
-                  );
-                }}
-                renderHiddenItem={({ item, index }) => {
-                  return (
-                    <ItemDelete
-                      border={index !== mealProducts.length - 1}
-                      onDelete={() => removeMealProduct(item.product.uuid)}
-                    />
-                  );
-                }}
-                onRowDidOpen={rowTimeout}
-                rightOpenValue={-75}
-                useNativeDriver={true}
-                disableRightSwipe={true}
+            <View style={{ gap: 12 }}>
+              <View>
+                <InputLabel label="Ingrediënten" />
+
+                <SwipeListView
+                  style={{
+                    width: "100%",
+                    flexDirection: "column",
+                    borderWidth: 2,
+                    borderColor: "#000000",
+                    borderRadius: 8,
+                  }}
+                  data={mealProducts}
+                  scrollEnabled={false}
+                  keyExtractor={(item) => item.product.uuid}
+                  ListEmptyComponent={() => {
+                    return (
+                      <EmptySmall
+                        content="Je hebt nog geen ingrediënten toegevoegd"
+                        onPress={() => setOpen(true)}
+                      />
+                    );
+                  }}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <ItemProduct
+                        icon={false}
+                        small={true}
+                        border={index !== mealProducts.length - 1}
+                        product={item.product}
+                        serving={item.serving}
+                        onSelect={handleSelect}
+                      />
+                    );
+                  }}
+                  renderHiddenItem={({ item, index }) => {
+                    return (
+                      <ItemDelete
+                        border={index !== mealProducts.length - 1}
+                        onDelete={() => removeMealProduct(item.product.uuid)}
+                      />
+                    );
+                  }}
+                  onRowDidOpen={rowTimeout}
+                  rightOpenValue={-75}
+                  useNativeDriver={true}
+                  disableRightSwipe={true}
+                />
+              </View>
+
+              {focus && (
+                <ButtonSmall
+                  icon="plus"
+                  title="Ingrediënt toevoegen"
+                  onPress={() => setOpen(true)}
+                  onPosition={setPosition}
+                />
+              )}
+
+              <AutomationsMealUpsertAdd
+                open={open}
+                position={position}
+                onClose={() => setOpen(false)}
               />
             </View>
-
-            {focus && (
-              <ButtonSmall
-                icon="plus"
-                title="Ingrediënt toevoegen"
-                onPress={() => setOpen(true)}
-                onPosition={setPosition}
-              />
-            )}
-
-            <AutomationsMealUpsertAdd
-              open={open}
-              position={position}
-              onClose={() => setOpen(false)}
-            />
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       <ButtonOverlay
         title="Wijzigingen opslaan"
