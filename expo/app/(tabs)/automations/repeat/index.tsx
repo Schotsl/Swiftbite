@@ -18,7 +18,7 @@ export default function AutomationsRepeat() {
   const path = usePathname();
   const router = useRouter();
 
-  const { data } = useSuspenseQuery(repeatData());
+  const { data } = useSuspenseQuery(repeatData({}));
 
   const deleteRepeat = useDeleteRepeat();
 

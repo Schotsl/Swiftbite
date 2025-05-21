@@ -4,27 +4,39 @@ import { Repeat } from "@/types/repeat";
 import { handleError } from "@/helper";
 import { queryOptions } from "@tanstack/react-query";
 
-export default function repeatData() {
+type RepeatDataProps = {
+  uuid?: string;
+};
+
+export default function repeatData({ uuid }: RepeatDataProps) {
   return queryOptions({
-    queryKey: ["repeatData"],
-    queryFn: async () => {
-      let query = supabase
+    queryKey: ["repeatData", uuid],
+    queryFn: async (): Promise<Repeat[]> => {
+      const select = uuid ? `*, product(*), meal(*)` : `*`;
+
+      const query = supabase
         .from("repeat")
-        .select(`*, product(*), meal(*)`)
+        .select(select)
         .order("created_at", { ascending: false });
+
+      if (uuid) {
+        query.eq("uuid", uuid);
+      }
 
       const { error, data } = await query;
 
       handleError(error);
 
-      const mapped = data?.map((repeat) => ({
+      // Very weird but if we paste "*, product:product(*), meal:meal(*)" into the select it's fine but the ternary causes a non-blocking syntax error
+      const repeats = data as unknown as Repeat[];
+      const mapped = repeats.map((repeat) => ({
         ...repeat,
         time: new Date(repeat.time),
       }));
 
       console.log(`[Query] fetched ${data?.length} repeats`);
 
-      return mapped as Repeat[];
+      return mapped;
     },
   });
 }
