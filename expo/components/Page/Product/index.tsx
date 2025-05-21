@@ -55,7 +55,7 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const isGeneric = product.type === "search_generic";
@@ -129,7 +129,7 @@ export default function PageProduct({
         icon: "weight-hanging",
         value: `${product.quantity.gram} ${product.quantity.option}`,
       });
-    } else if (product.search.quantity_original) {
+    } else if (product.search?.quantity_original) {
       items.push({
         icon: "weight-hanging",
         value: `${product.search.quantity_original} ${product.search.quantity_original_unit}`,
@@ -142,11 +142,11 @@ export default function PageProduct({
   const options = useMemo(() => {
     const optionsObject = getOptions({ product });
     const optionsQuantity = optionsObject.find(
-      (option) => option.value === "quantity",
+      (option) => option.value === "quantity"
     );
 
     const optionsServing = optionsObject.find(
-      (option) => option.value === "serving",
+      (option) => option.value === "serving"
     );
 
     if (optionsServing) {

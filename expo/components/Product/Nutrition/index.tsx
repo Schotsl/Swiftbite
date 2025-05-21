@@ -86,6 +86,8 @@ export default function ProductNutrition({
     setPer100((previous) => !previous);
   };
 
+  const isDifferent = servingAdjusted.gram !== 100;
+
   return (
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -99,12 +101,12 @@ export default function ProductNutrition({
           Voedingswaarde
         </Text>
 
-        <TouchableOpacity onPress={handleSwitch}>
+        <TouchableOpacity onPress={isDifferent ? handleSwitch : undefined}>
           <Text
             style={{
               fontSize: 14,
               fontFamily: "OpenSans_400Regular",
-              textDecorationLine: "underline",
+              textDecorationLine: isDifferent ? "underline" : "none",
             }}
           >
             {per100 ? "Per 100g" : `Per ${servingAdjusted.gram}g`}
