@@ -168,7 +168,7 @@ export default function PageCamera({
       base64: string,
       width: number,
       height: number,
-      orientation: number,
+      orientation: number
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -191,7 +191,7 @@ export default function PageCamera({
         newHeight,
         "JPEG",
         50,
-        orientation,
+        orientation
       );
 
       sendImage(data.uri);
@@ -203,7 +203,7 @@ export default function PageCamera({
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    [],
+    []
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -231,9 +231,18 @@ export default function PageCamera({
   }, []);
 
   const codeScanner = useCodeScanner({
-    codeTypes: ["qr", "ean-13", "ean-8", "code-128", "code-39"],
+    codeTypes: ["ean-13", "ean-8", "code-128", "code-39"],
     onCodeScanned: (codes) => {
-      const barcode = codes[0].value!;
+      if (codes.length > 1) {
+        Alert.alert(
+          "We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één."
+        );
+
+        return;
+      }
+
+      const code = codes[0];
+      const barcode = code.value!;
 
       onBarcode(barcode);
     },
