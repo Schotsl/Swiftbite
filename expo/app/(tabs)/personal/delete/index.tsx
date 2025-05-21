@@ -6,11 +6,10 @@ import supabase from "@/utils/supabase";
 import useDeleteAccount from "@/mutations/useDeleteAccount";
 
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { useRouter } from "expo-router";
+import { ScrollView } from "react-native-gesture-handler";
 import { handleError } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ScrollView } from "react-native-gesture-handler";
 import { Alert, View } from "react-native";
 import { DeleteData, deleteSchema } from "@/schemas/personal/delete";
 
@@ -19,9 +18,12 @@ export default function PersonalDelete() {
 
   const deleteAccount = useDeleteAccount();
 
-  const [isLoading, setIsLoading] = useState(false);
-
-  const { control, setError, handleSubmit } = useForm<DeleteData>({
+  const {
+    setError,
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+  } = useForm<DeleteData>({
     resolver: zodResolver(deleteSchema),
   });
 
@@ -40,7 +42,7 @@ export default function PersonalDelete() {
           style: "destructive",
           onPress: () => handleConfirm(data),
         },
-      ],
+      ]
     );
   };
 
@@ -49,17 +51,10 @@ export default function PersonalDelete() {
   };
 
   const handleConfirm = async (data: DeleteData) => {
-    if (isLoading) {
-      return;
-    }
-
-    setIsLoading(true);
-
     const success = await deleteAccount.mutateAsync(data);
 
     if (!success) {
       setError("password", { message: "Je wachtwoord is incorrect" });
-      setIsLoading(false);
 
       return;
     }
@@ -67,8 +62,6 @@ export default function PersonalDelete() {
     const { error } = await supabase.auth.signOut();
 
     handleError(error);
-
-    setIsLoading(false);
   };
 
   return (
@@ -94,6 +87,8 @@ export default function PersonalDelete() {
             title="Account verwijderen"
             action="delete"
             onPress={handleSubmit(handleDelete)}
+            loading={isSubmitting}
+            disabled={isSubmitting}
           />
         </View>
       </View>
