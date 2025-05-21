@@ -184,7 +184,7 @@ export default function AddAI() {
       base64: string,
       width: number,
       height: number,
-      orientation: number,
+      orientation: number
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -207,7 +207,7 @@ export default function AddAI() {
         newHeight,
         "JPEG",
         50,
-        orientation,
+        orientation
       );
 
       sendImage(data.uri);
@@ -219,7 +219,7 @@ export default function AddAI() {
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    [],
+    []
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -252,7 +252,7 @@ export default function AddAI() {
       const barcode = codes[0].value;
 
       router.push({
-        pathname: "/add/add-product",
+        pathname: productPath,
         params: { barcode },
       });
     },
