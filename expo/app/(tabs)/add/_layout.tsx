@@ -14,10 +14,11 @@ export default function AddLayout() {
     >
       <Stack.Screen name="index" />
       <Stack.Screen name="camera" />
-      <Stack.Screen name="estimation" />
-      <Stack.Screen name="meal" />
-      <Stack.Screen name="product" />
-      <Stack.Screen name="search" />
+
+      <Stack.Screen name="estimation/index" />
+      <Stack.Screen name="meal/index" />
+      <Stack.Screen name="product/index" />
+      <Stack.Screen name="search/index" />
     </Stack>
   );
 }

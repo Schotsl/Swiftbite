@@ -13,13 +13,13 @@ export default function PersonalLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="delete" />
-      <Stack.Screen name="details" />
-      <Stack.Screen name="export" />
-      <Stack.Screen name="goals" />
-      <Stack.Screen name="health" />
-      <Stack.Screen name="password" />
-      <Stack.Screen name="preferences" />
+      <Stack.Screen name="delete/index" />
+      <Stack.Screen name="details/index" />
+      <Stack.Screen name="export/index" />
+      <Stack.Screen name="goals/index" />
+      <Stack.Screen name="health/index" />
+      <Stack.Screen name="password/index" />
+      <Stack.Screen name="preferences/index" />
     </Stack>
   );
 }
