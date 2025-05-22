@@ -1,54 +1,62 @@
+// HAPPY
+
+import variables from "@/variables";
 import streakData from "@/queries/streakData";
 
+import TextBodyBold from "@/components/Text/Body/Bold";
+import DecorativeNoise from "@/components/Decorative/Noise";
+import DecorativeLinear from "@/components/Decorative/Linear";
+
+import { Suspense } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { useIsFocused } from "@react-navigation/native";
-import { useQuery } from "@tanstack/react-query";
-import { View, Text, ActivityIndicator } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+
+import useSuspenseQueryFocus from "@/hooks/useSuspenseQueryFocus";
 
 export default function HomeStreak() {
-  const focus = useIsFocused();
-
-  const { data, isLoading } = useQuery({
-    ...streakData(),
-    enabled: focus,
-  });
+  const { data } = useSuspenseQueryFocus(streakData());
 
   return (
     <View
       style={{
-        gap: 8,
+        gap: variables.gap.small,
         alignItems: "center",
         flexDirection: "row",
 
-        paddingHorizontal: 16,
-        paddingVertical: 8,
+        paddingVertical: variables.padding.small.vertical,
+        paddingHorizontal: variables.padding.small.horizontal,
 
-        borderWidth: 2,
-        borderColor: "#000000",
+        overflow: "hidden",
         borderRadius: 100,
       }}
     >
-      <FontAwesome6 name="fire" size={16} color="#000000" />
+      <DecorativeLinear />
+      <DecorativeNoise />
+
+      <FontAwesome6 name="fire" size={16} color="#ffffff" />
+
       <View
         style={{
           height: 22,
-          minWidth: 20,
+          minWidth: 16,
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        {isLoading ? (
-          <ActivityIndicator
-            size="small"
-            color="#000000"
-            style={{ transform: [{ scale: 0.85 }] }}
-          />
-        ) : (
-          <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
-            {data}
-          </Text>
-        )}
+        <Suspense fallback={<HomeStreakLoading />}>
+          <TextBodyBold style={{ color: "#fff" }}>{data}</TextBodyBold>
+        </Suspense>
       </View>
     </View>
+  );
+}
+
+function HomeStreakLoading() {
+  return (
+    <ActivityIndicator
+      size="small"
+      color="#FFFFFF"
+      style={{ transform: [{ scale: 0.8 }], position: "absolute" }}
+    />
   );
 }

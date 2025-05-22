@@ -7,11 +7,22 @@ export default {
     border: "#000000",
     primary: "#E92D2E",
     primaryLight: "#FCE0E0",
+    primaryGradient: "#E97B2D",
   },
-  gapSmall: 16,
-  gapLarge: 48,
+  gap: {
+    small: 8,
+    normal: 16,
+    large: 48,
+  },
+  padding: {
+    page: 32,
 
-  padding: 32,
+    small: {
+      vertical: 8,
+      horizontal: 16,
+    },
+  },
+
   paddingOverlay: 32 + 84,
 
   heightTab: 62,
