@@ -1,8 +1,10 @@
+import { View } from "react-native";
 import { router } from "expo-router";
-import { Text, View } from "react-native";
+import { ButtonSmallProps } from "../Button/Small";
 
-import HeaderTitle from "./Title";
-import ButtonSmall, { ButtonSmallProps } from "../Button/Small";
+import TextBody from "@/components/Text/Body";
+import TextTitle from "@/components/Text/Title";
+import ButtonSmall from "../Button/Small";
 
 type HeaderProps = {
   title: string;
@@ -60,13 +62,9 @@ export default function Header({
         )}
       </View>
 
-      <HeaderTitle>{title}</HeaderTitle>
+      <TextTitle>{title}</TextTitle>
 
-      {content && (
-        <Text style={{ fontSize: 16, fontFamily: "OpenSans_400Regular" }}>
-          {content}
-        </Text>
-      )}
+      {content && <TextBody>{content}</TextBody>}
     </View>
   );
 }

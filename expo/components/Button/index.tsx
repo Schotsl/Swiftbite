@@ -1,13 +1,14 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import React from "react";
 import {
-  Text,
-  View,
   StyleProp,
   ViewStyle,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+
+import React from "react";
+import TextBody from "../Text/Body";
+import variables from "@/variables";
 
 export type ButtonProps = {
   onPress: () => void;
@@ -15,7 +16,7 @@ export type ButtonProps = {
   icon?: keyof typeof FontAwesome6.glyphMap;
   style?: StyleProp<ViewStyle>;
   title: string;
-  action?: "primary" | "delete";
+  action?: "primary" | "secondary" | "delete";
   loading?: boolean;
   disabled?: boolean;
 };
@@ -30,75 +31,57 @@ export default function Button({
   loading = false,
   disabled = false,
 }: ButtonProps) {
+  let color = variables.colors.white;
+  let background = variables.colors.primary;
+
+  if (action === "secondary") {
+    color = variables.colors.text.primary;
+    background = variables.colors.greyLight;
+  }
+
+  if (action === "delete") {
+    color = variables.colors.primary;
+    background = variables.colors.primaryLight;
+  }
+
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      activeOpacity={0.85}
       style={[
         {
+          gap: variables.gap.small,
           width: "100%",
-          opacity: disabled || loading ? 0.6 : 1,
+          opacity: disabled || loading ? 0.5 : 1,
+
+          alignItems: "center",
+          flexDirection: "row",
+          justifyContent: "center",
+
+          borderColor: variables.colors.grey,
+          borderWidth: 1,
+
+          borderRadius: 32,
+          paddingVertical: 14,
+          paddingHorizontal: 32,
+          backgroundColor: background,
         },
         style,
       ]}
     >
-      <View
-        style={{
-          gap: 8,
-          flexDirection: "row",
+      {loading ? (
+        <ActivityIndicator
+          size="small"
+          color={color}
+          style={{ transform: [variables.scale] }}
+        />
+      ) : (
+        <FontAwesome6 name={icon} size={18} color={color} />
+      )}
 
-          alignItems: "center",
-          justifyContent: "center",
-
-          paddingVertical: 12,
-          paddingHorizontal: 32,
-
-          borderRadius: 8,
-          backgroundColor: "#fff",
-
-          borderWidth: 2,
-          borderColor: action === "delete" ? "#7C0000" : "#000",
-        }}
-      >
-        {loading ? (
-          <ActivityIndicator
-            size="small"
-            color={action === "delete" ? "#7C0000" : "#000"}
-          />
-        ) : (
-          <FontAwesome6
-            name={icon}
-            size={18}
-            color={action === "delete" ? "#7C0000" : "#000"}
-          />
-        )}
-
-        <Text
-          style={{
-            color: action === "delete" ? "#7C0000" : "#000",
-
-            textAlign: "center",
-            fontSize: 16,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {title}
-        </Text>
-      </View>
-
-      <View
-        style={{
-          top: 4,
-          left: 4,
-          width: "100%",
-          height: "100%",
-          zIndex: -1,
-          position: "absolute",
-          borderRadius: 8,
-          backgroundColor: action === "delete" ? "#7C0000" : "#000",
-        }}
-      ></View>
+      <TextBody color={color} align="center" weight="semibold">
+        {title}
+      </TextBody>
     </TouchableOpacity>
   );
 }

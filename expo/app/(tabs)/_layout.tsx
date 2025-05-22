@@ -7,8 +7,11 @@ import { useEffect, useState } from "react";
 import { Redirect, SplashScreen, Tabs } from "expo-router";
 
 import supabase from "@/utils/supabase";
+import variables from "@/variables";
+
 import useCamera from "@/hooks/useCamera";
 import NavigationAdd from "@/components/Navigation/Add";
+import language from "@/language";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -80,15 +83,15 @@ export default function TabsLayout() {
           screenOptions={() => {
             return {
               headerShown: false,
-              tabBarActiveTintColor: "#000",
+              tabBarActiveTintColor: variables.colors.primary,
               tabBarStyle: {
                 display: camera ? "none" : "flex",
                 paddingTop: 10,
-                paddingBottom: 10,
                 paddingLeft: 12,
                 paddingRight: 12,
+                paddingBottom: 10,
                 borderTopWidth: 2,
-                borderTopColor: "#000",
+                borderTopColor: variables.colors.grey,
               },
             };
           }}
@@ -104,7 +107,7 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="add"
             options={{
-              title: "Overview",
+              title: language.navigation.tabs.dairy,
               tabBarIcon: ({ color }: { color: string }) => (
                 <FontAwesome6
                   size={18}
@@ -119,7 +122,7 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="stats"
             options={{
-              title: "Stats",
+              title: language.navigation.tabs.statistics,
               tabBarIcon: ({ color }: { color: string }) => (
                 <FontAwesome6
                   size={18}
@@ -134,14 +137,14 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="redirect"
             options={{
-              tabBarButton: (props) => <NavigationAdd />,
+              tabBarButton: () => <NavigationAdd />,
             }}
           />
 
           <Tabs.Screen
             name="automations"
             options={{
-              title: "Automations",
+              title: language.navigation.tabs.automations,
               tabBarIcon: ({ color }: { color: string }) => (
                 <FontAwesome6
                   size={18}
@@ -156,7 +159,7 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="personal"
             options={{
-              title: "Personal",
+              title: language.navigation.tabs.personal,
               tabBarIcon: ({ color }: { color: string }) => (
                 <FontAwesome6
                   size={18}

@@ -2,14 +2,6 @@ import Text from "@/components/Text";
 
 import { TextWithoutSizeProps } from "../types";
 
-export default function TextSmall({
-  style,
-  weight = "normal",
-  children,
-}: TextWithoutSizeProps) {
-  return (
-    <Text size={14} weight={weight} style={style}>
-      {children}
-    </Text>
-  );
+export default function TextSmall(props: TextWithoutSizeProps) {
+  return <Text size={14} {...props} />;
 }

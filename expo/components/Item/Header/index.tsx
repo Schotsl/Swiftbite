@@ -1,4 +1,8 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
+
+import TextBody from "@/components/Text/Body";
+
+import variables from "@/variables";
 
 type ItemHeaderProps = {
   title: string;
@@ -12,31 +16,16 @@ export default function ItemHeader({ title, subtitle }: ItemHeaderProps) {
         flexDirection: "row",
         justifyContent: "space-between",
 
-        paddingHorizontal: 32,
-        paddingVertical: 8,
+        paddingHorizontal: variables.padding.page,
+        paddingVertical: variables.padding.small.vertical,
 
-        borderColor: "#000",
-        borderBottomWidth: 2,
-
-        backgroundColor: "#E5E5E5",
+        backgroundColor: variables.colors.background.secondary,
       }}
     >
-      <Text
-        style={{
-          fontSize: 16,
-          fontFamily: "OpenSans_400Regular",
-        }}
-      >
-        {title}
-      </Text>
-      <Text
-        style={{
-          fontSize: 16,
-          fontFamily: "OpenSans_600SemiBold",
-        }}
-      >
+      <TextBody color={variables.colors.text.secondary}>{title}</TextBody>
+      <TextBody color={variables.colors.text.secondary} weight="semibold">
         {subtitle}
-      </Text>
+      </TextBody>
     </View>
   );
 }

@@ -1,11 +1,20 @@
-import Icon from "../Icon";
+import variables from "@/variables";
+
+import ItemIcon from "./Icon";
+import TextBody from "../Text/Body";
+import TextSmall from "../Text/Small";
 
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Href, router } from "expo-router";
+import { Href, LinkProps, router } from "expo-router";
 import { useState, Fragment } from "react";
-import { Text, TouchableOpacity, View, ActivityIndicator } from "react-native";
+import {
+  ActivityIndicator,
+  ButtonProps,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-type BaseProps = {
+type ItemProps = {
   title: string;
   subtitle: string;
 
@@ -16,26 +25,14 @@ type BaseProps = {
   rightBottom?: string | null;
   subtitleIcon?: string;
   subtitleLoading?: boolean;
-};
 
-type LinkProps = {
-  href: Href;
-  onPress?: never;
-};
-
-type ButtonProps = {
-  href?: never;
   onPress: () => void;
 };
-
-type ItemProps = BaseProps & (LinkProps | ButtonProps);
 
 export default function Item({
   title,
   subtitle,
 
-  href,
-  onPress,
   small = false,
   border = true,
   subtitleIcon,
@@ -44,6 +41,8 @@ export default function Item({
 
   rightTop,
   rightBottom,
+
+  onPress,
 }: ItemProps) {
   const [width, setWidth] = useState(0);
 
@@ -53,16 +52,8 @@ export default function Item({
   const padding = small ? 20 : 32;
   const remaining = width - right - gap - icon - padding * 2;
 
-  const handlePress = () => {
-    if (href) {
-      router.push(href);
-    } else if (onPress) {
-      onPress();
-    }
-  };
-
   return (
-    <TouchableOpacity onPress={handlePress} activeOpacity={1}>
+    <TouchableOpacity onPress={onPress} activeOpacity={1}>
       <View
         onLayout={(event) => {
           const { width } = event.nativeEvent.layout;
@@ -72,7 +63,8 @@ export default function Item({
         style={{
           height: 75,
           minWidth: "100%",
-          borderWidth: border ? 2 : 0,
+          borderColor: variables.colors.grey,
+          borderWidth: border ? 1 : 0,
           flexDirection: "column",
           paddingVertical: 16,
           paddingHorizontal: padding,
@@ -92,7 +84,7 @@ export default function Item({
           }}
         >
           {/* If iconId is null it's still loading the ID */}
-          {typeof iconId !== "undefined" && <Icon iconId={iconId} />}
+          {typeof iconId !== "undefined" && <ItemIcon iconId={iconId} />}
 
           <View
             style={{
@@ -101,15 +93,9 @@ export default function Item({
               justifyContent: "space-between",
             }}
           >
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "OpenSans_600SemiBold",
-              }}
-              numberOfLines={1}
-            >
+            <TextBody weight="semibold" truncate={true}>
               {title}
-            </Text>
+            </TextBody>
 
             <View
               style={{
@@ -130,8 +116,8 @@ export default function Item({
                   {subtitleLoading ? (
                     <ActivityIndicator
                       size="small"
-                      style={{ transform: [{ scale: 0.65 }], opacity: 0.75 }}
-                      color="#000000"
+                      style={{ transform: [{ scale: 0.65 }] }}
+                      color={variables.colors.text.primary}
                     />
                   ) : (
                     <Fragment>
@@ -139,8 +125,7 @@ export default function Item({
                         <FontAwesome6
                           name={subtitleIcon}
                           size={12}
-                          style={{ opacity: 0.75 }}
-                          color="#545454"
+                          color={variables.colors.text.secondary}
                         />
                       )}
                     </Fragment>
@@ -148,16 +133,12 @@ export default function Item({
                 </View>
               )}
 
-              <Text
-                style={{
-                  color: "#545454",
-                  fontSize: 14,
-                  fontFamily: "OpenSans_400Regular",
-                }}
-                numberOfLines={1}
+              <TextSmall
+                color={variables.colors.text.secondary}
+                truncate={true}
               >
                 {subtitle}
-              </Text>
+              </TextSmall>
             </View>
           </View>
 
@@ -169,29 +150,15 @@ export default function Item({
               justifyContent: "space-between",
             }}
           >
-            <Text
-              style={{
-                color: "#000000",
-                fontSize: 16,
-                fontFamily: "OpenSans_600SemiBold",
-              }}
-              numberOfLines={1}
-            >
+            <TextBody weight="semibold" truncate={true}>
               {rightTop}
-            </Text>
+            </TextBody>
 
             <View style={{ flex: 1 }}></View>
 
-            <Text
-              style={{
-                color: "#545454",
-                fontSize: 14,
-                fontFamily: "OpenSans_400Regular",
-              }}
-              numberOfLines={1}
-            >
+            <TextSmall color={variables.colors.text.secondary} truncate={true}>
               {rightBottom}
-            </Text>
+            </TextSmall>
           </View>
         </View>
       </View>

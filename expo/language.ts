@@ -18,4 +18,23 @@ export default {
       protein: "Eiwitten",
     },
   },
+  navigation: {
+    tabs: {
+      dairy: "Dagboek",
+      personal: "Instellingen",
+      statistics: "Statistieken",
+      automations: "Automaties",
+    },
+    add: {
+      camera: "Camera",
+      search: "Zoeken",
+      estimation: "Inschatting",
+    },
+  },
+  time: {
+    night: "Nacht",
+    evening: "Avond",
+    morning: "Ochtend",
+    afternoon: "Middag",
+  },
 };

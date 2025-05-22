@@ -1,20 +1,21 @@
 import { View } from "react-native";
 import { Entry } from "@/types/entry";
-import { Product } from "@/types/product";
 import { ScrollView } from "react-native-gesture-handler";
+import { getSections } from "./helper";
 import { Href, router } from "expo-router";
-import { transformDate } from "@/helper";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
+import language from "@/language";
 import entryData from "@/queries/entryData";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 
 import HomeWeek from "@/components/Home/Week";
+import HomeTitle from "@/components/Home/Title";
 import HomeStreak from "@/components/Home/Streak";
 import HomeMacros from "@/components/Home/Macros";
-import HeaderTitle from "@/components/Header/Title";
+import TextTitle from "@/components/Text/Title";
 
 import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";
@@ -39,14 +40,6 @@ export default function Add() {
     setInterval(interval);
   }, [data]);
 
-  // If date is today then we'll return "Vandaag", ortherwise we'll turn the date to a locale string
-  const labelDate = transformDate(date);
-  const labelToday = transformDate(new Date());
-
-  const isToday = labelDate === labelToday;
-
-  const label = isToday ? "Vandaag" : labelDate;
-
   return (
     <ScrollView
       style={{
@@ -55,42 +48,44 @@ export default function Add() {
     >
       <View
         style={{
-          gap: 24,
+          gap: 48,
           padding: 32,
         }}
       >
-        <View
-          style={{
-            alignContent: "center",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <HeaderTitle>{label}</HeaderTitle>
+        <View style={{ gap: 32 }}>
+          <View
+            style={{
+              alignContent: "center",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <HomeTitle date={date} />
 
-          <HomeStreak />
+            <HomeStreak />
+          </View>
+
+          <HomeWeek date={date} onPress={setDate} />
         </View>
-
-        <HomeWeek date={date} onPress={setDate} />
 
         <HomeMacros date={date} />
 
-        <HeaderTitle>Logs</HeaderTitle>
+        <TextTitle>Logs</TextTitle>
       </View>
 
       <Suspense fallback={<AddListLoading />}>
-        <AddList entries={data} today={isToday} />
+        <AddList entries={data} />
       </Suspense>
     </ScrollView>
   );
 }
 
 type AddListProps = {
-  today: boolean;
   entries: Entry[];
 };
 
-function AddList({ entries, today }: AddListProps) {
+function AddList({ entries }: AddListProps) {
   const deleteEntry = useDeleteEntry();
 
   const handleDelete = (uuid: string) => {
@@ -114,89 +109,14 @@ function AddList({ entries, today }: AddListProps) {
     });
   };
 
-  const sections = useMemo(() => {
-    const sections = [
-      {
-        title: "Night",
-        subtitle: "21:00 - 06:00",
-        startHour: 21,
-        data: [] as Entry[],
-      },
-      {
-        title: "Evening",
-        subtitle: "17:00 - 21:00",
-        startHour: 17,
-        data: [] as Entry[],
-      },
-      {
-        title: "Afternoon",
-        subtitle: "12:00 - 17:00",
-        startHour: 12,
-        data: [] as Entry[],
-      },
-      {
-        title: "Morning",
-        subtitle: "06:00 - 12:00",
-        startHour: 6,
-        data: [] as Entry[],
-      },
-    ];
-
-    const currentDate = new Date();
-    const currentHour = currentDate.getHours();
-
-    // Filter sections based on the current time
-    const sectionsFiltered = sections.filter(
-      (section) => !today || currentHour >= section.startHour,
-    );
-
-    // Populate active sections with data
-    entries?.forEach((entry) => {
-      const entryDate = new Date(entry.created_at);
-      const entryHour = entryDate.getHours();
-
-      let targetSection;
-
-      if (entryHour >= 6 && entryHour < 12) {
-        targetSection = sectionsFiltered.find((s) => s.title === "Morning");
-      } else if (entryHour >= 12 && entryHour < 17) {
-        targetSection = sectionsFiltered.find((s) => s.title === "Afternoon");
-      } else if (entryHour >= 17 && entryHour < 21) {
-        targetSection = sectionsFiltered.find((s) => s.title === "Evening");
-      } else {
-        targetSection = sectionsFiltered.find((s) => s.title === "Night");
-      }
-
-      if (targetSection) {
-        targetSection.data.push(entry);
-      }
-    });
-
-    // Sort the active sections chronologically for display
-    sectionsFiltered.sort((a, b) => b.startHour - a.startHour);
-
-    return sectionsFiltered;
-  }, [entries, today]);
+  const sections = getSections(entries);
 
   return (
     <SwipeListView
-      style={{ marginBottom: -2 }}
       sections={sections}
-      renderItem={({ item }) => {
-        return item.product ? (
-          <ItemProduct
-            product={item.product as Product}
-            serving={item.serving}
-            onSelect={() => handleSelect(item.uuid, item.product.type)}
-          />
-        ) : (
-          <ItemMeal
-            meal={item.meal}
-            serving={item.serving}
-            onSelect={() => handleSelect(item.uuid, "meal")}
-          />
-        );
-      }}
+      renderItem={({ item }) => (
+        <AddListItem entry={item} handleSelect={handleSelect} />
+      )}
       renderHiddenItem={({ item }) => (
         <ItemDelete onDelete={() => handleDelete(item.uuid)} />
       )}
@@ -205,16 +125,52 @@ function AddList({ entries, today }: AddListProps) {
       )}
       scrollEnabled={false}
       rightOpenValue={-75}
-      useSectionList
-      disableRightSwipe
+      useSectionList={true}
+      disableRightSwipe={true}
+      ListEmptyComponent={<AddListEmpty />}
     />
+  );
+}
+
+type AddListItemProps = {
+  entry: Entry;
+  handleSelect: (uuid: string, type: string) => void;
+};
+
+function AddListItem({ entry, handleSelect }: AddListItemProps) {
+  const { meal, serving, product } = entry;
+
+  if (product) {
+    return (
+      <ItemProduct
+        product={product}
+        serving={serving}
+        onSelect={() => handleSelect(entry.uuid, entry.product.type)}
+      />
+    );
+  }
+
+  return (
+    <ItemMeal
+      meal={meal}
+      serving={serving}
+      onSelect={() => handleSelect(entry.uuid, "meal")}
+    />
+  );
+}
+
+function AddListEmpty() {
+  return (
+    <View>
+      <ItemHeader title={language.time.morning} subtitle="06:00 - 12:00" />
+    </View>
   );
 }
 
 function AddListLoading() {
   return (
     <View>
-      <ItemHeader title="Morning" subtitle="06:00 - 12:00" />
+      <ItemHeader title={language.time.morning} subtitle="06:00 - 12:00" />
       <ItemSkeleton />
       <ItemSkeleton />
       <ItemSkeleton />

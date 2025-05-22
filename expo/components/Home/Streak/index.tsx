@@ -44,7 +44,7 @@ export default function HomeStreak() {
         }}
       >
         <Suspense fallback={<HomeStreakLoading />}>
-          <TextBody weight="bold" style={{ color: "#fff" }}>
+          <TextBody weight="bold" style={{ color: variables.colors.white }}>
             {data}
           </TextBody>
         </Suspense>
@@ -58,7 +58,7 @@ function HomeStreakLoading() {
     <ActivityIndicator
       size="small"
       color="#FFFFFF"
-      style={{ transform: [{ scale: 0.8 }], position: "absolute" }}
+      style={{ transform: [variables.scale], position: "absolute" }}
     />
   );
 }

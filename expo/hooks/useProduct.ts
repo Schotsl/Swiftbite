@@ -23,7 +23,6 @@ export function useProduct({
 
   const [search, setSearch] = useState(false);
   const [interval, setInterval] = useState<number | false>(false);
-
   // Use barcode query if barcode is provided
   const queryBarcode = useQuery({
     ...productBarcode({ barcode: barcodeId!, search }),
@@ -41,7 +40,9 @@ export function useProduct({
   });
 
   // Determine which query to use
-  const { data: product, isLoading } = barcodeId ? queryBarcode : queryProduct;
+  const { data: product, isLoading: isLoadingQuery } = barcodeId
+    ? queryBarcode
+    : queryProduct;
 
   // Handle refetch interval based on product processing state
   useEffect(() => {
@@ -58,7 +59,7 @@ export function useProduct({
     }
 
     // If the product is still loading we don't need to show the alert
-    if (isLoading) {
+    if (isLoadingQuery) {
       return;
     }
 
@@ -103,15 +104,16 @@ export function useProduct({
         {
           text: "Ok",
         },
-      ],
+      ]
     );
-  }, [product, isLoading, search, router, barcodeId, redirect]);
+  }, [product, isLoadingQuery, search, router, barcodeId, redirect]);
 
-  const loadingProduct = isLoading;
-  const loadingBarcode = isLoading || (!search && !product);
+  const isLoadingProduct = isLoadingQuery;
+  const isLoadingBarcode = isLoadingQuery || (!search && !product);
+  const isLoading = enabled && productId ? isLoadingProduct : isLoadingBarcode;
 
   return {
     product,
-    isLoading: productId ? loadingProduct : loadingBarcode,
+    isLoading,
   };
 }

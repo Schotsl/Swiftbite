@@ -1,8 +1,12 @@
+// HAPPY
+
 import { Href, useRouter } from "expo-router";
 import { useCameraPermission } from "react-native-vision-camera";
 import { Alert, StyleProp, View, ViewStyle } from "react-native";
 
 import Button from "@/components/Button";
+import variables from "@/variables";
+import language from "@/language";
 
 type NavigationAddListProps = {
   camera: Href;
@@ -59,26 +63,39 @@ export default function NavigationAddList({
     <View
       style={[
         {
-          gap: 16,
+          gap: variables.gap.normal,
           left: "50%",
-          width: 175,
+          width: 200,
           bottom: 110,
           position: "absolute",
-          transform: [{ translateX: -87.5 }],
+          transform: [{ translateX: -100 }],
         },
         style,
       ]}
     >
-      {camera && <Button icon="camera" title="Camera" onPress={handleCamera} />}
+      {camera && (
+        <Button
+          icon="camera"
+          title={language.navigation.add.camera}
+          action="secondary"
+          onPress={handleCamera}
+        />
+      )}
 
       {search && (
-        <Button icon="magnifying-glass" title="Zoeken" onPress={handleSearch} />
+        <Button
+          icon="magnifying-glass"
+          title={language.navigation.add.search}
+          action="secondary"
+          onPress={handleSearch}
+        />
       )}
 
       {estimation && (
         <Button
           icon="wand-magic-sparkles"
-          title="Inschatting"
+          title={language.navigation.add.estimation}
+          action="secondary"
           onPress={handleEstimate}
         />
       )}

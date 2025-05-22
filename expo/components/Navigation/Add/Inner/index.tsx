@@ -1,7 +1,9 @@
+// HAPPY
+
 import {
+  withTiming,
   useSharedValue,
   useAnimatedStyle,
-  withTiming,
 } from "react-native-reanimated";
 
 import { useEffect } from "react";
@@ -9,6 +11,10 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 
 import Animated from "react-native-reanimated";
+import variables from "@/variables";
+import MaskedView from "@react-native-masked-view/masked-view";
+import DecorativeNoise from "@/components/Decorative/Noise";
+import DecorativeLinear from "@/components/Decorative/Linear";
 
 type NavigationAddInnerProps = {
   open: boolean;
@@ -40,58 +46,61 @@ export default function NavigationAddInner({
   }, [open, animatedRotation]);
 
   return (
-    <View
-      style={{
-        borderWidth: 2,
-        borderColor: overlay ? "#000" : "transparent",
-        borderRadius: 100,
-      }}
-    >
+    <View>
       {overlay && (
-        <View
+        <MaskedView
           style={{
             top: -2,
-            width: 70,
-            height: 14,
+            left: -2,
+            width: 66,
+            height: 66,
             position: "absolute",
-            backgroundColor: "#fff",
           }}
-        ></View>
+          maskElement={
+            <View
+              style={{
+                top: 12,
+                width: 66,
+                height: 54,
+                backgroundColor: variables.colors.black,
+              }}
+            ></View>
+          }
+        >
+          <View
+            style={{
+              width: 66,
+              height: 66,
+              borderRadius: 66,
+              backgroundColor: variables.colors.grey,
+            }}
+          ></View>
+        </MaskedView>
       )}
 
-      <View
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={onPress}
         style={{
-          borderWidth: 4,
-          borderColor: overlay ? "#fff" : "transparent",
-          borderRadius: 100,
+          width: 62,
+          height: 62,
+          zIndex: 11,
+          overflow: "hidden",
+          alignItems: "center",
+          borderRadius: 62,
+          justifyContent: "center",
         }}
       >
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={onPress}
-          style={{
-            width: 62,
-            height: 62,
-            zIndex: 11,
+        <DecorativeLinear />
+        <DecorativeNoise />
 
-            borderWidth: 2,
-            borderColor: "#000",
-            borderRadius: 100,
-
-            backgroundColor: "#fff",
-
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <AnimatedIcon
-            size={18}
-            name="plus"
-            color="#000"
-            style={animatedStyle}
-          />
-        </TouchableOpacity>
-      </View>
+        <AnimatedIcon
+          size={24}
+          name="plus"
+          color={variables.colors.white}
+          style={animatedStyle}
+        />
+      </TouchableOpacity>
     </View>
   );
 }

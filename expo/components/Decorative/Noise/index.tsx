@@ -9,7 +9,8 @@ export default function DecorativeNoise() {
         left: 0,
         right: 0,
         bottom: 0,
-        opacity: 0.05,
+        zIndex: 0,
+        opacity: 0.08,
         position: "absolute",
       }}
       resizeMode="repeat"

@@ -1,3 +1,5 @@
+// HAPPY
+
 import { Modal, View } from "react-native";
 import { useState } from "react";
 
@@ -29,9 +31,9 @@ export default function NavigationAdd() {
         <View
           style={{
             left: "50%",
-            bottom: 23,
+            bottom: 31,
             position: "absolute",
-            transform: [{ translateX: -32 }],
+            transform: [{ translateX: -33 }],
           }}
         >
           <NavigationAddInner
@@ -44,10 +46,10 @@ export default function NavigationAdd() {
 
       <View
         style={{
-          top: -26,
+          top: -22,
           left: "50%",
           position: "absolute",
-          transform: [{ translateX: -32 }],
+          transform: [{ translateX: -33 }],
         }}
       >
         <NavigationAddInner
