@@ -161,8 +161,8 @@ export default function PageProduct({
       <ScrollView>
         <View
           style={{
-            gap: variables.gapLarge,
-            padding: variables.padding,
+            gap: variables.gap.large,
+            padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,
           }}
         >
@@ -180,7 +180,7 @@ export default function PageProduct({
             <ProductInfo items={info} />
           </View>
 
-          <View style={{ gap: variables.gapSmall }}>
+          <View style={{ gap: variables.gap.small }}>
             <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
               Portie
             </Text>
@@ -203,7 +203,7 @@ export default function PageProduct({
           </View>
 
           {createdVisible && (
-            <View style={{ gap: variables.gapSmall }}>
+            <View style={{ gap: variables.gap.small }}>
               <Text
                 style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
               >

@@ -103,9 +103,9 @@ export function useProduct({
         {
           text: "Ok",
         },
-      ]
+      ],
     );
-  }, [product, isLoading, search, router, barcodeId]);
+  }, [product, isLoading, search, router, barcodeId, redirect]);
 
   const loadingProduct = isLoading;
   const loadingBarcode = isLoading || (!search && !product);

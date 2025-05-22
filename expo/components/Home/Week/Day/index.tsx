@@ -1,6 +1,6 @@
 // HAPPY
 
-import TextBodyBold from "@/components/Text/Body/Bold";
+import TextBody from "@/components/Text/Body";
 
 import { Day } from "../types";
 import { getStyle } from "./helper";
@@ -30,10 +30,10 @@ export default function HomeWeekDay({
       }}
     >
       <View style={style}>
-        <TextBodyBold>{weekday}</TextBodyBold>
+        <TextBody weight="bold">{weekday}</TextBody>
       </View>
 
-      <TextBodyBold>{date}</TextBodyBold>
+      <TextBody weight="bold">{date}</TextBody>
     </TouchableOpacity>
   );
 }

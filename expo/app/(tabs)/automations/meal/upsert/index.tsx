@@ -96,8 +96,8 @@ export default function AutomationsMealUpsert() {
       <ScrollView>
         <View
           style={{
-            gap: variables.gapLarge,
-            padding: variables.padding,
+            gap: variables.gap.large,
+            padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,
           }}
         >

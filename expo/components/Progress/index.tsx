@@ -1,4 +1,9 @@
-import { DimensionValue, StyleProp, Text, View, ViewStyle } from "react-native";
+import { DimensionValue, StyleProp, View, ViewStyle } from "react-native";
+
+import variables from "@/variables";
+
+import TextBody from "@/components/Text/Body";
+import TextSmall from "@/components/Text/Small";
 
 type ProgressProps = {
   type?: string;
@@ -20,47 +25,50 @@ export default function Progress({
   const progressWidth = `${progressRounded}%` as DimensionValue;
 
   return (
-    <View style={[{ gap: 8, flex: 1, alignItems: "center" }, style]}>
-      <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
-        {label}
-      </Text>
+    <View
+      style={[
+        { gap: variables.gap.small, flex: 1, alignItems: "center" },
+        style,
+      ]}
+    >
+      <TextBody weight="semibold">{label}</TextBody>
 
       <View
         style={{
           width: "100%",
-          height: 10,
+          height: 12,
           position: "relative",
 
           borderWidth: 2,
           borderRadius: 8,
-          borderColor: "#000",
+          borderColor: variables.colors.grey,
+          backgroundColor: variables.colors.grey,
+          overflow: "hidden",
         }}
       >
         <View
           style={{
             width: progressWidth,
-            height: 6,
+            height: 8,
             maxWidth: "100%",
             position: "absolute",
 
             borderRadius: 8,
-            backgroundColor: "#000",
+            backgroundColor: variables.colors.primary,
           }}
         />
       </View>
 
       <View style={{ flexDirection: "row", gap: 4 }}>
-        <Text style={{ fontSize: 14, fontFamily: "OpenSans_400Regular" }}>
+        <TextSmall>
           {value}
           {type}
-        </Text>
-        <Text style={{ fontSize: 14, fontFamily: "OpenSans_600SemiBold" }}>
-          /
-        </Text>
-        <Text style={{ fontSize: 14, fontFamily: "OpenSans_600SemiBold" }}>
+        </TextSmall>
+        <TextSmall weight="semibold">/</TextSmall>
+        <TextSmall weight="semibold">
           {target}
           {type}
-        </Text>
+        </TextSmall>
       </View>
     </View>
   );

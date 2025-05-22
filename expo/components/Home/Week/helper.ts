@@ -1,6 +1,7 @@
 // HAPPY
 
-import { language } from "@/language";
+import language from "@/language";
+
 import { Border, Color, Day } from "./types";
 
 export const getLetter = (date: Date): string => {
@@ -24,7 +25,7 @@ export function getDay(
   dateItem: Date,
   dateToday: Date,
   dateView: Date,
-  datesUsed: string[]
+  datesUsed: string[],
 ): Day {
   const dateString = dateItem.toISOString().split("T")[0];
 

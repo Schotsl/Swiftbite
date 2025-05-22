@@ -3,7 +3,7 @@
 import variables from "@/variables";
 import streakData from "@/queries/streakData";
 
-import TextBodyBold from "@/components/Text/Body/Bold";
+import TextBody from "@/components/Text/Body";
 import DecorativeNoise from "@/components/Decorative/Noise";
 import DecorativeLinear from "@/components/Decorative/Linear";
 
@@ -44,7 +44,9 @@ export default function HomeStreak() {
         }}
       >
         <Suspense fallback={<HomeStreakLoading />}>
-          <TextBodyBold style={{ color: "#fff" }}>{data}</TextBodyBold>
+          <TextBody weight="bold" style={{ color: "#fff" }}>
+            {data}
+          </TextBody>
         </Suspense>
       </View>
     </View>

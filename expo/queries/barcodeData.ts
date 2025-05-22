@@ -36,7 +36,7 @@ export default function barcodeData({
       if (response.status === 429) {
         Alert.alert(
           "Oeps!",
-          "Je hebt te veel aanvragen gedaan, de app kan raar gaan werken. Probeer het later nog eens."
+          "Je hebt te veel aanvragen gedaan, de app kan raar gaan werken. Probeer het later nog eens.",
         );
 
         return [];

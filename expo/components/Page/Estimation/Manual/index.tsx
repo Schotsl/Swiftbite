@@ -271,7 +271,7 @@ export default function PageEstimationManual({
           </View>
 
           {createdVisible && (
-            <View style={{ gap: variables.gapSmall }}>
+            <View style={{ gap: variables.gap.small }}>
               <Text
                 style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
               >

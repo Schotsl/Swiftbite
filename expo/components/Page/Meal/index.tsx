@@ -51,15 +51,14 @@ export default function PageMeal({
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(isMealFavorite(user, meal.uuid));
 
-  const { watch, control, reset, setValue, handleSubmit } =
-    useForm<MealPageData>({
-      resolver: zodResolver(mealPageSchema),
-      defaultValues: {
-        option: propServing?.option || "meal",
-        quantity: propServing?.quantity || 1,
-        created_at: propCreated || new Date(),
-      },
-    });
+  const { watch, control, reset, handleSubmit } = useForm<MealPageData>({
+    resolver: zodResolver(mealPageSchema),
+    defaultValues: {
+      option: propServing?.option || "meal",
+      quantity: propServing?.quantity || 1,
+      created_at: propCreated || new Date(),
+    },
+  });
 
   const option = watch("option");
   const quantity = watch("quantity");
@@ -129,8 +128,8 @@ export default function PageMeal({
       <ScrollView>
         <View
           style={{
-            gap: variables.gapLarge,
-            padding: variables.padding,
+            gap: variables.gap.large,
+            padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,
           }}
         >
@@ -147,7 +146,7 @@ export default function PageMeal({
             <ProductInfo items={info} />
           </View>
 
-          <View style={{ gap: variables.gapSmall }}>
+          <View style={{ gap: variables.gap.small }}>
             <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
               Portie
             </Text>
@@ -170,7 +169,7 @@ export default function PageMeal({
           </View>
 
           {createdVisible && (
-            <View style={{ gap: variables.gapSmall }}>
+            <View style={{ gap: variables.gap.small }}>
               <Text
                 style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
               >

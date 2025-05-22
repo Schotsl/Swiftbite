@@ -1,55 +1,65 @@
+// HAPPY
+
 import { View } from "react-native";
 import { useHealth } from "@/context/HealthContext";
+import { macrosToCalories } from "@/helper";
+import { useSuspenseQuery } from "@tanstack/react-query";
+
+import useMacros from "@/hooks/useMacros";
+import userData from "@/queries/userData";
 
 import Progress from "@/components/Progress";
-import useMacros from "@/hooks/useMacros";
 import HomeMacrosProgress from "./Progress";
+
+import language from "@/language";
+import variables from "@/variables";
 
 type HomeMacrosProps = {
   date: Date;
 };
 
 export default function HomeMacros({ date }: HomeMacrosProps) {
-  const macros = useMacros(date);
-
+  const { data } = useSuspenseQuery(userData());
   const { active } = useHealth();
 
+  const macrosConsumed = useMacros(date);
+  const macrosTarget = macrosToCalories(data.macro, data.calories);
+
   return (
-    <View style={{ gap: 16, paddingVertical: 24 }}>
+    <View style={{ gap: variables.gap.normal }}>
       <HomeMacrosProgress
-        target={3200}
+        target={macrosTarget.calories}
         burned={active || 0}
-        consumed={macros.calories}
+        consumed={macrosConsumed.calories}
       />
 
       <View
         style={{
-          gap: 16,
-          width: "100%",
+          gap: variables.gap.normal,
 
           flexDirection: "row",
           justifyContent: "space-between",
         }}
       >
         <Progress
-          label="Eiwitten"
-          value={macros.protein}
+          label={language.macros.short.protein}
+          value={macrosConsumed.protein}
+          target={macrosTarget.protein}
           style={{ maxWidth: 96 }}
-          target={180}
         />
 
         <Progress
-          label="Carbs"
-          value={macros.carbs}
+          label={language.macros.short.carbs}
+          value={macrosConsumed.carbs}
+          target={macrosTarget.carbs}
           style={{ maxWidth: 96 }}
-          target={450}
         />
 
         <Progress
-          label="Vetten"
-          value={macros.fat}
+          label={language.macros.short.fats}
+          value={macrosConsumed.fat}
+          target={macrosTarget.fat}
           style={{ maxWidth: 96 }}
-          target={85}
         />
       </View>
     </View>

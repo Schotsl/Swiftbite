@@ -43,7 +43,7 @@ export default function AutomationsMealUpsertProduct() {
   }
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId
+    (mealProduct) => mealProduct.product.uuid === productId,
   );
 
   return (

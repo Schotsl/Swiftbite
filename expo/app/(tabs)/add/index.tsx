@@ -57,8 +57,6 @@ export default function Add() {
         style={{
           gap: 24,
           padding: 32,
-          borderColor: "#000",
-          borderBottomWidth: 2,
         }}
       >
         <View

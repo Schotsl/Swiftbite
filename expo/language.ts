@@ -1,4 +1,4 @@
-export const language = {
+export default {
   weekdays: {
     monday: "Maandag",
     tuesday: "Dinsdag",
@@ -7,5 +7,15 @@ export const language = {
     friday: "Vrijdag",
     saturday: "Zaterdag",
     sunday: "Zondag",
+  },
+  burned: "Verbrand",
+  consumed: "Verbruikt",
+  remaining: "Resterend",
+  macros: {
+    short: {
+      fats: "Vetten",
+      carbs: "Carbs",
+      protein: "Eiwitten",
+    },
   },
 };

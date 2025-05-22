@@ -4,6 +4,7 @@ export default {
   },
   colors: {
     grey: "#EAEAEA",
+    white: "#FFFFFF",
     border: "#000000",
     primary: "#E92D2E",
     primaryLight: "#FCE0E0",

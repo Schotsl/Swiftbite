@@ -1,3 +1,7 @@
+// HAPPY
+
+import variables from "@/variables";
+
 import { View } from "react-native";
 
 type HomeMacrosProgressCircleProps = {
@@ -7,41 +11,75 @@ type HomeMacrosProgressCircleProps = {
 export default function HomeMacrosProgressCircle({
   progress,
 }: HomeMacrosProgressCircleProps) {
-  const degrees = progress * 230 + 20;
+  const widthCircle = 124;
+  const widthFiller = 8;
+  const widthBorder = 2;
+
+  const degreesDot = progress * 230 - 25;
+  const degreesFiller = progress * 230 + 20;
 
   return (
     <View
       style={{
-        height: 82,
+        width: widthCircle,
+        height: widthCircle * 0.73,
         overflow: "hidden",
         position: "relative",
       }}
     >
+      {/* This is the dot at the end of the filler */}
+      {progress > 0 && (
+        <View
+          style={{
+            top: widthCircle / 2 - widthFiller / 2,
+            left: widthBorder,
+            width: widthCircle / 2 - widthBorder,
+            height: widthFiller,
+
+            transform: [{ rotate: `${degreesDot}deg` }],
+            transformOrigin: "right",
+
+            zIndex: 1,
+            position: "absolute",
+          }}
+        >
+          <View
+            style={{
+              width: widthFiller,
+              height: widthFiller,
+              borderRadius: widthFiller,
+              backgroundColor: variables.colors.primary,
+            }}
+          />
+        </View>
+      )}
+
+      {/* This is the inner circle that covers the center */}
       <View
         style={{
-          top: 8,
-          left: 8,
+          top: widthBorder * 2 + widthFiller,
+          left: widthBorder * 2 + widthFiller,
           zIndex: 2,
 
-          width: 96,
-          height: 96,
+          width: widthCircle - widthBorder * 4 - widthFiller * 2,
+          height: widthCircle - widthBorder * 4 - widthFiller * 2,
           position: "absolute",
 
-          borderRadius: 100,
-          backgroundColor: "#fff",
+          borderRadius: widthCircle,
+          backgroundColor: variables.colors.white,
         }}
-      ></View>
+      />
 
+      {/* This is the left arm */}
       <View
         style={{
-          top: 55,
-          width: 56,
-          height: 2,
+          top: widthCircle / 2,
+
+          width: widthCircle / 2,
+          height: widthBorder,
           zIndex: 1,
 
           position: "absolute",
-          backgroundColor: "#000",
-
           transform: [{ rotate: "-25deg" }],
           transformOrigin: "right",
         }}
@@ -49,79 +87,86 @@ export default function HomeMacrosProgressCircle({
         <View
           style={{
             width: "100%",
-            height: 2,
-            backgroundColor: "#000",
+            height: widthBorder,
+            backgroundColor: variables.colors.grey,
           }}
-        ></View>
+        />
+
         <View
           style={{
             width: "100%",
-            height: 54,
-            backgroundColor: "#fff",
+            height: widthCircle / 2 - widthBorder,
+            backgroundColor: variables.colors.white,
           }}
-        ></View>
+        />
       </View>
 
+      {/* This is the right arm */}
       <View
         style={{
-          top: 55,
-          right: 0,
-          width: 56,
-          height: 2,
+          top: widthCircle / 2,
+          left: widthCircle / 2,
+
+          width: widthCircle / 2,
+          height: widthBorder,
           zIndex: 1,
 
           position: "absolute",
-          backgroundColor: "#fff",
-
           transform: [{ rotate: "25deg" }],
-          transformOrigin: "left",
+          transformOrigin: "left,top",
         }}
       >
         <View
           style={{
             width: "100%",
-            height: 2,
-            backgroundColor: "#000",
+            height: widthBorder,
+            backgroundColor: variables.colors.grey,
           }}
-        ></View>
+        />
+
         <View
           style={{
             width: "100%",
-            height: 54,
-            backgroundColor: "#fff",
+            height: widthCircle / 2 - widthBorder,
+            backgroundColor: variables.colors.white,
           }}
-        ></View>
+        />
       </View>
 
+      {/* This is the filler */}
       <View
         style={{
-          borderWidth: 2,
-          borderColor: "#000",
-          borderRadius: 100,
+          borderWidth: widthBorder,
+          borderColor: variables.colors.grey,
+          borderRadius: widthCircle,
+          backgroundColor: variables.colors.grey,
         }}
       >
         <View
           style={{
             borderLeftColor: "transparent",
-            borderTopColor: progress > 0.5 ? "#000" : "transparent",
-            borderRightColor: progress > 0.25 ? "#000" : "transparent",
+            borderTopColor:
+              progress > 0.5 ? variables.colors.primary : "transparent",
 
-            borderWidth: 4,
-            borderColor: "#000",
-            borderRadius: 100,
+            borderRightColor:
+              progress > 0.25 ? variables.colors.primary : "transparent",
 
-            transform: [{ rotate: `${degrees}deg` }],
+            borderWidth: widthFiller,
+            borderColor: variables.colors.primary,
+            borderRadius: widthCircle,
+
+            transform: [{ rotate: `${degreesFiller}deg` }],
           }}
         >
           <View
             style={{
-              width: 100,
-              height: 100,
-              borderWidth: 2,
-              borderRadius: 100,
-              borderColor: "#000",
+              width: widthCircle - widthBorder * 2 - widthFiller * 2,
+              height: widthCircle - widthBorder * 2 - widthFiller * 2,
+              borderColor: variables.colors.grey,
+              borderWidth: widthBorder,
+              borderRadius: widthCircle,
             }}
-          ></View>
+          />
         </View>
       </View>
     </View>

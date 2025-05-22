@@ -59,7 +59,16 @@ export default function PageSearchProduct({
     }
 
     reset();
-  }, [query, type, isSearchable, previousQuery, search, reset]);
+  }, [
+    query,
+    type,
+    isSearchable,
+    previousQuery,
+    search,
+    reset,
+    error,
+    overloaded,
+  ]);
 
   if (loading && isEmpty) {
     return (

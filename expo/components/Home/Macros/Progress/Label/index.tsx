@@ -1,4 +1,9 @@
-import { View, Text } from "react-native";
+// HAPPY
+
+import TextBody from "@/components/Text/Body";
+import TextSmall from "@/components/Text/Small";
+
+import { View } from "react-native";
 
 type HomeMacrosProgressLabelProps = {
   value: number;
@@ -17,13 +22,8 @@ export default function HomeMacrosProgressLabel({
         flexDirection: "column",
       }}
     >
-      <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
-        {value}
-      </Text>
-
-      <Text style={{ fontSize: 14, fontFamily: "OpenSans_400Regular" }}>
-        {label}
-      </Text>
+      <TextBody weight="semibold">{value}</TextBody>
+      <TextSmall>{label}</TextSmall>
     </View>
   );
 }
