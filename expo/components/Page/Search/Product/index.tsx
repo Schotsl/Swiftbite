@@ -1,16 +1,16 @@
 import { Enums } from "@/database.types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@/hooks/useSearch";
-import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
-import ProductStatus from "@/components/Product/Status";
-import SearchCollapsable from "@/components/Search/Collapsable";
-
-import productData from "@/queries/productData";
-import ItemProduct from "@/components/Item/Product";
 import language from "@/language";
+import productData from "@/queries/productData";
+
+import ItemProduct from "@/components/Item/Product";
+import ProductStatus from "@/components/Product/Status";
+import PageSearchProductCollapsable from "@/components/Page/Search/Product/Collapsable";
 
 type PageSearchProps = {
   type: Enums<"type">;
@@ -42,6 +42,8 @@ export default function PageSearchProduct({
   const isSearchable = query.length >= 4;
 
   const labelPlural = type === "search_product" ? "producten" : "basisitems";
+
+  const [opened, setOpened] = useState<string | null>(null);
 
   const [previousQuery, setPreviousQuery] = useState(query);
 
@@ -142,35 +144,43 @@ export default function PageSearchProduct({
 
   return (
     <View style={{ flex: 1 }}>
-      <SearchCollapsable
+      <PageSearchProductCollapsable
         title={language.search.favorite.getTitle(labelPlural)}
         empty={language.search.favorite.getEmpty(labelPlural)}
+        opened={opened}
         loading={favoriteProductsLoading}
         products={favoriteProducts}
+        onOpen={setOpened}
         onSelect={onSelect}
       />
 
-      <SearchCollapsable
+      <PageSearchProductCollapsable
         title={language.search.manual.getTitle(labelPlural)}
         empty={language.search.manual.getEmpty(labelPlural)}
+        opened={opened}
         loading={false}
         products={[]}
+        onOpen={setOpened}
         onSelect={onSelect}
       />
 
-      <SearchCollapsable
+      <PageSearchProductCollapsable
         title={language.search.often.getTitle(labelPlural)}
         empty={language.search.often.getEmpty(labelPlural)}
+        opened={opened}
         loading={mostUsedProductsLoading}
         products={mostUsedProducts}
+        onOpen={setOpened}
         onSelect={onSelect}
       />
 
-      <SearchCollapsable
+      <PageSearchProductCollapsable
         title={language.search.recent.getTitle(labelPlural)}
         empty={language.search.recent.getEmpty(labelPlural)}
+        opened={opened}
         loading={mostRecentProductsLoading}
         products={mostRecentProducts}
+        onOpen={setOpened}
         onSelect={onSelect}
       />
     </View>

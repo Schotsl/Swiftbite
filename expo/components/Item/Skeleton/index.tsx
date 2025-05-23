@@ -1,4 +1,9 @@
+// HAPPY
+
+import variables from "@/variables";
+
 import { View } from "react-native";
+
 import Skeleton from "react-native-reanimated-skeleton";
 
 type SkeletonItemProps = {
@@ -13,7 +18,7 @@ export default function ItemSkeleton({
   border = true,
 }: SkeletonItemProps) {
   const gap = 16;
-  const padding = small ? 20 : 32;
+  const padding = small ? 20 : variables.padding.page;
 
   // Random width variations (±10%)
   const titleWidth = 100 + Math.random() * 20;
@@ -26,14 +31,12 @@ export default function ItemSkeleton({
       style={{
         height: 75,
         minWidth: "100%",
-        borderWidth: border ? 2 : 0,
+        borderBottomWidth: border ? variables.border.width : 0,
+        borderBottomColor: variables.border.color,
+
         flexDirection: "column",
-        paddingVertical: 16,
+        paddingVertical: variables.padding.small.horizontal,
         paddingHorizontal: padding,
-        borderTopWidth: 0,
-        borderLeftWidth: 0,
-        borderRightWidth: 0,
-        backgroundColor: "#fff",
       }}
     >
       <View

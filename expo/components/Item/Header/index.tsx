@@ -1,3 +1,5 @@
+// HAPPY
+
 import { View } from "react-native";
 
 import TextBody from "@/components/Text/Body";
@@ -16,8 +18,8 @@ export default function ItemHeader({ title, subtitle }: ItemHeaderProps) {
         flexDirection: "row",
         justifyContent: "space-between",
 
-        paddingHorizontal: variables.padding.page,
         paddingVertical: variables.padding.small.vertical,
+        paddingHorizontal: variables.padding.page,
 
         backgroundColor: variables.colors.background.secondary,
       }}

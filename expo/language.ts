@@ -247,6 +247,7 @@ export default {
     },
   },
   empty: {
+    meal: "Je hebt nog geen maaltijden aan je account toegevoegd",
     weight: "Je hebt nog geen gewicht aan je account toegevoegd",
 
     getAdded: (type: string) => {

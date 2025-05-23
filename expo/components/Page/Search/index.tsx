@@ -11,6 +11,7 @@ import Input from "@/components/Input";
 import PageSearchMeal from "./Meal";
 import PageSearchProduct from "./Product";
 import language from "@/language";
+import variables from "@/variables";
 
 enum Type {
   MEALS = "meals",
@@ -96,11 +97,13 @@ export default function PageSearch({
       />
       <View
         style={{
-          padding: 16,
           flexDirection: "column",
-          paddingHorizontal: 32,
-          borderBottomWidth: 2,
-          borderBottomColor: "#000000",
+
+          padding: variables.padding.small.horizontal,
+          paddingHorizontal: variables.padding.page,
+
+          borderBottomWidth: variables.border.width,
+          borderBottomColor: variables.border.color,
         }}
       >
         <Input
