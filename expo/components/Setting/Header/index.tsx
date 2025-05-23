@@ -1,22 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-import { Text, View } from "react-native";
+// HAPPY
+
+import { Suspense } from "react";
+import { ActivityIndicator, View } from "react-native";
 
 import userData from "@/queries/userData";
-import SettingHeaderAvatar from "./Avatar";
-import { useIsFocused } from "@react-navigation/native";
-import TextLarge from "@/components/Text/Large";
-import TextSmall from "@/components/Text/Small";
+import useSuspenseQueryFocus from "@/hooks/useSuspenseQueryFocus";
+
 import TextBody from "@/components/Text/Body";
-import variables from "@/variables";
+import TextLarge from "@/components/Text/Large";
+
+import SettingHeaderAvatar from "./Avatar";
+
 import language from "@/language";
+import variables from "@/variables";
 
 export default function SettingHeader() {
-  const focus = useIsFocused();
-
-  const { data } = useQuery({
-    ...userData(),
-    enabled: focus,
-  });
+  const { data: user } = useSuspenseQueryFocus(userData());
 
   return (
     <View
@@ -26,17 +25,44 @@ export default function SettingHeader() {
         flexDirection: "row",
       }}
     >
-      <SettingHeaderAvatar />
+      <Suspense fallback={<SettingHeaderLoading />}>
+        <SettingHeaderAvatar user={user} />
 
-      <View>
-        <TextLarge weight="semibold">
-          {data?.first_name} {data?.last_name}
-        </TextLarge>
+        <View>
+          <TextLarge weight="semibold">
+            {user.first_name} {user.last_name}
+          </TextLarge>
 
-        <TextBody>
-          {language.page.personal.getSubtitle(data?.total || 0)}
-        </TextBody>
-      </View>
+          <TextBody>{language.page.personal.getSubtitle(user.total)}</TextBody>
+        </View>
+      </Suspense>
+    </View>
+  );
+}
+
+function SettingHeaderLoading() {
+  return (
+    <View
+      style={{
+        width: 48,
+        height: 48,
+
+        borderColor: variables.border.color,
+        borderWidth: variables.border.width,
+        borderRadius: 24,
+
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: variables.colors.greyLight,
+      }}
+    >
+      <ActivityIndicator
+        size="small"
+        color={variables.colors.text.primary}
+        style={{
+          transform: [variables.scale],
+        }}
+      />
     </View>
   );
 }

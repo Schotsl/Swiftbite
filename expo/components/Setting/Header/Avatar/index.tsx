@@ -1,39 +1,28 @@
+// HAPPY
+
+import { User } from "@/types/user";
 import { Image } from "expo-image";
-import { handleError } from "@/helper";
-import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 import Gravatar from "@krosben/react-native-gravatar";
-import supabase from "@/utils/supabase";
+
 import variables from "@/variables";
 
-export default function SettingHeaderAvatar() {
-  const [email, setEmail] = useState<string | null>(null);
+type SettingHeaderAvatarProps = {
+  user: User;
+};
 
-  useEffect(() => {
-    const loadEmail = async () => {
-      const { data, error } = await supabase.auth.getUser();
-
-      handleError(error);
-
-      const email = data.user?.email;
-
-      if (!email) {
-        return;
-      }
-
-      setEmail(email);
-    };
-
-    loadEmail();
-  }, []);
-
+export default function SettingHeaderAvatar({
+  user: { email },
+}: SettingHeaderAvatarProps) {
   return (
     <View
       style={{
         width: 48,
         height: 48,
+        overflow: "hidden",
         position: "relative",
+
         borderColor: variables.border.color,
         borderWidth: variables.border.width,
         borderRadius: 24,
@@ -56,20 +45,25 @@ export default function SettingHeaderAvatar() {
               width: 45,
               height: 45,
               zIndex: -1,
-              borderRadius: 24,
 
               position: "absolute",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: "#DDD",
+              backgroundColor: variables.colors.greyLight,
             }}
           >
-            <ActivityIndicator size="small" color="#000" />
+            <ActivityIndicator
+              size="small"
+              color={variables.colors.text.primary}
+              style={{
+                transform: [variables.scale],
+              }}
+            />
           </View>
         </View>
       ) : (
         <Image
-          style={{ width: 44, height: 44, zIndex: -1, position: "absolute" }}
+          style={{ width: 45, height: 45, zIndex: -1, position: "absolute" }}
           source={require("@/assets/images/placeholder.svg")}
           contentFit="contain"
           contentPosition="center"
