@@ -1,9 +1,13 @@
+// HAPPY
+
 import Label from "@/components/Input/Label";
 import TextSmall from "@/components/Text/Small";
 import InputWeekdayItem from "./Item";
 
 import { View } from "react-native";
 import { Control, useController } from "react-hook-form";
+
+import language from "@/language";
 
 type InputWeekdayProps = {
   name: string;
@@ -18,7 +22,7 @@ export default function InputWeekday({
 }: InputWeekdayProps) {
   const {
     field: { value, onChange },
-    fieldState,
+    fieldState: { error },
   } = useController({
     name,
     control,
@@ -39,13 +43,13 @@ export default function InputWeekday({
   };
 
   const weekdays = [
-    "monday",
-    "tuesday",
-    "wednesday",
-    "thursday",
-    "friday",
-    "saturday",
-    "sunday",
+    language.weekdays.monday,
+    language.weekdays.tuesday,
+    language.weekdays.wednesday,
+    language.weekdays.thursday,
+    language.weekdays.friday,
+    language.weekdays.saturday,
+    language.weekdays.sunday,
   ];
 
   return (
@@ -61,7 +65,7 @@ export default function InputWeekday({
         {weekdays.map((weekday) => (
           <InputWeekdayItem
             key={weekday}
-            error={!!fieldState.error}
+            error={!!error}
             weekday={weekday}
             selected={value.includes(weekday)}
             onPress={() => {
@@ -71,9 +75,9 @@ export default function InputWeekday({
         ))}
       </View>
 
-      {fieldState.error && (
+      {error && (
         <TextSmall style={{ marginTop: 8 }} color="#7C0000" weight="semibold">
-          {fieldState.error?.message}
+          {error?.message}
         </TextSmall>
       )}
     </View>

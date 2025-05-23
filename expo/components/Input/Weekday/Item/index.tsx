@@ -1,4 +1,9 @@
+// HAPPY
+
 import TextBody from "@/components/Text/Body";
+import DecorativeNoise from "@/components/Decorative/Noise";
+
+import variables from "@/variables";
 
 import { TouchableOpacity } from "react-native";
 
@@ -17,6 +22,22 @@ export default function InputWeekdayItem({
 }: InputWeekdayItemProps) {
   const firstLetter = weekday.charAt(0);
   const firstUpper = firstLetter.toUpperCase();
+
+  let color = variables.colors.text.secondary;
+  let border = variables.border.color;
+  let background = variables.colors.white;
+
+  if (selected) {
+    color = variables.colors.text.secondary;
+    border = "transparent";
+    background = variables.colors.background.secondary;
+  }
+
+  if (error) {
+    color = "#7C0000";
+    border = "#7C0000";
+  }
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -25,18 +46,22 @@ export default function InputWeekdayItem({
         width: 36,
         height: 36,
 
+        overflow: "hidden",
         alignItems: "center",
         justifyContent: "center",
 
-        borderRadius: 18,
-        borderColor: error ? "#7C0000" : "#000",
-        borderWidth: selected ? 3 : 2,
-        backgroundColor: selected ? "#E5E5E5" : "#FFFFFF",
+        borderColor: border,
+        borderWidth: variables.border.width,
+        borderRadius: 36,
+
+        backgroundColor: background,
       }}
     >
-      <TextBody color={error ? "#7C0000" : "#000"} weight="semibold">
+      <TextBody weight="bold" color={color}>
         {firstUpper}
       </TextBody>
+
+      {selected && <DecorativeNoise />}
     </TouchableOpacity>
   );
 }
