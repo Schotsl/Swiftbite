@@ -1,6 +1,6 @@
 import Input from "@/components/Input";
 import Header from "@/components/Header";
-import Button from "@/components/Button";
+import ButtonOverlay from "@/components/Button/Overlay";
 
 import useUpdatePassword from "@/mutations/useUpdatePassword";
 
@@ -10,7 +10,9 @@ import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordData, passwordSchema } from "@/schemas/personal/password";
+
 import language from "@/language";
+import variables from "@/variables";
 
 export default function PersonalPassword() {
   const router = useRouter();
@@ -41,11 +43,17 @@ export default function PersonalPassword() {
   };
 
   return (
-    <ScrollView>
-      <View style={{ flex: 1, padding: 32 }}>
-        <Header title={language.page.personal.password.title} />
+    <View>
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            padding: variables.padding.page,
+            paddingBottom: variables.paddingOverlay,
+          }}
+        >
+          <Header small={true} title={language.page.personal.password.title} />
 
-        <View style={{ gap: 48 }}>
           <View style={{ gap: 32 }}>
             <Input
               name="password"
@@ -80,15 +88,15 @@ export default function PersonalPassword() {
               />
             </View>
           </View>
-
-          <Button
-            title={language.page.personal.password.button}
-            onPress={handleSubmit(handleSave)}
-            loading={isSubmitting}
-            disabled={isSubmitting}
-          />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+
+      <ButtonOverlay
+        title={language.page.personal.password.button}
+        onPress={handleSubmit(handleSave)}
+        loading={isSubmitting}
+        disabled={isSubmitting}
+      />
+    </View>
   );
 }

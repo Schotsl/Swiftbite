@@ -1,11 +1,11 @@
 import Tabs from "@/components/Tabs";
 import Empty from "@/components/Empty";
-import repeatData from "@/queries/repeatData";
-import useDeleteRepeat from "@/mutations/useDeleteRepeat";
-
 import ItemDelete from "@/components/Item/Delete";
 import ItemRepeat from "@/components/Item/Repeat";
 import ItemSkeleton from "@/components/Item/Skeleton";
+
+import repeatData from "@/queries/repeatData";
+import useDeleteRepeat from "@/mutations/useDeleteRepeat";
 
 import { View } from "react-native";
 import { Suspense } from "react";
@@ -13,6 +13,7 @@ import { rowTimeout } from "@/helper";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "expo-router";
+
 import language from "@/language";
 
 export default function AutomationsRepeat() {
@@ -37,7 +38,7 @@ export default function AutomationsRepeat() {
   return (
     <View
       style={{
-        height: "100%",
+        minHeight: "100%",
       }}
     >
       <Tabs

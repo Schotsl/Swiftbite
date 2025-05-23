@@ -11,20 +11,23 @@ import useDeleteRepeat from "@/mutations/useDeleteRepeat";
 import ModalBackground from "@/components/Modal/Background";
 import NavigationAddList from "@/components/Navigation/Add/List";
 
+import variables from "@/variables";
+import language from "@/language";
+
 import { Product } from "@/types/product";
-import { useForm } from "react-hook-form";
 import { Position } from "@/types";
+import { ScrollView } from "react-native-gesture-handler";
 import { ServingData } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Modal, View } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
-import { useEditRepeat } from "@/context/RepeatContext";
 import { MealWithProduct } from "@/types/meal";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
+
+import { useForm } from "react-hook-form";
+import { useIsFocused } from "@react-navigation/native";
+import { useEditRepeat } from "@/context/RepeatContext";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import variables from "@/variables";
-import language from "@/language";
 
 export default function AutomationsRepeatUpsert() {
   const focus = useIsFocused();
@@ -103,80 +106,89 @@ export default function AutomationsRepeatUpsert() {
   const isSet = !!product && !!serving;
 
   return (
-    <View style={{ padding: 32 }}>
-      <Header
-        title={
-          updating
-            ? language.modifications.getEdit(language.types.repeat.single)
-            : language.modifications.getSave(language.types.repeat.single)
-        }
-        content={language.types.repeat.explanation}
-        onDelete={handleDelete}
-      />
-
-      <View style={{ gap: 48 }}>
-        <View style={{ gap: 32 }}>
-          <InputWeekday
-            name="weekdays"
-            label={language.types.repeat.inputRepeatDate}
-            control={control}
+    <View>
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            padding: variables.padding.page,
+            paddingBottom: variables.paddingOverlay,
+          }}
+        >
+          <Header
+            small={true}
+            title={
+              updating
+                ? language.modifications.getEdit(language.types.repeat.single)
+                : language.modifications.getSave(language.types.repeat.single)
+            }
+            content={language.types.repeat.explanation}
+            onDelete={handleDelete}
           />
 
-          <InputTime
-            name="time"
-            label={language.types.repeat.inputRepeatTime}
-            control={control}
-          />
-
-          <View style={{ gap: 12 }}>
-            <View>
-              <InputLabel label={language.types.ingredient.single} />
-
-              <View
-                style={{
-                  overflow: "hidden",
-                  marginTop: 2,
-                  borderColor: variables.border.color,
-                  borderWidth: variables.border.width,
-                  borderRadius: variables.border.radius,
-                }}
-              >
-                <AutomationsRepeatUpsertItem
-                  meal={meal}
-                  product={product}
-                  serving={serving}
-                  onOpen={() => setOpen(true)}
-                  onSelect={handleSelect}
-                />
-              </View>
-            </View>
-
-            {focus && (
-              <ButtonSmall
-                icon={isSet ? "pencil" : "plus"}
-                title={
-                  isSet
-                    ? language.modifications.getPick(
-                        language.types.ingredient.single
-                      )
-                    : language.modifications.getEdit(
-                        language.types.ingredient.single
-                      )
-                }
-                onPress={() => setOpen(true)}
-                onPosition={setPosition}
-              />
-            )}
-
-            <AutomationsRepeatUpsertAdd
-              set={isSet}
-              open={open}
-              position={position}
-              onClose={() => setOpen(false)}
+          <View style={{ gap: 32 }}>
+            <InputWeekday
+              name="weekdays"
+              label={language.types.repeat.inputRepeatDate}
+              control={control}
             />
+
+            <InputTime
+              name="time"
+              label={language.types.repeat.inputRepeatTime}
+              control={control}
+            />
+
+            <View style={{ gap: 12 }}>
+              <View>
+                <InputLabel label={language.types.ingredient.single} />
+
+                <View
+                  style={{
+                    overflow: "hidden",
+                    marginTop: 2,
+                    borderColor: variables.border.color,
+                    borderWidth: variables.border.width,
+                    borderRadius: variables.border.radius,
+                  }}
+                >
+                  <AutomationsRepeatUpsertItem
+                    meal={meal}
+                    product={product}
+                    serving={serving}
+                    onOpen={() => setOpen(true)}
+                    onSelect={handleSelect}
+                  />
+                </View>
+              </View>
+
+              {focus && (
+                <ButtonSmall
+                  icon={isSet ? "pencil" : "plus"}
+                  title={
+                    isSet
+                      ? language.modifications.getPick(
+                          language.types.ingredient.single
+                        )
+                      : language.modifications.getEdit(
+                          language.types.ingredient.single
+                        )
+                  }
+                  onPress={() => setOpen(true)}
+                  onPosition={setPosition}
+                />
+              )}
+
+              <AutomationsRepeatUpsertAdd
+                set={isSet}
+                open={open}
+                position={position}
+                onClose={() => setOpen(false)}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
 
       <ButtonOverlay
         title={language.modifications.getSave(language.types.repeat.single)}

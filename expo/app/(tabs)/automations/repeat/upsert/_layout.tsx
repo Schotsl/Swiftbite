@@ -2,12 +2,16 @@ import repeatData from "@/queries/repeatData";
 
 import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
+import { ScrollView } from "react-native-gesture-handler";
 import { RepeatProvider } from "@/context/RepeatContext";
-import { Slot, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, Slot } from "expo-router";
 
 import Header from "@/components/Header";
 import ProductStatus from "@/components/Product/Status";
+import ButtonOverlay from "@/components/Button/Overlay";
+
 import language from "@/language";
+import variables from "@/variables";
 
 export default function AutomationsRepeatUpsertLayout() {
   const { repeat: repeatId } = useLocalSearchParams<{
@@ -33,13 +37,33 @@ export default function AutomationsRepeatUpsertLayout() {
 
 function AutomationsRepeatUpsertLayoutLoading() {
   return (
-    <View style={{ flex: 1, padding: 32 }}>
-      <Header
-        title={language.modifications.getEdit(language.types.repeat.single)}
-        content={language.types.repeat.explanation}
-      />
+    <View>
+      <ScrollView style={{ minHeight: "100%" }}>
+        <View
+          style={{
+            minHeight: "100%",
 
-      <ProductStatus status={language.types.repeat.loading} />
+            gap: variables.gap.large,
+            padding: variables.padding.page,
+            paddingBottom: variables.paddingOverlay,
+          }}
+        >
+          <Header
+            small={true}
+            title={language.modifications.getEdit(language.types.repeat.single)}
+            content={language.types.repeat.explanation}
+          />
+
+          <ProductStatus status={language.types.repeat.loading} />
+        </View>
+      </ScrollView>
+
+      <ButtonOverlay
+        title={language.modifications.getSave(language.types.repeat.single)}
+        loading={true}
+        disabled={true}
+        onPress={() => {}}
+      />
     </View>
   );
 }

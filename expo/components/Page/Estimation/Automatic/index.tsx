@@ -1,6 +1,7 @@
 import { View } from "react-native";
 import { decode } from "base64-arraybuffer";
 import { useForm } from "react-hook-form";
+import { Product } from "@/types/product";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
@@ -15,20 +16,21 @@ import {
 } from "@/schemas/serving";
 
 import supabase from "@/utils/supabase";
+import variables from "@/variables";
+
+import useInsertProduct from "@/mutations/useInsertProduct";
+import useInsertGenerative from "@/mutations/useInsertGenerative";
 
 import Input from "@/components/Input";
 import Header from "@/components/Header";
 import EstimationImage from "@/components/Estimation/Image";
-import useInsertProduct from "@/mutations/useInsertProduct";
-import useInsertGenerative from "@/mutations/useInsertGenerative";
 import ButtonOverlay from "@/components/Button/Overlay";
-import { Product } from "@/types/product";
 
 type PageEstimationAutomaticProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
@@ -215,17 +217,20 @@ export default function PageEstimationAutomatic({
 
   return (
     <View>
-      <ScrollView
-        style={{
-          padding: 32,
-        }}
-      >
-        <Header
-          title="Automatisch inschatten"
-          content="Dit is een AI-inschatting van de calorieën en macro's van je maaltijd. Controleer het resultaat en pas het zo nodig aan op het volgende scherm."
-        />
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            padding: variables.padding.page,
+            paddingBottom: variables.paddingOverlay,
+          }}
+        >
+          <Header
+            small={true}
+            title="Automatisch inschatten"
+            content="Dit is een AI-inschatting van de calorieën en macro's van je maaltijd. Controleer het resultaat en pas het zo nodig aan op het volgende scherm."
+          />
 
-        <View style={{ gap: 48 }}>
           <View style={{ gap: 24 }}>
             <EstimationImage
               image={image}
@@ -259,6 +264,7 @@ export default function PageEstimationAutomatic({
 
       <ButtonOverlay
         tab={true}
+        // TODO: Language
         title="Product opslaan"
         onPress={handleSubmit(handleSave)}
         loading={saving}

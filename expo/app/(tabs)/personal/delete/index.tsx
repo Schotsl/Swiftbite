@@ -1,5 +1,6 @@
 import Input from "@/components/Input";
 import Header from "@/components/Header";
+import ButtonOverlay from "@/components/Button/Overlay";
 
 import supabase from "@/utils/supabase";
 import useDeleteAccount from "@/mutations/useDeleteAccount";
@@ -11,8 +12,9 @@ import { handleError } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, View } from "react-native";
 import { DeleteData, deleteSchema } from "@/schemas/personal/delete";
+
 import language from "@/language";
-import ButtonOverlay from "@/components/Button/Overlay";
+import variables from "@/variables";
 
 export default function PersonalDelete() {
   const router = useRouter();
@@ -43,7 +45,7 @@ export default function PersonalDelete() {
           style: "destructive",
           onPress: () => handleConfirm(data),
         },
-      ],
+      ]
     );
   };
 
@@ -68,14 +70,21 @@ export default function PersonalDelete() {
   };
 
   return (
-    <ScrollView>
-      <View style={{ flex: 1, padding: 32 }}>
-        <Header
-          title={language.page.personal.delete.title}
-          content={language.page.personal.delete.content}
-        />
+    <View>
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            padding: variables.padding.page,
+            paddingBottom: variables.paddingOverlay,
+          }}
+        >
+          <Header
+            small={true}
+            title={language.page.personal.delete.title}
+            content={language.page.personal.delete.content}
+          />
 
-        <View style={{ gap: 48 }}>
           <Input
             name="password"
             type="password"
@@ -86,17 +95,17 @@ export default function PersonalDelete() {
               language.page.personal.delete.input.passwordPlaceholder
             }
           />
-
-          <ButtonOverlay
-            icon="trash"
-            title={language.page.personal.delete.button}
-            action="delete"
-            onPress={handleSubmit(handleDelete)}
-            loading={isSubmitting}
-            disabled={isSubmitting}
-          />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+
+      <ButtonOverlay
+        icon="trash"
+        title={language.page.personal.delete.button}
+        action="delete"
+        onPress={handleSubmit(handleDelete)}
+        loading={isSubmitting}
+        disabled={isSubmitting}
+      />
+    </View>
   );
 }

@@ -8,6 +8,8 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { Suspense, useEffect, useState } from "react";
 
 import language from "@/language";
+import variables from "@/variables";
+
 import entryData from "@/queries/entryData";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 
@@ -48,8 +50,8 @@ export default function Add() {
     >
       <View
         style={{
-          gap: 48,
-          padding: 32,
+          gap: variables.gap.large,
+          padding: variables.padding.page,
         }}
       >
         <View style={{ gap: 32 }}>

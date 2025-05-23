@@ -8,14 +8,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ServingData } from "@/schemas/serving";
 import { ManualData, manualSchema } from "@/schemas/insert/manual";
 
+import variables from "@/variables";
+
 import Input from "@/components/Input";
 import Header from "@/components/Header";
-import variables from "@/variables";
+import TextBody from "@/components/Text/Body";
 import InputTime from "@/components/Input/Time";
 import ButtonOverlay from "@/components/Button/Overlay";
+
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useUpdateProduct from "@/mutations/useUpdateProduct";
-import TextBody from "@/components/Text/Body";
 
 export default function PageEstimationManual({
   product,
@@ -109,23 +111,26 @@ export default function PageEstimationManual({
 
   return (
     <View>
-      <ScrollView
-        style={{
-          padding: 32,
-        }}
-      >
-        <Header
-          title={product?.title || "Handmatig inschatten"}
-          content={
-            product
-              ? undefined
-              : "Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
-          }
-          onDelete={onDelete}
-          onRepeat={onRepeat && (() => onRepeat(serving))}
-        />
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            padding: variables.padding.page,
+            paddingBottom: variables.paddingOverlay,
+          }}
+        >
+          <Header
+            small={true}
+            title={product?.title || "Handmatig inschatten"}
+            content={
+              product
+                ? undefined
+                : "Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
+            }
+            onDelete={onDelete}
+            onRepeat={onRepeat && (() => onRepeat(serving))}
+          />
 
-        <View style={{ gap: 48 }}>
           <Input
             name="title"
             label="Titel"

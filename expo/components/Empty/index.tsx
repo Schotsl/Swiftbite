@@ -13,6 +13,7 @@ export default function Empty({ emoji, content }: EmptyProps) {
   return (
     <View
       style={{
+        flex: 1,
         minHeight: "100%",
         alignItems: "center",
         justifyContent: "center",

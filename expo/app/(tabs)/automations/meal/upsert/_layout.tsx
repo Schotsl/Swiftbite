@@ -1,13 +1,16 @@
 import mealData from "@/queries/mealData";
 
-import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { MealProvider } from "@/context/MealContext";
-import { Slot, useLocalSearchParams } from "expo-router";
+import { ScrollView, View } from "react-native";
+import { useLocalSearchParams, Slot } from "expo-router";
 
 import Header from "@/components/Header";
 import ProductStatus from "@/components/Product/Status";
+import ButtonOverlay from "@/components/Button/Overlay";
+
 import language from "@/language";
+import variables from "@/variables";
 
 export default function AutomationsMealUpsertLayout() {
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
@@ -31,13 +34,33 @@ export default function AutomationsMealUpsertLayout() {
 
 function AutomationsMealUpsertLayoutLoading() {
   return (
-    <View style={{ flex: 1, padding: 32 }}>
-      <Header
-        title={language.modifications.getEdit(language.types.meal.single)}
-        content={language.types.meal.explanation}
-      />
+    <View>
+      <ScrollView style={{ minHeight: "100%" }}>
+        <View
+          style={{
+            minHeight: "100%",
 
-      <ProductStatus status={language.types.meal.loading} />
+            gap: variables.gap.large,
+            padding: variables.padding.page,
+            paddingBottom: variables.paddingOverlay,
+          }}
+        >
+          <Header
+            small={true}
+            title={language.modifications.getEdit(language.types.meal.single)}
+            content={language.types.meal.explanation}
+          />
+
+          <ProductStatus status={language.types.meal.loading} />
+        </View>
+      </ScrollView>
+
+      <ButtonOverlay
+        title={language.modifications.getSave(language.types.meal.single)}
+        loading={true}
+        disabled={true}
+        onPress={() => {}}
+      />
     </View>
   );
 }

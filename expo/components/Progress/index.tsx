@@ -48,7 +48,7 @@ export default function Progress({
         <View
           style={{
             width: progressWidth,
-            height: variables.border.width,
+            height: variables.border.radius,
             maxWidth: "100%",
             position: "absolute",
 

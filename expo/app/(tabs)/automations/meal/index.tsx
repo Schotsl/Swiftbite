@@ -39,7 +39,7 @@ export default function AutomationsMeal() {
   return (
     <View
       style={{
-        height: "100%",
+        minHeight: "100%",
       }}
     >
       <Tabs
