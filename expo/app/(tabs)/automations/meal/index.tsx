@@ -13,6 +13,7 @@ import ItemSkeleton from "@/components/Item/Skeleton";
 
 import mealData from "@/queries/mealData";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
+import language from "@/language";
 
 export default function AutomationsMeal() {
   const path = usePathname();
@@ -45,8 +46,8 @@ export default function AutomationsMeal() {
         add="/automations/meal/upsert"
         value={path}
         tabs={[
-          { href: "/automations/meal", title: "Maaltijden" },
-          { href: "/automations/repeat", title: "Herhalen" },
+          { href: "/automations/meal", title: language.types.meal.plural },
+          { href: "/automations/repeat", title: language.types.repeat.plural },
         ]}
       />
 
@@ -83,5 +84,10 @@ function AutomationsMealLoading() {
 }
 
 function AutomationsMealEmpty() {
-  return <Empty emoji="🌮" content="Je hebt nog geen maaltijden toegevoegd" />;
+  return (
+    <Empty
+      emoji="🌮"
+      content={language.empty.getAdded(language.types.meal.plural)}
+    />
+  );
 }

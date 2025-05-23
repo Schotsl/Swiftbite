@@ -15,6 +15,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { HealthData, healthSchema } from "@/schemas/personal/health";
+import language from "@/language";
 
 export default function PersonalHealth() {
   const { data: user } = useSuspenseQuery(userData());
@@ -22,7 +23,7 @@ export default function PersonalHealth() {
   return (
     <ScrollView>
       <View style={{ flex: 1, padding: 32 }}>
-        <Header title="Mijn gezondheid" />
+        <Header title={language.page.personal.health.title} />
 
         <Suspense fallback={<PersonalHealthLoading />}>
           <PersonalHealthForm user={user} />
@@ -33,9 +34,7 @@ export default function PersonalHealth() {
 }
 
 function PersonalHealthLoading() {
-  return (
-    <ProductStatus status="We zijn je gezondheidsgegevens aan het laden uit onze database" />
-  );
+  return <ProductStatus status={language.page.personal.health.loading} />;
 }
 
 type PersonalHealthFormProps = {
@@ -65,16 +64,24 @@ function PersonalHealthForm({ user }: PersonalHealthFormProps) {
   return (
     <View style={{ gap: 48 }}>
       <View style={{ gap: 32 }}>
-        <InputLength name="length" label="Lengte" control={control} />
+        <InputLength
+          name="length"
+          label={language.page.personal.health.input.height}
+          control={control}
+        />
 
-        <InputWeights name="weight" label="Gewicht" control={control} />
+        <InputWeights
+          name="weight"
+          label={language.page.personal.health.input.weight}
+          control={control}
+        />
       </View>
 
       <Button
-        title="Wijzigen opslaan"
-        onPress={handleSubmit(handleSave)}
+        title={language.page.personal.health.button}
         loading={isSubmitting}
         disabled={isSubmitting}
+        onPress={handleSubmit(handleSave)}
       />
     </View>
   );

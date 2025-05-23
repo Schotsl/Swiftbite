@@ -16,6 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { GoalData, goalSchema } from "@/schemas/personal/goal";
+import language from "@/language";
 
 export default function PersonalGoals() {
   const { data: user } = useSuspenseQuery(userData());
@@ -23,7 +24,7 @@ export default function PersonalGoals() {
   return (
     <ScrollView>
       <View style={{ flex: 1, padding: 32 }}>
-        <Header title="Verander je doel" />
+        <Header title={language.page.personal.goals.title} />
 
         <Suspense fallback={<PersonalGoalsLoading />}>
           <PersonalGoalsForm user={user} />
@@ -34,9 +35,7 @@ export default function PersonalGoals() {
 }
 
 function PersonalGoalsLoading() {
-  return (
-    <ProductStatus status="We zijn je doelen aan het laden uit onze database" />
-  );
+  return <ProductStatus status={language.page.personal.goals.loading} />;
 }
 
 type PersonalGoalsFormProps = {
@@ -68,17 +67,21 @@ function PersonalGoalsForm({ user }: PersonalGoalsFormProps) {
 
   return (
     <View style={{ gap: 48 }}>
-      <InputCalorie name="calories" label="Calorie" control={control} />
+      <InputCalorie
+        name="calories"
+        label={language.page.personal.goals.input.calories}
+        control={control}
+      />
 
       <InputMacro
         name="macro"
-        label="Je macronutriënten"
+        label={language.page.personal.goals.input.macros}
         control={control}
         calories={calories}
       />
 
       <Button
-        title="Wijzigen opslaan"
+        title={language.page.personal.goals.button}
         onPress={handleSubmit(handleSave)}
         loading={isSubmitting}
         disabled={isSubmitting}

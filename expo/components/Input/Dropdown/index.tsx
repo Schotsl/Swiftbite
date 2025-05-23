@@ -8,6 +8,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import Modal from "@/components/Modal";
 import InputLabel from "../Label";
 import InputDropdownRadio from "./Radio";
+import variables from "@/variables";
 
 type DropdownProps = {
   name: string;
@@ -84,8 +85,9 @@ export default function InputDropdown({
 
       <TouchableOpacity
         style={{
-          borderWidth: 2,
-          borderColor: fieldState.error || error ? "#FF4141" : "#000",
+          borderWidth: variables.border.width,
+          borderColor:
+            fieldState.error || error ? "#FF4141" : variables.border.color,
           borderRadius: 8,
 
           flexDirection: "row",

@@ -21,6 +21,7 @@ import ProductImpact from "@/components/Product/Impact";
 import ButtonOverlay from "@/components/Button/Overlay";
 import InputTime from "@/components/Input/Time";
 import ProductNutrition from "@/components/Product/Nutrition";
+import language from "@/language";
 
 export type PageMealProps = {
   meal: MealWithProduct;
@@ -101,10 +102,11 @@ export default function PageMeal({
 
   const info = useMemo(() => {
     const items = [];
+    const length = meal.meal_products?.length || 0;
 
     items.push({
       icon: "bowl-food",
-      value: `${meal.meal_products?.length || 0} ingrediënten`,
+      value: language.types.ingredient.getCount(length),
     });
 
     items.push({

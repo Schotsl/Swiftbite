@@ -8,8 +8,9 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import React from "react";
+import React, { useState } from "react";
 import InputLabel from "./Label";
+import variables from "@/variables";
 
 type Type =
   | "default"
@@ -59,17 +60,7 @@ export default function Input({
   onFocus,
   onSubmit,
 }: InputProps) {
-  // let height = 48;
-
-  // if (label) {
-  //   height = 78;
-  // }
-
-  // if (error) {
-
-  // }
-
-  // // const height = label ? 78 : 48;
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
     <Controller
@@ -92,6 +83,16 @@ export default function Input({
           onChange(text);
         };
 
+        let border = variables.border.color;
+
+        if (fieldState.error || error) {
+          border = "red";
+        }
+
+        if (isFocused) {
+          border = "#007AFF";
+        }
+
         return (
           <View>
             {label && <InputLabel label={label} required={required} />}
@@ -105,20 +106,20 @@ export default function Input({
                     width: 20,
                     height: 20,
                     position: "absolute",
+                    zIndex: 2,
                   }}
                 >
-                  <FontAwesome6 name={icon} size={16} color="#000" />
+                  <FontAwesome6 name={icon} size={16} color="#555555" />
                 </View>
               )}
 
               <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                 <View
                   style={{
-                    borderWidth: 2,
-                    borderColor: fieldState.error || error ? "#7C0000" : "#000",
+                    borderColor: border,
+                    borderWidth: variables.border.width,
                     borderRadius: 8,
                     flexDirection: "row",
-
                     opacity: disabled ? 0.5 : 1,
                     minHeight: multiline ? 100 : undefined,
                   }}
@@ -127,13 +128,14 @@ export default function Input({
                     value={value !== undefined ? value.toString() : ""}
                     style={{
                       flex: 1,
+                      color: variables.colors.greyDark,
                       zIndex: 1,
-                      padding: 12,
-                      paddingLeft: icon ? 40 : 16,
-                      paddingHorizontal: 16,
-
+                      paddingVertical: 12,
+                      paddingLeft: icon ? 44 : 16,
+                      paddingRight: suffix ? 0 : 16,
                       fontSize: 16,
                       fontFamily: "OpenSans_600SemiBold",
+                      backgroundColor: "transparent",
                     }}
                     editable={!disabled}
                     multiline={multiline}
@@ -141,9 +143,17 @@ export default function Input({
                     keyboardType={type === "password" ? "default" : type}
                     secureTextEntry={type === "password"}
                     selectTextOnFocus={!disabled}
-                    placeholderTextColor={"#aba9a9"}
-                    onBlur={onBlur}
-                    onFocus={onFocus}
+                    placeholderTextColor={"#999999"}
+                    onBlur={() => {
+                      setIsFocused(false);
+
+                      onBlur?.();
+                    }}
+                    onFocus={() => {
+                      setIsFocused(true);
+
+                      onFocus?.();
+                    }}
                     onChangeText={handleChange}
                     onSubmitEditing={onSubmit}
                   />
@@ -151,24 +161,22 @@ export default function Input({
                   {suffix && (
                     <View
                       style={{
-                        width: 78,
+                        minWidth: 70,
+                        paddingHorizontal: 10,
                         height: "100%",
-
                         alignItems: "center",
                         flexDirection: "row",
                         justifyContent: "center",
-                        backgroundColor: "#E2E2E2",
-
-                        borderColor: "#000",
-                        borderLeftWidth: 2,
-                        borderTopRightRadius: 8,
-                        borderBottomRightRadius: 8,
+                        backgroundColor: "#EEEEEE",
+                        borderLeftWidth: 1,
+                        borderColor: border,
+                        borderTopRightRadius: 7,
+                        borderBottomRightRadius: 7,
                       }}
                     >
                       <Text
                         style={{
-                          color: "#000",
-
+                          color: "#555555",
                           fontSize: 16,
                           fontFamily: "OpenSans_600SemiBold",
                         }}

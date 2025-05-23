@@ -7,6 +7,7 @@ import { Slot, useLocalSearchParams } from "expo-router";
 
 import Header from "@/components/Header";
 import ProductStatus from "@/components/Product/Status";
+import language from "@/language";
 
 export default function AutomationsMealUpsertLayout() {
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
@@ -32,11 +33,11 @@ function AutomationsMealUpsertLayoutLoading() {
   return (
     <View style={{ flex: 1, padding: 32 }}>
       <Header
-        title="Bewerk maaltijd"
-        content="Een maaltijd is een combinatie van producten die je opslaat om later in één keer toe te voegen."
+        title={language.modifications.getEdit(language.types.meal.single)}
+        content={language.types.meal.explanation}
       />
 
-      <ProductStatus status="We zijn je maaltijd aan het laden uit onze database" />
+      <ProductStatus status={language.types.meal.loading} />
     </View>
   );
 }

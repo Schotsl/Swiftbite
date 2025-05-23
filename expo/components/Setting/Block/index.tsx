@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 
 import SettingBlockItem from "./Item";
+import variables from "@/variables";
 
 type ItemBase = {
   icon?: keyof typeof FontAwesome6.glyphMap;
@@ -31,8 +32,8 @@ export default function SettingBlock({ items }: SettingBlockProps) {
   return (
     <View
       style={{
-        borderWidth: 2,
-        borderColor: "#000",
+        borderWidth: variables.border.width,
+        borderColor: variables.border.color,
         borderRadius: 8,
       }}
     >

@@ -1,3 +1,6 @@
+import DecorativeLinear from "@/components/Decorative/Linear";
+import DecorativeNoise from "@/components/Decorative/Noise";
+import variables from "@/variables";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { useRef } from "react";
 import {
@@ -71,12 +74,12 @@ export default function ButtonSmall({
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "center",
-          backgroundColor: "#fff",
+          // backgroundColor: "#fff",
           paddingHorizontal: title ? 16 : 0,
+          backgroundColor: variables.colors.background.secondary,
+          overflow: "hidden",
 
           borderRadius: 100,
-          borderColor: color || "#000",
-          borderWidth: 2,
         },
         style,
       ]}
@@ -85,7 +88,7 @@ export default function ButtonSmall({
         <FontAwesome6
           name={icon}
           size={nano ? 12 : 14}
-          color={color || "#000"}
+          color={color || variables.colors.text.secondary}
         />
       )}
 
@@ -93,13 +96,14 @@ export default function ButtonSmall({
         <MaterialIcons
           name={iconMaterial}
           size={nano ? 12 : 14}
-          color={color || "#000"}
+          color={color || variables.colors.text.secondary}
         />
       )}
 
       {title && (
         <Text
           style={{
+            color: variables.colors.text.secondary,
             fontSize: 14,
             fontFamily: "OpenSans_600SemiBold",
             marginTop: -1,
@@ -108,6 +112,9 @@ export default function ButtonSmall({
           {title}
         </Text>
       )}
+
+      <DecorativeNoise />
+      {/* <DecorativeLinear /> */}
     </TouchableOpacity>
   );
 }

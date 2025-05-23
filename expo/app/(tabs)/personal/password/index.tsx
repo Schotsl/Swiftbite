@@ -10,6 +10,7 @@ import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordData, passwordSchema } from "@/schemas/personal/password";
+import language from "@/language";
 
 export default function PersonalPassword() {
   const router = useRouter();
@@ -29,7 +30,9 @@ export default function PersonalPassword() {
     const success = await updatePassword.mutateAsync(data);
 
     if (!success) {
-      setError("password", { message: "Je huidige wachtwoord is incorrect" });
+      setError("password", {
+        message: language.page.personal.password.input.confirmPasswordIncorrect,
+      });
 
       return;
     }
@@ -40,39 +43,46 @@ export default function PersonalPassword() {
   return (
     <ScrollView>
       <View style={{ flex: 1, padding: 32 }}>
-        <Header title="Verander je wachtwoord" />
+        <Header title={language.page.personal.password.title} />
 
         <View style={{ gap: 48 }}>
           <View style={{ gap: 32 }}>
             <Input
               name="password"
               type="password"
-              label="Je huidige wachtwoord"
+              label={language.page.personal.password.input.password}
               control={control}
-              placeholder="*********"
+              placeholder={
+                language.page.personal.password.input.passwordPlaceholder
+              }
             />
 
             <View style={{ gap: 16 }}>
               <Input
                 name="password_new"
                 type="password"
-                label="Je nieuwe wachtwoord"
+                label={language.page.personal.password.input.newPassword}
                 control={control}
-                placeholder="*********"
+                placeholder={
+                  language.page.personal.password.input.newPasswordPlaceholder
+                }
               />
 
               <Input
                 name="password_new_confirm"
                 type="password"
-                label="Herhaal je nieuwe wachtwoord"
+                label={language.page.personal.password.input.confirmPassword}
                 control={control}
-                placeholder="*********"
+                placeholder={
+                  language.page.personal.password.input
+                    .confirmPasswordPlaceholder
+                }
               />
             </View>
           </View>
 
           <Button
-            title="Wijzigen opslaan"
+            title={language.page.personal.password.button}
             onPress={handleSubmit(handleSave)}
             loading={isSubmitting}
             disabled={isSubmitting}

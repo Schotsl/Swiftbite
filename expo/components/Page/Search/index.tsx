@@ -10,6 +10,7 @@ import Tabs from "@/components/Tabs";
 import Input from "@/components/Input";
 import PageSearchMeal from "./Meal";
 import PageSearchProduct from "./Product";
+import language from "@/language";
 
 enum Type {
   MEALS = "meals",
@@ -83,13 +84,13 @@ export default function PageSearch({
         tabs={
           meal
             ? [
-                { value: Type.PRODUCTS, title: "Producten" },
-                { value: Type.BASICS, title: "Basisitems" },
-                { value: Type.MEALS, title: "Maaltijden" },
+                { value: Type.PRODUCTS, title: language.types.product.plural },
+                { value: Type.BASICS, title: language.types.basic.plural },
+                { value: Type.MEALS, title: language.types.meal.plural },
               ]
             : [
-                { value: Type.PRODUCTS, title: "Producten" },
-                { value: Type.BASICS, title: "Basisitems" },
+                { value: Type.PRODUCTS, title: language.types.product.plural },
+                { value: Type.BASICS, title: language.types.basic.plural },
               ]
         }
       />

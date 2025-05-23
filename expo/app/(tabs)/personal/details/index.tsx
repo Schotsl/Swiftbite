@@ -16,6 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { DetailsData, detailsSchema } from "@/schemas/personal/details";
+import language from "@/language";
 
 export default function PersonalDetails() {
   const { data: user } = useSuspenseQuery(userData());
@@ -23,7 +24,7 @@ export default function PersonalDetails() {
   return (
     <ScrollView>
       <View style={{ flex: 1, padding: 32 }}>
-        <Header title="Mijn gegevens" />
+        <Header title={language.page.personal.details.title} />
 
         <Suspense fallback={<PersonalDetailsLoading />}>
           <PersonalDetailsForm user={user} />
@@ -34,9 +35,7 @@ export default function PersonalDetails() {
 }
 
 function PersonalDetailsLoading() {
-  return (
-    <ProductStatus status="We zijn je gegevens aan het laden uit onze database" />
-  );
+  return <ProductStatus status={language.page.personal.details.loading} />;
 }
 
 type PersonalDetailsFormProps = {
@@ -68,34 +67,42 @@ function PersonalDetailsForm({ user }: PersonalDetailsFormProps) {
       <View style={{ gap: 32 }}>
         <Input
           name="email"
-          label="E-mail"
+          label={language.page.personal.details.input.email}
           control={control}
-          content="Je kunt je e-mail niet wijzigen via dit formulier. Stuur een bericht naar swiftbite@sjorsvanholst.nl voor wijziging."
+          content={language.page.personal.details.input.emailContent}
+          placeholder={language.page.personal.details.input.emailPlaceholder}
           disabled={true}
-          placeholder="jane@gmail.com"
         />
 
         <View style={{ gap: 16 }}>
           <Input
             name="first_name"
-            label="Voornaam"
+            label={language.page.personal.details.input.firstName}
             control={control}
-            placeholder="Jane"
+            placeholder={
+              language.page.personal.details.input.firstNamePlaceholder
+            }
           />
 
           <Input
             name="last_name"
-            label="Achternaam"
+            label={language.page.personal.details.input.lastName}
             control={control}
-            placeholder="Doe"
+            placeholder={
+              language.page.personal.details.input.lastNamePlaceholder
+            }
           />
         </View>
 
-        <InputDate label="Geboortedatum" name="birth" control={control} />
+        <InputDate
+          name="birth"
+          label={language.page.personal.details.input.birth}
+          control={control}
+        />
       </View>
 
       <Button
-        title="Wijzigen opslaan"
+        title={language.page.personal.details.button}
         onPress={handleSubmit(handleSave)}
         loading={isSubmitting}
         disabled={isSubmitting}

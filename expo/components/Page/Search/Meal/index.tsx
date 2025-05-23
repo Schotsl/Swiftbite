@@ -5,6 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import Item from "@/components/Item";
 import mealData from "@/queries/mealData";
 import ProductStatus from "@/components/Product/Status";
+import language from "@/language";
 
 type PageSearchProps = {
   query: string;
@@ -70,10 +71,12 @@ export default function PageSearchMeal({
       data={data}
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => {
+        const length = item.meal_products?.length || 0;
+
         return (
           <Item
             title={item.title}
-            subtitle={`${item.meal_products?.length || 0} ingrediënten`}
+            subtitle={language.types.ingredient.getCount(length)}
             rightBottom={`420 kcal`}
             subtitleIcon="bowl-food"
             onPress={() =>

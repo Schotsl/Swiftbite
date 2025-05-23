@@ -12,6 +12,7 @@ import {
   getMacrosFromMeal,
   getMacrosFromProduct,
 } from "@/helper";
+import variables from "@/variables";
 
 type ProductImpactProps =
   | {
@@ -90,8 +91,8 @@ export default function ProductImpact({
           height: 186,
           padding: 16,
 
-          borderWidth: 2,
-          borderColor: "#000",
+          borderColor: variables.border.color,
+          borderWidth: variables.border.width,
           borderRadius: 8,
 
           alignItems: "center",

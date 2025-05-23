@@ -1,3 +1,4 @@
+import variables from "@/variables";
 import { TouchableOpacity, View } from "react-native";
 
 type CameraControlsCircleProps = {
@@ -10,8 +11,8 @@ export default function CameraControlsCircle({
   return (
     <TouchableOpacity
       style={{
-        borderColor: "#ffffff",
-        borderWidth: 2,
+        borderColor: variables.border.color,
+        borderWidth: variables.border.width,
         borderRadius: 100,
       }}
       onPress={onPress}

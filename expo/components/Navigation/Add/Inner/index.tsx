@@ -5,7 +5,7 @@ import {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-
+import { StyleSheet } from "react-native";
 import { useEffect } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
@@ -46,7 +46,14 @@ export default function NavigationAddInner({
   }, [open, animatedRotation]);
 
   return (
-    <View>
+    <View
+      style={{
+        shadowColor: "#000",
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.025,
+      }}
+    >
       {overlay && (
         <MaskedView
           style={{
@@ -59,9 +66,9 @@ export default function NavigationAddInner({
           maskElement={
             <View
               style={{
-                top: 12,
+                top: 6,
                 width: 66,
-                height: 54,
+                height: 60,
                 backgroundColor: variables.colors.black,
               }}
             ></View>

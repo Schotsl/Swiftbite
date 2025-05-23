@@ -19,35 +19,44 @@ export default function HomeStreak() {
   return (
     <View
       style={{
-        gap: variables.gap.small,
-        alignItems: "center",
-        flexDirection: "row",
-
-        paddingVertical: variables.padding.small.vertical,
-        paddingHorizontal: variables.padding.small.horizontal,
-
-        overflow: "hidden",
-        borderRadius: 100,
+        shadowColor: "#000",
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.025,
       }}
     >
-      <DecorativeLinear />
-      <DecorativeNoise />
-
-      <FontAwesome6 name="fire" size={16} color="#ffffff" />
-
       <View
         style={{
-          height: 22,
-          minWidth: 16,
+          gap: variables.gap.small,
           alignItems: "center",
-          justifyContent: "center",
+          flexDirection: "row",
+
+          paddingVertical: variables.padding.small.vertical,
+          paddingHorizontal: variables.padding.small.horizontal,
+
+          overflow: "hidden",
+          borderRadius: 100,
         }}
       >
-        <Suspense fallback={<HomeStreakLoading />}>
-          <TextBody weight="bold" style={{ color: variables.colors.white }}>
-            {data}
-          </TextBody>
-        </Suspense>
+        <DecorativeLinear />
+        <DecorativeNoise />
+
+        <FontAwesome6 name="fire" size={16} color="#ffffff" />
+
+        <View
+          style={{
+            height: 22,
+            minWidth: 16,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Suspense fallback={<HomeStreakLoading />}>
+            <TextBody weight="bold" style={{ color: variables.colors.white }}>
+              {data}
+            </TextBody>
+          </Suspense>
+        </View>
       </View>
     </View>
   );

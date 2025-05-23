@@ -10,6 +10,7 @@ import SearchCollapsable from "@/components/Search/Collapsable";
 
 import productData from "@/queries/productData";
 import ItemProduct from "@/components/Item/Product";
+import language from "@/language";
 
 type PageSearchProps = {
   type: Enums<"type">;
@@ -40,7 +41,6 @@ export default function PageSearchProduct({
   const isActive = queryWatched?.length > 0;
   const isSearchable = query.length >= 4;
 
-  const labelSingular = type === "search_product" ? "product" : "basisitem";
   const labelPlural = type === "search_product" ? "producten" : "basisitems";
 
   const [previousQuery, setPreviousQuery] = useState(query);
@@ -72,9 +72,7 @@ export default function PageSearchProduct({
 
   if (loading && isEmpty) {
     return (
-      <ProductStatus
-        status={`🕵️ We zijn het hele internet aan het zoeken naar ${labelPlural}`}
-      />
+      <ProductStatus status={language.search.results.getLoading(labelPlural)} />
     );
   }
 
@@ -82,7 +80,7 @@ export default function PageSearchProduct({
     return (
       <ProductStatus
         active={false}
-        status={`😔 Er is iets mis gegaan tijdens het zoeken naar ${labelPlural}`}
+        status={language.search.results.getError(labelPlural)}
       />
     );
   }
@@ -91,7 +89,7 @@ export default function PageSearchProduct({
     return (
       <ProductStatus
         active={false}
-        status={`😲 Je hebt je dagelijkse zoek limiet overschreden`}
+        status={language.search.results.overloaded}
       />
     );
   }
@@ -100,7 +98,7 @@ export default function PageSearchProduct({
     return (
       <ProductStatus
         active={false}
-        status={`😔 We hebben geen ${labelPlural} gevonden met deze naam`}
+        status={language.search.results.getEmpty(labelPlural)}
       />
     );
   }
@@ -137,7 +135,7 @@ export default function PageSearchProduct({
     return (
       <ProductStatus
         active={false}
-        status={`🥳 Start met zoeken door minimaal 4 letters te typen en druk op enter`}
+        status={language.search.results.getDefault(labelPlural)}
       />
     );
   }
@@ -145,32 +143,32 @@ export default function PageSearchProduct({
   return (
     <View style={{ flex: 1 }}>
       <SearchCollapsable
-        title={`Mijn favoriete ${labelPlural}`}
-        empty={`😲 Je hebt nog geen ${labelSingular} als favoriet ingesteld`}
+        title={language.search.favorite.getTitle(labelPlural)}
+        empty={language.search.favorite.getEmpty(labelPlural)}
         loading={favoriteProductsLoading}
         products={favoriteProducts}
         onSelect={onSelect}
       />
 
       <SearchCollapsable
-        title={`Zelf toegevoegde ${labelPlural}`}
-        empty={`😲 Je hebt nog geen ${labelPlural} zelf toegevoegd`}
+        title={language.search.manual.getTitle(labelPlural)}
+        empty={language.search.manual.getEmpty(labelPlural)}
         loading={false}
         products={[]}
         onSelect={onSelect}
       />
 
       <SearchCollapsable
-        title={`Vaak gebruikte ${labelPlural}`}
-        empty={`😲 Je hebt nog geen ${labelPlural} vaak gebruikt`}
+        title={language.search.often.getTitle(labelPlural)}
+        empty={language.search.often.getEmpty(labelPlural)}
         loading={mostUsedProductsLoading}
         products={mostUsedProducts}
         onSelect={onSelect}
       />
 
       <SearchCollapsable
-        title={`Recent gebruikte ${labelPlural}`}
-        empty={`😲 Je hebt nog geen ${labelPlural} gebruikt`}
+        title={language.search.recent.getTitle(labelPlural)}
+        empty={language.search.recent.getEmpty(labelPlural)}
         loading={mostRecentProductsLoading}
         products={mostRecentProducts}
         onSelect={onSelect}

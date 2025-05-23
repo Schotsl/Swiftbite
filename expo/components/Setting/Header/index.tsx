@@ -4,6 +4,11 @@ import { Text, View } from "react-native";
 import userData from "@/queries/userData";
 import SettingHeaderAvatar from "./Avatar";
 import { useIsFocused } from "@react-navigation/native";
+import TextLarge from "@/components/Text/Large";
+import TextSmall from "@/components/Text/Small";
+import TextBody from "@/components/Text/Body";
+import variables from "@/variables";
+import language from "@/language";
 
 export default function SettingHeader() {
   const focus = useIsFocused();
@@ -16,30 +21,21 @@ export default function SettingHeader() {
   return (
     <View
       style={{
-        gap: 12,
+        gap: variables.gap.normal,
         alignItems: "center",
         flexDirection: "row",
       }}
     >
       <SettingHeaderAvatar />
 
-      <View style={{ gap: 4 }}>
-        <Text
-          style={{
-            fontSize: 20,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
+      <View>
+        <TextLarge weight="semibold">
           {data?.first_name} {data?.last_name}
-        </Text>
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
-          {data?.total} entries geregistreerd
-        </Text>
+        </TextLarge>
+
+        <TextBody>
+          {language.page.personal.getSubtitle(data?.total || 0)}
+        </TextBody>
       </View>
     </View>
   );

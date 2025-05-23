@@ -23,6 +23,7 @@ import ModalBackground from "@/components/Modal/Background";
 import NavigationAddList from "@/components/Navigation/Add/List";
 import { ScrollView } from "react-native-gesture-handler";
 import variables from "@/variables";
+import language from "@/language";
 
 export default function AutomationsMealUpsert() {
   const focus = useIsFocused();
@@ -103,8 +104,12 @@ export default function AutomationsMealUpsert() {
         >
           <Header
             small={true}
-            title={updating ? "Bewerk maaltijd" : "Maaltijd toevoegen"}
-            content="Een maaltijd is een combinatie van producten die je opslaat om later in één keer toe te voegen."
+            title={
+              updating
+                ? language.modifications.getEdit(language.types.meal.single)
+                : language.modifications.getSave(language.types.meal.single)
+            }
+            content={language.types.meal.explanation}
             onDelete={handleDelete}
           />
 
@@ -112,20 +117,20 @@ export default function AutomationsMealUpsert() {
             <Input
               name="title"
               control={control}
-              label="Titel"
-              placeholder="Maaltijd titel"
+              label={language.types.meal.inputTitle}
+              placeholder={language.types.meal.inputTitlePlaceholder}
             />
 
             <View style={{ gap: 12 }}>
               <View>
-                <InputLabel label="Ingrediënten" />
+                <InputLabel label={language.types.ingredient.plural} />
 
                 <SwipeListView
                   style={{
                     width: "100%",
                     flexDirection: "column",
-                    borderWidth: 2,
-                    borderColor: "#000000",
+                    borderWidth: variables.border.width,
+                    borderColor: variables.border.color,
                     borderRadius: 8,
                   }}
                   data={mealProducts}
@@ -134,8 +139,10 @@ export default function AutomationsMealUpsert() {
                   ListEmptyComponent={() => {
                     return (
                       <EmptySmall
-                        content="Je hebt nog geen ingrediënten toegevoegd"
                         onPress={() => setOpen(true)}
+                        content={language.empty.getAdded(
+                          language.types.ingredient.plural
+                        )}
                       />
                     );
                   }}
@@ -169,7 +176,9 @@ export default function AutomationsMealUpsert() {
               {focus && (
                 <ButtonSmall
                   icon="plus"
-                  title="Ingrediënt toevoegen"
+                  title={language.modifications.getInsert(
+                    language.types.ingredient.plural
+                  )}
                   onPress={() => setOpen(true)}
                   onPosition={setPosition}
                 />
@@ -186,7 +195,7 @@ export default function AutomationsMealUpsert() {
       </ScrollView>
 
       <ButtonOverlay
-        title="Wijzigingen opslaan"
+        title={language.modifications.getSave(language.types.meal.single)}
         onPress={handleSubmit(handleSave)}
         loading={isSubmitting}
         disabled={isSubmitting || isDeleting}
@@ -236,7 +245,9 @@ function AutomationsMealUpsertAdd({
 
         <ButtonSmall
           icon={"plus"}
-          title={"Ingrediënt toevoegen"}
+          title={language.modifications.getInsert(
+            language.types.ingredient.plural
+          )}
           onPress={() => onClose()}
         />
       </View>

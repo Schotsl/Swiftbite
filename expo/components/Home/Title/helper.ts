@@ -1,5 +1,7 @@
 // HAPPY
 
+import language from "@/language";
+
 export const getDateRelative = (date: Date): string => {
   const today = new Date();
 
@@ -20,18 +22,18 @@ export const getDateRelative = (date: Date): string => {
   const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) {
-    return "Vandaag";
+    return language.days.today;
   } else if (diffDays === 1) {
-    return "Morgen";
+    return language.days.tomorrow;
   } else if (diffDays === 2) {
-    return "Overmorgen";
+    return language.days.tomorrowAfter;
   } else if (diffDays > 2) {
-    return `Over ${diffDays} dagen`;
+    return language.days.getFuture(diffDays);
   } else if (diffDays === -1) {
-    return "Gisteren";
+    return language.days.yesterday;
   } else if (diffDays === -2) {
-    return "Eergisteren";
+    return language.days.yesterdayBefore;
   } else {
-    return `${Math.abs(diffDays)} dagen geleden`;
+    return language.days.getPast(Math.abs(diffDays));
   }
 };

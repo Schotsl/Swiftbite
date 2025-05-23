@@ -6,6 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import supabase from "@/utils/supabase";
 import SettingHeader from "@/components/Setting/Header";
 import SettingBlock from "@/components/Setting/Block";
+import language from "@/language";
 
 export default function Personal() {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,19 +34,18 @@ export default function Personal() {
             items={[
               {
                 href: "/(tabs)/personal/details",
-                title: "Mijn gegevens",
-                content: "Wijzig gegevens zoals voornaam, achternaam, etc.",
+                title: language.page.personal.details.title,
+                content: language.page.personal.details.short,
               },
               {
                 href: "/(tabs)/personal/health",
-                title: "Mijn gezondheid",
-                content:
-                  "Lichaamsmetingen en -geschiedenis, zoals gewicht en lengte.",
+                title: language.page.personal.health.title,
+                content: language.page.personal.health.short,
               },
               {
                 href: "/(tabs)/personal/preferences",
-                title: "Mijn voorkeur",
-                content: "Verander taal, meetsysteem en andere instellingen.",
+                title: language.page.personal.preferences.title,
+                content: language.page.personal.preferences.short,
               },
             ]}
           />
@@ -54,13 +54,13 @@ export default function Personal() {
             items={[
               {
                 href: "/(tabs)/personal/password",
-                title: "Verander je wachtwoord",
-                content: "Verander je accountwachtwoord.",
+                title: language.page.personal.password.title,
+                content: language.page.personal.password.short,
               },
               {
                 href: "/(tabs)/personal/goals",
-                title: "Verander je doel",
-                content: "Verander je calorieën of macrodoelen.",
+                title: language.page.personal.goals.title,
+                content: language.page.personal.goals.short,
               },
             ]}
           />
@@ -69,9 +69,8 @@ export default function Personal() {
             items={[
               {
                 href: "/(tabs)/personal/export",
-                title: "Exporteer gegevens",
-                content:
-                  "Exporteer je dieetdata om te delen met een voedingscoach.",
+                title: language.page.personal.export.title,
+                content: language.page.personal.export.short,
               },
             ]}
           />
@@ -80,8 +79,8 @@ export default function Personal() {
             items={[
               {
                 href: "/(tabs)/personal/delete",
-                title: "Verwijder je account",
-                content: "Verwijder je account definitief.",
+                title: language.page.personal.delete.title,
+                content: language.page.personal.delete.short,
               },
             ]}
           />
@@ -90,9 +89,9 @@ export default function Personal() {
             items={[
               {
                 icon: "arrow-right-from-bracket",
-                title: "Uitloggen",
+                title: language.page.personal.signout.title,
+                content: language.page.personal.signout.short,
                 loading: isLoading,
-                content: "Uitloggen van je account.",
                 onPress: handleSignout,
               },
             ]}

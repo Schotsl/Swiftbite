@@ -2,6 +2,7 @@ import InputLabel from "@/components/Input/Label";
 import EstimationImageButton from "./Button";
 
 import { Image, Text, View } from "react-native";
+import variables from "@/variables";
 
 type EstimationImageProps = {
   required?: boolean;
@@ -39,8 +40,8 @@ export default function EstimationImage({
             position: "relative",
 
             overflow: "hidden",
-            borderWidth: 2,
-            borderColor: "#000",
+            borderColor: variables.border.color,
+            borderWidth: variables.border.width,
             borderRadius: 8,
           }}
         >

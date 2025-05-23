@@ -1,3 +1,4 @@
+import language from "@/language";
 import { Text, View } from "react-native";
 
 export default function Stats() {
@@ -11,7 +12,7 @@ export default function Stats() {
           textAlign: "center",
         }}
       >
-        Deze pagina is nog in ontwikkeling, we zien je later graag terug! 👷
+        {language.page.stats.empty}
       </Text>
     </View>
   );

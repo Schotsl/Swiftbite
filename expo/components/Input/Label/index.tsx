@@ -1,4 +1,7 @@
-import { Text, View } from "react-native";
+import TextBody from "@/components/Text/Body";
+import variables from "@/variables";
+
+import { View } from "react-native";
 
 type InputLabelProps = {
   label: string;
@@ -18,27 +21,16 @@ export default function InputLabel({
         flexDirection: "row",
       }}
     >
-      <Text
-        style={{
-          color: "#000",
-          fontSize: 14,
-          fontFamily: "OpenSans_600SemiBold",
-        }}
-      >
-        {label}
-      </Text>
+      <TextBody weight="semibold">{label}</TextBody>
 
       {!required && (
-        <Text
-          style={{
-            top: -1,
-            opacity: 0.75,
-            fontSize: 10,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
+        <TextBody
+          color={variables.colors.greyDark}
+          style={{ top: -1, fontSize: 10 }}
+          weight="semibold"
         >
           (optioneel)
-        </Text>
+        </TextBody>
       )}
     </View>
   );

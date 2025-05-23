@@ -5,6 +5,7 @@ import { ActivityIndicator, View } from "react-native";
 
 import Gravatar from "@krosben/react-native-gravatar";
 import supabase from "@/utils/supabase";
+import variables from "@/variables";
 
 export default function SettingHeaderAvatar() {
   const [email, setEmail] = useState<string | null>(null);
@@ -33,16 +34,16 @@ export default function SettingHeaderAvatar() {
         width: 48,
         height: 48,
         position: "relative",
-        borderColor: "#000",
-        borderWidth: 2,
+        borderColor: variables.border.color,
+        borderWidth: variables.border.width,
         borderRadius: 24,
       }}
     >
       {email ? (
         <View
           style={{
-            width: 44,
-            height: 44,
+            width: 45,
+            height: 45,
             position: "relative",
             alignItems: "center",
             justifyContent: "center",
@@ -52,8 +53,8 @@ export default function SettingHeaderAvatar() {
 
           <View
             style={{
-              width: 44,
-              height: 44,
+              width: 45,
+              height: 45,
               zIndex: -1,
               borderRadius: 24,
 

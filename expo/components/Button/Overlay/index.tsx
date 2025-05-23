@@ -15,7 +15,11 @@ export default function ButtonOverlay({
 
   const adjustedTab = tab ? variables.heightTab : 0;
   const adjustedTop =
-    height - variables.heightNavigation - variables.heightOverlay - adjustedTab;
+    height -
+    variables.heightNavigation -
+    variables.heightOverlay -
+    adjustedTab +
+    8;
 
   return (
     <View
@@ -24,13 +28,18 @@ export default function ButtonOverlay({
         left: 0,
         right: 0,
         position: "absolute",
-        backgroundColor: "#fff",
+        backgroundColor: variables.colors.greyLight,
 
-        padding: 32,
-        paddingVertical: 16,
+        padding: variables.padding.page,
+        paddingVertical: 12,
 
-        borderTopWidth: 2,
-        borderTopColor: "#000",
+        borderTopWidth: variables.border.width,
+        borderTopColor: variables.border.color,
+
+        shadowColor: "#000",
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.025,
       }}
     >
       <Button {...props} />

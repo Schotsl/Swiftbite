@@ -58,14 +58,13 @@ const OPTIONS = {
 class HealthService {
   async initHealthKit(): Promise<void> {
     return new Promise((resolve, reject) => {
-      AppleHealthKit.initHealthKit(OPTIONS, (error) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-
-        resolve();
-      });
+      // AppleHealthKit.initHealthKit(OPTIONS, (error) => {
+      //   if (error) {
+      //     reject(error);
+      //     return;
+      //   }
+      //   resolve();
+      // });
     });
   }
 

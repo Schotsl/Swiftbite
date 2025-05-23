@@ -34,7 +34,7 @@ export type OptionWithGram = Option & {
 };
 
 export enum CameraSelected {
-  Label = "Label",
-  Barcode = "Barcode",
-  Estimation = "Estimation",
+  Label = "label",
+  Barcode = "barcode",
+  Estimation = "estimation",
 }

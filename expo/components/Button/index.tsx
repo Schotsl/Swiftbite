@@ -4,11 +4,15 @@ import {
   ViewStyle,
   TouchableOpacity,
   ActivityIndicator,
+  View,
+  StyleSheet,
 } from "react-native";
 
-import React from "react";
+import React, { Fragment } from "react";
 import TextBody from "../Text/Body";
 import variables from "@/variables";
+import DecorativeNoise from "../Decorative/Noise";
+import DecorativeLinear from "../Decorative/Linear";
 
 export type ButtonProps = {
   onPress: () => void;
@@ -31,17 +35,21 @@ export default function Button({
   loading = false,
   disabled = false,
 }: ButtonProps) {
-  let color = variables.colors.white;
-  let background = variables.colors.primary;
+  let textColor = variables.colors.white;
+  let backgroundColorToSet = variables.colors.primary;
 
   if (action === "secondary") {
-    color = variables.colors.text.primary;
-    background = variables.colors.greyLight;
+    textColor = variables.colors.text.primary;
+    backgroundColorToSet = variables.colors.background.secondary;
   }
 
   if (action === "delete") {
-    color = variables.colors.primary;
-    background = variables.colors.primaryLight;
+    textColor = variables.colors.primary;
+    backgroundColorToSet = variables.colors.primaryLight;
+  }
+
+  if (action === "primary") {
+    backgroundColorToSet = "transparent";
   }
 
   return (
@@ -58,28 +66,44 @@ export default function Button({
           flexDirection: "row",
           justifyContent: "center",
 
-          borderColor: variables.colors.grey,
-          borderWidth: 1,
-
+          overflow: "hidden",
           borderRadius: 32,
           paddingVertical: 14,
           paddingHorizontal: 32,
-          backgroundColor: background,
+          backgroundColor: backgroundColorToSet,
         },
         style,
       ]}
     >
+      {action === "primary" && (
+        <Fragment>
+          <DecorativeLinear />
+          <DecorativeNoise />
+        </Fragment>
+      )}
       {loading ? (
         <ActivityIndicator
           size="small"
-          color={color}
-          style={{ transform: [variables.scale] }}
+          color={textColor}
+          style={{ transform: [variables.scale], zIndex: 1 }}
         />
       ) : (
-        <FontAwesome6 name={icon} size={18} color={color} />
+        icon && (
+          <FontAwesome6
+            name={icon}
+            size={18}
+            color={textColor}
+            style={{ zIndex: 1 }}
+          />
+        )
       )}
 
-      <TextBody color={color} align="center" weight="semibold">
+      <TextBody
+        color={textColor}
+        align="center"
+        weight="semibold"
+        style={{ zIndex: 1 }}
+      >
         {title}
       </TextBody>
     </TouchableOpacity>

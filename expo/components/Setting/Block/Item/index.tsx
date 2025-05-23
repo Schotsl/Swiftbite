@@ -1,6 +1,10 @@
-import { Href, useRouter } from "expo-router";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
+import { Href, useRouter } from "expo-router";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
+
+import variables from "@/variables";
+import TextBody from "@/components/Text/Body";
+import TextSmall from "@/components/Text/Small";
 
 type SettingBlockItemBaseProps = {
   last: boolean;
@@ -46,8 +50,8 @@ export default function SettingBlockItem({
         flexDirection: "row",
         justifyContent: "space-between",
 
-        borderColor: "#000",
-        borderBottomWidth: last ? 0 : 2,
+        borderColor: variables.border.color,
+        borderBottomWidth: last ? 0 : variables.border.width,
       }}
     >
       <View
@@ -55,29 +59,22 @@ export default function SettingBlockItem({
           gap: 4,
         }}
       >
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {title}
-        </Text>
-        <Text
-          style={{
-            opacity: 0.75,
-            fontSize: 16,
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
+        <TextBody weight="semibold">{title}</TextBody>
+        <TextSmall color={variables.colors.text.secondary} weight="medium">
           {content}
-        </Text>
+        </TextSmall>
       </View>
 
       {loading ? (
         <ActivityIndicator size="small" color="#000" />
       ) : (
-        icon && <FontAwesome6 name={icon} size={20} color="#000" />
+        icon && (
+          <FontAwesome6
+            name={icon}
+            size={20}
+            color={variables.colors.text.primary}
+          />
+        )
       )}
     </TouchableOpacity>
   );

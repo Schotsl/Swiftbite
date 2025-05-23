@@ -42,21 +42,21 @@ export default function HomeMacros({ date }: HomeMacrosProps) {
         }}
       >
         <Progress
-          label={language.macros.short.protein}
+          label={language.macros.protein.short}
           value={macrosConsumed.protein}
           target={macrosTarget.protein}
           style={{ maxWidth: 96 }}
         />
 
         <Progress
-          label={language.macros.short.carbs}
+          label={language.macros.carbs.short}
           value={macrosConsumed.carbs}
           target={macrosTarget.carbs}
           style={{ maxWidth: 96 }}
         />
 
         <Progress
-          label={language.macros.short.fats}
+          label={language.macros.fats.short}
           value={macrosConsumed.fat}
           target={macrosTarget.fat}
           style={{ maxWidth: 96 }}

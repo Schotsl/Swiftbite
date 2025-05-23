@@ -3,6 +3,7 @@ import { macroToCalories } from "@/helper";
 
 import Label from "@/components/Input/Label";
 import Slider from "@react-native-community/slider";
+import variables from "@/variables";
 
 type InputMacroSliderProps = {
   type: "carbs" | "protein" | "fat";
@@ -51,9 +52,9 @@ export default function InputMacroSlider({
             position: "absolute",
             transform: [{ translateY: -5 }],
 
-            borderWidth: 2,
-            borderColor: "#000",
-            borderRadius: 10,
+            borderColor: variables.border.color,
+            borderWidth: variables.border.width,
+            borderRadius: 8,
           }}
         />
       </View>

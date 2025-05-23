@@ -4,13 +4,17 @@ export default function DecorativeNoise() {
   return (
     <ImageBackground
       source={require("@/assets/images/noise.png")}
+      imageStyle={{
+        width: 450,
+        height: 450,
+      }}
       style={{
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: 0,
-        opacity: 0.08,
+        zIndex: -1,
+        opacity: 0.05,
         position: "absolute",
       }}
       resizeMode="repeat"

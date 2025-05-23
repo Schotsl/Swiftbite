@@ -1,21 +1,25 @@
-import { Fragment } from "react";
+import { Fragment, useRef, useEffect } from "react";
 import { Href, Link } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
-import { FontAwesome6 } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, Text, View, type LayoutChangeEvent } from "react-native";
 
-type LinkTab = {
+import TabsButton from "./Button";
+
+import variables from "@/variables";
+import TextBody from "../Text/Body";
+import TextLarge from "../Text/Large";
+
+type TabLink = {
   href: Href;
   title: string;
 };
 
-type ActionTab = {
+type TabAction = {
   value: string;
   title: string;
 };
 
-type Tab = LinkTab | ActionTab;
-
+type Tab = TabLink | TabAction;
 type TabsProps = {
   add?: Href;
   back?: boolean;
@@ -31,6 +35,37 @@ export default function Tabs({
   value,
   onSelect,
 }: TabsProps) {
+  const scrollRef = useRef<ScrollView>(null);
+  const scrollWidth = useRef<number>(0);
+
+  const tabsLayouts = useRef<({ x: number; width: number } | null)[]>([]);
+
+  // I've asked Gemini to write the API for centering on a tab when clicked although I do understand it it should be mentioned
+  useEffect(() => {
+    const tabsLength = tabs.length;
+    const tabsUpdated = Array(tabsLength).fill(null);
+
+    tabs.forEach((_, index) => {
+      if (!tabsLayouts.current || !tabsLayouts.current[index]) {
+        return;
+      }
+
+      tabsUpdated[index] = tabsLayouts.current[index];
+    });
+    tabsLayouts.current = tabsUpdated;
+  }, [tabs]);
+
+  const handleCenter = (index: number) => {
+    const tabLayout = tabsLayouts.current[index];
+
+    if (tabLayout && scrollWidth.current > 0 && scrollRef.current) {
+      const tabCenter = tabLayout.x + tabLayout.width / 2;
+      const tabPosition = tabCenter - scrollWidth.current / 2;
+
+      scrollRef.current.scrollTo({ x: tabPosition, animated: true });
+    }
+  };
+
   return (
     <View>
       <View
@@ -38,71 +73,88 @@ export default function Tabs({
           alignItems: "center",
           paddingTop: 12,
           paddingBottom: 24,
-          borderBottomWidth: 2,
-          borderColor: "#000000",
+          borderColor: variables.border.color,
+          borderBottomWidth: variables.border.width,
           backgroundColor: "#fff",
         }}
       >
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView
+          ref={scrollRef}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          onLayout={(event: LayoutChangeEvent) => {
+            scrollWidth.current = event.nativeEvent.layout.width;
+          }}
+        >
           <View
             style={{
-              gap: 32,
-              paddingHorizontal: 32,
+              gap: variables.padding.page,
+              paddingHorizontal: variables.padding.page,
+
               alignItems: "center",
               flexDirection: "row",
               justifyContent: "center",
             }}
           >
-            {back && (
-              <Link
-                href={"/(tabs)/add"}
-                style={{
-                  width: 28,
-                  height: 28,
-
-                  borderWidth: 2,
-                  borderColor: "#000000",
-                  borderRadius: 100,
-
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                asChild
-              >
-                <Pressable>
-                  <FontAwesome6 name="arrow-left" size={12} color="#000000" />
-                </Pressable>
-              </Link>
-            )}
+            {back && <TabsButton href={"/(tabs)/add"} icon="arrow-left" />}
 
             {tabs.map((tab, index) => {
               const isLast = index === tabs.length - 1;
               const isActive =
                 "href" in tab ? value === tab.href : value === tab.value;
 
-              const tabContent = (
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontFamily: "OpenSans_400Regular",
-
-                    textShadowColor: "#000000",
-                    textShadowOffset: { width: 0, height: 0 },
-
-                    opacity: isActive ? 1 : 0.25,
-                  }}
+              const tabVisualContent = (
+                <TextLarge
+                  weight="medium"
+                  color={
+                    isActive
+                      ? variables.colors.text.primary
+                      : variables.colors.greyDark
+                  }
                 >
                   {tab.title}
-                </Text>
+                </TextLarge>
               );
+
+              const handleLayout = (event: LayoutChangeEvent) => {
+                const { x, width } = event.nativeEvent.layout;
+
+                if (index < tabsLayouts.current.length) {
+                  tabsLayouts.current[index] = { x, width };
+                } else {
+                  const tabsUpdated = [...tabsLayouts.current];
+
+                  while (tabsUpdated.length <= index) {
+                    tabsUpdated.push(null);
+                  }
+
+                  tabsUpdated[index] = { x, width };
+                  tabsLayouts.current = tabsUpdated;
+                }
+              };
 
               return (
                 <Fragment key={index}>
                   {"href" in tab ? (
-                    <Link href={tab.href}>{tabContent}</Link>
+                    <Link href={tab.href} asChild>
+                      <Pressable
+                        onLayout={handleLayout}
+                        onPress={() => {
+                          handleCenter(index);
+                        }}
+                      >
+                        {tabVisualContent}
+                      </Pressable>
+                    </Link>
                   ) : (
-                    <Pressable onPress={() => onSelect?.(tab.value)}>
-                      {tabContent}
+                    <Pressable
+                      onLayout={handleLayout}
+                      onPress={() => {
+                        handleCenter(index);
+                        onSelect?.(tab.value);
+                      }}
+                    >
+                      {tabVisualContent}
                     </Pressable>
                   )}
 
@@ -111,8 +163,8 @@ export default function Tabs({
                       style={{
                         width: 2,
                         height: 18,
-                        opacity: 0.25,
-                        backgroundColor: "#000000",
+
+                        backgroundColor: variables.colors.greyDark,
                       }}
                     />
                   )}
@@ -123,31 +175,7 @@ export default function Tabs({
         </ScrollView>
       </View>
 
-      {add && (
-        <Link
-          href={add}
-          style={{
-            top: 12,
-            right: 32,
-            position: "absolute",
-
-            width: 28,
-            height: 28,
-
-            borderWidth: 2,
-            borderColor: "#000000",
-            borderRadius: 100,
-
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          asChild
-        >
-          <Pressable>
-            <FontAwesome6 name="plus" size={12} color="#000000" />
-          </Pressable>
-        </Link>
-      )}
+      {add && <TabsButton href={add} icon="plus" right={true} />}
     </View>
   );
 }

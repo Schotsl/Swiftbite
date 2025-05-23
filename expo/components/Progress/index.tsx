@@ -39,8 +39,6 @@ export default function Progress({
           height: 12,
           position: "relative",
 
-          borderWidth: 2,
-          borderRadius: 8,
           borderColor: variables.colors.grey,
           backgroundColor: variables.colors.grey,
           overflow: "hidden",

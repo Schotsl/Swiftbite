@@ -23,6 +23,8 @@ import { MealWithProduct } from "@/types/meal";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import variables from "@/variables";
+import language from "@/language";
 
 export default function AutomationsRepeatUpsert() {
   const focus = useIsFocused();
@@ -103,27 +105,39 @@ export default function AutomationsRepeatUpsert() {
   return (
     <View style={{ padding: 32 }}>
       <Header
-        title={updating ? "Herhaling bewerken" : "Herhaling toevoegen"}
-        content="Een herhaling is een product dat automatisch toevoegt wordt op de dagen en tijden die jij kiest"
+        title={
+          updating
+            ? language.modifications.getEdit(language.types.repeat.single)
+            : language.modifications.getSave(language.types.repeat.single)
+        }
+        content={language.types.repeat.explanation}
         onDelete={handleDelete}
       />
 
       <View style={{ gap: 48 }}>
         <View style={{ gap: 32 }}>
-          <InputWeekday name="weekdays" label="Herhalen op" control={control} />
+          <InputWeekday
+            name="weekdays"
+            label={language.types.repeat.inputRepeatDate}
+            control={control}
+          />
 
-          <InputTime name="time" label="Herhalen om" control={control} />
+          <InputTime
+            name="time"
+            label={language.types.repeat.inputRepeatTime}
+            control={control}
+          />
 
           <View style={{ gap: 12 }}>
             <View>
-              <InputLabel label="Ingrediënt" />
+              <InputLabel label={language.types.ingredient.single} />
 
               <View
                 style={{
                   overflow: "hidden",
                   marginTop: 2,
-                  borderWidth: 2,
-                  borderColor: "#000",
+                  borderColor: variables.border.color,
+                  borderWidth: variables.border.width,
                   borderRadius: 8,
                 }}
               >
@@ -140,7 +154,15 @@ export default function AutomationsRepeatUpsert() {
             {focus && (
               <ButtonSmall
                 icon={isSet ? "pencil" : "plus"}
-                title={isSet ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"}
+                title={
+                  isSet
+                    ? language.modifications.getPick(
+                        language.types.ingredient.single
+                      )
+                    : language.modifications.getEdit(
+                        language.types.ingredient.single
+                      )
+                }
                 onPress={() => setOpen(true)}
                 onPosition={setPosition}
               />
@@ -157,7 +179,7 @@ export default function AutomationsRepeatUpsert() {
       </View>
 
       <ButtonOverlay
-        title="Herhaling opslaan"
+        title={language.modifications.getSave(language.types.repeat.single)}
         onPress={handleSubmit(handleSave)}
         loading={isSubmitting}
         disabled={isSubmitting || isDeleting}
@@ -209,7 +231,7 @@ function AutomationsRepeatUpsertItem({
 
   return (
     <EmptySmall
-      content="Je hebt nog geen ingrediënt geselecteerd"
+      content={language.empty.getSelected(language.types.ingredient.single)}
       onPress={onOpen}
     />
   );
@@ -254,7 +276,11 @@ function AutomationsRepeatUpsertAdd({
 
         <ButtonSmall
           icon={set ? "pencil" : "plus"}
-          title={set ? "Ingrediënt wijzigen" : "Ingrediënt kiezen"}
+          title={
+            set
+              ? language.modifications.getEdit(language.types.ingredient.single)
+              : language.modifications.getPick(language.types.ingredient.single)
+          }
           onPress={() => onClose()}
         />
       </View>

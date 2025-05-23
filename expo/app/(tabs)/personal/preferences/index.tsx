@@ -21,6 +21,7 @@ import {
   PreferenceData,
   preferenceSchema,
 } from "@/schemas/personal/preference";
+import language from "@/language";
 
 const languages = [
   { value: "en", title: "English" },
@@ -51,7 +52,7 @@ export default function PersonalPreferences() {
   return (
     <ScrollView>
       <View style={{ flex: 1, padding: 32 }}>
-        <Header title="Mijn voorkeur" />
+        <Header title={language.page.personal.preferences.title} />
 
         <Suspense fallback={<PersonalPreferencesLoading />}>
           <PersonalPreferencesForm user={user} />
@@ -62,9 +63,7 @@ export default function PersonalPreferences() {
 }
 
 function PersonalPreferencesLoading() {
-  return (
-    <ProductStatus status="We zijn je voorkeuren aan het laden uit onze database" />
-  );
+  return <ProductStatus status={language.page.personal.preferences.loading} />;
 }
 
 type PersonalPreferencesFormProps = {
@@ -99,21 +98,23 @@ function PersonalPreferencesForm({ user }: PersonalPreferencesFormProps) {
       <View style={{ gap: 32 }}>
         <InputDropdown
           name="language"
-          label="Taal"
+          label={language.page.personal.preferences.input.language}
           control={control}
           options={languages}
-          placeholder="Taal"
+          placeholder={
+            language.page.personal.preferences.input.languagePlaceholder
+          }
         />
 
         <View>
-          <InputLabel label="Meetsysteem" />
+          <InputLabel label={language.page.personal.preferences.input.system} />
 
           <InputDropdownRadio
             style={{
               borderBottomLeftRadius: 0,
               borderBottomRightRadius: 0,
             }}
-            label="Metrisch systeem"
+            label={language.page.personal.preferences.input.systemMetric}
             selected={measurement === "metric"}
             onSelect={() => {
               setValue("measurement", "metric");
@@ -126,7 +127,7 @@ function PersonalPreferencesForm({ user }: PersonalPreferencesFormProps) {
               borderTopLeftRadius: 0,
               borderTopRightRadius: 0,
             }}
-            label="Imperial systeem"
+            label={language.page.personal.preferences.input.systemImperial}
             selected={measurement === "imperial"}
             onSelect={() => {
               setValue("measurement", "imperial");
@@ -136,7 +137,7 @@ function PersonalPreferencesForm({ user }: PersonalPreferencesFormProps) {
       </View>
 
       <Button
-        title="Wijzigen opslaan"
+        title={language.page.personal.preferences.button}
         onPress={handleSubmit(handleSave)}
         loading={isSubmitting}
         disabled={isSubmitting}

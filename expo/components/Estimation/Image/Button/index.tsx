@@ -1,3 +1,4 @@
+import variables from "@/variables";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 
@@ -19,8 +20,8 @@ export default function EstimationImageButton({
         height: 32,
 
         borderRadius: 100,
-        borderWidth: 2,
-        borderColor: "#000",
+        borderColor: variables.border.color,
+        borderWidth: variables.border.width,
 
         alignItems: "center",
         justifyContent: "center",

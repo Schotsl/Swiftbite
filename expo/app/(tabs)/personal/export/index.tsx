@@ -1,5 +1,7 @@
 import Button from "@/components/Button";
+import ButtonOverlay from "@/components/Button/Overlay";
 import Header from "@/components/Header";
+import language from "@/language";
 
 import { Alert, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -7,8 +9,8 @@ import { ScrollView } from "react-native-gesture-handler";
 export default function PersonalExport() {
   const handleExport = () => {
     Alert.alert(
-      "Dit is helaas nog niet mogelijk",
-      "De exporteer functie is onderweg, maar nog niet klaar. We werken hard aan deze en andere functionaliteiten.",
+      language.page.personal.export.alert.title,
+      language.page.personal.export.alert.content
     );
   };
 
@@ -16,11 +18,14 @@ export default function PersonalExport() {
     <ScrollView>
       <View style={{ flex: 1, padding: 32 }}>
         <Header
-          title="Exporteer gegevens"
-          content="Klik op 'Exporteer gegevens' en ontvang binnen enkele minuten een e-mail met een CSV-bestand van al je voedingsdata."
+          title={language.page.personal.export.title}
+          content={language.page.personal.export.content}
         />
 
-        <Button title="Exporteer gegevens" onPress={handleExport} />
+        <ButtonOverlay
+          title={language.page.personal.export.button}
+          onPress={handleExport}
+        />
       </View>
     </ScrollView>
   );

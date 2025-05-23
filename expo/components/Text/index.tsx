@@ -31,7 +31,7 @@ export default function Text({
   truncate = false,
 }: TextProps) {
   const family = fontWeights[weight];
-  console.log(family);
+
   return (
     <ReactText
       style={[

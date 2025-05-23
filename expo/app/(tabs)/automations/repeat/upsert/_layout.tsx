@@ -7,6 +7,7 @@ import { Slot, useLocalSearchParams } from "expo-router";
 
 import Header from "@/components/Header";
 import ProductStatus from "@/components/Product/Status";
+import language from "@/language";
 
 export default function AutomationsRepeatUpsertLayout() {
   const { repeat: repeatId } = useLocalSearchParams<{
@@ -34,11 +35,11 @@ function AutomationsRepeatUpsertLayoutLoading() {
   return (
     <View style={{ flex: 1, padding: 32 }}>
       <Header
-        title="Herhaling bewerken"
-        content="Een herhaling is een product dat automatisch toevoegt wordt op de dagen en tijden die jij kiest"
+        title={language.modifications.getEdit(language.types.repeat.single)}
+        content={language.types.repeat.explanation}
       />
 
-      <ProductStatus status="We zijn je maaltijd aan het laden uit onze database" />
+      <ProductStatus status={language.types.repeat.loading} />
     </View>
   );
 }

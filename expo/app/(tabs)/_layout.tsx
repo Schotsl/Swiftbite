@@ -84,14 +84,15 @@ export default function TabsLayout() {
             return {
               headerShown: false,
               tabBarActiveTintColor: variables.colors.primary,
+              tabBarInactiveTintColor: variables.colors.greyDark,
               tabBarStyle: {
                 display: camera ? "none" : "flex",
                 paddingTop: 10,
                 paddingLeft: 12,
                 paddingRight: 12,
                 paddingBottom: 10,
-                borderTopWidth: 2,
-                borderTopColor: variables.colors.grey,
+                borderTopWidth: variables.border.width,
+                borderTopColor: variables.border.color,
               },
             };
           }}

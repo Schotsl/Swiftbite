@@ -13,6 +13,7 @@ import { rowTimeout } from "@/helper";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "expo-router";
+import language from "@/language";
 
 export default function AutomationsRepeat() {
   const path = usePathname();
@@ -43,8 +44,8 @@ export default function AutomationsRepeat() {
         add="/automations/repeat/upsert"
         value={path}
         tabs={[
-          { href: "/automations/meal", title: "Maaltijden" },
-          { href: "/automations/repeat", title: "Herhalen" },
+          { href: "/automations/meal", title: language.types.meal.plural },
+          { href: "/automations/repeat", title: language.types.repeat.plural },
         ]}
       />
 
@@ -81,5 +82,10 @@ function AutomationsRepeatLoading() {
 }
 
 function AutomationsRepeatEmpty() {
-  return <Empty emoji="🔁" content="Je hebt nog geen herhalingen toegevoegd" />;
+  return (
+    <Empty
+      emoji="🔁"
+      content={language.empty.getAdded(language.types.repeat.plural)}
+    />
+  );
 }

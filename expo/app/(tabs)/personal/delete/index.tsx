@@ -1,5 +1,4 @@
 import Input from "@/components/Input";
-import Button from "@/components/Button";
 import Header from "@/components/Header";
 
 import supabase from "@/utils/supabase";
@@ -12,6 +11,8 @@ import { handleError } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, View } from "react-native";
 import { DeleteData, deleteSchema } from "@/schemas/personal/delete";
+import language from "@/language";
+import ButtonOverlay from "@/components/Button/Overlay";
 
 export default function PersonalDelete() {
   const router = useRouter();
@@ -29,20 +30,20 @@ export default function PersonalDelete() {
 
   const handleDelete = (data: DeleteData) => {
     Alert.alert(
-      "Weet je zeker dat je je account wilt verwijderen?",
-      "Dit kan niet worden teruggedraaid.",
+      language.page.personal.delete.alert.title,
+      language.page.personal.delete.alert.content,
       [
         {
-          text: "Annuleren",
+          text: language.modifications.uppercase.cancel,
           style: "cancel",
           onPress: handleCancel,
         },
         {
-          text: "Verwijderen",
+          text: language.modifications.uppercase.delete,
           style: "destructive",
           onPress: () => handleConfirm(data),
         },
-      ],
+      ]
     );
   };
 
@@ -54,7 +55,9 @@ export default function PersonalDelete() {
     const success = await deleteAccount.mutateAsync(data);
 
     if (!success) {
-      setError("password", { message: "Je wachtwoord is incorrect" });
+      setError("password", {
+        message: language.page.personal.delete.input.passwordIncorrect,
+      });
 
       return;
     }
@@ -68,23 +71,25 @@ export default function PersonalDelete() {
     <ScrollView>
       <View style={{ flex: 1, padding: 32 }}>
         <Header
-          title="Verwijder je account"
-          content="Je account verwijderen wist al je gegevens voorgoed. Dit kan niet worden teruggedraaid. Vul je wachtwoord in om te bevestigen."
+          title={language.page.personal.delete.title}
+          content={language.page.personal.delete.content}
         />
 
         <View style={{ gap: 48 }}>
           <Input
             name="password"
             type="password"
-            label="Wachtwoord"
+            label={language.page.personal.delete.input.password}
+            content={language.page.personal.delete.input.passwordContent}
             control={control}
-            content="Vul hieronder je wachtwoord in om je account te definitief verwijderen."
-            placeholder="*********"
+            placeholder={
+              language.page.personal.delete.input.passwordPlaceholder
+            }
           />
 
-          <Button
+          <ButtonOverlay
             icon="trash"
-            title="Account verwijderen"
+            title={language.page.personal.delete.button}
             action="delete"
             onPress={handleSubmit(handleDelete)}
             loading={isSubmitting}

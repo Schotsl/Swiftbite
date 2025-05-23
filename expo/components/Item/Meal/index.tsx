@@ -3,6 +3,7 @@ import Item from "@/components/Item";
 import { MealWithProduct } from "@/types/meal";
 import { getMacrosFromMeal } from "@/helper";
 import { ServingData } from "@/schemas/serving";
+import language from "@/language";
 
 type ItemMealProps = {
   meal: MealWithProduct;
@@ -40,7 +41,7 @@ export default function ItemMeal({
       title={meal.title}
       border={border}
       iconId={icon ? meal.icon_id : undefined}
-      subtitle={`${length} ${length === 1 ? "ingrediënt" : "ingrediënten"}`}
+      subtitle={language.types.ingredient.getCount(length)}
       subtitleIcon="bowl-food"
       rightTop={macros.calories ? `${macros.calories} kcal` : null}
       rightBottom={macros.gram ? `${macros.gram} g` : null}

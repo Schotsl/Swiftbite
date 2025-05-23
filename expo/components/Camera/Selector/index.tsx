@@ -6,6 +6,7 @@ import { CameraSelected } from "@/types";
 import MaskedView from "@react-native-masked-view/masked-view";
 import CameraSelectorItem from "./Item";
 import CameraSelectorGradient from "./Gradient";
+import language from "@/language";
 
 type CameraSelectorProps = {
   estimation: boolean;
@@ -129,20 +130,20 @@ export default function CameraSelector({
               {estimation && (
                 <CameraSelectorItem
                   width={widthItem}
-                  title="Inschatting"
+                  title={language.page.camera.options.estimation}
                   active={activeItem === CameraSelected.Estimation}
                 />
               )}
 
               <CameraSelectorItem
                 width={widthItem}
-                title="Barcode"
+                title={language.page.camera.options.barcode}
                 active={activeItem === CameraSelected.Barcode}
               />
 
               <CameraSelectorItem
                 width={widthItem}
-                title="Voedingsetiket"
+                title={language.page.camera.options.label}
                 active={activeItem === CameraSelected.Label}
               />
 

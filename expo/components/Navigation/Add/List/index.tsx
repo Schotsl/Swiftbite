@@ -76,7 +76,7 @@ export default function NavigationAddList({
       {camera && (
         <Button
           icon="camera"
-          title={language.navigation.add.camera}
+          title="Camera"
           action="secondary"
           onPress={handleCamera}
         />

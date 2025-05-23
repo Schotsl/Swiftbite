@@ -1,3 +1,4 @@
+import variables from "@/variables";
 import {
   View,
   Text,
@@ -28,8 +29,8 @@ export default function InputDropdownRadio({
           padding: 16,
           paddingVertical: 12,
           borderRadius: 8,
-          borderWidth: 2,
-          borderColor: "#000",
+          borderColor: variables.border.color,
+          borderWidth: variables.border.width,
 
           flexDirection: "row",
           alignItems: "center",
@@ -42,8 +43,8 @@ export default function InputDropdownRadio({
         style={{
           width: 16,
           height: 16,
-          borderWidth: 2,
-          borderColor: "#000",
+          borderColor: variables.border.color,
+          borderWidth: variables.border.width,
           borderRadius: 8,
 
           alignItems: "center",

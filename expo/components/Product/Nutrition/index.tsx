@@ -4,6 +4,7 @@ import { ServingData } from "@/schemas/serving";
 import { MealWithProduct } from "@/types/meal";
 import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
+import variables from "@/variables";
 
 type ProductNutritionProps =
   | {
@@ -117,8 +118,8 @@ export default function ProductNutrition({
       <View
         style={{
           position: "relative",
-          borderWidth: 2,
-          borderColor: "#000",
+          borderColor: variables.border.color,
+          borderWidth: variables.border.width,
           borderRadius: 8,
         }}
       >

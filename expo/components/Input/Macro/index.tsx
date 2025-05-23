@@ -7,6 +7,7 @@ import { View } from "react-native";
 import { useState } from "react";
 import { MacroData } from "@/schemas/personal/goal";
 import { Control, useController } from "react-hook-form";
+import language from "@/language";
 
 type MacroDataKey = keyof MacroData;
 
@@ -79,7 +80,7 @@ export default function InputMacro({
       const leastRecentValuePotential = leastRecentValue - remainingDelta;
       const leastRecentValueUpdated = Math.max(
         0,
-        Math.min(1, leastRecentValuePotential),
+        Math.min(1, leastRecentValuePotential)
       );
 
       const leastRecentValueDelta = leastRecentValue - leastRecentValueUpdated;
@@ -96,7 +97,7 @@ export default function InputMacro({
 
         const newSecondLeastRecentValue = Math.max(
           0,
-          Math.min(1, secondLeastRecentValuePotential),
+          Math.min(1, secondLeastRecentValuePotential)
         );
 
         currentValues[secondRecentKey] = newSecondLeastRecentValue;
@@ -146,30 +147,30 @@ export default function InputMacro({
 
       <View style={{ gap: 32 }}>
         <InputMacroItem
-          label="Koolhydraten"
+          label={language.macros.carbs.short}
           percentage={macro.carbs}
-          description="Snelle brandstof voor spieren en hersenen. Handig vóór of tijdens inspanning, te vinden in brood, fruit en rijst"
+          description={language.macros.carbs.explanation}
           onPress={handleOpen}
         />
 
         <InputMacroItem
-          label="Eiwitten"
+          label={language.macros.protein.short}
           percentage={macro.protein}
-          description="Bouwstenen voor spierherstel en -groei en houden je langer verzadigd. Komt uit yoghurt, peulvruchten, vlees en vis"
+          description={language.macros.protein.explanation}
           onPress={handleOpen}
         />
 
         <InputMacroItem
-          label="Vetten"
+          label={language.macros.fats.short}
           percentage={macro.fat}
-          description="Langzame energiebron die hormonen en vitamine­opname ondersteunt. Komt uit onder andere avocado, noten en olijfolie"
+          description={language.macros.fats.explanation}
           onPress={handleOpen}
         />
       </View>
 
       <Modal
         title={label}
-        button="Wijzigen opslaan"
+        button={language.macros.button}
         visible={visible}
         onClose={handleClose}
         onButton={handleModalSave}
@@ -177,7 +178,7 @@ export default function InputMacro({
         <View style={{ gap: 32 }}>
           <InputMacroSlider
             type="carbs"
-            label="Koolhydraten"
+            label={language.macros.carbs.long}
             value={temporary.carbs}
             calories={calories}
             onChange={(value) => handleChange("carbs", value)}
@@ -185,7 +186,7 @@ export default function InputMacro({
 
           <InputMacroSlider
             type="protein"
-            label="Eiwitten"
+            label={language.macros.protein.long}
             value={temporary.protein}
             calories={calories}
             onChange={(value) => handleChange("protein", value)}
@@ -193,7 +194,7 @@ export default function InputMacro({
 
           <InputMacroSlider
             type="fat"
-            label="Vetten"
+            label={language.macros.fats.long}
             value={temporary.fat}
             calories={calories}
             onChange={(value) => handleChange("fat", value)}
