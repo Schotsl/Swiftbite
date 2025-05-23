@@ -1,19 +1,21 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
+
+import TextBody from "@/components/Text/Body";
+
+import variables from "@/variables";
 
 export function Divider() {
   return (
     <View style={{ alignItems: "center" }}>
-      <Text
+      <TextBody
+        weight="semibold"
         style={{
-          backgroundColor: "#fff",
+          backgroundColor: variables.colors.white,
           paddingHorizontal: 8,
-
-          fontSize: 16,
-          fontWeight: "semibold",
         }}
       >
         Of
-      </Text>
+      </TextBody>
       <View
         style={{
           top: "50%",

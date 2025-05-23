@@ -5,14 +5,8 @@ import TextBody from "../Text/Body";
 import TextSmall from "../Text/Small";
 
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Href, LinkProps, router } from "expo-router";
 import { useState, Fragment } from "react";
-import {
-  ActivityIndicator,
-  ButtonProps,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 
 type ItemProps = {
   title: string;

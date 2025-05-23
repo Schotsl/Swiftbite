@@ -1,10 +1,11 @@
 import Input from "@/components/Input";
 import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
+import TextTitle from "@/components/Text/Title";
 import ButtonSmall from "@/components/Button/Small";
 
+import { View } from "react-native";
 import { useState } from "react";
-import { Text, View } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalorieData, calorieSchema } from "@/schemas/personal/goal";
 import { Control, useController, useForm } from "react-hook-form";
@@ -61,14 +62,7 @@ export default function InputMacro({ name, label, control }: InputMacroProps) {
           justifyContent: "space-between",
         }}
       >
-        <Text
-          style={{
-            fontSize: 22,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {value} kcal
-        </Text>
+        <TextTitle>{value} kcal</TextTitle>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
       </View>

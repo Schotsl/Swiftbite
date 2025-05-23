@@ -5,7 +5,7 @@ import {
   useSharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { StyleSheet } from "react-native";
+
 import { useEffect } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";

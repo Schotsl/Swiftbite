@@ -1,8 +1,10 @@
-import InputLabel from "@/components/Input/Label";
-import EstimationImageButton from "./Button";
+import { Image, View } from "react-native";
 
-import { Image, Text, View } from "react-native";
 import variables from "@/variables";
+
+import TextLarge from "@/components/Text/Large";
+import InputLabel from "@/components/Input/Label";
+import EstimationImageButton from "@/components/Estimation/Image/Button";
 
 type EstimationImageProps = {
   required?: boolean;
@@ -80,15 +82,7 @@ export default function EstimationImage({
             justifyContent: "space-between",
           }}
         >
-          <Text
-            style={{
-              color: "#000",
-              fontSize: 20,
-              fontFamily: "OpenSans_600SemiBold",
-            }}
-          >
-            Geen afbeelding
-          </Text>
+          <TextLarge>Geen afbeelding</TextLarge>
 
           <EstimationImageButton icon="plus" onPress={onAdd} />
         </View>

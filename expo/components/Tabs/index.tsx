@@ -1,13 +1,12 @@
-import { Fragment, useRef, useEffect } from "react";
 import { Href, Link } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
-import { Pressable, Text, View, type LayoutChangeEvent } from "react-native";
+import { Fragment, useRef, useEffect } from "react";
+import { Pressable, View, type LayoutChangeEvent } from "react-native";
 
 import TabsButton from "./Button";
+import TextLarge from "@/components/Text/Large";
 
 import variables from "@/variables";
-import TextBody from "../Text/Body";
-import TextLarge from "../Text/Large";
 
 type TabLink = {
   href: Href;

@@ -1,18 +1,17 @@
 import { FontAwesome6 } from "@expo/vector-icons";
+import { Fragment } from "react";
 import {
   StyleProp,
   ViewStyle,
   TouchableOpacity,
   ActivityIndicator,
-  View,
-  StyleSheet,
 } from "react-native";
 
-import React, { Fragment } from "react";
-import TextBody from "../Text/Body";
+import React from "react";
+import TextBody from "@/components/Text/Body";
 import variables from "@/variables";
-import DecorativeNoise from "../Decorative/Noise";
-import DecorativeLinear from "../Decorative/Linear";
+import DecorativeNoise from "@/components/Decorative/Noise";
+import DecorativeLinear from "@/components/Decorative/Linear";
 
 export type ButtonProps = {
   onPress: () => void;

@@ -1,14 +1,15 @@
 import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
+import TextLarge from "@/components/Text/Large";
+import EmptySmall from "@/components/Empty/Small";
 import ButtonSmall from "@/components/Button/Small";
 
+import { View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Weight } from "@/schemas/personal/health";
 import { useState } from "react";
-import { Text, View } from "react-native";
 import { transformDate } from "@/helper";
 import { Control, useController } from "react-hook-form";
-import EmptySmall from "@/components/Empty/Small";
 
 type InputWeightsProps = {
   name: string;
@@ -138,23 +139,9 @@ function InputWeightsList({ weights, onDelete }: InputWeightsListProps) {
             borderBottomWidth: 2,
           }}
         >
-          <Text
-            style={{
-              fontSize: 18,
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            {entry.weight.toFixed(1)} kg
-          </Text>
+          <TextLarge>{entry.weight.toFixed(1)} kg</TextLarge>
 
-          <Text
-            style={{
-              fontSize: 18,
-              fontFamily: "OpenSans_400Regular",
-            }}
-          >
-            {transformDate(entry.date)}
-          </Text>
+          <TextLarge>{transformDate(entry.date)}</TextLarge>
 
           <ButtonSmall icon="trash" onPress={() => onDelete(index)} nano />
         </View>

@@ -80,7 +80,7 @@ export default function InputMacro({
       const leastRecentValuePotential = leastRecentValue - remainingDelta;
       const leastRecentValueUpdated = Math.max(
         0,
-        Math.min(1, leastRecentValuePotential)
+        Math.min(1, leastRecentValuePotential),
       );
 
       const leastRecentValueDelta = leastRecentValue - leastRecentValueUpdated;
@@ -97,7 +97,7 @@ export default function InputMacro({
 
         const newSecondLeastRecentValue = Math.max(
           0,
-          Math.min(1, secondLeastRecentValuePotential)
+          Math.min(1, secondLeastRecentValuePotential),
         );
 
         currentValues[secondRecentKey] = newSecondLeastRecentValue;

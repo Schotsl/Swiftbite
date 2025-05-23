@@ -1,5 +1,7 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
+
+import TextBody from "@/components/Text/Body";
 
 type ProductInfoProps = {
   items: {
@@ -18,15 +20,9 @@ export default function ProductInfo({ items }: ProductInfoProps) {
         >
           <FontAwesome6 name={item.icon} size={16} color="#404040" />
 
-          <Text
-            style={{
-              color: "#404040",
-              fontSize: 16,
-              fontFamily: "OpenSans_600SemiBold",
-            }}
-          >
+          <TextBody color="#404040" weight="semibold">
             {item.value}
-          </Text>
+          </TextBody>
         </View>
       ))}
     </View>

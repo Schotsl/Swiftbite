@@ -2,9 +2,13 @@ import { Product } from "@/types/product";
 import { Fragment, useState } from "react";
 import { ServingData } from "@/schemas/serving";
 import { MealWithProduct } from "@/types/meal";
-import { View, Text, TouchableOpacity, ActivityIndicator } from "react-native";
 import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
+import { View, TouchableOpacity, ActivityIndicator } from "react-native";
+
 import variables from "@/variables";
+
+import TextBody from "@/components/Text/Body";
+import TextSmall from "@/components/Text/Small";
 
 type ProductNutritionProps =
   | {
@@ -92,26 +96,16 @@ export default function ProductNutrition({
   return (
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "OpenSans_600SemiBold",
-            marginBottom: 16,
-          }}
-        >
+        <TextBody weight="semibold" style={{ marginBottom: 16 }}>
           Voedingswaarde
-        </Text>
+        </TextBody>
 
         <TouchableOpacity onPress={handleSwitch}>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "OpenSans_400Regular",
-              textDecorationLine: isDifferent ? "underline" : "none",
-            }}
+          <TextSmall
+            style={{ textDecorationLine: isDifferent ? "underline" : "none" }}
           >
             {per100 ? "Per 100g" : `Per ${servingAdjusted.gram}g`}
-          </Text>
+          </TextSmall>
         </TouchableOpacity>
       </View>
 
@@ -140,23 +134,8 @@ export default function ProductNutrition({
                 justifyContent: "space-between",
               }}
             >
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: "OpenSans_400Regular",
-                }}
-              >
-                {item.name}
-              </Text>
-
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: "OpenSans_600SemiBold",
-                }}
-              >
-                {item.value} g
-              </Text>
+              <TextBody>{item.name}</TextBody>
+              <TextBody>{item.value} g</TextBody>
             </View>
 
             {item.items &&
@@ -169,22 +148,8 @@ export default function ProductNutrition({
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: "OpenSans_400Regular",
-                    }}
-                  >
-                    {item.name}
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: "OpenSans_600SemiBold",
-                    }}
-                  >
-                    {item.value} g
-                  </Text>
+                  <TextSmall>{item.name}</TextSmall>
+                  <TextSmall>{item.value} g</TextSmall>
                 </View>
               ))}
           </View>
@@ -212,11 +177,11 @@ export function ProductNutritionProcessing() {
           flexDirection: "column",
         }}
       >
-        <ActivityIndicator size="small" color="#000" />
+        <ActivityIndicator size="small" color={variables.colors.text.primary} />
 
-        <Text style={{ fontSize: 14, fontFamily: "OpenSans_600SemiBold" }}>
+        <TextSmall weight="semibold">
           We zijn de voedingswaarden van dit product online aan het controleren.
-        </Text>
+        </TextSmall>
       </View>
 
       <View

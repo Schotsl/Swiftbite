@@ -1,4 +1,6 @@
-import { Text, TouchableOpacity } from "react-native";
+import TextBody from "@/components/Text/Body";
+
+import { TouchableOpacity } from "react-native";
 
 type InputWeekdayItemProps = {
   error: boolean;
@@ -32,15 +34,9 @@ export default function InputWeekdayItem({
         backgroundColor: selected ? "#E5E5E5" : "#FFFFFF",
       }}
     >
-      <Text
-        style={{
-          color: error ? "#7C0000" : "#000",
-          fontSize: 16,
-          fontFamily: "OpenSans_600SemiBold",
-        }}
-      >
+      <TextBody color={error ? "#7C0000" : "#000"} weight="semibold">
         {firstUpper}
-      </Text>
+      </TextBody>
     </TouchableOpacity>
   );
 }

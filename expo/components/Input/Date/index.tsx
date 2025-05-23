@@ -1,14 +1,16 @@
 import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
+import TextTitle from "@/components/Text/Title";
 import ButtonSmall from "@/components/Button/Small";
+
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
+import { View } from "react-native";
 import { useState } from "react";
-import { Text, View } from "react-native";
-import { Control, useController } from "react-hook-form";
 import { transformDate } from "@/helper";
+import { useController, Control } from "react-hook-form";
 
 type InputDateProps = {
   name: string;
@@ -60,14 +62,7 @@ export default function InputDate({ name, label, control }: InputDateProps) {
           justifyContent: "space-between",
         }}
       >
-        <Text
-          style={{
-            fontSize: 22,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {transformDate(value)}
-        </Text>
+        <TextTitle>{transformDate(value)}</TextTitle>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
       </View>

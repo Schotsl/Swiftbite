@@ -1,6 +1,9 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 
 import ButtonSmall from "@/components/Button/Small";
+import TextTitle from "@/components/Text/Title";
+import TextSmall from "@/components/Text/Small";
+import TextLarge from "@/components/Text/Large";
 
 type InputMacroItemProps = {
   label: string;
@@ -21,22 +24,9 @@ export default function InputMacroItem({
   return (
     <View style={{ flexDirection: "row", gap: 16, alignItems: "flex-end" }}>
       <View style={{ flex: 1, gap: 4 }}>
-        <Text
-          style={{
-            fontSize: 22,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {label}
-        </Text>
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
-          {description}
-        </Text>
+        <TextLarge>{label}</TextLarge>
+
+        <TextSmall>{description}</TextSmall>
       </View>
 
       <View
@@ -50,15 +40,7 @@ export default function InputMacroItem({
           justifyContent: "center",
         }}
       >
-        <Text
-          style={{
-            marginTop: -2,
-            fontSize: 22,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {percentageRounded}%
-        </Text>
+        <TextTitle style={{ marginTop: -2 }}>{percentageRounded}%</TextTitle>
 
         <ButtonSmall
           icon="pencil"

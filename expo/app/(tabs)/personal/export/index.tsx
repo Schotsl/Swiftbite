@@ -1,6 +1,6 @@
-import Button from "@/components/Button";
-import ButtonOverlay from "@/components/Button/Overlay";
 import Header from "@/components/Header";
+import ButtonOverlay from "@/components/Button/Overlay";
+
 import language from "@/language";
 
 import { Alert, View } from "react-native";
@@ -10,7 +10,7 @@ export default function PersonalExport() {
   const handleExport = () => {
     Alert.alert(
       language.page.personal.export.alert.title,
-      language.page.personal.export.alert.content
+      language.page.personal.export.alert.content,
     );
   };
 

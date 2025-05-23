@@ -3,11 +3,14 @@ import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { Control, useController } from "react-hook-form";
-import { Text, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import Modal from "@/components/Modal";
 import InputLabel from "../Label";
 import InputDropdownRadio from "./Radio";
+import TextSmall from "@/components/Text/Small";
+import TextBody from "@/components/Text/Body";
+
 import variables from "@/variables";
 
 type DropdownProps = {
@@ -97,19 +100,13 @@ export default function InputDropdown({
         }}
         onPress={handleOpen}
       >
-        <Text
-          style={{
-            flex: 1,
-            color: selected ? "#000" : "#aba9a9",
-            fontSize: 16,
-            fontFamily: "OpenSans_600SemiBold",
-
-            padding: 12,
-            paddingHorizontal: 16,
-          }}
+        <TextBody
+          color={selected ? "#000" : "#aba9a9"}
+          style={{ flex: 1, padding: 12, paddingHorizontal: 16 }}
+          weight="semibold"
         >
           {selected ? selected.title : placeholder}
-        </Text>
+        </TextBody>
 
         <View
           style={{
@@ -128,16 +125,9 @@ export default function InputDropdown({
       </TouchableOpacity>
 
       {(fieldState.error || error) && (
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "OpenSans_600SemiBold",
-            color: "#FF4141",
-            marginTop: 8,
-          }}
-        >
+        <TextSmall color="#FF4141" weight="semibold" style={{ marginTop: 8 }}>
           {fieldState.error?.message || error}
-        </Text>
+        </TextSmall>
       )}
 
       <Modal

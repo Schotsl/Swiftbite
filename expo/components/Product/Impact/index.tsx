@@ -6,13 +6,16 @@ import { ServingData } from "@/schemas/serving";
 import { MealWithProduct } from "@/types/meal";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Fragment, Suspense, useState } from "react";
-import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, ActivityIndicator, TouchableOpacity } from "react-native";
 import {
   macrosToCalories,
   getMacrosFromMeal,
   getMacrosFromProduct,
 } from "@/helper";
+
 import variables from "@/variables";
+import TextSmall from "@/components/Text/Small";
+import TextBody from "@/components/Text/Body";
 
 type ProductImpactProps =
   | {
@@ -62,26 +65,16 @@ export default function ProductImpact({
   return (
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "OpenSans_600SemiBold",
-            marginBottom: 16,
-          }}
-        >
+        <TextBody weight="semibold" style={{ marginBottom: 16 }}>
           Impact op je budget
-        </Text>
+        </TextBody>
 
         <TouchableOpacity onPress={isDifferent ? handleSwitch : undefined}>
-          <Text
-            style={{
-              fontSize: 14,
-              fontFamily: "OpenSans_400Regular",
-              textDecorationLine: isDifferent ? "underline" : "none",
-            }}
+          <TextSmall
+            style={{ textDecorationLine: isDifferent ? "underline" : "none" }}
           >
             {per100 ? "Per 100g" : `Per ${servingAdjusted.gram}g`}
-          </Text>
+          </TextSmall>
         </TouchableOpacity>
       </View>
 
@@ -157,14 +150,14 @@ export function ProductImpactProcessing() {
     >
       <ActivityIndicator size="small" color="#000" />
 
-      <Text style={{ fontSize: 14, fontFamily: "OpenSans_600SemiBold" }}>
+      <TextSmall weight="semibold">
         We zijn de voedingswaarden van dit product online aan het controleren.
-      </Text>
+      </TextSmall>
 
-      <Text style={{ fontSize: 14, fontFamily: "OpenSans_400Regular" }}>
+      <TextSmall>
         Dit kan tot een minuut duren, maar voel je vrij om het product alvast
         aan je logs toe te voegen.
-      </Text>
+      </TextSmall>
     </View>
   );
 }

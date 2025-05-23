@@ -1,11 +1,8 @@
+import TextBody from "@/components/Text/Body";
+
 import variables from "@/variables";
-import {
-  View,
-  Text,
-  StyleProp,
-  ViewStyle,
-  TouchableOpacity,
-} from "react-native";
+
+import { View, StyleProp, ViewStyle, TouchableOpacity } from "react-native";
 
 export type InputDropdownRadioProps = {
   style?: StyleProp<ViewStyle>;
@@ -62,14 +59,8 @@ export default function InputDropdownRadio({
           />
         )}
       </View>
-      <Text
-        style={{
-          fontSize: 16,
-          fontFamily: "OpenSans_600SemiBold",
-        }}
-      >
-        {label}
-      </Text>
+
+      <TextBody weight="semibold">{label}</TextBody>
     </TouchableOpacity>
   );
 }

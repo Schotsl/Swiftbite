@@ -1,10 +1,6 @@
-import {
-  View,
-  Text,
-  StyleProp,
-  ViewStyle,
-  TouchableOpacity,
-} from "react-native";
+import TextSmall from "@/components/Text/Small";
+
+import { View, StyleProp, ViewStyle, TouchableOpacity } from "react-native";
 
 type EmptySmallProps = {
   left?: boolean;
@@ -35,19 +31,17 @@ export default function EmptySmall({
           style,
         ]}
       >
-        <Text
+        <TextSmall
+          weight="medium"
           style={{
             opacity: 0.25,
             maxWidth: 200,
             textAlign: left ? "left" : "center",
-
-            fontSize: 14,
-            fontWeight: "semibold",
           }}
         >
           {emoji}
           {content}
-        </Text>
+        </TextSmall>
       </View>
     </TouchableOpacity>
   );

@@ -1,3 +1,4 @@
+import TextBody from "@/components/Text/Body";
 import ItemProduct from "@/components/Item/Product";
 import SearchCollapsableEmpty from "./Empty";
 import SearchCollapsableSkeleton from "./Skeleton";
@@ -6,7 +7,7 @@ import { FlatList } from "react-native-gesture-handler";
 import { Product } from "@/types/product";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { useState, useRef } from "react";
-import { View, Text, Animated, TouchableOpacity } from "react-native";
+import { View, Animated, TouchableOpacity } from "react-native";
 
 type SearchCollapsableProps = {
   empty: string;
@@ -60,14 +61,7 @@ export default function SearchCollapsable({
           justifyContent: "space-between",
         }}
       >
-        <Text
-          style={{
-            fontSize: 16,
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
-          {title}
-        </Text>
+        <TextBody>{title}</TextBody>
 
         <Animated.View style={{ transform: [{ rotate: spin }] }}>
           <FontAwesome6 name="chevron-down" size={16} color="#000" />

@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Alert, Text, View } from "react-native";
+import { Alert, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import useSignUpWithEmail from "@/mutations/useSignUpWithEmail";
@@ -10,6 +10,8 @@ import { AuthData, authSchema } from "@/schemas/auth";
 
 import Button from "../../components/Button";
 import Input from "../../components/Input";
+import TextTitle from "@/components/Text/Title";
+import TextBody from "@/components/Text/Body";
 
 export default function SignUp() {
   const signUpMutation = useSignUpWithEmail();
@@ -37,9 +39,7 @@ export default function SignUp() {
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "left", "top"]}>
       <View style={{ flex: 1, justifyContent: "center", gap: 16 }}>
-        <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 16 }}>
-          Create Account
-        </Text>
+        <TextTitle>Create Account</TextTitle>
 
         <Input control={control} name="email" placeholder="E-mail" />
 
@@ -66,9 +66,12 @@ export default function SignUp() {
             marginTop: 16,
           }}
         >
-          <Text>Already have an account? </Text>
+          <TextBody>Already have an account? </TextBody>
+
           <Link href="/sign-in" asChild>
-            <Text style={{ color: "#0891b2", fontWeight: "500" }}>Sign in</Text>
+            <TextBody color="#0891b2" weight="medium">
+              Sign in
+            </TextBody>
           </Link>
         </View>
       </View>

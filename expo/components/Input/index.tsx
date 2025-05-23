@@ -1,15 +1,18 @@
+import { useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Control, Controller } from "react-hook-form";
 import {
   View,
-  Text,
   Keyboard,
   TextInput,
   TouchableWithoutFeedback,
 } from "react-native";
 
-import React, { useState } from "react";
+import React from "react";
 import InputLabel from "./Label";
+import TextBody from "@/components/Text/Body";
+import TextSmall from "@/components/Text/Small";
+
 import variables from "@/variables";
 
 type Type =
@@ -174,15 +177,9 @@ export default function Input({
                         borderBottomRightRadius: 7,
                       }}
                     >
-                      <Text
-                        style={{
-                          color: "#555555",
-                          fontSize: 16,
-                          fontFamily: "OpenSans_600SemiBold",
-                        }}
-                      >
+                      <TextBody weight="semibold" color="#555555">
                         {suffix}
-                      </Text>
+                      </TextBody>
                     </View>
                   )}
                 </View>
@@ -190,31 +187,19 @@ export default function Input({
             </View>
 
             {content && (
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontFamily: "OpenSans_600SemiBold",
-
-                  color: "#000",
-                  marginTop: 8,
-                }}
-              >
+              <TextSmall weight="semibold" style={{ marginTop: 8 }}>
                 {content}
-              </Text>
+              </TextSmall>
             )}
 
             {(fieldState.error || error) && (
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontFamily: "OpenSans_600SemiBold",
-
-                  color: "#7C0000",
-                  marginTop: 8,
-                }}
+              <TextSmall
+                style={{ marginTop: 8 }}
+                color="#7C0000"
+                weight="semibold"
               >
                 {fieldState.error?.message || error}
-              </Text>
+              </TextSmall>
             )}
           </View>
         );

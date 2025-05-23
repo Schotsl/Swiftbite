@@ -1,8 +1,10 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import { macroToCalories } from "@/helper";
 
 import Label from "@/components/Input/Label";
 import Slider from "@react-native-community/slider";
+import TextSmall from "@/components/Text/Small";
+
 import variables from "@/variables";
 
 type InputMacroSliderProps = {
@@ -66,22 +68,9 @@ export default function InputMacroSlider({
           alignItems: "center",
         }}
       >
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {percentageRounded}%
-        </Text>
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "OpenSans_400Regular",
-          }}
-        >
-          {grams} g
-        </Text>
+        <TextSmall weight="semibold">{percentageRounded}%</TextSmall>
+
+        <TextSmall>{grams} g</TextSmall>
       </View>
     </View>
   );

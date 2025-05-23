@@ -110,7 +110,7 @@ export default {
     },
     stats: {
       empty:
-        "Deze pagina is nog in ontwikkeling, we zien je later graag terug! 👷",
+        "Deze pagina is nog in ontwikkeling, we zien je later graag terug!",
     },
     personal: {
       getSubtitle: (count: number) => {

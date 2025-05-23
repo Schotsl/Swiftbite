@@ -1,11 +1,12 @@
 import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
+import TextLarge from "@/components/Text/Large";
 import ButtonSmall from "@/components/Button/Small";
 
+import { View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
-import { Text, View } from "react-native";
-import { Control, useController } from "react-hook-form";
+import { useController, Control } from "react-hook-form";
 
 type InputLengthProps = {
   name: string;
@@ -62,14 +63,7 @@ export default function InputLength({
           justifyContent: "space-between",
         }}
       >
-        <Text
-          style={{
-            fontSize: 22,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {value} cm
-        </Text>
+        <TextLarge>{value} cm</TextLarge>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
       </View>

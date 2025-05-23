@@ -1,8 +1,8 @@
+import { View } from "react-native";
 import { useForm } from "react-hook-form";
 import { Divider } from "@/components/Divider";
 import { useState } from "react";
 import { Product } from "@/types/product";
-import { Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ServingData } from "@/schemas/serving";
@@ -15,6 +15,7 @@ import InputTime from "@/components/Input/Time";
 import ButtonOverlay from "@/components/Button/Overlay";
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useUpdateProduct from "@/mutations/useUpdateProduct";
+import TextBody from "@/components/Text/Body";
 
 export default function PageEstimationManual({
   product,
@@ -272,11 +273,7 @@ export default function PageEstimationManual({
 
           {createdVisible && (
             <View style={{ gap: variables.gap.small }}>
-              <Text
-                style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
-              >
-                Overige informatie
-              </Text>
+              <TextBody weight="semibold">Overige informatie</TextBody>
 
               <InputTime name="created_at" label="Tijd" control={control} />
             </View>

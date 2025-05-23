@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { MealWithProduct } from "@/types/meal";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { MealPageData, mealPageSchema, ServingData } from "@/schemas/serving";
 import { getOptions, isMealFavorite, toggleMealFavorite } from "@/helper";
@@ -22,6 +22,7 @@ import ButtonOverlay from "@/components/Button/Overlay";
 import InputTime from "@/components/Input/Time";
 import ProductNutrition from "@/components/Product/Nutrition";
 import language from "@/language";
+import TextBody from "@/components/Text/Body";
 
 export type PageMealProps = {
   meal: MealWithProduct;
@@ -149,9 +150,7 @@ export default function PageMeal({
           </View>
 
           <View style={{ gap: variables.gap.small }}>
-            <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
-              Portie
-            </Text>
+            <TextBody weight="semibold">Portie</TextBody>
 
             <InputDropdown
               name="option"
@@ -172,11 +171,7 @@ export default function PageMeal({
 
           {createdVisible && (
             <View style={{ gap: variables.gap.small }}>
-              <Text
-                style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
-              >
-                Overige informatie
-              </Text>
+              <TextBody weight="semibold">Overige informatie</TextBody>
 
               <InputTime name="created_at" label="Tijd" control={control} />
             </View>

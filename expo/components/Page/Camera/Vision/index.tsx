@@ -1,6 +1,10 @@
 import { useVision } from "@/context/VisionContext";
-import { Text, Animated } from "react-native";
+import { Animated } from "react-native";
 import { useEffect, useRef } from "react";
+
+import TextBody from "@/components/Text/Body";
+
+import variables from "@/variables";
 
 export default function CameraVision() {
   const { feedback, feedbackOld, resetHistory, resetFeedback } = useVision();
@@ -50,16 +54,9 @@ export default function CameraVision() {
         transform: [{ translateX: -100 }],
       }}
     >
-      <Text
-        style={{
-          color: "#FFF",
-          textAlign: "center",
-          fontSize: 16,
-          fontFamily: "OpenSans_600SemiBold",
-        }}
-      >
+      <TextBody color={variables.colors.white} align="center" weight="semibold">
         {feedback === "OK" ? feedbackOld : feedback}
-      </Text>
+      </TextBody>
     </Animated.View>
   );
 }

@@ -1,7 +1,8 @@
 import Label from "@/components/Input/Label";
+import TextSmall from "@/components/Text/Small";
 import InputWeekdayItem from "./Item";
 
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { Control, useController } from "react-hook-form";
 
 type InputWeekdayProps = {
@@ -71,17 +72,9 @@ export default function InputWeekday({
       </View>
 
       {fieldState.error && (
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: "OpenSans_600SemiBold",
-
-            color: "#7C0000",
-            marginTop: 8,
-          }}
-        >
+        <TextSmall style={{ marginTop: 8 }} color="#7C0000" weight="semibold">
           {fieldState.error?.message}
-        </Text>
+        </TextSmall>
       )}
     </View>
   );

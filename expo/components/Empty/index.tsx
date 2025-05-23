@@ -1,4 +1,8 @@
-import { Text, View } from "react-native";
+// HAPPY
+
+import { View } from "react-native";
+
+import TextBody from "@/components/Text/Body";
 
 type EmptyProps = {
   emoji: string;
@@ -14,18 +18,16 @@ export default function Empty({ emoji, content }: EmptyProps) {
         justifyContent: "center",
       }}
     >
-      <Text
+      <TextBody
+        weight="medium"
         style={{
-          maxWidth: 200,
+          maxWidth: 250,
           textAlign: "center",
-
-          fontSize: 16,
-          fontWeight: "semibold",
         }}
       >
         {emoji}
         {content}
-      </Text>
+      </TextBody>
     </View>
   );
 }

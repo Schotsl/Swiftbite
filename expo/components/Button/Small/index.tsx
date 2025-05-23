@@ -1,15 +1,11 @@
-import DecorativeLinear from "@/components/Decorative/Linear";
+import TextSmall from "@/components/Text/Small";
 import DecorativeNoise from "@/components/Decorative/Noise";
+
 import variables from "@/variables";
-import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+
 import { useRef } from "react";
-import {
-  Text,
-  View,
-  ViewStyle,
-  StyleProp,
-  TouchableOpacity,
-} from "react-native";
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { View, ViewStyle, StyleProp, TouchableOpacity } from "react-native";
 
 type ButtonSmallBase = {
   nano?: boolean;
@@ -74,7 +70,6 @@ export default function ButtonSmall({
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "center",
-          // backgroundColor: "#fff",
           paddingHorizontal: title ? 16 : 0,
           backgroundColor: variables.colors.background.secondary,
           overflow: "hidden",
@@ -101,20 +96,16 @@ export default function ButtonSmall({
       )}
 
       {title && (
-        <Text
-          style={{
-            color: variables.colors.text.secondary,
-            fontSize: 14,
-            fontFamily: "OpenSans_600SemiBold",
-            marginTop: -1,
-          }}
+        <TextSmall
+          style={{ marginTop: -1 }}
+          color={variables.colors.text.secondary}
+          weight="semibold"
         >
           {title}
-        </Text>
+        </TextSmall>
       )}
 
       <DecorativeNoise />
-      {/* <DecorativeLinear /> */}
     </TouchableOpacity>
   );
 }

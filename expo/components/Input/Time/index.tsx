@@ -5,9 +5,11 @@ import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
+import { View } from "react-native";
 import { useState } from "react";
-import { Text, View } from "react-native";
 import { Control, useController } from "react-hook-form";
+
+import TextTitle from "@/components/Text/Title";
 
 type InputTimeProps = {
   name: string;
@@ -66,14 +68,7 @@ export default function InputTime({ name, label, control }: InputTimeProps) {
           justifyContent: "space-between",
         }}
       >
-        <Text
-          style={{
-            fontSize: 22,
-            fontFamily: "OpenSans_600SemiBold",
-          }}
-        >
-          {transformTime(value)}
-        </Text>
+        <TextTitle>{transformTime(value)}</TextTitle>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
       </View>

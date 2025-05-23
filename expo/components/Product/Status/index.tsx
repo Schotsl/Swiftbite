@@ -1,5 +1,7 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { useState, useEffect, Fragment } from "react";
+
+import TextBody from "@/components/Text/Body";
 
 type ProductStatusProps = {
   small?: boolean;
@@ -39,49 +41,23 @@ export default function ProductStatus({
         justifyContent: "center",
       }}
     >
-      <Text
+      <TextBody
+        align="center"
         style={{
           maxWidth: 250,
           marginTop: small ? -12 : -48,
-          textAlign: "center",
-          fontSize: 16,
-          fontFamily: "OpenSans_400Regular",
         }}
       >
         {status}
 
         {active && (
           <Fragment>
-            <Text
-              style={{
-                color: dots > 0 ? "#000" : "transparent",
-                fontSize: 16,
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              .
-            </Text>
-            <Text
-              style={{
-                color: dots > 1 ? "#000" : "transparent",
-                fontSize: 16,
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              .
-            </Text>
-            <Text
-              style={{
-                color: dots > 2 ? "#000" : "transparent",
-                fontSize: 16,
-                fontFamily: "OpenSans_400Regular",
-              }}
-            >
-              .
-            </Text>
+            <TextBody color={dots > 0 ? undefined : "transparent"}>.</TextBody>
+            <TextBody color={dots > 1 ? undefined : "transparent"}>.</TextBody>
+            <TextBody color={dots > 2 ? undefined : "transparent"}>.</TextBody>
           </Fragment>
         )}
-      </Text>
+      </TextBody>
     </View>
   );
 }

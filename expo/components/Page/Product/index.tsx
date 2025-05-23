@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getOption, getOptions } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { isProductFavorite, toggleProductFavorite } from "@/helper";
 import {
@@ -18,14 +18,15 @@ import useUpdateUser from "@/mutations/useUpdateUser";
 
 import variables from "@/variables";
 
+import InputDropdown from "@/components/Input/Dropdown";
+import ButtonOverlay from "@/components/Button/Overlay";
+import ProductNutrition from "@/components/Product/Nutrition";
+import ProductImpact from "@/components/Product/Impact";
+import ProductInfo from "@/components/Product/Info";
+import InputTime from "@/components/Input/Time";
+import TextBody from "@/components/Text/Body";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
-import InputDropdown from "@/components/Input/Dropdown";
-import ProductInfo from "@/components/Product/Info";
-import ProductImpact from "@/components/Product/Impact";
-import ProductNutrition from "@/components/Product/Nutrition";
-import ButtonOverlay from "@/components/Button/Overlay";
-import InputTime from "@/components/Input/Time";
 
 export type PageProductProps = {
   product: Product;
@@ -181,9 +182,7 @@ export default function PageProduct({
           </View>
 
           <View style={{ gap: variables.gap.small }}>
-            <Text style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}>
-              Portie
-            </Text>
+            <TextBody weight="semibold">Portie</TextBody>
 
             <InputDropdown
               name="option"
@@ -204,11 +203,7 @@ export default function PageProduct({
 
           {createdVisible && (
             <View style={{ gap: variables.gap.small }}>
-              <Text
-                style={{ fontSize: 16, fontFamily: "OpenSans_600SemiBold" }}
-              >
-                Overige informatie
-              </Text>
+              <TextBody weight="semibold">Overige informatie</TextBody>
 
               <InputTime name="created_at" label="Tijd" control={control} />
             </View>
