@@ -77,7 +77,7 @@ export default function NavigationAddList({
         <Button
           icon="camera"
           title="Camera"
-          action="secondary"
+          action="tertiary"
           onPress={handleCamera}
         />
       )}
@@ -86,7 +86,7 @@ export default function NavigationAddList({
         <Button
           icon="magnifying-glass"
           title={language.navigation.add.search}
-          action="secondary"
+          action="tertiary"
           onPress={handleSearch}
         />
       )}
@@ -95,7 +95,7 @@ export default function NavigationAddList({
         <Button
           icon="wand-magic-sparkles"
           title={language.navigation.add.estimation}
-          action="secondary"
+          action="tertiary"
           onPress={handleEstimate}
         />
       )}

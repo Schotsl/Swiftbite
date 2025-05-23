@@ -19,7 +19,7 @@ export type ButtonProps = {
   icon?: keyof typeof FontAwesome6.glyphMap;
   style?: StyleProp<ViewStyle>;
   title: string;
-  action?: "primary" | "secondary" | "delete";
+  action?: "primary" | "secondary" | "tertiary" | "delete";
   loading?: boolean;
   disabled?: boolean;
 };
@@ -45,6 +45,11 @@ export default function Button({
   if (action === "delete") {
     textColor = variables.colors.primary;
     backgroundColorToSet = variables.colors.primaryLight;
+  }
+
+  if (action === "tertiary") {
+    textColor = variables.colors.text.primary;
+    backgroundColorToSet = variables.colors.greyLight;
   }
 
   if (action === "primary") {
