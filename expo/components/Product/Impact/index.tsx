@@ -95,7 +95,14 @@ export default function ProductImpact({
         {processing ? (
           <ProductImpactProcessing />
         ) : (
-          <Suspense fallback={<ActivityIndicator size="small" color="#000" />}>
+          <Suspense
+            fallback={
+              <ActivityIndicator
+                size="small"
+                color={variables.colors.text.primary}
+              />
+            }
+          >
             <Fragment>
               <View
                 style={{
@@ -148,7 +155,7 @@ export function ProductImpactProcessing() {
     <View
       style={{ gap: 12, flexDirection: "column", alignItems: "flex-start" }}
     >
-      <ActivityIndicator size="small" color="#000" />
+      <ActivityIndicator size="small" color={variables.colors.text.primary} />
 
       <TextSmall weight="semibold">
         We zijn de voedingswaarden van dit product online aan het controleren.

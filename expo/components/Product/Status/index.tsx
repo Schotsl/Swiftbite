@@ -2,6 +2,7 @@ import { View } from "react-native";
 import { useState, useEffect, Fragment } from "react";
 
 import TextBody from "@/components/Text/Body";
+import variables from "@/variables";
 
 type ProductStatusProps = {
   small?: boolean;
@@ -52,9 +53,23 @@ export default function ProductStatus({
 
         {active && (
           <Fragment>
-            <TextBody color={dots > 0 ? undefined : "transparent"}>.</TextBody>
-            <TextBody color={dots > 1 ? undefined : "transparent"}>.</TextBody>
-            <TextBody color={dots > 2 ? undefined : "transparent"}>.</TextBody>
+            <TextBody
+              color={dots > 0 ? undefined : variables.colors.transparent}
+            >
+              .
+            </TextBody>
+
+            <TextBody
+              color={dots > 1 ? undefined : variables.colors.transparent}
+            >
+              .
+            </TextBody>
+
+            <TextBody
+              color={dots > 2 ? undefined : variables.colors.transparent}
+            >
+              .
+            </TextBody>
           </Fragment>
         )}
       </TextBody>

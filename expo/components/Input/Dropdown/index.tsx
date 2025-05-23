@@ -101,7 +101,7 @@ export default function InputDropdown({
         onPress={handleOpen}
       >
         <TextBody
-          color={selected ? "#000" : "#aba9a9"}
+          color={selected ? variables.colors.text.primary : "#aba9a9"}
           style={{ flex: 1, padding: 12, paddingHorizontal: 16 }}
           weight="semibold"
         >

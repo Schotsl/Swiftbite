@@ -2,6 +2,7 @@ import React from "react";
 
 import { FontAwesome } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
+import variables from "@/variables";
 
 type ItemDeleteProps = {
   border?: boolean;
@@ -28,15 +29,13 @@ export default function ItemDelete({
           position: "absolute",
           alignItems: "center",
           justifyContent: "center",
-
-          borderWidth: border ? 2 : 0,
-          borderColor: "#000000",
-          borderTopWidth: 0,
-          borderLeftWidth: 0,
-          borderRightWidth: 0,
         }}
       >
-        <FontAwesome name="trash" size={24} color="#000" />
+        <FontAwesome
+          name="trash"
+          size={24}
+          color={variables.colors.text.primary}
+        />
       </TouchableOpacity>
     </View>
   );

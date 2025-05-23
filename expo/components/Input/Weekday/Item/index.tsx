@@ -29,7 +29,7 @@ export default function InputWeekdayItem({
 
   if (selected) {
     color = variables.colors.text.secondary;
-    border = "transparent";
+    border = variables.colors.transparent;
     background = variables.colors.background.secondary;
   }
 

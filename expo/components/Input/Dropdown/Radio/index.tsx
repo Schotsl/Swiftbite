@@ -53,7 +53,7 @@ export default function InputDropdownRadio({
             style={{
               width: 8,
               height: 8,
-              backgroundColor: "#000",
+              backgroundColor: variables.colors.text.primary,
               borderRadius: 4,
             }}
           />

@@ -6,12 +6,14 @@ import variables from "@/variables";
 import { useRef } from "react";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { View, ViewStyle, StyleProp, TouchableOpacity } from "react-native";
+import DecorativeLinear from "@/components/Decorative/Linear";
 
 type ButtonSmallBase = {
   nano?: boolean;
   color?: string;
   style?: StyleProp<ViewStyle>;
   title?: string;
+  gradient?: boolean;
   onPress: () => void;
   onPosition?: (position: { x: number; y: number }) => void;
 };
@@ -34,12 +36,23 @@ export default function ButtonSmall({
   nano = false,
   icon,
   iconMaterial,
-  color,
+  color: colorProp,
   style,
   title,
+  gradient = false,
   onPress,
   onPosition,
 }: ButtonSmallProps) {
+  let color = variables.colors.text.secondary;
+
+  if (gradient) {
+    color = variables.colors.white;
+  }
+
+  if (colorProp) {
+    color = colorProp;
+  }
+
   const handleLayout = () => {
     if (!marker.current) {
       return;
@@ -79,31 +92,23 @@ export default function ButtonSmall({
         style,
       ]}
     >
-      {icon && (
-        <FontAwesome6
-          name={icon}
-          size={nano ? 12 : 14}
-          color={color || variables.colors.text.secondary}
-        />
-      )}
+      {icon && <FontAwesome6 name={icon} size={nano ? 12 : 14} color={color} />}
 
       {iconMaterial && (
         <MaterialIcons
           name={iconMaterial}
           size={nano ? 12 : 14}
-          color={color || variables.colors.text.secondary}
+          color={color}
         />
       )}
 
       {title && (
-        <TextSmall
-          style={{ marginTop: -1 }}
-          color={variables.colors.text.secondary}
-          weight="semibold"
-        >
+        <TextSmall style={{ marginTop: -1 }} color={color} weight="semibold">
           {title}
         </TextSmall>
       )}
+
+      {gradient && <DecorativeLinear />}
 
       <DecorativeNoise />
     </TouchableOpacity>

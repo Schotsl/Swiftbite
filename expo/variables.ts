@@ -15,6 +15,7 @@ export default {
       primary: "#FFFFFF",
       secondary: "#E1F1FF",
     },
+    transparent: "transparent",
     grey: "#d6d6d6",
     greyLight: "#F5F5F5",
     greyDark: "#b5b3b3",
@@ -24,6 +25,9 @@ export default {
     primary: "#E92D2E",
     primaryLight: "#FCE0E0",
     primaryGradient: "#EBA262",
+  },
+  input: {
+    margin: 8,
   },
   gap: {
     small: 8,

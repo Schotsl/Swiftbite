@@ -53,7 +53,7 @@ export default function Button({
   }
 
   if (action === "primary") {
-    backgroundColorToSet = "transparent";
+    backgroundColorToSet = variables.colors.transparent;
   }
 
   return (

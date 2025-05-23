@@ -139,7 +139,7 @@ export default function Input({
                       paddingRight: suffix ? 0 : 16,
                       fontSize: 16,
                       fontFamily: "OpenSans_600SemiBold",
-                      backgroundColor: "transparent",
+                      backgroundColor: variables.colors.transparent,
                     }}
                     editable={!disabled}
                     multiline={multiline}

@@ -6,6 +6,7 @@ import { Modal as ReactModal } from "react-native";
 import ModalBackground from "./Background";
 import TextTitle from "@/components/Text/Title";
 import Button from "@/components/Button";
+import variables from "@/variables";
 
 type ModalBaseProps = {
   title: string;
@@ -82,7 +83,11 @@ export default function Modal({
             <TextTitle>{title}</TextTitle>
 
             <TouchableOpacity onPress={onClose}>
-              <FontAwesome6 name="xmark" size={22} color="#000" />
+              <FontAwesome6
+                name="xmark"
+                size={22}
+                color={variables.colors.text.primary}
+              />
             </TouchableOpacity>
           </View>
 

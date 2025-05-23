@@ -29,7 +29,11 @@ export default function EstimationImageButton({
       }}
       onPress={onPress}
     >
-      <FontAwesome6 name={icon} size={14} color="#000" />
+      <FontAwesome6
+        name={icon}
+        size={14}
+        color={variables.colors.text.primary}
+      />
     </TouchableOpacity>
   );
 }

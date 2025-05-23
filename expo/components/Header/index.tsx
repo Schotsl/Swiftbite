@@ -52,13 +52,7 @@ export default function Header({
         {onRepeat && <ButtonSmall icon="repeat" onPress={onRepeat} />}
 
         {onFavorite && (
-          <ButtonSmall
-            icon="heart"
-            onPress={onFavorite}
-            style={{
-              backgroundColor: favorite ? "red" : "transparent",
-            }}
-          />
+          <ButtonSmall icon="heart" onPress={onFavorite} gradient={favorite} />
         )}
       </View>
 

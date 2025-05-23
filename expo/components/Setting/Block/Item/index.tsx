@@ -66,7 +66,7 @@ export default function SettingBlockItem({
       </View>
 
       {loading ? (
-        <ActivityIndicator size="small" color="#000" />
+        <ActivityIndicator size="small" color={variables.colors.text.primary} />
       ) : (
         icon && (
           <FontAwesome6

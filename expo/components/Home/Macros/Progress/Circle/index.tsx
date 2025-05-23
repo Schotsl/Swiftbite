@@ -144,12 +144,16 @@ export default function HomeMacrosProgressCircle({
       >
         <View
           style={{
-            borderLeftColor: "transparent",
+            borderLeftColor: variables.colors.transparent,
             borderTopColor:
-              progress > 0.5 ? variables.colors.primary : "transparent",
+              progress > 0.5
+                ? variables.colors.primary
+                : variables.colors.transparent,
 
             borderRightColor:
-              progress > 0.25 ? variables.colors.primary : "transparent",
+              progress > 0.25
+                ? variables.colors.primary
+                : variables.colors.transparent,
 
             borderWidth: widthFiller,
             borderColor: variables.colors.primary,

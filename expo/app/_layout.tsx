@@ -27,6 +27,7 @@ import { OpenSans_500Medium_Italic } from "@expo-google-fonts/open-sans/500Mediu
 import { OpenSans_600SemiBold_Italic } from "@expo-google-fonts/open-sans/600SemiBold_Italic";
 import { OpenSans_700Bold_Italic } from "@expo-google-fonts/open-sans/700Bold_Italic";
 import { OpenSans_800ExtraBold_Italic } from "@expo-google-fonts/open-sans/800ExtraBold_Italic";
+import variables from "@/variables";
 // import DecorativeLinear from "@/components/Decorative/Linear";
 
 export const unstable_settings = {
@@ -108,7 +109,9 @@ function RootLayout() {
               animation: "none",
               headerShown: false,
               contentStyle: {
-                backgroundColor: camera ? "#000" : "transparent",
+                backgroundColor: camera
+                  ? variables.colors.black
+                  : variables.colors.transparent,
               },
               gestureEnabled: true,
             }}

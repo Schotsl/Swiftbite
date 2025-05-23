@@ -24,7 +24,7 @@ export function Divider() {
 
           zIndex: -1,
           position: "absolute",
-          backgroundColor: "#000",
+          backgroundColor: variables.colors.text.primary,
         }}
       />
     </View>

@@ -11,6 +11,7 @@ import productData from "@/queries/productData";
 import ItemProduct from "@/components/Item/Product";
 import ProductStatus from "@/components/Product/Status";
 import PageSearchProductCollapsable from "@/components/Page/Search/Product/Collapsable";
+import variables from "@/variables";
 
 type PageSearchProps = {
   type: Enums<"type">;
@@ -126,7 +127,10 @@ export default function PageSearchProduct({
               justifyContent: "center",
             }}
           >
-            <ActivityIndicator size="large" color="#0000ff" />
+            <ActivityIndicator
+              size="small"
+              color={variables.colors.text.primary}
+            />
           </View>
         )}
       </ScrollView>
