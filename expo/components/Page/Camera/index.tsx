@@ -1,7 +1,7 @@
-import CameraVision from "@/components/Camera/Vision";
-import CameraControls from "@/components/Camera/Controls";
-import CameraSelector from "@/components/Camera/Selector";
-import CameraShortcuts from "@/components/Camera/Shortcuts";
+import CameraVision from "@/components/Page/Camera/Vision";
+import CameraControls from "@/components/Page/Camera/Controls";
+import CameraSelector from "@/components/Page/Camera/Selector";
+import CameraShortcuts from "@/components/Page/Camera/Shortcuts";
 
 import ImageResizer from "@bam.tech/react-native-image-resizer";
 
