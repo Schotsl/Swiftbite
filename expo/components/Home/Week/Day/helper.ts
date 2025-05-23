@@ -7,25 +7,20 @@ export const getStyle = ({ color, border }: Day): ViewStyle => {
   let backgroundColor = variables.colors.transparent;
 
   if (color === "grey") {
-    backgroundColor = variables.colors.grey;
+    backgroundColor = "rgba(0, 0, 0, 0.2)";
   } else if (color === "primary") {
-    backgroundColor = variables.colors.primaryLight;
+    backgroundColor = "rgba(0, 0, 0, 0.4)";
   }
 
-  const borderWidth = border === "thick" ? 3 : 2;
+  const borderWidth = border === "thick" ? 3 : variables.border.width;
   const borderStyle = border === "dashed" ? "dashed" : "solid";
   const borderColor =
     border === "none" ? variables.colors.transparent : variables.colors.primary;
 
   return {
-    width: variables.circle.small,
-    height: variables.circle.small,
-    backgroundColor,
     borderColor,
     borderWidth,
     borderStyle,
-    borderRadius: variables.circle.small,
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor,
   };
 };

@@ -1,8 +1,12 @@
 import { DimensionValue, StyleProp, View, ViewStyle } from "react-native";
+
 import variables from "@/variables";
 
 import TextBody from "@/components/Text/Body";
 import TextSmall from "@/components/Text/Small";
+
+import DecorativeLinear from "../Decorative/Linear";
+import DecorativeNoise from "../Decorative/Noise";
 
 type ProgressProps = {
   type?: string;
@@ -35,27 +39,31 @@ export default function Progress({
       <View
         style={{
           width: "100%",
-          height: 12,
+          height: 11,
           position: "relative",
 
           borderColor: variables.colors.grey,
           borderWidth: variables.border.width,
           borderRadius: variables.border.radius,
           backgroundColor: variables.colors.grey,
-          overflow: "hidden",
         }}
       >
         <View
           style={{
-            width: progressWidth,
-            height: variables.border.radius,
             maxWidth: "100%",
+            minWidth: variables.border.radius,
+            
+            overflow: "hidden",
             position: "absolute",
 
+            width: progressWidth,
+            height: variables.border.radius,
             borderRadius: variables.border.radius,
-            backgroundColor: variables.colors.primary,
           }}
-        />
+        >
+          <DecorativeLinear />
+          <DecorativeNoise />
+        </View>
       </View>
 
       <View style={{ flexDirection: "row", gap: 4 }}>

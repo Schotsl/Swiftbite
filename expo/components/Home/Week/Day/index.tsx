@@ -1,12 +1,15 @@
 // HAPPY
 
-import TextBody from "@/components/Text/Body";
-
 import { Day } from "../types";
 import { getStyle } from "./helper";
 import { TouchableOpacity, View } from "react-native";
 
 import variables from "@/variables";
+
+import TextBody from "@/components/Text/Body";
+import MaskedView from "@react-native-masked-view/masked-view";
+import DecorativeLinear from "@/components/Decorative/Linear";
+import DecorativeNoise from "@/components/Decorative/Noise";
 
 type HomeWeekDayProps = {
   day: Day;
@@ -27,12 +30,54 @@ export default function HomeWeekDay({
     <TouchableOpacity
       onPress={onPress}
       style={{
-        gap: variables.gap.small,
+        gap: 4,
         alignItems: "center",
       }}
     >
-      <View style={style}>
+      <View
+        style={{
+          width: variables.circle.small,
+          height: variables.circle.small,
+          borderRadius: variables.circle.small,
+
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <TextBody weight="bold">{weekday}</TextBody>
+
+        <MaskedView
+          style={{
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: -1,
+            position: "absolute",
+          }}
+          maskElement={
+            <View
+              style={[
+                {
+                  width: variables.circle.small,
+                  height: variables.circle.small,
+                  borderRadius: variables.circle.small,
+                },
+                style,
+              ]}
+            ></View>
+          }
+        >
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            <DecorativeLinear />
+            <DecorativeNoise />
+          </View>
+        </MaskedView>
       </View>
 
       <TextBody weight="bold">{date}</TextBody>

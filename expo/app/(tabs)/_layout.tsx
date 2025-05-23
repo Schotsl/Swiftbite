@@ -1,17 +1,22 @@
-import { AppState } from "react-native";
 import { StatusBar } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AppState, View } from "react-native";
 import { HealthProvider } from "@/context/HealthContext";
-import { useEffect, useState } from "react";
 import { Redirect, SplashScreen, Tabs } from "expo-router";
+import { Fragment, useEffect, useState } from "react";
 
 import supabase from "@/utils/supabase";
+import language from "@/language";
 import variables from "@/variables";
 
 import useCamera from "@/hooks/useCamera";
+
+import Text from "@/components/Text";
 import NavigationAdd from "@/components/Navigation/Add";
-import language from "@/language";
+import MaskedView from "@react-native-masked-view/masked-view";
+import DecorativeLinear from "@/components/Decorative/Linear";
+import DecorativeNoise from "@/components/Decorative/Noise";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -83,14 +88,13 @@ export default function TabsLayout() {
           screenOptions={() => {
             return {
               headerShown: false,
-              tabBarActiveTintColor: variables.colors.primary,
-              tabBarInactiveTintColor: variables.colors.greyDark,
+              tabBarShowLabel: false,
               tabBarStyle: {
                 display: camera ? "none" : "flex",
-                paddingTop: 10,
+                paddingTop: 12,
                 paddingLeft: 12,
                 paddingRight: 12,
-                paddingBottom: 10,
+                paddingBottom: 8,
                 borderTopWidth: variables.border.width,
                 borderTopColor: variables.border.color,
               },
@@ -108,13 +112,11 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="add"
             options={{
-              title: language.navigation.tabs.dairy,
-              tabBarIcon: ({ color }: { color: string }) => (
-                <FontAwesome6
-                  size={18}
-                  name="book"
-                  color={color}
-                  style={{ marginBottom: 4 }}
+              tabBarIcon: ({ focused }: { focused: boolean }) => (
+                <TabsLayoutIcon
+                  icon="book"
+                  title={language.navigation.tabs.dairy}
+                  focused={focused}
                 />
               ),
             }}
@@ -123,13 +125,11 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="stats"
             options={{
-              title: language.navigation.tabs.statistics,
-              tabBarIcon: ({ color }: { color: string }) => (
-                <FontAwesome6
-                  size={18}
-                  name="chart-line"
-                  color={color}
-                  style={{ marginBottom: 4 }}
+              tabBarIcon: ({ focused }: { focused: boolean }) => (
+                <TabsLayoutIcon
+                  icon="chart-line"
+                  title={language.navigation.tabs.statistics}
+                  focused={focused}
                 />
               ),
             }}
@@ -145,13 +145,11 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="automations"
             options={{
-              title: language.navigation.tabs.automations,
-              tabBarIcon: ({ color }: { color: string }) => (
-                <FontAwesome6
-                  size={18}
-                  name="wand-magic-sparkles"
-                  color={color}
-                  style={{ marginBottom: 4 }}
+              tabBarIcon: ({ focused }: { focused: boolean }) => (
+                <TabsLayoutIcon
+                  icon="wand-magic-sparkles"
+                  title={language.navigation.tabs.automations}
+                  focused={focused}
                 />
               ),
             }}
@@ -160,13 +158,11 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="personal"
             options={{
-              title: language.navigation.tabs.personal,
-              tabBarIcon: ({ color }: { color: string }) => (
-                <FontAwesome6
-                  size={18}
-                  name="circle-user"
-                  color={color}
-                  style={{ marginBottom: 4 }}
+              tabBarIcon: ({ focused }: { focused: boolean }) => (
+                <TabsLayoutIcon
+                  icon="circle-user"
+                  title={language.navigation.tabs.personal}
+                  focused={focused}
                 />
               ),
             }}
@@ -174,5 +170,57 @@ export default function TabsLayout() {
         </Tabs>
       </HealthProvider>
     </SafeAreaView>
+  );
+}
+
+type TabsLayoutIconProps = {
+  icon: keyof typeof FontAwesome6.glyphMap;
+  title: string;
+  focused: boolean;
+};
+
+function TabsLayoutIcon({ icon, title, focused }: TabsLayoutIconProps) {
+  return (
+    <MaskedView
+      maskElement={
+        <View
+          style={{
+            gap: 4,
+            width: 60,
+            height: 38,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <FontAwesome6 size={18} name={icon} color={variables.colors.black} />
+
+          <Text weight="semibold" size={10} color={variables.colors.black}>
+            {title}
+          </Text>
+        </View>
+      }
+    >
+      <View
+        style={{
+          width: 60,
+          height: 38,
+        }}
+      >
+        {focused ? (
+          <Fragment>
+            <DecorativeNoise />
+            <DecorativeLinear />
+          </Fragment>
+        ) : (
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: variables.border.color,
+            }}
+          />
+        )}
+      </View>
+    </MaskedView>
   );
 }

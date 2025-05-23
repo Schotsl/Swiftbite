@@ -46,7 +46,7 @@ export default function NavigationAdd() {
 
       <View
         style={{
-          top: -16,
+          top: -17.5,
           left: "50%",
           position: "absolute",
           transform: [{ translateX: -33 }],
