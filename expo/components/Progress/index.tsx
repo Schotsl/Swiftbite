@@ -1,5 +1,4 @@
 import { DimensionValue, StyleProp, View, ViewStyle } from "react-native";
-
 import variables from "@/variables";
 
 import TextBody from "@/components/Text/Body";
@@ -39,6 +38,8 @@ export default function Progress({
           height: 12,
           position: "relative",
 
+          borderWidth: 2,
+          borderRadius: 8,
           borderColor: variables.colors.grey,
           backgroundColor: variables.colors.grey,
           overflow: "hidden",

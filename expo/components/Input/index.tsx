@@ -14,6 +14,7 @@ import TextBody from "@/components/Text/Body";
 import TextSmall from "@/components/Text/Small";
 
 import variables from "@/variables";
+import Text from "../Text";
 
 type Type =
   | "default"
@@ -187,19 +188,25 @@ export default function Input({
             </View>
 
             {content && (
-              <TextSmall weight="semibold" style={{ marginTop: 8 }}>
+              <Text
+                size={12}
+                color={variables.colors.text.secondary}
+                style={{ marginTop: 8 }}
+                weight="semibold"
+              >
                 {content}
-              </TextSmall>
+              </Text>
             )}
 
             {(fieldState.error || error) && (
-              <TextSmall
-                style={{ marginTop: 8 }}
+              <Text
+                size={12}
                 color="#7C0000"
+                style={{ marginTop: 8 }}
                 weight="semibold"
               >
                 {fieldState.error?.message || error}
-              </TextSmall>
+              </Text>
             )}
           </View>
         );

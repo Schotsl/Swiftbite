@@ -116,8 +116,8 @@ export default function InputDropdown({
             alignItems: "center",
             justifyContent: "center",
 
-            borderColor: "#000",
-            borderLeftWidth: 2,
+            borderColor: variables.border.color,
+            borderLeftWidth: variables.border.width,
           }}
         >
           <Ionicons name="chevron-down" size={20} color="#000" />

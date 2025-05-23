@@ -124,8 +124,9 @@ export default function ProductNutrition({
             style={{
               padding: 16,
               flexDirection: "column",
-              borderColor: "#000",
-              borderBottomWidth: index === items.length - 1 ? 0 : 2,
+              borderColor: variables.border.color,
+              borderBottomWidth:
+                index === items.length - 1 ? 0 : variables.border.width,
             }}
           >
             <View
@@ -134,7 +135,7 @@ export default function ProductNutrition({
                 justifyContent: "space-between",
               }}
             >
-              <TextBody>{item.name}</TextBody>
+              <TextBody weight="medium">{item.name}</TextBody>
               <TextBody>{item.value} g</TextBody>
             </View>
 
@@ -143,12 +144,13 @@ export default function ProductNutrition({
                 <View
                   key={item.name}
                   style={{
+                    paddingTop: 4,
                     paddingLeft: 16,
                     flexDirection: "row",
                     justifyContent: "space-between",
                   }}
                 >
-                  <TextSmall>{item.name}</TextSmall>
+                  <TextSmall weight="medium">{item.name}</TextSmall>
                   <TextSmall>{item.value} g</TextSmall>
                 </View>
               ))}

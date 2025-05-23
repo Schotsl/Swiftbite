@@ -10,6 +10,7 @@ import { Weight } from "@/schemas/personal/health";
 import { useState } from "react";
 import { transformDate } from "@/helper";
 import { Control, useController } from "react-hook-form";
+import variables from "@/variables";
 
 type InputWeightsProps = {
   name: string;
@@ -135,8 +136,8 @@ function InputWeightsList({ weights, onDelete }: InputWeightsListProps) {
             justifyContent: "space-between",
             paddingVertical: 12,
 
-            borderColor: "#000",
-            borderBottomWidth: 2,
+            borderColor: variables.border.color,
+            borderBottomWidth: variables.border.width,
           }}
         >
           <TextLarge>{entry.weight.toFixed(1)} kg</TextLarge>
