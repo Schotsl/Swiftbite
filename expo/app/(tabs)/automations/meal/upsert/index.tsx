@@ -129,9 +129,9 @@ export default function AutomationsMealUpsert() {
                   style={{
                     width: "100%",
                     flexDirection: "column",
-                    borderWidth: variables.border.width,
                     borderColor: variables.border.color,
-                    borderRadius: 8,
+                    borderWidth: variables.border.width,
+                    borderRadius: variables.border.radius,
                   }}
                   data={mealProducts}
                   scrollEnabled={false}
@@ -141,7 +141,7 @@ export default function AutomationsMealUpsert() {
                       <EmptySmall
                         onPress={() => setOpen(true)}
                         content={language.empty.getAdded(
-                          language.types.ingredient.plural,
+                          language.types.ingredient.plural
                         )}
                       />
                     );
@@ -177,7 +177,7 @@ export default function AutomationsMealUpsert() {
                 <ButtonSmall
                   icon="plus"
                   title={language.modifications.getInsert(
-                    language.types.ingredient.plural,
+                    language.types.ingredient.plural
                   )}
                   onPress={() => setOpen(true)}
                   onPosition={setPosition}
@@ -246,7 +246,7 @@ function AutomationsMealUpsertAdd({
         <ButtonSmall
           icon={"plus"}
           title={language.modifications.getInsert(
-            language.types.ingredient.plural,
+            language.types.ingredient.plural
           )}
           onPress={() => onClose()}
         />

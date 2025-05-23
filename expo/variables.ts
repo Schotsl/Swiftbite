@@ -5,6 +5,7 @@ export default {
   border: {
     width: 1.5,
     color: "#d6d6d6",
+    radius: 8,
   },
   colors: {
     text: {

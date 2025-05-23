@@ -138,7 +138,7 @@ export default function AutomationsRepeatUpsert() {
                   marginTop: 2,
                   borderColor: variables.border.color,
                   borderWidth: variables.border.width,
-                  borderRadius: 8,
+                  borderRadius: variables.border.radius,
                 }}
               >
                 <AutomationsRepeatUpsertItem
@@ -157,10 +157,10 @@ export default function AutomationsRepeatUpsert() {
                 title={
                   isSet
                     ? language.modifications.getPick(
-                        language.types.ingredient.single,
+                        language.types.ingredient.single
                       )
                     : language.modifications.getEdit(
-                        language.types.ingredient.single,
+                        language.types.ingredient.single
                       )
                 }
                 onPress={() => setOpen(true)}

@@ -1,3 +1,4 @@
+import variables from "@/variables";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 
@@ -18,9 +19,9 @@ export default function CameraControlsSquare({
         style={{
           width: 58,
           height: 58,
-          borderColor: "#ffffff",
-          borderWidth: 2,
-          borderRadius: 8,
+          borderColor: variables.colors.white,
+          borderWidth: variables.border.width,
+          borderRadius: variables.border.radius,
 
           alignItems: "center",
           justifyContent: "center",

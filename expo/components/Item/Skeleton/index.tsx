@@ -59,7 +59,7 @@ export default function ItemSkeleton({
 
         <Skeleton
           isLoading={true}
-          containerStyle={{ gap: 8 }}
+          containerStyle={{ gap: variables.gap.small }}
           layout={[
             { key: "title", width: titleWidth, height: 20, top: 1 },
             { key: "subtitle", width: subtitleWidth, height: 16, bottom: 2 },
@@ -68,7 +68,7 @@ export default function ItemSkeleton({
 
         <Skeleton
           isLoading={true}
-          containerStyle={{ gap: 8 }}
+          containerStyle={{ gap: variables.gap.small }}
           layout={[
             { key: "rightTop", width: rightTopWidth, height: 20, top: 1 },
             {

@@ -17,7 +17,7 @@ export default function InputLabel({
       style={{
         gap: 4,
         alignItems: "flex-end",
-        marginBottom: 8,
+        marginBottom: variables.input.margin,
         flexDirection: "row",
       }}
     >

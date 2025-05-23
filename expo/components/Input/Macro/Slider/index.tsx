@@ -56,16 +56,16 @@ export default function InputMacroSlider({
 
             borderColor: variables.border.color,
             borderWidth: variables.border.width,
-            borderRadius: 8,
+            borderRadius: variables.border.radius,
           }}
         />
       </View>
 
       <View
         style={{
+          alignItems: "center",
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "center",
         }}
       >
         <TextSmall weight="semibold">{percentageRounded}%</TextSmall>

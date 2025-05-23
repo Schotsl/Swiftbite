@@ -44,7 +44,7 @@ export default function EstimationImage({
             overflow: "hidden",
             borderColor: variables.border.color,
             borderWidth: variables.border.width,
-            borderRadius: 8,
+            borderRadius: variables.border.radius,
           }}
         >
           <View

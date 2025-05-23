@@ -38,9 +38,9 @@ export default function Progress({
           height: 12,
           position: "relative",
 
-          borderWidth: 2,
-          borderRadius: 8,
           borderColor: variables.colors.grey,
+          borderWidth: variables.border.width,
+          borderRadius: variables.border.radius,
           backgroundColor: variables.colors.grey,
           overflow: "hidden",
         }}
@@ -48,11 +48,11 @@ export default function Progress({
         <View
           style={{
             width: progressWidth,
-            height: 8,
+            height: variables.border.width,
             maxWidth: "100%",
             position: "absolute",
 
-            borderRadius: 8,
+            borderRadius: variables.border.radius,
             backgroundColor: variables.colors.primary,
           }}
         />

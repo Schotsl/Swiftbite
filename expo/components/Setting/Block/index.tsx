@@ -34,7 +34,7 @@ export default function SettingBlock({ items }: SettingBlockProps) {
       style={{
         borderWidth: variables.border.width,
         borderColor: variables.border.color,
-        borderRadius: 8,
+        borderRadius: variables.border.radius,
       }}
     >
       {items.map((item, index) => (

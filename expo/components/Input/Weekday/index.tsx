@@ -8,6 +8,7 @@ import { View } from "react-native";
 import { Control, useController } from "react-hook-form";
 
 import language from "@/language";
+import variables from "@/variables";
 
 type InputWeekdayProps = {
   name: string;
@@ -76,7 +77,11 @@ export default function InputWeekday({
       </View>
 
       {error && (
-        <TextSmall style={{ marginTop: 8 }} color="#7C0000" weight="semibold">
+        <TextSmall
+          style={{ marginTop: variables.input.margin }}
+          color="#7C0000"
+          weight="semibold"
+        >
           {error?.message}
         </TextSmall>
       )}

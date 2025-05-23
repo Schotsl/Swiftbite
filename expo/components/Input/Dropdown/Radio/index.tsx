@@ -25,9 +25,9 @@ export default function InputDropdownRadio({
           gap: 12,
           padding: 16,
           paddingVertical: 12,
-          borderRadius: 8,
           borderColor: variables.border.color,
           borderWidth: variables.border.width,
+          borderRadius: variables.border.radius,
 
           flexDirection: "row",
           alignItems: "center",
@@ -42,7 +42,7 @@ export default function InputDropdownRadio({
           height: 16,
           borderColor: variables.border.color,
           borderWidth: variables.border.width,
-          borderRadius: 8,
+          borderRadius: variables.border.radius,
 
           alignItems: "center",
           justifyContent: "center",
@@ -51,10 +51,10 @@ export default function InputDropdownRadio({
         {selected && (
           <View
             style={{
-              width: 8,
-              height: 8,
+              width: variables.border.radius,
+              height: variables.border.radius,
+              borderRadius: variables.border.radius,
               backgroundColor: variables.colors.text.primary,
-              borderRadius: 4,
             }}
           />
         )}

@@ -86,7 +86,7 @@ export default function ProductImpact({
 
           borderColor: variables.border.color,
           borderWidth: variables.border.width,
-          borderRadius: 8,
+          borderRadius: variables.border.radius,
 
           alignItems: "center",
           justifyContent: "center",

@@ -114,7 +114,7 @@ export default function ProductNutrition({
           position: "relative",
           borderColor: variables.border.color,
           borderWidth: variables.border.width,
-          borderRadius: 8,
+          borderRadius: variables.border.radius,
         }}
       >
         {processing && <ProductNutritionProcessing />}
@@ -196,8 +196,8 @@ export function ProductNutritionProcessing() {
           position: "absolute",
 
           opacity: 0.96,
-          borderRadius: 8,
-          backgroundColor: "#fff",
+          borderRadius: variables.border.radius,
+          backgroundColor: variables.colors.white,
         }}
       />
     </Fragment>

@@ -75,7 +75,7 @@ export default function ButtonSmall({
       onLayout={handleLayout}
       style={[
         {
-          gap: 8,
+          gap: variables.gap.small,
           minWidth: nano ? 28 : 36,
           minHeight: nano ? 28 : 36,
 

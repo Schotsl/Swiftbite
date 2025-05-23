@@ -11,7 +11,7 @@ export function Divider() {
         weight="semibold"
         style={{
           backgroundColor: variables.colors.white,
-          paddingHorizontal: 8,
+          paddingHorizontal: variables.gap.small,
         }}
       >
         Of

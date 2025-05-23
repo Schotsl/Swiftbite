@@ -6,6 +6,8 @@ import { Day } from "../types";
 import { getStyle } from "./helper";
 import { TouchableOpacity, View } from "react-native";
 
+import variables from "@/variables";
+
 type HomeWeekDayProps = {
   day: Day;
   date: number;
@@ -25,7 +27,7 @@ export default function HomeWeekDay({
     <TouchableOpacity
       onPress={onPress}
       style={{
-        gap: 8,
+        gap: variables.gap.small,
         alignItems: "center",
       }}
     >

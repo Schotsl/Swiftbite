@@ -18,7 +18,7 @@ export default function HeaderLoading() {
 
       <Skeleton
         isLoading={true}
-        containerStyle={{ gap: 8 }}
+        containerStyle={{ gap: variables.gap.small }}
         layout={[
           { key: "title", width: 220, height: 32, marginBottom: 6 },
           { key: "content", width: 180, height: 20, marginBottom: 6 },

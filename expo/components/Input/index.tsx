@@ -122,7 +122,7 @@ export default function Input({
                   style={{
                     borderColor: border,
                     borderWidth: variables.border.width,
-                    borderRadius: 8,
+                    borderRadius: variables.border.radius,
                     flexDirection: "row",
                     opacity: disabled ? 0.5 : 1,
                     minHeight: multiline ? 100 : undefined,
@@ -191,7 +191,7 @@ export default function Input({
               <Text
                 size={12}
                 color={variables.colors.text.secondary}
-                style={{ marginTop: 8 }}
+                style={{ marginTop: variables.input.margin }}
                 weight="semibold"
               >
                 {content}
@@ -202,7 +202,7 @@ export default function Input({
               <Text
                 size={12}
                 color="#7C0000"
-                style={{ marginTop: 8 }}
+                style={{ marginTop: variables.input.margin }}
                 weight="semibold"
               >
                 {fieldState.error?.message || error}
