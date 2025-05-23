@@ -201,7 +201,7 @@ export default function Input({
             {(fieldState.error || error) && (
               <Text
                 size={12}
-                color="#7C0000"
+                color={variables.colors.text.error}
                 style={{ marginTop: variables.input.margin }}
                 weight="semibold"
               >

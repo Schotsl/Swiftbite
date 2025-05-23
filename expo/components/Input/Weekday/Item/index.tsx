@@ -34,8 +34,8 @@ export default function InputWeekdayItem({
   }
 
   if (error) {
-    color = "#7C0000";
-    border = "#7C0000";
+    color = variables.colors.text.error;
+    border = variables.colors.text.error;
   }
 
   return (

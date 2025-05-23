@@ -79,7 +79,7 @@ export default function InputWeekday({
       {error && (
         <TextSmall
           style={{ marginTop: variables.input.margin }}
-          color="#7C0000"
+          color={variables.colors.text.error}
           weight="semibold"
         >
           {error?.message}

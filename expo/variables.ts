@@ -9,6 +9,7 @@ export default {
   },
   colors: {
     text: {
+      error: "#7C0000",
       primary: "#2E2727",
       secondary: "#677798",
     },
