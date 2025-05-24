@@ -2,7 +2,8 @@
 
 import { View } from "react-native";
 
-import TextBody from "@/components/Text/Body";
+import TextSmall from "@/components/Text/Small";
+import TextTitle from "@/components/Text/Title";
 
 type EmptyProps = {
   emoji: string;
@@ -13,22 +14,23 @@ export default function Empty({ emoji, content }: EmptyProps) {
   return (
     <View
       style={{
+        gap: 4,
         flex: 1,
         minHeight: "100%",
         alignItems: "center",
         justifyContent: "center",
       }}
     >
-      <TextBody
+      <TextTitle>{emoji}</TextTitle>
+      <TextSmall
+        align="center"
         weight="medium"
         style={{
           maxWidth: 250,
-          textAlign: "center",
         }}
       >
-        {emoji}
         {content}
-      </TextBody>
+      </TextSmall>
     </View>
   );
 }

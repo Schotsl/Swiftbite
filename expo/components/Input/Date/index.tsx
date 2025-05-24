@@ -11,6 +11,7 @@ import { View } from "react-native";
 import { useState } from "react";
 import { transformDate } from "@/helper";
 import { useController, Control } from "react-hook-form";
+import TextInput from "@/components/Text/Input";
 
 type InputDateProps = {
   name: string;
@@ -62,7 +63,7 @@ export default function InputDate({ name, label, control }: InputDateProps) {
           justifyContent: "space-between",
         }}
       >
-        <TextTitle>{transformDate(value)}</TextTitle>
+        <TextInput>{transformDate(value)}</TextInput>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
       </View>

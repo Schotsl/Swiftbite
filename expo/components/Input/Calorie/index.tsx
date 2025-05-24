@@ -9,6 +9,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalorieData, calorieSchema } from "@/schemas/personal/goal";
 import { Control, useController, useForm } from "react-hook-form";
+import TextInput from "@/components/Text/Input";
 
 type InputMacroProps = {
   name: string;
@@ -62,7 +63,7 @@ export default function InputMacro({ name, label, control }: InputMacroProps) {
           justifyContent: "space-between",
         }}
       >
-        <TextTitle>{value} kcal</TextTitle>
+        <TextInput>{value} kcal</TextInput>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
       </View>
@@ -78,6 +79,7 @@ export default function InputMacro({ name, label, control }: InputMacroProps) {
           type="number-pad"
           name="calories"
           label="Caloriebudget"
+          suffix="kcal"
           control={localControl}
           placeholder="0"
         />

@@ -29,6 +29,10 @@ export default function InputDropdownRadio({
           borderWidth: variables.border.width,
           borderRadius: variables.border.radius,
 
+          // I would use the border width variable but the decimal causes a visual glitch
+          borderTopWidth: 2,
+          borderBottomWidth: 2,
+
           flexDirection: "row",
           alignItems: "center",
         },
@@ -54,7 +58,7 @@ export default function InputDropdownRadio({
               width: variables.border.radius,
               height: variables.border.radius,
               borderRadius: variables.border.radius,
-              backgroundColor: variables.colors.text.primary,
+              backgroundColor: variables.colors.text.secondary,
             }}
           />
         )}

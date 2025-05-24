@@ -1,12 +1,12 @@
 import TextSmall from "@/components/Text/Small";
 import DecorativeNoise from "@/components/Decorative/Noise";
+import DecorativeLinear from "@/components/Decorative/Linear";
 
 import variables from "@/variables";
 
 import { useRef } from "react";
 import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import { View, ViewStyle, StyleProp, TouchableOpacity } from "react-native";
-import DecorativeLinear from "@/components/Decorative/Linear";
 
 type ButtonSmallBase = {
   nano?: boolean;
@@ -69,12 +69,22 @@ export default function ButtonSmall({
 
   const marker = useRef<View>(null);
   return (
-    <TouchableOpacity
-      ref={marker}
-      onPress={onPress}
-      onLayout={handleLayout}
+    <View
       style={[
         {
+          shadowColor: "#000",
+          shadowRadius: 8,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.05,
+        },
+        style,
+      ]}
+    >
+      <TouchableOpacity
+        ref={marker}
+        onPress={onPress}
+        onLayout={handleLayout}
+        style={{
           gap: variables.gap.small,
           minWidth: nano ? 28 : 36,
           minHeight: nano ? 28 : 36,
@@ -84,33 +94,36 @@ export default function ButtonSmall({
           flexDirection: "row",
           justifyContent: "center",
           paddingHorizontal: title ? 16 : 0,
-          backgroundColor: variables.colors.background.secondary,
+
           overflow: "hidden",
-
+          borderColor: "#c9e6ff",
+          borderWidth: 2,
           borderRadius: 100,
-        },
-        style,
-      ]}
-    >
-      {icon && <FontAwesome6 name={icon} size={nano ? 12 : 14} color={color} />}
+          backgroundColor: variables.colors.background.secondary,
+        }}
+      >
+        {icon && (
+          <FontAwesome6 name={icon} size={nano ? 12 : 14} color={color} />
+        )}
 
-      {iconMaterial && (
-        <MaterialIcons
-          name={iconMaterial}
-          size={nano ? 12 : 14}
-          color={color}
-        />
-      )}
+        {iconMaterial && (
+          <MaterialIcons
+            name={iconMaterial}
+            size={nano ? 12 : 14}
+            color={color}
+          />
+        )}
 
-      {title && (
-        <TextSmall style={{ marginTop: -1 }} color={color} weight="semibold">
-          {title}
-        </TextSmall>
-      )}
+        {title && (
+          <TextSmall style={{ marginTop: -1 }} color={color} weight="semibold">
+            {title}
+          </TextSmall>
+        )}
 
-      {gradient && <DecorativeLinear />}
+        {gradient && <DecorativeLinear />}
 
-      <DecorativeNoise />
-    </TouchableOpacity>
+        <DecorativeNoise />
+      </TouchableOpacity>
+    </View>
   );
 }

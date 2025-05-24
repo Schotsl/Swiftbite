@@ -1,11 +1,12 @@
-import { FontAwesome6 } from "@expo/vector-icons";
-import { View, TouchableOpacity } from "react-native";
-import { Fragment, ReactNode, useState } from "react";
+import { View } from "react-native";
 import { Modal as ReactModal } from "react-native";
+import { Fragment, ReactNode, useState } from "react";
 
-import ModalBackground from "./Background";
-import TextTitle from "@/components/Text/Title";
 import Button from "@/components/Button";
+import ButtonSmall from "../Button/Small";
+import TextInput from "../Text/Input";
+import ModalBackground from "./Background";
+
 import variables from "@/variables";
 
 type ModalBaseProps = {
@@ -55,8 +56,8 @@ export default function Modal({
           }}
           style={{
             top: "50%",
-            left: 32,
-            right: 32,
+            left: variables.padding.page,
+            right: variables.padding.page,
             position: "absolute",
             transform: [{ translateY: -height / 2 }],
 
@@ -70,25 +71,21 @@ export default function Modal({
         >
           <View
             style={{
-              marginBottom: 32,
+              marginBottom: variables.gap.large,
               paddingBottom: 24,
-              borderBottomWidth: 1,
-              borderColor: "#A6A6A6",
+
+              borderColor: variables.colors.grey,
+              borderBottomWidth: variables.border.width,
+              backgroundColor: "red",
 
               alignItems: "center",
               flexDirection: "row",
               justifyContent: "space-between",
             }}
           >
-            <TextTitle>{title}</TextTitle>
+            <TextInput>{title}</TextInput>
 
-            <TouchableOpacity onPress={onClose}>
-              <FontAwesome6
-                name="xmark"
-                size={22}
-                color={variables.colors.text.primary}
-              />
-            </TouchableOpacity>
+            <ButtonSmall icon="xmark" onPress={onClose} />
           </View>
 
           {children}
@@ -96,13 +93,14 @@ export default function Modal({
           {button && (
             <View
               style={{
-                marginTop: 32,
+                marginTop: variables.gap.large,
+                paddingTop: variables.gap.large,
 
-                borderTopWidth: 1,
-                borderColor: "#A6A6A6",
+                borderTopWidth: variables.border.width,
+                borderColor: variables.colors.grey,
               }}
             >
-              <Button title={button} onPress={onButton} />
+              <Button title={button} action="primary" onPress={onButton} />
             </View>
           )}
         </View>

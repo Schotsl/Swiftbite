@@ -9,7 +9,7 @@ import { View } from "react-native";
 import { useState } from "react";
 import { Control, useController } from "react-hook-form";
 
-import TextTitle from "@/components/Text/Title";
+import TextInput from "@/components/Text/Input";
 
 type InputTimeProps = {
   name: string;
@@ -68,7 +68,7 @@ export default function InputTime({ name, label, control }: InputTimeProps) {
           justifyContent: "space-between",
         }}
       >
-        <TextTitle>{transformTime(value)}</TextTitle>
+        <TextInput>{transformTime(value)}</TextInput>
 
         <ButtonSmall icon="pencil" onPress={handleOpen} nano />
       </View>

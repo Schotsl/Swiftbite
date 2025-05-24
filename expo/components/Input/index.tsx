@@ -132,7 +132,7 @@ export default function Input({
                     value={value !== undefined ? value.toString() : ""}
                     style={{
                       flex: 1,
-                      color: variables.colors.greyDark,
+                      color: variables.colors.text.primary,
                       zIndex: 1,
                       paddingVertical: 12,
                       paddingLeft: icon ? 44 : 16,
