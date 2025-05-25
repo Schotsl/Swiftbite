@@ -28,7 +28,7 @@ export async function searchGenerics(
   }: {
     generics: GenericSearchData[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<
   StreamObjectResult<
     GenericSearchData[],
@@ -93,18 +93,22 @@ export async function searchGenerics(
   return genericStream;
 }
 
-export async function searchGeneric({
-  title,
-  category,
-}: {
-  title: string;
-  category: string;
-}): Promise<GenericData> {
+export async function searchGeneric(
+  user: string,
+  {
+    title,
+    category,
+  }: {
+    title: string;
+    category: string;
+  },
+): Promise<GenericData> {
+  const task = "search-generic";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {
     useSearchGrounding: true,
   });
 
-  const { object } = await generateObject({
+  const { object, usage } = await generateObject({
     model,
     temperature,
 
@@ -131,6 +135,16 @@ export async function searchGeneric({
         })}`,
       },
     ],
+  });
+
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      usage,
+      model: model.modelId,
+      grounding: true,
+    });
   });
 
   return object;

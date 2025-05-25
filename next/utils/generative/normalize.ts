@@ -64,6 +64,7 @@ export async function normalizeMeal(
 }
 
 export async function normalizeTitle(
+  user: string,
   {
     title,
   }: {
@@ -71,9 +72,10 @@ export async function normalizeTitle(
   },
   signal?: AbortSignal,
 ): Promise<string> {
+  const task = "normalize-title";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
 
-  const { object } = await generateObject({
+  const { object, usage } = await generateObject({
     model,
     temperature,
 
@@ -94,6 +96,15 @@ export async function normalizeTitle(
         })}`,
       },
     ],
+  });
+
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      usage,
+      model: model.modelId,
+    });
   });
 
   const normalized = object.title;

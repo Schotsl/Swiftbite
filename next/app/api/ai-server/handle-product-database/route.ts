@@ -1,6 +1,7 @@
-import { normalizeTitle } from "@/utils/generative/normalize";
 import { generateIcon } from "@/utils/generative/generate";
-import { after } from "next/server";
+import { validateUsage } from "@/utils/usage";
+import { normalizeTitle } from "@/utils/generative/normalize";
+import { after, NextResponse } from "next/server";
 import {
   fetchIcon,
   insertIcon,
@@ -15,6 +16,16 @@ export const maxDuration = 120;
 export async function POST(request: Request) {
   // Make sure the user isn't over their usage limits
   const body = await request.json();
+  const user = body.record.user_id;
+
+  // There are products without a user_id
+  if (user) {
+    const response = await validateUsage(user);
+
+    if (response) {
+      return NextResponse.json({ error: response }, { status: 429 });
+    }
+  }
 
   const productIcon = body.record.icon_id;
   const productUuid = body.record.uuid;
@@ -40,7 +51,7 @@ export async function POST(request: Request) {
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[ICON] Normalizing title`);
-    const iconTitle = await normalizeTitle({ title: productTitleNew });
+    const iconTitle = await normalizeTitle(user, { title: productTitleNew });
 
     console.log(`[ICON] Fetching icon from database`);
     const iconUuid = await fetchIcon(iconTitle);
@@ -59,7 +70,7 @@ export async function POST(request: Request) {
       const iconUuid = await insertIcon(iconTitle);
 
       console.log(`[ICON] Generating icon`);
-      const newIconBuffer = await generateIcon({ title: iconTitle });
+      const newIconBuffer = await generateIcon(user, { title: iconTitle });
 
       console.log(`[ICON] Resizing icon`);
       const newIconResized = await sharp(newIconBuffer).resize(256).toBuffer();

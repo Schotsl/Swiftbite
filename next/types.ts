@@ -7,7 +7,7 @@ export type Option = {
   gram: number;
 };
 
-export type ServingData = {
+export type Serving = {
   gram: number;
   option: string;
   quantity: number;
@@ -20,8 +20,8 @@ export type Product = Omit<
 > & {
   search: ProductSearchData | GenericSearchData | null;
   options: Option[] | null;
-  serving: ServingData | null;
-  quantity: ServingData | null;
+  serving: Serving | null;
+  quantity: Serving | null;
 };
 
 export type ProductInsert = Omit<
@@ -31,3 +31,8 @@ export type ProductInsert = Omit<
 
 export type Entry = Tables<"entry">;
 export type EntryInsert = Omit<Entry, "uuid" | "created_at" | "updated_at">;
+
+export type Ingredient = Tables<"meal_product"> & {
+  serving: Serving;
+  product: { title: string };
+};

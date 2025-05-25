@@ -1,11 +1,11 @@
 import { Tables } from "@/database.types";
 import { handleError } from "@/helper";
-import { EntryInsert, Product, ProductInsert } from "@/types";
+import { EntryInsert, Ingredient, Product, ProductInsert } from "@/types";
 import { createClient as createClientSupabase } from "@supabase/supabase-js";
 
 export const supabase = createClientSupabase(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
+  process.env.SUPABASE_SERVICE_KEY!,
 );
 
 export async function getUser(request: Request) {
@@ -35,7 +35,9 @@ export const fetchUrl = async (generativeUUID: string): Promise<string> => {
   return data!.signedUrl;
 };
 
-export const fetchIngredients = async (mealUUID: string): Promise<string[]> => {
+export const fetchIngredients = async (
+  mealUUID: string,
+): Promise<Ingredient[]> => {
   const { data, error } = await supabase
     .from("meal_product")
     .select(`*,product(title)`)
@@ -43,12 +45,11 @@ export const fetchIngredients = async (mealUUID: string): Promise<string[]> => {
 
   handleError(error);
 
-  const ingredients = data?.map((ingredient) => ingredient.product.title);
-  return ingredients ?? [];
+  return data ?? [];
 };
 
 export const fetchProduct = async (
-  productUUID: string
+  productUUID: string,
 ): Promise<Tables<"product">> => {
   const { data, error } = await supabase
     .from("product")
@@ -62,7 +63,7 @@ export const fetchProduct = async (
 };
 
 export const fetchProductByBarcode = async (
-  barcode: string
+  barcode: string,
 ): Promise<Tables<"product"> | null> => {
   const { data, error } = await supabase
     .from("product")
@@ -76,7 +77,7 @@ export const fetchProductByBarcode = async (
 };
 
 export const fetchEntry = async (
-  productId: string
+  productId: string,
 ): Promise<Tables<"entry">> => {
   const { data, error } = await supabase
     .from("entry")
@@ -90,7 +91,7 @@ export const fetchEntry = async (
 };
 
 export const fetchGenerative = async (
-  generativeUUID: string
+  generativeUUID: string,
 ): Promise<Tables<"generative">> => {
   const { data, error } = await supabase
     .from("generative")
@@ -134,7 +135,7 @@ export const updateProduct = async (product: string, icon: string) => {
   handleError(error);
 };
 
-export const updateMeal = async (meal: string, icon: string) => {
+export const updateMeal = async (meal: string, icon: string | null) => {
   const { error } = await supabase
     .from("meal")
     .update({ icon_id: icon })
@@ -163,7 +164,7 @@ export const insertEntry = async (entry: EntryInsert) => {
 };
 
 export const insertProducts = async (
-  products: ProductInsert | ProductInsert[]
+  products: ProductInsert | ProductInsert[],
 ): Promise<Product[]> => {
   const { error, data } = await supabase
     .from("product")
@@ -176,7 +177,7 @@ export const insertProducts = async (
 };
 
 export const insertProduct = async (
-  product: ProductInsert
+  product: ProductInsert,
 ): Promise<Product> => {
   const { error, data } = await supabase
     .from("product")

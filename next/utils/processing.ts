@@ -35,14 +35,14 @@ export function processSearchProduct({
   }
 
   fetch(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-server/search-product-data?${params.toString()}`,
+    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
     {
       headers,
     },
   );
 
   fetch(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
+    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-product?${params.toString()}`,
     {
       headers,
     },
@@ -66,14 +66,14 @@ export function processSearchGeneric({
   });
 
   fetch(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-server/search-generic-data?${params.toString()}`,
+    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
     {
       headers,
     },
   );
 
   fetch(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-server/product-options?${params.toString()}`,
+    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-generic?${params.toString()}`,
     {
       headers,
     },

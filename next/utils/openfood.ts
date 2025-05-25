@@ -69,7 +69,7 @@ async function mapProduct(
       combined: product.serving_size,
     }),
 
-    generateOptions({
+    generateOptions(user, {
       title,
       brand,
     }),

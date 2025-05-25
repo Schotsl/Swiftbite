@@ -32,7 +32,7 @@ export async function searchProducts(
   }: {
     products: ProductSearchData[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -117,24 +117,28 @@ export async function searchProducts(
   return stream;
 }
 
-export async function searchProduct({
-  brand,
-  title,
-  barcode,
-  quantity_original,
-  quantity_original_unit,
-}: {
-  brand: string;
-  title: string;
-  barcode?: string;
-  quantity_original?: number;
-  quantity_original_unit?: string;
-}): Promise<ProductData> {
+export async function searchProduct(
+  user: string,
+  {
+    brand,
+    title,
+    barcode,
+    quantity_original,
+    quantity_original_unit,
+  }: {
+    brand: string;
+    title: string;
+    barcode?: string;
+    quantity_original?: number;
+    quantity_original_unit?: string;
+  },
+): Promise<ProductData> {
+  const task = "search-product";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {
     useSearchGrounding: true,
   });
 
-  const { object } = await generateObject({
+  const { object, usage } = await generateObject({
     model,
     temperature,
 
@@ -165,6 +169,16 @@ export async function searchProduct({
         })}`,
       },
     ],
+  });
+
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      usage,
+      model: model.modelId,
+      grounding: true,
+    });
   });
 
   return object;

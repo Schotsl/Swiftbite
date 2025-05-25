@@ -1,13 +1,12 @@
+import { supabase } from "@/utils/supabase";
 import { handleError } from "@/helper";
+import { validateUsage } from "@/utils/usage";
+import { NextResponse, after } from "next/server";
+import { fetchProduct, fetchEntry } from "@/utils/supabase";
 import {
   estimateNutrition,
   estimateVisuals,
 } from "@/utils/generative/estimate";
-import { after, NextResponse } from "next/server";
-
-import { supabase } from "@/utils/supabase";
-import { validateUsage } from "@/utils/usage";
-import { fetchEntry, fetchProduct } from "@/utils/supabase";
 
 export const maxDuration = 120;
 

@@ -1,10 +1,13 @@
 import { supabase } from "@/utils/supabase";
-import { generateSlug, handleError } from "@/helper";
 import { generateOptions } from "@/utils/generative/generate";
+import { generateSlug, handleError } from "@/helper";
 import { NextRequest, NextResponse } from "next/server";
+
+export const maxDuration = 120;
 
 export async function GET(request: NextRequest) {
   const uuid = request.nextUrl.searchParams.get("uuid");
+  const user = request.nextUrl.searchParams.get("user_id");
   const lang = request.nextUrl.searchParams.get("lang");
   const title = request.nextUrl.searchParams.get("title");
 
@@ -14,6 +17,13 @@ export async function GET(request: NextRequest) {
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
+      { status: 400 },
+    );
+  }
+
+  if (!user) {
+    return NextResponse.json(
+      { error: "Please provide a user_id" },
       { status: 400 },
     );
   }
@@ -32,9 +42,9 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  console.log(`[OPTIONS/${title}] Generating options`);
+  if (!user) console.log(`[OPTIONS/${title}] Generating options`);
 
-  const options = await generateOptions({ title, brand, category });
+  const options = await generateOptions(user, { title, brand, category });
   const optionsMapped = options.map((option) => ({
     value: generateSlug(option.title),
     title: option.title,

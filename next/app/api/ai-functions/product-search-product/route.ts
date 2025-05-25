@@ -1,11 +1,14 @@
 import { supabase } from "@/utils/supabase";
 import { handleError } from "@/helper";
-import { NextRequest, NextResponse } from "next/server";
-import { generateEmbedding } from "@/utils/generative/generate";
 import { searchProduct } from "@/utils/generative/product";
+import { generateEmbedding } from "@/utils/generative/generate";
+import { NextRequest, NextResponse } from "next/server";
+
+export const maxDuration = 120;
 
 export async function GET(request: NextRequest) {
   const uuid = request.nextUrl.searchParams.get("uuid");
+  const user = request.nextUrl.searchParams.get("user_id");
   const lang = request.nextUrl.searchParams.get("lang");
   const title = request.nextUrl.searchParams.get("title");
   const brand = request.nextUrl.searchParams.get("brand");
@@ -15,40 +18,47 @@ export async function GET(request: NextRequest) {
     request.nextUrl.searchParams.get("quantity_original");
 
   const quantity_original_unit = request.nextUrl.searchParams.get(
-    "quantity_original_unit",
+    "quantity_original_unit"
   );
 
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 },
+      { status: 400 }
+    );
+  }
+
+  if (!user) {
+    return NextResponse.json(
+      { error: "Please provide a user_id" },
+      { status: 400 }
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!brand) {
     return NextResponse.json(
       { error: "Please provide a brand" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   console.log(`[PRODUCT/${title}] Searching product`);
 
-  const product = await searchProduct({
+  const product = await searchProduct(user, {
     brand: brand!,
     title,
     barcode: barcode || undefined,
@@ -116,7 +126,7 @@ export async function GET(request: NextRequest) {
     embeddingInput += ` ${quantity.quantity} ${quantity.option}`;
   }
 
-  const embedding = await generateEmbedding({ value: embeddingInput });
+  const embedding = await generateEmbedding(user, { value: embeddingInput });
 
   console.log(`[PRODUCT/${title}] Updating embedding`);
 

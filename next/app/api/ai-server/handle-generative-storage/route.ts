@@ -1,9 +1,12 @@
-import { after, NextResponse } from "next/server";
+import { supabase } from "@/utils/supabase";
 import { handleError } from "@/helper";
+import { validateUsage } from "@/utils/usage";
+import { NextResponse, after } from "next/server";
 import {
   estimateNutrition,
   estimateVisuals,
 } from "@/utils/generative/estimate";
+
 import {
   fetchUrl,
   fetchEntry,
@@ -11,8 +14,7 @@ import {
   fetchGenerative,
 } from "@/utils/supabase";
 
-import { supabase } from "@/utils/supabase";
-import { validateUsage } from "@/utils/usage";
+export const maxDuration = 120;
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -25,7 +27,6 @@ export async function POST(request: Request) {
 
   // Make sure the user isn't over their usage limits
   const user = body.record.owner_id;
-
   const response = await validateUsage(user);
 
   if (response) {

@@ -123,10 +123,11 @@ export const openfoodRequest = async (
 };
 
 export const supabaseRequest = async (
+  user: string,
   value: string,
   type: Enums<"type">,
 ): Promise<Product[]> => {
-  const vector = await generateEmbedding({ value });
+  const vector = await generateEmbedding(user, { value });
 
   const { data, error } = await supabase.rpc("product_match", {
     query_embedding: vector,

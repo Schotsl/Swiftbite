@@ -7,18 +7,18 @@ export async function insertUsage({
   task,
   model,
   usage,
-  search,
+  grounding = false,
 }: {
   user: string;
   task: string;
   model: string;
   usage: LanguageModelUsage;
-  search?: "low" | "med" | "high";
+  grounding?: boolean;
 }) {
   const { error } = await supabase.from("usage").insert({
     task,
     model,
-    search,
+    grounding,
     user_id: user,
     input_tokens: usage.promptTokens,
     output_tokens: usage.completionTokens,
