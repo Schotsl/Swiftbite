@@ -26,7 +26,6 @@ export default function PersonalExport() {
           }}
         >
           <Header
-            small={true}
             title={language.page.personal.export.title}
             content={language.page.personal.export.content}
           />

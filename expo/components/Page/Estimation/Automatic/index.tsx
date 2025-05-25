@@ -226,7 +226,6 @@ export default function PageEstimationAutomatic({
           }}
         >
           <Header
-            small={true}
             title="Automatisch inschatten"
             content="Dit is een AI-inschatting van de calorieën en macro's van je maaltijd. Controleer het resultaat en pas het zo nodig aan op het volgende scherm."
           />

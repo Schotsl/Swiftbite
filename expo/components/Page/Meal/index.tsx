@@ -138,7 +138,6 @@ export default function PageMeal({
         >
           <View>
             <Header
-              small={true}
               title={meal.title}
               favorite={favorite}
               onDelete={onDelete}

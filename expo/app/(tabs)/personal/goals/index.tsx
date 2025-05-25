@@ -54,7 +54,7 @@ export default function PersonalGoals() {
             paddingBottom: variables.paddingOverlay,
           }}
         >
-          <Header small={true} title={language.page.personal.goals.title} />
+          <Header title={language.page.personal.goals.title} />
 
           <Suspense fallback={<PersonalGoalsLoading />}>
             <PersonalGoalsForm control={control} calories={calories} />

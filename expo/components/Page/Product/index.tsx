@@ -169,7 +169,6 @@ export default function PageProduct({
         >
           <View>
             <Header
-              small={true}
               title={`${title}`}
               content={content}
               favorite={favorite}

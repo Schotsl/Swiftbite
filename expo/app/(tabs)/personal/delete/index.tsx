@@ -80,7 +80,6 @@ export default function PersonalDelete() {
           }}
         >
           <Header
-            small={true}
             title={language.page.personal.delete.title}
             content={language.page.personal.delete.content}
           />

@@ -51,7 +51,7 @@ export default function PersonalDetails() {
             paddingBottom: variables.paddingOverlay,
           }}
         >
-          <Header small={true} title={language.page.personal.details.title} />
+          <Header title={language.page.personal.details.title} />
 
           <Suspense fallback={<PersonalDetailsLoading />}>
             <PersonalDetailsForm control={control} />

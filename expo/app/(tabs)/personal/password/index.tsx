@@ -52,7 +52,7 @@ export default function PersonalPassword() {
             paddingBottom: variables.paddingOverlay,
           }}
         >
-          <Header small={true} title={language.page.personal.password.title} />
+          <Header title={language.page.personal.password.title} />
 
           <View style={{ gap: 32 }}>
             <Input

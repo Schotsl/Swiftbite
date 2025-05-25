@@ -116,7 +116,6 @@ export default function AutomationsRepeatUpsert() {
           }}
         >
           <Header
-            small={true}
             title={
               updating
                 ? language.modifications.getEdit(language.types.repeat.single)

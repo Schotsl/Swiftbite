@@ -51,7 +51,7 @@ export default function PersonalHealth() {
             paddingBottom: variables.paddingOverlay,
           }}
         >
-          <Header small={true} title={language.page.personal.health.title} />
+          <Header title={language.page.personal.health.title} />
 
           <Suspense fallback={<PersonalHealthLoading />}>
             <PersonalHealthForm control={control} />

@@ -5,12 +5,12 @@ import { ButtonSmallProps } from "../Button/Small";
 import TextBody from "@/components/Text/Body";
 import TextTitle from "@/components/Text/Title";
 import ButtonSmall from "../Button/Small";
+import variables from "@/variables";
 
 type HeaderProps = {
   title: string;
   content?: string | null;
   buttons?: ButtonSmallProps[];
-  small?: boolean;
   favorite?: boolean;
   onDelete?: () => void;
   onRepeat?: () => void;
@@ -21,7 +21,6 @@ export default function Header({
   title,
   content,
   buttons,
-  small = false,
   favorite = false,
   onDelete,
   onRepeat,
@@ -30,10 +29,10 @@ export default function Header({
   return (
     <View
       style={{
-        gap: 12,
+        gap: variables.gap.small,
         width: "100%",
         flexDirection: "column",
-        paddingBottom: small ? 24 : 48,
+        paddingBottom: variables.gap.normal,
       }}
     >
       <View style={{ flexDirection: "row", gap: 12 }}>

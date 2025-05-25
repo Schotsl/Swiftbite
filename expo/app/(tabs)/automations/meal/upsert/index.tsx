@@ -103,7 +103,6 @@ export default function AutomationsMealUpsert() {
           }}
         >
           <Header
-            small={true}
             title={
               updating
                 ? language.modifications.getEdit(language.types.meal.single)

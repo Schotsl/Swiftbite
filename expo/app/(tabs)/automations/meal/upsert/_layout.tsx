@@ -46,7 +46,6 @@ function AutomationsMealUpsertLayoutLoading() {
           }}
         >
           <Header
-            small={true}
             title={language.modifications.getEdit(language.types.meal.single)}
             content={language.types.meal.explanation}
           />

@@ -83,10 +83,7 @@ export default function PersonalPreferences() {
             paddingBottom: variables.paddingOverlay,
           }}
         >
-          <Header
-            small={true}
-            title={language.page.personal.preferences.title}
-          />
+          <Header title={language.page.personal.preferences.title} />
 
           <Suspense fallback={<PersonalPreferencesLoading />}>
             <PersonalPreferencesForm

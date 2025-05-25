@@ -49,7 +49,6 @@ function AutomationsRepeatUpsertLayoutLoading() {
           }}
         >
           <Header
-            small={true}
             title={language.modifications.getEdit(language.types.repeat.single)}
             content={language.types.repeat.explanation}
           />

@@ -120,7 +120,6 @@ export default function PageEstimationManual({
           }}
         >
           <Header
-            small={true}
             title={product?.title || "Handmatig inschatten"}
             content={
               product
