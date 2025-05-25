@@ -5,6 +5,7 @@ import TextBody from "@/components/Text/Body";
 
 type ProductInfoProps = {
   items: {
+    key: string;
     icon: keyof typeof FontAwesome6.glyphMap;
     value: string;
   }[];
@@ -15,7 +16,7 @@ export default function ProductInfo({ items }: ProductInfoProps) {
     <View style={{ gap: 8 }}>
       {items.map((item) => (
         <View
-          key={item.value}
+          key={item.key}
           style={{ gap: 8, alignItems: "center", flexDirection: "row" }}
         >
           <FontAwesome6 name={item.icon} size={16} color="#404040" />
