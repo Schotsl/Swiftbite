@@ -41,7 +41,7 @@ export const googleRequest = async (query: string, signal: AbortSignal) => {
 export const openfoodRequest = async (
   query: string,
   lang: string,
-  signal: AbortSignal,
+  signal: AbortSignal
 ) => {
   const timeStart = performance.now();
 
@@ -103,8 +103,7 @@ export const openfoodRequest = async (
     const brandsCombined = [...brands, ...brandsTags];
     const brandsUnique = brandsCombined.filter(
       (brand, index, self) =>
-        index ===
-        self.findIndex((t) => t.toLowerCase() === brand.toLowerCase()),
+        index === self.findIndex((t) => t.toLowerCase() === brand.toLowerCase())
     );
 
     delete item.brands_tags;
@@ -125,8 +124,10 @@ export const openfoodRequest = async (
 export const supabaseRequest = async (
   user: string,
   value: string,
-  type: Enums<"type">,
+  type: Enums<"type">
 ): Promise<Product[]> => {
+  const timeStart = performance.now();
+
   const vector = await generateEmbedding(user, { value });
 
   const { data, error } = await supabase.rpc("product_match", {
@@ -137,6 +138,11 @@ export const supabaseRequest = async (
   });
 
   handleError(error);
+
+  const timeEnd = performance.now();
+  const timeDiff = Math.round(timeEnd - timeStart);
+
+  console.log(`[SEARCH] Supabase request took ${timeDiff}ms`);
 
   const resultsSafe = data || [];
   return resultsSafe;

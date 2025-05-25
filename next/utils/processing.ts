@@ -4,22 +4,26 @@ const headers = {
   "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
 };
 
-export function processSearchProduct({
-  uuid,
-  lang,
-  search,
-  barcode,
-}: {
-  uuid: string;
-  lang: string;
-  search: ProductSearchData;
-  barcode?: string;
-}) {
+export function processSearchProduct(
+  user: string,
+  {
+    uuid,
+    lang,
+    search,
+    barcode,
+  }: {
+    uuid: string;
+    lang: string;
+    search: ProductSearchData;
+    barcode?: string;
+  }
+) {
   const params = new URLSearchParams({
     uuid,
     lang,
     title: search.title,
     brand: search.brand,
+    user_id: user,
   });
 
   if (search.quantity_original) {
@@ -38,44 +42,48 @@ export function processSearchProduct({
     `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
     {
       headers,
-    },
+    }
   );
 
   fetch(
     `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-product?${params.toString()}`,
     {
       headers,
-    },
+    }
   );
 }
 
-export function processSearchGeneric({
-  uuid,
-  lang,
-  search,
-}: {
-  uuid: string;
-  lang: string;
-  search: GenericSearchData;
-}) {
+export function processSearchGeneric(
+  user: string,
+  {
+    uuid,
+    lang,
+    search,
+  }: {
+    uuid: string;
+    lang: string;
+    search: GenericSearchData;
+  }
+) {
   const params = new URLSearchParams({
     uuid,
     lang,
     title: search.title,
     category: search.category,
+    user_id: user,
   });
 
   fetch(
     `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
     {
       headers,
-    },
+    }
   );
 
   fetch(
     `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-generic?${params.toString()}`,
     {
       headers,
-    },
+    }
   );
 }
