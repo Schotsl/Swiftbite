@@ -96,8 +96,9 @@ export default function ButtonSmall({
           paddingHorizontal: title ? 16 : 0,
 
           overflow: "hidden",
-          borderColor: "#c9e6ff",
-          borderWidth: 2,
+
+          // borderColor: "#c9e6ff",
+          // borderWidth: 2,
           borderRadius: 100,
           backgroundColor: variables.colors.background.secondary,
         }}

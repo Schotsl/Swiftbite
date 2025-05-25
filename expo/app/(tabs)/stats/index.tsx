@@ -15,7 +15,6 @@ export default function Stats() {
 
           gap: variables.gap.large,
           padding: variables.padding.page,
-          paddingBottom: variables.paddingOverlay,
         }}
       >
         <Empty emoji="👷" content={language.page.stats.empty} />

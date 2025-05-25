@@ -41,14 +41,19 @@ export default function Empty({
     return () => clearInterval(intervalId);
   }, [active]);
 
+  const getOffset = () => {
+    return overlay
+      ? -variables.gap.normal - variables.heightOverlay / 2
+      : -variables.gap.normal;
+  };
+
   return (
     <View
       style={{
         gap: 4,
         flex: 1,
         minHeight: list ? "100%" : undefined,
-        marginTop:
-          -variables.gap.normal - (overlay ? variables.heightOverlay / 2 : 0),
+        marginTop: getOffset(),
         alignItems: "center",
         justifyContent: "center",
       }}

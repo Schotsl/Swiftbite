@@ -1,10 +1,10 @@
-import { Href, Link } from "expo-router";
+import { Href, Link, useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { Fragment, useRef, useEffect } from "react";
 import { Pressable, View, type LayoutChangeEvent } from "react-native";
 
-import TabsButton from "./Button";
 import TextLarge from "@/components/Text/Large";
+import ButtonSmall from "@/components/Button/Small";
 
 import variables from "@/variables";
 
@@ -34,6 +34,8 @@ export default function Tabs({
   value,
   onSelect,
 }: TabsProps) {
+  const router = useRouter();
+
   const scrollRef = useRef<ScrollView>(null);
   const scrollWidth = useRef<number>(0);
 
@@ -95,7 +97,13 @@ export default function Tabs({
               justifyContent: "center",
             }}
           >
-            {back && <TabsButton href={"/(tabs)/add"} icon="arrow-left" />}
+            {back && (
+              <ButtonSmall
+                icon="arrow-left"
+                nano={true}
+                onPress={() => router.back()}
+              />
+            )}
 
             {tabs.map((tab, index) => {
               const isLast = index === tabs.length - 1;
@@ -174,7 +182,18 @@ export default function Tabs({
         </ScrollView>
       </View>
 
-      {add && <TabsButton href={add} icon="plus" right={true} />}
+      {add && (
+        <ButtonSmall
+          icon="plus"
+          nano={true}
+          style={{
+            top: 12,
+            right: variables.padding.page,
+            position: "absolute",
+          }}
+          onPress={() => router.push(add)}
+        />
+      )}
     </View>
   );
 }
