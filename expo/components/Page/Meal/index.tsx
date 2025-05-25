@@ -106,11 +106,13 @@ export default function PageMeal({
     const length = meal.meal_products?.length || 0;
 
     items.push({
+      key: "ingredients",
       icon: "bowl-food",
       value: language.types.ingredient.getCount(length),
     });
 
     items.push({
+      key: "quantity",
       icon: "weight-hanging",
       value: `${meal.quantity_gram} g`,
     });
