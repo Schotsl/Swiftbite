@@ -72,6 +72,11 @@ export default function ButtonSmall({
           shadowRadius: 8,
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.05,
+
+          // I added this background color to improve shadow performance
+          alignSelf: "flex-start",
+          borderRadius: 100,
+          backgroundColor: variables.colors.white,
         },
         style,
       ]}
@@ -85,15 +90,12 @@ export default function ButtonSmall({
           minWidth: nano ? 28 : 36,
           minHeight: nano ? 28 : 36,
 
-          alignSelf: "flex-start",
           alignItems: "center",
           flexDirection: "row",
           justifyContent: "center",
           paddingHorizontal: title ? 16 : 0,
 
           overflow: "hidden",
-          // borderColor: "#c9e6ff",
-          // borderWidth: 2,
           borderRadius: 100,
           backgroundColor: variables.colors.background.secondary,
         }}

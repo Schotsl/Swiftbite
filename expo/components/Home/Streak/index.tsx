@@ -23,6 +23,10 @@ export default function HomeStreak() {
         shadowRadius: 8,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.025,
+
+        // I added this background color to improve shadow performance
+        borderRadius: 100,
+        backgroundColor: variables.colors.white,
       }}
     >
       <View
