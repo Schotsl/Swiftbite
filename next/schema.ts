@@ -50,10 +50,10 @@ export type ProductGenerativeVisualsData = z.infer<
 export const productGenerativeNutritionSchema = nutritionSchema.extend({
   serving_original: z
     .number()
-    .describe("Numeric value of the recommended serving size"),
+    .describe("Numeric value of the recommended serving size, for example 100"),
   serving_original_unit: z
     .string()
-    .describe(`Unit of the recommended serving size`),
+    .describe(`Unit of the recommended serving size, for example g, ml, etc.`),
   serving_gram: z
     .number()
     .describe(
@@ -62,12 +62,16 @@ export const productGenerativeNutritionSchema = nutritionSchema.extend({
 
   quantity_original: z
     .number()
-    .describe("Numeric value of the total quantity in the product's packaging")
+    .describe(
+      "Numeric value of the total quantity in the product's packaging, for example 100"
+    )
     .optional()
     .nullable(),
   quantity_original_unit: z
     .string()
-    .describe(`Unit of the total quantity in the product's packaging`)
+    .describe(
+      `Unit of the total quantity in the product's packaging, for example g, ml, etc.`
+    )
     .optional()
     .nullable(),
   quantity_gram: z
