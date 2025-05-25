@@ -189,7 +189,7 @@ export default function InputMacro({
             label={language.macros.carbs.long}
             value={temporary.carbs}
             calories={calories}
-            background="#02b6ff"
+            background={variables.macros.carbs.background}
             onChange={(value) => handleChange("carbs", value)}
           />
 
@@ -198,7 +198,7 @@ export default function InputMacro({
             label={language.macros.protein.long}
             value={temporary.protein}
             calories={calories}
-            background="#37a859"
+            background={variables.macros.protein.background}
             onChange={(value) => handleChange("protein", value)}
           />
 
@@ -207,7 +207,7 @@ export default function InputMacro({
             label={language.macros.fats.long}
             value={temporary.fat}
             calories={calories}
-            background="#ff0202"
+            background={variables.macros.fats.background}
             onChange={(value) => handleChange("fat", value)}
           />
         </View>

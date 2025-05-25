@@ -68,6 +68,7 @@ export default function ButtonSmall({
   };
 
   const marker = useRef<View>(null);
+
   return (
     <View
       style={[

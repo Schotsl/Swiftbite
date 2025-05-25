@@ -9,7 +9,9 @@ import { Picker } from "@react-native-picker/picker";
 import { Weight } from "@/schemas/personal/health";
 import { useState } from "react";
 import { transformDate } from "@/helper";
-import { Control, useController } from "react-hook-form";
+import { useController, Control } from "react-hook-form";
+
+import language from "@/language";
 import variables from "@/variables";
 
 type InputWeightsProps = {
@@ -77,7 +79,7 @@ export default function InputWeights({
           <EmptySmall
             left={true}
             style={{ marginBottom: -12 }}
-            content="Je hebt nog geen gewicht aan je account toegevoegd"
+            content={language.input.weight.empty}
             onPress={handleOpen}
           />
         ) : (
@@ -90,13 +92,13 @@ export default function InputWeights({
             paddingVertical: 12,
           }}
         >
-          <ButtonSmall icon="plus" onPress={handleOpen} nano />
+          <ButtonSmall icon="plus" onPress={handleOpen} nano={true} />
         </View>
       </View>
 
       <Modal
-        title="Gewicht toevoegen"
-        button="Gewicht opslaan"
+        title={language.input.weight.add}
+        button={language.input.weight.button}
         visible={visible}
         onClose={handleClose}
         onButton={handleSave}
@@ -140,7 +142,9 @@ function InputWeightsList({ weights, onDelete }: InputWeightsListProps) {
             borderBottomWidth: variables.border.width,
           }}
         >
-          <TextLarge>{entry.weight.toFixed(1)} kg</TextLarge>
+          <TextLarge>
+            {entry.weight.toFixed(1)} {language.measurement.metric.weight}
+          </TextLarge>
 
           <TextLarge>{transformDate(entry.date)}</TextLarge>
 

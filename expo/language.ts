@@ -26,6 +26,10 @@ export default {
   consumed: "Verbruikt",
   remaining: "Resterend",
   macros: {
+    calories: {
+      long: "Calorieën",
+      short: "kcal",
+    },
     fats: {
       long: "Vetten",
       short: "Vetten",
@@ -105,6 +109,24 @@ export default {
       single: "Inschatting",
       plural: "Inschattingen",
       loading: "We zijn je inschatting aan het laden uit onze database",
+    },
+  },
+  measurement: {
+    metric: {
+      weight: "kg",
+      distance: "cm",
+    },
+    imperial: {
+      weight: "lbs",
+      distance: "in",
+    },
+  },
+  input: {
+    optional: "optioneel",
+    weight: {
+      add: "Gewicht toevoegen",
+      empty: "Je hebt nog geen gewicht aan je account toegevoegd",
+      button: "Gewicht opslaan",
     },
   },
   page: {

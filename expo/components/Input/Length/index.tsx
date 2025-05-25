@@ -2,12 +2,13 @@ import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
 import ButtonSmall from "@/components/Button/Small";
 
-import { View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { useState } from "react";
 import { useController, Control } from "react-hook-form";
+import { TouchableOpacity, View } from "react-native";
 
 import TextInput from "@/components/Text/Input";
+import language from "@/language";
 
 type InputLengthProps = {
   name: string;
@@ -56,22 +57,26 @@ export default function InputLength({
     <View>
       <Label label={label} />
 
-      <View
-        style={{
-          marginTop: -4,
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <TextInput>{value} cm</TextInput>
+      <TouchableOpacity onPress={handleOpen}>
+        <View
+          style={{
+            marginTop: -4,
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <TextInput>
+            {value} {language.measurement.metric.distance}
+          </TextInput>
 
-        <ButtonSmall icon="pencil" onPress={handleOpen} nano />
-      </View>
+          <ButtonSmall icon="pencil" onPress={handleOpen} nano />
+        </View>
+      </TouchableOpacity>
 
       <Modal
         title={label}
-        button="Wijzigen opslaan"
+        button={language.modifications.getEdit(label)}
         visible={visible}
         onClose={handleClose}
         onButton={handleSave}
@@ -82,7 +87,11 @@ export default function InputLength({
           onValueChange={handleChange}
         >
           {options.map((option) => (
-            <Picker.Item key={option} label={`${option} cm`} value={option} />
+            <Picker.Item
+              key={option}
+              value={option}
+              label={`${option} ${language.measurement.metric.distance}`}
+            />
           ))}
         </Picker>
       </Modal>

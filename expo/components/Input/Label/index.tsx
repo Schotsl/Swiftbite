@@ -1,4 +1,7 @@
+import Text from "@/components/Text";
 import TextBody from "@/components/Text/Body";
+
+import language from "@/language";
 import variables from "@/variables";
 
 import { View } from "react-native";
@@ -24,13 +27,14 @@ export default function InputLabel({
       <TextBody weight="semibold">{label}</TextBody>
 
       {!required && (
-        <TextBody
+        <Text
+          size={10}
           color={variables.colors.greyDark}
-          style={{ top: -1, fontSize: 10 }}
+          style={{ top: -1 }}
           weight="semibold"
         >
-          (optioneel)
-        </TextBody>
+          ({language.input.optional})
+        </Text>
       )}
     </View>
   );

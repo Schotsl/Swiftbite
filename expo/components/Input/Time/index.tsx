@@ -1,15 +1,16 @@
 import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
+import TextInput from "@/components/Text/Input";
 import ButtonSmall from "@/components/Button/Small";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 
-import { View } from "react-native";
 import { useState } from "react";
-import { Control, useController } from "react-hook-form";
+import { useController, Control } from "react-hook-form";
+import { TouchableOpacity, View } from "react-native";
 
-import TextInput from "@/components/Text/Input";
+import language from "@/language";
 
 type InputTimeProps = {
   name: string;
@@ -60,22 +61,24 @@ export default function InputTime({ name, label, control }: InputTimeProps) {
     <View>
       <Label label={label} />
 
-      <View
-        style={{
-          marginTop: -4,
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <TextInput>{transformTime(value)}</TextInput>
+      <TouchableOpacity onPress={handleOpen}>
+        <View
+          style={{
+            marginTop: -4,
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <TextInput>{transformTime(value)}</TextInput>
 
-        <ButtonSmall icon="pencil" onPress={handleOpen} nano />
-      </View>
+          <ButtonSmall icon="pencil" onPress={handleOpen} nano />
+        </View>
+      </TouchableOpacity>
 
       <Modal
         title={label}
-        button="Wijzigen opslaan"
+        button={language.modifications.getEdit(label)}
         visible={visible}
         onClose={handleClose}
         onButton={handleSave}

@@ -12,6 +12,7 @@ import TextSmall from "@/components/Text/Small";
 import TextBody from "@/components/Text/Body";
 
 import variables from "@/variables";
+import language from "@/language";
 
 type DropdownProps = {
   name: string;
@@ -90,20 +91,24 @@ export default function InputDropdown({
         style={{
           borderWidth: variables.border.width,
           borderColor:
-            fieldState.error || error ? "#FF4141" : variables.border.color,
-          borderRadius: 8,
+            fieldState.error || error
+              ? variables.colors.text.error
+              : variables.border.color,
 
+          borderRadius: variables.border.radius,
+          backgroundColor: variables.colors.white,
           flexDirection: "row",
-          backgroundColor: "#fff",
 
           opacity: disabled ? 0.5 : 1,
         }}
         onPress={handleOpen}
       >
         <TextBody
-          color={selected ? variables.colors.text.primary : "#aba9a9"}
-          style={{ flex: 1, padding: 12, paddingHorizontal: 16 }}
           weight="semibold"
+          style={{ flex: 1, padding: 12, paddingHorizontal: 16 }}
+          color={
+            selected ? variables.colors.text.primary : variables.border.color
+          }
         >
           {selected ? selected.title : placeholder}
         </TextBody>
@@ -120,12 +125,20 @@ export default function InputDropdown({
             borderLeftWidth: variables.border.width,
           }}
         >
-          <Ionicons name="chevron-down" size={20} color="#000" />
+          <Ionicons
+            size={20}
+            name="chevron-down"
+            color={variables.colors.text.primary}
+          />
         </View>
       </TouchableOpacity>
 
       {(fieldState.error || error) && (
-        <TextSmall color="#FF4141" weight="semibold" style={{ marginTop: 8 }}>
+        <TextSmall
+          color={variables.colors.text.error}
+          style={{ marginTop: variables.input.margin }}
+          weight="semibold"
+        >
           {fieldState.error?.message || error}
         </TextSmall>
       )}
@@ -134,7 +147,7 @@ export default function InputDropdown({
         title={label}
         visible={visible}
         onClose={handleClose}
-        button={extended ? "Wijzigen opslaan" : undefined}
+        button={extended ? language.modifications.getEdit(label) : undefined}
         onButton={handleSave}
       >
         {extended ? (
