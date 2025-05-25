@@ -18,6 +18,7 @@ import { DetailsData, detailsSchema } from "@/schemas/personal/details";
 
 import language from "@/language";
 import variables from "@/variables";
+import ButtonOverlay from "@/components/Button/Overlay";
 
 export default function PersonalDetails() {
   const { data: user } = useSuspenseQuery(userData());
@@ -59,7 +60,7 @@ export default function PersonalDetails() {
         </View>
       </ScrollView>
 
-      <Button
+      <ButtonOverlay
         title={language.page.personal.details.button}
         onPress={handleSubmit(handleSave)}
         loading={isSubmitting}

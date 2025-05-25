@@ -90,11 +90,11 @@ export default function Input({
         let border = variables.border.color;
 
         if (fieldState.error || error) {
-          border = "red";
+          border = variables.colors.text.error;
         }
 
         if (isFocused) {
-          border = "#007AFF";
+          border = variables.colors.text.focused;
         }
 
         return (
@@ -113,7 +113,11 @@ export default function Input({
                     zIndex: 2,
                   }}
                 >
-                  <FontAwesome6 name={icon} size={16} color="#555555" />
+                  <FontAwesome6
+                    name={icon}
+                    size={16}
+                    color={variables.colors.text.primary}
+                  />
                 </View>
               )}
 

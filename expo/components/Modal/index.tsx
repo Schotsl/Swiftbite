@@ -76,7 +76,6 @@ export default function Modal({
 
               borderColor: variables.colors.grey,
               borderBottomWidth: variables.border.width,
-              backgroundColor: "red",
 
               alignItems: "center",
               flexDirection: "row",

@@ -28,7 +28,6 @@ export default function ButtonOverlay({
         left: 0,
         right: 0,
         position: "absolute",
-        backgroundColor: variables.colors.greyLight,
 
         padding: variables.padding.page,
         paddingVertical: 12,

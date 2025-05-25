@@ -12,6 +12,7 @@ type InputMacroSliderProps = {
   label: string;
   value: number;
   calories: number;
+  background: string;
   onChange: (value: number) => void;
 };
 
@@ -20,6 +21,7 @@ export default function InputMacroSlider({
   label,
   value,
   calories,
+  background,
   onChange,
 }: InputMacroSliderProps) {
   const grams = macroToCalories(type, value, calories);
@@ -42,7 +44,7 @@ export default function InputMacroSlider({
           maximumValue={1}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#FFFFFF"
-          thumbTintColor="#000"
+          thumbTintColor={background}
           onValueChange={onChange}
         />
         <View
@@ -53,9 +55,8 @@ export default function InputMacroSlider({
             zIndex: -1,
             position: "absolute",
             transform: [{ translateY: -5 }],
-
             borderColor: variables.border.color,
-            borderWidth: variables.border.width,
+            borderWidth: 2,
             borderRadius: variables.border.radius,
           }}
         />

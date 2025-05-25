@@ -1,12 +1,14 @@
 import { View } from "react-native";
 
-import ButtonSmall from "@/components/Button/Small";
-import TextTitle from "@/components/Text/Title";
 import TextSmall from "@/components/Text/Small";
 import TextLarge from "@/components/Text/Large";
+import ButtonSmall from "@/components/Button/Small";
+import variables from "@/variables";
 
 type InputMacroItemProps = {
   label: string;
+  border: string;
+  background: string;
   percentage: number;
   description: string;
   onPress: () => void;
@@ -14,6 +16,8 @@ type InputMacroItemProps = {
 
 export default function InputMacroItem({
   label,
+  border,
+  background,
   percentage,
   description,
   onPress,
@@ -22,9 +26,15 @@ export default function InputMacroItem({
   const percentageRounded = Math.round(percentageDisplay);
 
   return (
-    <View style={{ flexDirection: "row", gap: 16, alignItems: "flex-end" }}>
+    <View
+      style={{
+        gap: variables.gap.normal,
+        alignItems: "flex-end",
+        flexDirection: "row",
+      }}
+    >
       <View style={{ flex: 1, gap: 4 }}>
-        <TextLarge>{label}</TextLarge>
+        <TextLarge weight="semibold">{label}</TextLarge>
 
         <TextSmall>{description}</TextSmall>
       </View>
@@ -33,14 +43,17 @@ export default function InputMacroItem({
         style={{
           width: 86,
           height: 86,
-          borderWidth: 4,
-          borderColor: "#000",
+          borderColor: border,
+          borderWidth: 2,
+          backgroundColor: background,
           borderRadius: 43,
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <TextTitle style={{ marginTop: -2 }}>{percentageRounded}%</TextTitle>
+        <TextLarge color="#FFF" weight="semibold">
+          {percentageRounded}%
+        </TextLarge>
 
         <ButtonSmall
           icon="pencil"
@@ -50,7 +63,6 @@ export default function InputMacroItem({
             left: -4,
             bottom: -4,
             position: "absolute",
-            backgroundColor: "#fff",
           }}
         />
       </View>

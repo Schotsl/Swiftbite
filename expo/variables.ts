@@ -7,10 +7,25 @@ export default {
     color: "#d6d6d6",
     radius: 8,
   },
+  macros: {
+    carbs: {
+      border: "#0098d6",
+      background: "#009bda",
+    },
+    protein: {
+      border: "#36a557",
+      background: "#37a859",
+    },
+    fats: {
+      border: "#fc0000",
+      background: "#ff0202",
+    },
+  },
   colors: {
     text: {
       error: "#7C0000",
       primary: "#2E2727",
+      focused: "#007AFF",
       secondary: "#677798",
     },
     background: {
@@ -51,6 +66,6 @@ export default {
   paddingOverlay: 32 + 84,
 
   heightTab: 62,
-  heightOverlay: 84,
+  heightOverlay: 96,
   heightNavigation: 130,
 };

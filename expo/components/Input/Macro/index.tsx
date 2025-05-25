@@ -6,8 +6,10 @@ import InputMacroSlider from "./Slider";
 import { View } from "react-native";
 import { useState } from "react";
 import { MacroData } from "@/schemas/personal/goal";
-import { Control, useController } from "react-hook-form";
+import { useController, Control } from "react-hook-form";
+
 import language from "@/language";
+import variables from "@/variables";
 
 type MacroDataKey = keyof MacroData;
 
@@ -80,7 +82,7 @@ export default function InputMacro({
       const leastRecentValuePotential = leastRecentValue - remainingDelta;
       const leastRecentValueUpdated = Math.max(
         0,
-        Math.min(1, leastRecentValuePotential),
+        Math.min(1, leastRecentValuePotential)
       );
 
       const leastRecentValueDelta = leastRecentValue - leastRecentValueUpdated;
@@ -97,7 +99,7 @@ export default function InputMacro({
 
         const newSecondLeastRecentValue = Math.max(
           0,
-          Math.min(1, secondLeastRecentValuePotential),
+          Math.min(1, secondLeastRecentValuePotential)
         );
 
         currentValues[secondRecentKey] = newSecondLeastRecentValue;
@@ -145,9 +147,11 @@ export default function InputMacro({
     <View>
       <Label label={label} />
 
-      <View style={{ gap: 32 }}>
+      <View style={{ marginTop: -4, gap: 32 }}>
         <InputMacroItem
           label={language.macros.carbs.short}
+          border={variables.macros.carbs.border}
+          background={variables.macros.carbs.background}
           percentage={macro.carbs}
           description={language.macros.carbs.explanation}
           onPress={handleOpen}
@@ -155,6 +159,8 @@ export default function InputMacro({
 
         <InputMacroItem
           label={language.macros.protein.short}
+          border={variables.macros.protein.border}
+          background={variables.macros.protein.background}
           percentage={macro.protein}
           description={language.macros.protein.explanation}
           onPress={handleOpen}
@@ -162,6 +168,8 @@ export default function InputMacro({
 
         <InputMacroItem
           label={language.macros.fats.short}
+          border={variables.macros.fats.border}
+          background={variables.macros.fats.background}
           percentage={macro.fat}
           description={language.macros.fats.explanation}
           onPress={handleOpen}
@@ -181,6 +189,7 @@ export default function InputMacro({
             label={language.macros.carbs.long}
             value={temporary.carbs}
             calories={calories}
+            background="#02b6ff"
             onChange={(value) => handleChange("carbs", value)}
           />
 
@@ -189,6 +198,7 @@ export default function InputMacro({
             label={language.macros.protein.long}
             value={temporary.protein}
             calories={calories}
+            background="#37a859"
             onChange={(value) => handleChange("protein", value)}
           />
 
@@ -197,6 +207,7 @@ export default function InputMacro({
             label={language.macros.fats.long}
             value={temporary.fat}
             calories={calories}
+            background="#ff0202"
             onChange={(value) => handleChange("fat", value)}
           />
         </View>

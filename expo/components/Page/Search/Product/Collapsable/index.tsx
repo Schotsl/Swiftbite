@@ -139,7 +139,7 @@ function SearchCollapsableEmpty({ empty }: SearchCollapsableEmptyProps) {
         borderBottomColor: variables.border.color,
       }}
     >
-      <ProductStatus active={false} small={true} status={empty} />
+      <ProductStatus active={false} status={empty} />
     </View>
   );
 }
