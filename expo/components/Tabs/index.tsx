@@ -71,6 +71,7 @@ export default function Tabs({
     <View>
       <View
         style={{
+          height: variables.heightTab,
           alignItems: "center",
           paddingTop: 12,
           paddingBottom: 24,

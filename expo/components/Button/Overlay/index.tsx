@@ -13,20 +13,28 @@ export default function ButtonOverlay({
 }: ButtonOverlayProps) {
   const { height } = useWindowDimensions();
 
-  const adjustedTab = tab ? variables.heightTab : 0;
-  const adjustedTop =
-    height -
-    variables.heightNavigation -
-    variables.heightOverlay -
-    adjustedTab +
-    9;
+  const getHeight = () => {
+    let heightCalculated = height;
+
+    if (tab) {
+      heightCalculated -= variables.heightTab;
+    }
+
+    heightCalculated += variables.border.width;
+    heightCalculated -= variables.heightNavigation;
+    heightCalculated -= variables.heightOverlay;
+    heightCalculated -= variables.gap.large;
+
+    return heightCalculated;
+  };
 
   return (
     <View
       style={{
-        top: adjustedTop,
+        top: getHeight(),
         left: 0,
         right: 0,
+        height: variables.heightOverlay,
         position: "absolute",
 
         padding: variables.padding.page,

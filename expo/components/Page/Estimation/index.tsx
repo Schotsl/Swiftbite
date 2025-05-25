@@ -17,7 +17,7 @@ type PageEstimationProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
@@ -31,9 +31,11 @@ export default function PageEstimation({
 }: PageEstimationProps) {
   const [tab, setTab] = useState(product ? "manual" : "automatic");
 
+  const tabVisible = !image && !product;
+
   return (
     <View>
-      {!image && !product && (
+      {tabVisible && (
         <Tabs
           tabs={[
             {
@@ -51,7 +53,7 @@ export default function PageEstimation({
       )}
 
       {tab === "automatic" ? (
-        <PageEstimationAutomatic onSave={onSave} />
+        <PageEstimationAutomatic tab={tabVisible} onSave={onSave} />
       ) : (
         <PageEstimationManual
           product={product}

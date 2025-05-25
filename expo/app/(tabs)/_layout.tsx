@@ -90,6 +90,7 @@ export default function TabsLayout() {
               headerShown: false,
               tabBarShowLabel: false,
               tabBarStyle: {
+                height: variables.heightNavigation,
                 display: camera ? "none" : "flex",
                 paddingTop: 12,
                 paddingLeft: 12,

@@ -69,6 +69,6 @@ export default {
   paddingOverlay: 32 + 84,
 
   heightTab: 62,
-  heightOverlay: 96,
-  heightNavigation: 130,
+  heightOverlay: 75,
+  heightNavigation: 83,
 };

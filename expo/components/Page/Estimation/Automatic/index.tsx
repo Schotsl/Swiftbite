@@ -27,14 +27,16 @@ import EstimationImage from "@/components/Estimation/Image";
 import ButtonOverlay from "@/components/Button/Overlay";
 
 type PageEstimationAutomaticProps = {
+  tab?: boolean;
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
 export default function PageEstimationAutomatic({
+  tab,
   onSave,
 }: PageEstimationAutomaticProps) {
   const focus = useIsFocused();
@@ -262,8 +264,8 @@ export default function PageEstimationAutomatic({
       </ScrollView>
 
       <ButtonOverlay
-        tab={true}
         // TODO: Language
+        tab={tab}
         title="Product opslaan"
         onPress={handleSubmit(handleSave)}
         loading={saving}
