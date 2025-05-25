@@ -13,6 +13,7 @@ import variables from "@/variables";
 
 type PageSearchProductCollapsableProps = {
   empty: string;
+  emoji: string;
   title: string;
   opened: string | null;
   loading: boolean;
@@ -24,6 +25,7 @@ type PageSearchProductCollapsableProps = {
 
 export default function PageSearchProductCollapsable({
   empty,
+  emoji,
   title,
   opened,
   loading,
@@ -91,7 +93,7 @@ export default function PageSearchProductCollapsable({
           {loading ? (
             <SearchCollapsableSkeleton />
           ) : isEmpty ? (
-            <SearchCollapsableEmpty empty={empty} />
+            <SearchCollapsableEmpty empty={empty} emoji={emoji} />
           ) : (
             products && (
               <FlatList
@@ -127,9 +129,10 @@ function SearchCollapsableSkeleton() {
 
 type SearchCollapsableEmptyProps = {
   empty: string;
+  emoji: string;
 };
 
-function SearchCollapsableEmpty({ empty }: SearchCollapsableEmptyProps) {
+function SearchCollapsableEmpty({ empty, emoji }: SearchCollapsableEmptyProps) {
   return (
     <View
       style={{
@@ -139,7 +142,7 @@ function SearchCollapsableEmpty({ empty }: SearchCollapsableEmptyProps) {
         borderBottomColor: variables.border.color,
       }}
     >
-      <Empty content={empty} emoji="🍎" />
+      <Empty content={empty} emoji={emoji} />
     </View>
   );
 }

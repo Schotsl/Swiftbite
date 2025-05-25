@@ -153,6 +153,7 @@ export default function PageSearchProduct({
       <PageSearchProductCollapsable
         title={language.search.favorite.getTitle(labelPlural)}
         empty={language.search.favorite.getEmpty(labelPlural)}
+        emoji="😊"
         opened={opened}
         loading={favoriteProductsLoading}
         products={favoriteProducts}
@@ -163,6 +164,7 @@ export default function PageSearchProduct({
       <PageSearchProductCollapsable
         title={language.search.manual.getTitle(labelPlural)}
         empty={language.search.manual.getEmpty(labelPlural)}
+        emoji="📝"
         opened={opened}
         loading={false}
         products={[]}
@@ -173,6 +175,7 @@ export default function PageSearchProduct({
       <PageSearchProductCollapsable
         title={language.search.often.getTitle(labelPlural)}
         empty={language.search.often.getEmpty(labelPlural)}
+        emoji="👀"
         opened={opened}
         loading={mostUsedProductsLoading}
         products={mostUsedProducts}
@@ -183,6 +186,7 @@ export default function PageSearchProduct({
       <PageSearchProductCollapsable
         title={language.search.recent.getTitle(labelPlural)}
         empty={language.search.recent.getEmpty(labelPlural)}
+        emoji="🆕"
         opened={opened}
         loading={mostRecentProductsLoading}
         products={mostRecentProducts}

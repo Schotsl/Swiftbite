@@ -167,10 +167,10 @@ export default function AutomationsRepeatUpsert() {
                   title={
                     isSet
                       ? language.modifications.getPick(
-                          language.types.ingredient.single
+                          language.types.ingredient.single,
                         )
                       : language.modifications.getEdit(
-                          language.types.ingredient.single
+                          language.types.ingredient.single,
                         )
                   }
                   onPress={() => setOpen(true)}

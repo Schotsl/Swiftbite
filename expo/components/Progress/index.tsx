@@ -52,7 +52,7 @@ export default function Progress({
           style={{
             maxWidth: "100%",
             minWidth: variables.border.radius,
-            
+
             overflow: "hidden",
             position: "absolute",
 

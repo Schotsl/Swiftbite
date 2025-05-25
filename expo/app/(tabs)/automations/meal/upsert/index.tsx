@@ -140,7 +140,7 @@ export default function AutomationsMealUpsert() {
                       <EmptySmall
                         onPress={() => setOpen(true)}
                         content={language.empty.getAdded(
-                          language.types.ingredient.plural
+                          language.types.ingredient.plural,
                         )}
                       />
                     );
@@ -176,7 +176,7 @@ export default function AutomationsMealUpsert() {
                 <ButtonSmall
                   icon="plus"
                   title={language.modifications.getInsert(
-                    language.types.ingredient.plural
+                    language.types.ingredient.plural,
                   )}
                   onPress={() => setOpen(true)}
                   onPosition={setPosition}
@@ -245,7 +245,7 @@ function AutomationsMealUpsertAdd({
         <ButtonSmall
           icon={"plus"}
           title={language.modifications.getInsert(
-            language.types.ingredient.plural
+            language.types.ingredient.plural,
           )}
           onPress={() => onClose()}
         />

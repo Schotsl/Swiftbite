@@ -169,7 +169,7 @@ export default function PageCamera({
       base64: string,
       width: number,
       height: number,
-      orientation: number
+      orientation: number,
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -192,7 +192,7 @@ export default function PageCamera({
         newHeight,
         "JPEG",
         50,
-        orientation
+        orientation,
       );
 
       sendImage(data.uri);
@@ -204,7 +204,7 @@ export default function PageCamera({
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    []
+    [],
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -236,7 +236,7 @@ export default function PageCamera({
     onCodeScanned: (codes) => {
       if (codes.length > 1) {
         Alert.alert(
-          "We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één."
+          "We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één.",
         );
 
         return;

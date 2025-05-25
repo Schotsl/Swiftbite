@@ -11,7 +11,6 @@ import {
 import React from "react";
 import InputLabel from "./Label";
 import TextBody from "@/components/Text/Body";
-import TextSmall from "@/components/Text/Small";
 
 import variables from "@/variables";
 import Text from "../Text";

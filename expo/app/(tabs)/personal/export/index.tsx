@@ -11,7 +11,7 @@ export default function PersonalExport() {
   const handleExport = () => {
     Alert.alert(
       language.page.personal.export.alert.title,
-      language.page.personal.export.alert.content
+      language.page.personal.export.alert.content,
     );
   };
 

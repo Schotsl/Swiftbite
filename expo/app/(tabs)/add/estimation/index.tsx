@@ -1,6 +1,5 @@
 import entryData from "@/queries/entryData";
 
-import { View } from "react-native";
 import { Product } from "@/types/product";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
@@ -11,9 +10,8 @@ import useDeleteEntry from "@/mutations/useDeleteEntry";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import PageEstimation from "@/components/Page/Estimation";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
-import HeaderLoading from "@/components/Header/Loading";
-import Empty from "@/components/Empty";
-import language from "@/language";
+
+import PageEstimationLoading from "@/components/Page/Estimation/Loading";
 
 export default function AddEstimation() {
   const router = useRouter();
@@ -42,17 +40,7 @@ export default function AddEstimation() {
   });
 
   if (isLoading) {
-    return (
-      <View style={{ padding: 32, minHeight: "100%" }}>
-        <HeaderLoading />
-
-        <Empty
-          emoji="🔎"
-          active={true}
-          content={language.types.estimation.loading}
-        />
-      </View>
-    );
+    return <PageEstimationLoading editing={!!entry} />;
   }
 
   const image = transformImage(uri, width, height);
@@ -61,7 +49,7 @@ export default function AddEstimation() {
   const handleSave = async (
     returnedProduct: Product,
     returnedServing: ServingData | null,
-    returnedCreated: Date
+    returnedCreated: Date,
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it

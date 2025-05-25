@@ -1,14 +1,10 @@
-import Empty from "@/components/Empty";
 import PageProduct from "@/components/Page/Product";
-import HeaderLoading from "@/components/Header/Loading";
+import PageProductLoading from "@/components/Page/Product/Loading";
 
-import { View } from "react-native";
 import { useProduct } from "@/hooks/useProduct";
 import { useEditMeal } from "@/context/MealContext";
 import { ServingData } from "@/schemas/serving";
 import { useLocalSearchParams, Redirect, router } from "expo-router";
-
-import language from "@/language";
 
 export default function AutomationsMealUpsertProduct() {
   const {
@@ -30,27 +26,17 @@ export default function AutomationsMealUpsertProduct() {
     redirect: "/(tabs)/automations/meal/upsert/search",
   });
 
-  if (isLoading) {
-    return (
-      <View style={{ padding: 32, minHeight: "100%" }}>
-        <HeaderLoading />
+  const mealProduct = mealProducts.find(
+    (mealProduct) => mealProduct.product.uuid === productId,
+  );
 
-        <Empty
-          emoji="🔎"
-          active={true}
-          content={language.types.product.loading}
-        />
-      </View>
-    );
+  if (isLoading) {
+    return <PageProductLoading editing={!!mealProduct?.serving} />;
   }
 
   if (!product) {
     return <Redirect href="/(tabs)/automations/meal" />;
   }
-
-  const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId
-  );
 
   return (
     <PageProduct

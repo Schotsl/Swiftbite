@@ -1,14 +1,10 @@
-import { View } from "react-native";
 import { useProduct } from "@/hooks/useProduct";
 import { ServingData } from "@/schemas/serving";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
 
-import Empty from "@/components/Empty";
 import PageProduct from "@/components/Page/Product";
-import HeaderLoading from "@/components/Header/Loading";
-
-import language from "@/language";
+import PageProductLoading from "@/components/Page/Product/Loading";
 
 export default function AutomationsRepeatUpsertProduct() {
   const {
@@ -32,17 +28,7 @@ export default function AutomationsRepeatUpsertProduct() {
   });
 
   if (isLoadingSearch) {
-    return (
-      <View style={{ padding: 32, minHeight: "100%" }}>
-        <HeaderLoading />
-
-        <Empty
-          emoji="🔎"
-          active={true}
-          content={language.types.product.loading}
-        />
-      </View>
-    );
+    return <PageProductLoading editing={!!serving} />;
   }
 
   const product = productEditing || productSearch;

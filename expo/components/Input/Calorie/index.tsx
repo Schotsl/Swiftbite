@@ -1,7 +1,6 @@
 import Input from "@/components/Input";
 import Modal from "@/components/Modal";
 import Label from "@/components/Input/Label";
-import TextTitle from "@/components/Text/Title";
 import ButtonSmall from "@/components/Button/Small";
 
 import { View } from "react-native";
