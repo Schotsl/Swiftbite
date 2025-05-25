@@ -6,8 +6,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { RepeatProvider } from "@/context/RepeatContext";
 import { useLocalSearchParams, Slot } from "expo-router";
 
+import Empty from "@/components/Empty";
 import Header from "@/components/Header";
-import ProductStatus from "@/components/Product/Status";
 import ButtonOverlay from "@/components/Button/Overlay";
 
 import language from "@/language";
@@ -54,7 +54,12 @@ function AutomationsRepeatUpsertLayoutLoading() {
             content={language.types.repeat.explanation}
           />
 
-          <ProductStatus status={language.types.repeat.loading} />
+          <Empty
+            emoji="🔎"
+            active={true}
+            overlay={true}
+            content={language.types.repeat.loading}
+          />
         </View>
       </ScrollView>
 

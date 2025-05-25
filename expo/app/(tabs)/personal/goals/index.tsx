@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import InputMacro from "@/components/Input/Macro";
 import InputCalorie from "@/components/Input/Calorie";
-import ProductStatus from "@/components/Product/Status";
 import ButtonOverlay from "@/components/Button/Overlay";
 
 import useUpdateUser from "@/mutations/useUpdateUser";
@@ -18,6 +17,7 @@ import { GoalData, goalSchema } from "@/schemas/personal/goal";
 
 import language from "@/language";
 import variables from "@/variables";
+import Empty from "@/components/Empty";
 
 export default function PersonalGoals() {
   const { data: user } = useSuspenseQuery(userData());
@@ -73,7 +73,13 @@ export default function PersonalGoals() {
 }
 
 function PersonalGoalsLoading() {
-  return <ProductStatus status={language.page.personal.goals.loading} />;
+  return (
+    <Empty
+      emoji="🔎"
+      active={true}
+      content={language.page.personal.goals.loading}
+    />
+  );
 }
 
 type PersonalGoalsFormProps = {

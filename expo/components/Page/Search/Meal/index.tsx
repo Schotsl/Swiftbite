@@ -8,8 +8,8 @@ import { ServingData } from "@/schemas/serving";
 import language from "@/language";
 import mealData from "@/queries/mealData";
 
+import Empty from "@/components/Empty";
 import ItemMeal from "@/components/Item/Meal";
-import ProductStatus from "@/components/Product/Status";
 
 type PageSearchProps = {
   query: string;
@@ -40,28 +40,28 @@ export default function PageSearchMeal({
   const isEmpty = data?.length === 0;
 
   if (isLoading) {
-    return <ProductStatus status={language.search.results.getLoading(label)} />;
-  }
-
-  if (isError) {
     return (
-      <ProductStatus
-        active={false}
-        status={language.search.results.getError(label)}
+      <Empty
+        emoji="🔎"
+        active={true}
+        content={language.types.meal.loadingPlural}
       />
     );
   }
 
+  if (isError) {
+    return (
+      <Empty emoji="⚠️" content={language.search.results.getError(label)} />
+    );
+  }
+
   if (isEmpty && !query) {
-    return <ProductStatus active={false} status={language.empty.meal} />;
+    return <Empty emoji="😲" content={language.empty.meal} />;
   }
 
   if (isEmpty) {
     return (
-      <ProductStatus
-        active={false}
-        status={language.search.results.getEmpty(label)}
-      />
+      <Empty emoji="😲" content={language.search.results.getEmpty(label)} />
     );
   }
 

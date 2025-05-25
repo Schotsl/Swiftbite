@@ -9,7 +9,7 @@ import language from "@/language";
 import productData from "@/queries/productData";
 
 import ItemProduct from "@/components/Item/Product";
-import ProductStatus from "@/components/Product/Status";
+import Empty from "@/components/Empty";
 import PageSearchProductCollapsable from "@/components/Page/Search/Product/Collapsable";
 import variables from "@/variables";
 
@@ -42,7 +42,10 @@ export default function PageSearchProduct({
   const isActive = queryWatched?.length > 0;
   const isSearchable = query.length >= 4;
 
-  const labelPlural = type === "search_product" ? "producten" : "basisitems";
+  const labelPlural =
+    type === "search_product"
+      ? language.types.product.plural
+      : language.types.basic.plural;
 
   const [opened, setOpened] = useState<string | null>(null);
 
@@ -75,33 +78,32 @@ export default function PageSearchProduct({
 
   if (loading && isEmpty) {
     return (
-      <ProductStatus status={language.search.results.getLoading(labelPlural)} />
+      <Empty
+        emoji="🔎"
+        active={true}
+        content={language.search.results.getLoading(labelPlural)}
+      />
     );
   }
 
   if (error) {
     return (
-      <ProductStatus
-        active={false}
-        status={language.search.results.getError(labelPlural)}
+      <Empty
+        emoji="⚠️"
+        content={language.search.results.getError(labelPlural)}
       />
     );
   }
 
   if (overloaded) {
-    return (
-      <ProductStatus
-        active={false}
-        status={language.search.results.overloaded}
-      />
-    );
+    return <Empty emoji="🥱" content={language.search.results.overloaded} />;
   }
 
   if (isEmpty && isSearchable) {
     return (
-      <ProductStatus
-        active={false}
-        status={language.search.results.getEmpty(labelPlural)}
+      <Empty
+        emoji="😲"
+        content={language.search.results.getEmpty(labelPlural)}
       />
     );
   }
@@ -139,9 +141,9 @@ export default function PageSearchProduct({
 
   if (isActive) {
     return (
-      <ProductStatus
-        active={false}
-        status={language.search.results.getDefault(labelPlural)}
+      <Empty
+        emoji="🥳"
+        content={language.search.results.getDefault(labelPlural)}
       />
     );
   }

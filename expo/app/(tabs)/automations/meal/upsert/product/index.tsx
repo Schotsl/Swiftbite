@@ -1,12 +1,14 @@
+import Empty from "@/components/Empty";
 import PageProduct from "@/components/Page/Product";
-import ProductStatus from "@/components/Product/Status";
 import HeaderLoading from "@/components/Header/Loading";
 
 import { View } from "react-native";
 import { useProduct } from "@/hooks/useProduct";
 import { useEditMeal } from "@/context/MealContext";
 import { ServingData } from "@/schemas/serving";
-import { Redirect, router, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, Redirect, router } from "expo-router";
+
+import language from "@/language";
 
 export default function AutomationsMealUpsertProduct() {
   const {
@@ -33,7 +35,11 @@ export default function AutomationsMealUpsertProduct() {
       <View style={{ padding: 32, minHeight: "100%" }}>
         <HeaderLoading />
 
-        <ProductStatus status="We zijn het product in onze database aan het zoeken" />
+        <Empty
+          emoji="🔎"
+          active={true}
+          content={language.types.product.loading}
+        />
       </View>
     );
   }
@@ -43,7 +49,7 @@ export default function AutomationsMealUpsertProduct() {
   }
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId,
+    (mealProduct) => mealProduct.product.uuid === productId
   );
 
   return (

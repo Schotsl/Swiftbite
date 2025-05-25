@@ -78,19 +78,21 @@ export default {
     product: {
       single: "Product",
       plural: "Producten",
+      loading: "We zijn het product in onze database aan het zoeken",
     },
     meal: {
       single: "Maaltijd",
       plural: "Maaltijden",
       loading: "We zijn je maaltijd aan het laden uit onze database",
+      loadingPlural: "We zijn je maaltijden aan het laden uit onze database",
       explanation: `Een maaltijd is een combinatie van producten die je opslaat om later in één keer toe te voegen.`,
       inputTitle: "Titel",
       inputTitlePlaceholder: "Spicy volkorennoedels",
     },
     repeat: {
       single: "Herhaling",
-      plural: "Herhalen",
-      loading: "We zijn je maaltijd aan het laden uit onze database",
+      plural: "Herhalingen",
+      loading: "We zijn je herhaling aan het laden uit onze database",
       explanation: `Een herhaling is een product dat automatisch toevoegt wordt op de dagen en tijden die jij kiest`,
       inputRepeatTime: "Herhalen om",
       inputRepeatDate: "Herhalen op",
@@ -98,6 +100,11 @@ export default {
     basic: {
       single: "Basisitem",
       plural: "Basisitems",
+    },
+    estimation: {
+      single: "Inschatting",
+      plural: "Inschattingen",
+      loading: "We zijn je inschatting aan het laden uit onze database",
     },
   },
   page: {
@@ -251,59 +258,59 @@ export default {
     weight: "Je hebt nog geen gewicht aan je account toegevoegd",
 
     getAdded: (type: string) => {
-      return `Je hebt nog geen ${type} toegevoegd`;
+      return `Je hebt nog geen ${type.toLowerCase()} toegevoegd`;
     },
     getSelected: (type: string) => {
-      return `Je hebt nog geen ${type} geselecteerd`;
+      return `Je hebt nog geen ${type.toLowerCase()} geselecteerd`;
     },
   },
   search: {
     results: {
-      overloaded: "😲 Je hebt je dagelijkse zoek limiet overschreden",
+      overloaded: "Je hebt je dagelijkse zoek limiet overschreden",
 
       getDefault: (type: string) => {
-        return `🥳 Start met zoeken naar ${type} door minimaal 4 letters te typen en druk op enter`;
+        return `Start met zoeken naar ${type.toLowerCase()} door minimaal 4 letters te typen en druk op enter`;
       },
       getEmpty: (type: string) => {
-        return `😔 We hebben geen ${type} gevonden met deze naam`;
+        return `We hebben geen ${type} gevonden met deze naam`;
       },
       getError: (type: string) => {
-        return `😔 Er is iets mis gegaan tijdens het zoeken naar ${type}`;
+        return `Er is iets mis gegaan tijdens het zoeken naar ${type.toLowerCase()}`;
       },
       getLoading: (type: string) => {
-        return `🕵️ We zijn het hele internet aan het zoeken naar ${type}`;
+        return `We zijn het hele internet aan het zoeken naar ${type.toLowerCase()}`;
       },
     },
     favorite: {
       getTitle: (type: string) => {
-        return `Mijn favoriete ${type}`;
+        return `Mijn favoriete ${type.toLowerCase()}`;
       },
       getEmpty: (type: string) => {
-        return `Je hebt nog geen ${type} als favoriet toegevoegd`;
+        return `Je hebt nog geen ${type.toLowerCase()} als favoriet toegevoegd`;
       },
     },
     manual: {
       getTitle: (type: string) => {
-        return `Zelf toegevoegde ${type}`;
+        return `Zelf toegevoegde ${type.toLowerCase()}`;
       },
       getEmpty: (type: string) => {
-        return `Je hebt nog geen ${type} zelf toegevoegd`;
+        return `Je hebt nog geen ${type.toLowerCase()} zelf toegevoegd`;
       },
     },
     often: {
       getTitle: (type: string) => {
-        return `Vaak gebruikte ${type}`;
+        return `Vaak gebruikte ${type.toLowerCase()}`;
       },
       getEmpty: (type: string) => {
-        return `Je hebt nog geen ${type} zelf toegevoegd`;
+        return `Je hebt nog geen ${type.toLowerCase()} zelf toegevoegd`;
       },
     },
     recent: {
       getTitle: (type: string) => {
-        return `Recent gebruikte ${type}`;
+        return `Recent gebruikte ${type.toLowerCase()}`;
       },
       getEmpty: (type: string) => {
-        return `Je hebt nog geen ${type} gebruikt`;
+        return `Je hebt nog geen ${type.toLowerCase()} gebruikt`;
       },
     },
   },

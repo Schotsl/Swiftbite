@@ -1,9 +1,10 @@
+import Empty from "@/components/Empty";
 import Header from "@/components/Header";
+import ButtonOverlay from "@/components/Button/Overlay";
+
 import InputLabel from "@/components/Input/Label";
 import InputDropdown from "@/components/Input/Dropdown";
 import InputDropdownRadio from "@/components/Input/Dropdown/Radio";
-import ButtonOverlay from "@/components/Button/Overlay";
-import ProductStatus from "@/components/Product/Status";
 
 import useUpdateUser from "@/mutations/useUpdateUser";
 import userData from "@/queries/userData";
@@ -108,7 +109,13 @@ export default function PersonalPreferences() {
 }
 
 function PersonalPreferencesLoading() {
-  return <ProductStatus status={language.page.personal.preferences.loading} />;
+  return (
+    <Empty
+      emoji="🔎"
+      active={true}
+      content={language.page.personal.preferences.loading}
+    />
+  );
 }
 
 type PersonalPreferencesFormProps = {

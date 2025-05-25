@@ -1,11 +1,11 @@
 import userData from "@/queries/userData";
 import useUpdateUser from "@/mutations/useUpdateUser";
 
-import Button from "@/components/Button";
+import Empty from "@/components/Empty";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
 import InputDate from "@/components/Input/Date";
-import ProductStatus from "@/components/Product/Status";
+import ButtonOverlay from "@/components/Button/Overlay";
 
 import { View } from "react-native";
 import { Suspense } from "react";
@@ -18,7 +18,6 @@ import { DetailsData, detailsSchema } from "@/schemas/personal/details";
 
 import language from "@/language";
 import variables from "@/variables";
-import ButtonOverlay from "@/components/Button/Overlay";
 
 export default function PersonalDetails() {
   const { data: user } = useSuspenseQuery(userData());
@@ -71,7 +70,13 @@ export default function PersonalDetails() {
 }
 
 function PersonalDetailsLoading() {
-  return <ProductStatus status={language.page.personal.details.loading} />;
+  return (
+    <Empty
+      emoji="🔎"
+      active={true}
+      content={language.page.personal.details.loading}
+    />
+  );
 }
 
 type PersonalDetailsFormProps = {

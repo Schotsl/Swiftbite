@@ -4,6 +4,8 @@ import ButtonSmall from "@/components/Button/Small";
 import { View } from "react-native";
 import { useRouter } from "expo-router";
 
+import variables from "@/variables";
+
 export default function HeaderLoading() {
   const router = useRouter();
 

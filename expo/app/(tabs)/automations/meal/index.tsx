@@ -86,6 +86,7 @@ function AutomationsMealLoading() {
 function AutomationsMealEmpty() {
   return (
     <Empty
+      list={true}
       emoji="🌮"
       content={language.empty.getAdded(language.types.meal.plural)}
     />

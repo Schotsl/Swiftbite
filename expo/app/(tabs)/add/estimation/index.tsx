@@ -12,7 +12,8 @@ import useInsertEntry from "@/mutations/useInsertEntry";
 import PageEstimation from "@/components/Page/Estimation";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
 import HeaderLoading from "@/components/Header/Loading";
-import ProductStatus from "@/components/Product/Status";
+import Empty from "@/components/Empty";
+import language from "@/language";
 
 export default function AddEstimation() {
   const router = useRouter();
@@ -45,7 +46,11 @@ export default function AddEstimation() {
       <View style={{ padding: 32, minHeight: "100%" }}>
         <HeaderLoading />
 
-        <ProductStatus status="We zijn de inschatting in onze database aan het zoeken" />
+        <Empty
+          emoji="🔎"
+          active={true}
+          content={language.types.estimation.loading}
+        />
       </View>
     );
   }
@@ -56,7 +61,7 @@ export default function AddEstimation() {
   const handleSave = async (
     returnedProduct: Product,
     returnedServing: ServingData | null,
-    returnedCreated: Date,
+    returnedCreated: Date
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it

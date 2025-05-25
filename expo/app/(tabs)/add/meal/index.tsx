@@ -4,14 +4,16 @@ import useInsertEntry from "@/mutations/useInsertEntry";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 
+import Empty from "@/components/Empty";
 import PageMeal from "@/components/Page/Meal";
 import HeaderLoading from "@/components/Header/Loading";
-import ProductStatus from "@/components/Product/Status";
 
 import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
-import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, Redirect, useRouter } from "expo-router";
+
+import language from "@/language";
 
 export default function AddMeal() {
   const router = useRouter();
@@ -35,7 +37,7 @@ export default function AddMeal() {
       <View style={{ padding: 32, minHeight: "100%" }}>
         <HeaderLoading />
 
-        <ProductStatus status="We zijn de maaltijd in onze database aan het zoeken" />
+        <Empty emoji="🔎" active={true} content={language.types.meal.loading} />
       </View>
     );
   }
@@ -49,7 +51,7 @@ export default function AddMeal() {
 
   const handleSave = async (
     returnedServing: ServingData,
-    returnedCreated: Date,
+    returnedCreated: Date
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it

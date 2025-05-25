@@ -1,7 +1,7 @@
+import Empty from "@/components/Empty";
 import Header from "@/components/Header";
 import InputLength from "@/components/Input/Length";
 import InputWeights from "@/components/Input/Weights";
-import ProductStatus from "@/components/Product/Status";
 import ButtonOverlay from "@/components/Button/Overlay";
 
 import userData from "@/queries/userData";
@@ -70,7 +70,13 @@ export default function PersonalHealth() {
 }
 
 function PersonalHealthLoading() {
-  return <ProductStatus status={language.page.personal.health.loading} />;
+  return (
+    <Empty
+      emoji="🔎"
+      active={true}
+      content={language.page.personal.health.loading}
+    />
+  );
 }
 
 type PersonalHealthFormProps = {

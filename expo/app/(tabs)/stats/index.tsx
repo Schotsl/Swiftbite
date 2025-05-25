@@ -18,7 +18,7 @@ export default function Stats() {
           paddingBottom: variables.paddingOverlay,
         }}
       >
-        <Empty content={language.page.stats.empty} emoji="👷" />
+        <Empty emoji="👷" content={language.page.stats.empty} />
       </View>
     </ScrollView>
   );

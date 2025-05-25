@@ -5,8 +5,8 @@ import { MealProvider } from "@/context/MealContext";
 import { ScrollView, View } from "react-native";
 import { useLocalSearchParams, Slot } from "expo-router";
 
+import Empty from "@/components/Empty";
 import Header from "@/components/Header";
-import ProductStatus from "@/components/Product/Status";
 import ButtonOverlay from "@/components/Button/Overlay";
 
 import language from "@/language";
@@ -51,7 +51,12 @@ function AutomationsMealUpsertLayoutLoading() {
             content={language.types.meal.explanation}
           />
 
-          <ProductStatus status={language.types.meal.loading} />
+          <Empty
+            emoji="🔎"
+            active={true}
+            overlay={true}
+            content={language.types.meal.loading}
+          />
         </View>
       </ScrollView>
 

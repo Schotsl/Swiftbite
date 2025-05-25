@@ -85,6 +85,7 @@ function AutomationsRepeatLoading() {
 function AutomationsRepeatEmpty() {
   return (
     <Empty
+      list={true}
       emoji="🔁"
       content={language.empty.getAdded(language.types.repeat.plural)}
     />

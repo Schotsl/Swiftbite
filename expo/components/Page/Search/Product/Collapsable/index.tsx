@@ -1,7 +1,7 @@
+import Empty from "@/components/Empty";
 import TextBody from "@/components/Text/Body";
 import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
-import ProductStatus from "@/components/Product/Status";
 
 import { useRef } from "react";
 import { Product } from "@/types/product";
@@ -139,7 +139,7 @@ function SearchCollapsableEmpty({ empty }: SearchCollapsableEmptyProps) {
         borderBottomColor: variables.border.color,
       }}
     >
-      <ProductStatus active={false} status={empty} />
+      <Empty content={empty} emoji="🍎" />
     </View>
   );
 }
