@@ -1,6 +1,3 @@
-import mealData from "@/queries/mealData";
-
-import { useQuery } from "@tanstack/react-query";
 import { MealProvider } from "@/context/MealContext";
 import { ScrollView, View } from "react-native";
 import { useLocalSearchParams, Slot } from "expo-router";
@@ -12,21 +9,19 @@ import ButtonOverlay from "@/components/Button/Overlay";
 import language from "@/language";
 import variables from "@/variables";
 
+import { useMeal } from "@/hooks/useMeal";
+
 export default function AutomationsMealUpsertLayout() {
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
 
-  const { data, isLoading } = useQuery({
-    ...mealData({ uuid: mealId }),
-    select: (data) => data[0],
-    enabled: !!mealId,
-  });
+  const { meal, isLoading } = useMeal({ mealId });
 
   if (isLoading) {
     return <AutomationsMealUpsertLayoutLoading />;
   }
 
   return (
-    <MealProvider initial={data!}>
+    <MealProvider initial={meal!}>
       <Slot />
     </MealProvider>
   );

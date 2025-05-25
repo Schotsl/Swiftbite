@@ -1,9 +1,9 @@
-import mealData from "@/queries/mealData";
 import PageMeal from "@/components/Page/Meal";
 import PageMealLoading from "@/components/Page/Meal/Loading";
 
-import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
+
+import { useMeal } from "@/hooks/useMeal";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { useLocalSearchParams, Redirect, router } from "expo-router";
 
@@ -20,13 +20,9 @@ export default function AutomationsRepeatUpsertMeal() {
     meal: string;
   }>();
 
-  const { data: mealSearch, isLoading: isLoadingSearch } = useQuery({
-    ...mealData({ uuid: mealId }),
-    select: (meals) => meals[0],
-    enabled: !!mealId,
-  });
+  const { meal: mealSearch, isLoading } = useMeal({ mealId });
 
-  if (isLoadingSearch) {
+  if (isLoading) {
     return <PageMealLoading editing={!!serving} />;
   }
 

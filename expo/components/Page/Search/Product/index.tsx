@@ -38,7 +38,7 @@ export default function PageSearchProduct({
   const { data: mostUsedProducts, isLoading: mostUsedProductsLoading } =
     useQuery(productData({ rpc: "product_most_used", type }));
 
-  const isTyping = queryWatched !== query && queryWatched?.length > 0;
+  const isTyping = queryWatched !== query;
   const isEmpty = products.length === 0;
   const isActive = queryWatched?.length > 0;
   const isSearchable = query.length >= 4;
