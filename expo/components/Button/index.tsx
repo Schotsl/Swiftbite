@@ -64,7 +64,7 @@ export default function Button({
         {
           gap: variables.gap.small,
           width: "100%",
-          opacity: disabled || loading ? 0.5 : 1,
+          opacity: disabled || loading ? variables.input.disabled.opacity : 1,
 
           alignItems: "center",
           flexDirection: "row",

@@ -1,4 +1,5 @@
 import TextSmall from "@/components/Text/Small";
+import variables from "@/variables";
 
 import { View, StyleProp, ViewStyle, TouchableOpacity } from "react-native";
 
@@ -33,8 +34,8 @@ export default function EmptySmall({
       >
         <TextSmall
           weight="medium"
+          color={variables.border.color}
           style={{
-            opacity: 0.25,
             maxWidth: 200,
             textAlign: left ? "left" : "center",
           }}

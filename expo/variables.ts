@@ -45,6 +45,9 @@ export default {
   },
   input: {
     margin: 8,
+    disabled: {
+      opacity: 0.5,
+    },
   },
   gap: {
     small: 8,

@@ -99,7 +99,7 @@ export default function InputDropdown({
           backgroundColor: variables.colors.white,
           flexDirection: "row",
 
-          opacity: disabled ? 0.5 : 1,
+          opacity: disabled ? variables.input.disabled.opacity : 1,
         }}
         onPress={handleOpen}
       >
