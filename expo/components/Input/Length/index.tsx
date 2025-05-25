@@ -29,7 +29,7 @@ export default function InputLength({
   });
 
   const [visible, setVisible] = useState(false);
-  const [temporary, setTemporary] = useState(0);
+  const [temporary, setTemporary] = useState(value);
 
   const handleClose = () => {
     setVisible(false);
