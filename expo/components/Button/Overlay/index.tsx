@@ -19,7 +19,7 @@ export default function ButtonOverlay({
     variables.heightNavigation -
     variables.heightOverlay -
     adjustedTab +
-    8;
+    9;
 
   return (
     <View
@@ -39,6 +39,8 @@ export default function ButtonOverlay({
         shadowRadius: 8,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.025,
+
+        backgroundColor: variables.colors.background.primary,
       }}
     >
       <Button {...props} />
