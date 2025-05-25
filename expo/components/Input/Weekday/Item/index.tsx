@@ -6,12 +6,13 @@ import DecorativeNoise from "@/components/Decorative/Noise";
 import variables from "@/variables";
 
 import { TouchableOpacity } from "react-native";
+import { Option } from "@/types";
 
 type InputWeekdayItemProps = {
   error: boolean;
-  weekday: string;
+  weekday: Option;
   selected: boolean;
-  onPress: () => void;
+  onPress: (value: string) => void;
 };
 
 export default function InputWeekdayItem({
@@ -20,7 +21,7 @@ export default function InputWeekdayItem({
   selected,
   onPress,
 }: InputWeekdayItemProps) {
-  const firstLetter = weekday.charAt(0);
+  const firstLetter = weekday.title.charAt(0);
   const firstUpper = firstLetter.toUpperCase();
 
   let color = variables.colors.text.secondary;
@@ -38,9 +39,13 @@ export default function InputWeekdayItem({
     border = variables.colors.text.error;
   }
 
+  const handlePress = () => {
+    onPress(weekday.value);
+  };
+
   return (
     <TouchableOpacity
-      onPress={onPress}
+      onPress={handlePress}
       activeOpacity={1}
       style={{
         width: 36,

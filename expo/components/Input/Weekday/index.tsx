@@ -44,13 +44,13 @@ export default function InputWeekday({
   };
 
   const weekdays = [
-    language.weekdays.monday,
-    language.weekdays.tuesday,
-    language.weekdays.wednesday,
-    language.weekdays.thursday,
-    language.weekdays.friday,
-    language.weekdays.saturday,
-    language.weekdays.sunday,
+    { value: "monday", title: language.weekdays.monday },
+    { value: "tuesday", title: language.weekdays.tuesday },
+    { value: "wednesday", title: language.weekdays.wednesday },
+    { value: "thursday", title: language.weekdays.thursday },
+    { value: "friday", title: language.weekdays.friday },
+    { value: "saturday", title: language.weekdays.saturday },
+    { value: "sunday", title: language.weekdays.sunday },
   ];
 
   return (
@@ -65,12 +65,12 @@ export default function InputWeekday({
       >
         {weekdays.map((weekday) => (
           <InputWeekdayItem
-            key={weekday}
+            key={weekday.value}
             error={!!error}
             weekday={weekday}
-            selected={value.includes(weekday)}
+            selected={value.includes(weekday.value)}
             onPress={() => {
-              handleSelect(weekday);
+              handleSelect(weekday.value);
             }}
           />
         ))}
