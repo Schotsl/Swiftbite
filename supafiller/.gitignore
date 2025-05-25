@@ -1,0 +1,12 @@
+# Dependencies
+node_modules
+
+# Environment variables
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Finder (MacOS) folder config
+.DS_Store
