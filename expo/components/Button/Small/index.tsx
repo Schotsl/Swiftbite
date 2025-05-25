@@ -54,21 +54,16 @@ export default function ButtonSmall({
   }
 
   const handleLayout = () => {
-    if (!marker.current) {
-      return;
-    }
-
     if (!onPosition) {
       return;
     }
 
-    marker.current.measure((x, y, width, height, pageX, pageY) => {
-      onPosition({ x: pageX, y: pageY });
+    marker.current?.measureInWindow((x, y) => {
+      onPosition({ x, y });
     });
   };
 
   const marker = useRef<View>(null);
-
   return (
     <View
       style={[
@@ -97,7 +92,6 @@ export default function ButtonSmall({
           paddingHorizontal: title ? 16 : 0,
 
           overflow: "hidden",
-
           // borderColor: "#c9e6ff",
           // borderWidth: 2,
           borderRadius: 100,

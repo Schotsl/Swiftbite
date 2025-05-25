@@ -273,7 +273,7 @@ function AutomationsRepeatUpsertAdd({
       <View
         style={{
           gap: 18,
-          top: position.y - 87,
+          top: position.y - 133,
           left: position.x,
           position: "absolute",
         }}
@@ -282,7 +282,11 @@ function AutomationsRepeatUpsertAdd({
           search="/automations/repeat/upsert/search"
           camera="/automations/repeat/upsert/camera"
           onClose={onClose}
-          style={{ position: "relative", bottom: 0 }}
+          style={{
+            left: 100,
+            bottom: 0,
+            position: "relative",
+          }}
         />
 
         <ButtonSmall

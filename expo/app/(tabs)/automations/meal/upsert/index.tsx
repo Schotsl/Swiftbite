@@ -226,7 +226,7 @@ function AutomationsMealUpsertAdd({
       <View
         style={{
           gap: 18,
-          top: position.y - 87,
+          top: position.y - 133,
           left: position.x,
           position: "absolute",
         }}
@@ -236,7 +236,7 @@ function AutomationsMealUpsertAdd({
           search="/automations/meal/upsert/search"
           onClose={onClose}
           style={{
-            left: 88,
+            left: 100,
             bottom: 0,
             position: "relative",
           }}
