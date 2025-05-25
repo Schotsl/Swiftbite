@@ -1,14 +1,15 @@
-import { supabase } from "@/utils/supabase";
 import { handleError } from "@/helper";
 import { searchProduct } from "@/utils/generative/product";
+import { getUser, supabase } from "@/utils/supabase";
 import { generateEmbedding } from "@/utils/generative/generate";
 import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 120;
 
 export async function GET(request: NextRequest) {
+  const user = await getUser(request);
+
   const uuid = request.nextUrl.searchParams.get("uuid");
-  const user = request.nextUrl.searchParams.get("user_id");
   const lang = request.nextUrl.searchParams.get("lang");
   const title = request.nextUrl.searchParams.get("title");
   const brand = request.nextUrl.searchParams.get("brand");
@@ -24,13 +25,6 @@ export async function GET(request: NextRequest) {
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 }
-    );
-  }
-
-  if (!user) {
-    return NextResponse.json(
-      { error: "Please provide a user_id" },
       { status: 400 }
     );
   }

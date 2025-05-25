@@ -14,10 +14,7 @@ import {
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
-
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const headers = request.headers;
 
   const lang = request.nextUrl.searchParams.get("lang");
   const barcode = request.nextUrl.searchParams.get("barcode");
@@ -28,14 +25,14 @@ export async function GET(request: NextRequest) {
   if (!barcode) {
     return NextResponse.json(
       { error: "Please provide a barcode" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -76,7 +73,7 @@ export async function GET(request: NextRequest) {
   after(async () => {
     const { uuid } = product;
 
-    processSearchProduct({
+    processSearchProduct(headers, {
       uuid,
       lang,
       search,

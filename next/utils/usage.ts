@@ -9,7 +9,7 @@ export async function insertUsage({
   usage,
   grounding = false,
 }: {
-  user: string;
+  user: string | null;
   task: string;
   model: string;
   usage: LanguageModelUsage;

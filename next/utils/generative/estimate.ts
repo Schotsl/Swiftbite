@@ -15,7 +15,7 @@ import { after } from "next/server";
 import { insertUsage } from "../usage";
 
 export async function estimateNutrition(
-  user: string,
+  user: string | null,
   {
     image,
     title,
@@ -25,7 +25,7 @@ export async function estimateNutrition(
     title?: string;
     content?: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = googleModel("gemini-2.5-pro-preview-05-06");
@@ -80,7 +80,7 @@ export async function estimateNutrition(
 }
 
 export async function estimateVisuals(
-  user: string,
+  user: string | null,
   {
     image,
     title,
@@ -90,7 +90,7 @@ export async function estimateVisuals(
     title?: string;
     content?: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = googleModel("gemini-2.5-flash-preview-05-20");

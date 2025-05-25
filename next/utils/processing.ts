@@ -1,11 +1,7 @@
 import { GenericSearchData, ProductSearchData } from "@/schema";
 
-const headers = {
-  "X-Supabase-Secret": process.env.SWIFTBITE_WEBHOOK_SECRET!,
-};
-
 export function processSearchProduct(
-  user: string,
+  headers: Headers,
   {
     uuid,
     lang,
@@ -23,7 +19,6 @@ export function processSearchProduct(
     lang,
     title: search.title,
     brand: search.brand,
-    user_id: user,
   });
 
   if (search.quantity_original) {
@@ -54,7 +49,7 @@ export function processSearchProduct(
 }
 
 export function processSearchGeneric(
-  user: string,
+  headers: Headers,
   {
     uuid,
     lang,
@@ -70,7 +65,6 @@ export function processSearchGeneric(
     lang,
     title: search.title,
     category: search.category,
-    user_id: user,
   });
 
   fetch(

@@ -4,9 +4,10 @@ import { getUser } from "./utils/supabase";
 
 export async function middleware(request: NextRequest) {
   // Check calls from the Supabase database
-  if (request.nextUrl.pathname.startsWith("/api/ai-server")) {
-    const secret = request.headers.get("X-Supabase-Secret");
+  const secret = request.headers.get("X-Supabase-Secret");
+  const pathname = request.nextUrl.pathname;
 
+  if (pathname.startsWith("/api/ai-server") || secret) {
     if (secret !== process.env.SWIFTBITE_WEBHOOK_SECRET) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

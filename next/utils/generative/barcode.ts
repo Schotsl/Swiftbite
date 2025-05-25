@@ -10,7 +10,7 @@ import { google as googleModel } from "@ai-sdk/google";
 import promptSearchBarcodeQuick from "@/prompts/search-barcode";
 
 export async function searchBarcode(
-  user: string,
+  user: string | null,
   {
     barcode,
     google,
@@ -22,7 +22,7 @@ export async function searchBarcode(
     openfood: unknown[];
     fatsecret: unknown[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductSearchData | null> {
   const task = "search-barcode";
   const model = googleModel("gemini-2.5-pro-preview-05-06");

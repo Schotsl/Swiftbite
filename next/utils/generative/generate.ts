@@ -14,7 +14,7 @@ import { openai as openaiModel } from "@ai-sdk/openai";
 import { OptionData, optionSchema } from "@/schema";
 
 export async function generateOptions(
-  user: string,
+  user: string | null,
   {
     title,
     brand,
@@ -23,7 +23,7 @@ export async function generateOptions(
     title: string;
     brand?: string;
     category?: string;
-  },
+  }
 ): Promise<OptionData[]> {
   const model = openaiModel("gpt-4o-mini");
   const task = "generate-options";
@@ -64,12 +64,12 @@ export async function generateOptions(
 }
 
 export async function generateIcon(
-  user: string,
+  user: string | null,
   {
     title,
   }: {
     title: string;
-  },
+  }
 ): Promise<Buffer> {
   const { image } = await generateImage({
     size: "1024x1024",
@@ -87,12 +87,12 @@ export async function generateIcon(
 }
 
 export async function generateEmbedding(
-  user: string,
+  user: string | null,
   {
     value,
   }: {
     value: string;
-  },
+  }
 ): Promise<number[]> {
   const model = openaiModel.embedding("text-embedding-3-small");
 

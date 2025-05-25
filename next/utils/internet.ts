@@ -122,7 +122,7 @@ export const openfoodRequest = async (
 };
 
 export const supabaseRequest = async (
-  user: string,
+  user: string | null,
   value: string,
   type: Enums<"type">
 ): Promise<Product[]> => {

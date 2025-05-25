@@ -9,10 +9,6 @@ import {
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
 
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const lang = request.nextUrl.searchParams.get("lang");
   const barcode = request.nextUrl.searchParams.get("barcode");
 

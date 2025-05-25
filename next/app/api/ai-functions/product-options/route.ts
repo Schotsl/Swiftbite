@@ -1,13 +1,14 @@
-import { supabase } from "@/utils/supabase";
 import { generateOptions } from "@/utils/generative/generate";
+import { getUser, supabase } from "@/utils/supabase";
 import { generateSlug, handleError } from "@/helper";
 import { NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 120;
 
 export async function GET(request: NextRequest) {
+  const user = await getUser(request);
+
   const uuid = request.nextUrl.searchParams.get("uuid");
-  const user = request.nextUrl.searchParams.get("user_id");
   const lang = request.nextUrl.searchParams.get("lang");
   const title = request.nextUrl.searchParams.get("title");
 
@@ -17,28 +18,21 @@ export async function GET(request: NextRequest) {
   if (!uuid) {
     return NextResponse.json(
       { error: "Please provide a uuid" },
-      { status: 400 },
-    );
-  }
-
-  if (!user) {
-    return NextResponse.json(
-      { error: "Please provide a user_id" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
   if (!title) {
     return NextResponse.json(
       { error: "Please provide a title" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 

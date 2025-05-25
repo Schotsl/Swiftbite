@@ -15,7 +15,7 @@ import searchGenericPrompt from "@/prompts/search-generic";
 import searchGenericsPrompt from "@/prompts/search-generics";
 
 export async function searchGenerics(
-  user: string,
+  user: string | null,
   {
     query,
     google,
@@ -28,7 +28,7 @@ export async function searchGenerics(
   }: {
     generics: GenericSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     GenericSearchData[],
@@ -94,14 +94,14 @@ export async function searchGenerics(
 }
 
 export async function searchGeneric(
-  user: string,
+  user: string | null,
   {
     title,
     category,
   }: {
     title: string;
     category: string;
-  },
+  }
 ): Promise<GenericData> {
   const task = "search-generic";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {

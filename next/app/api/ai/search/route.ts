@@ -16,10 +16,7 @@ import { processSearchGeneric, processSearchProduct } from "@/utils/processing";
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
   const signal = request.signal;
-
-  if (!user) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const headers = request.headers;
 
   const seed = crypto.randomUUID();
   const lang = request.nextUrl.searchParams.get("lang");
@@ -108,7 +105,7 @@ export async function GET(request: NextRequest) {
         const uuid = result.uuid;
         const search = result.search as GenericSearchData;
 
-        processSearchGeneric(user, { uuid, lang, search });
+        processSearchGeneric(headers, { uuid, lang, search });
 
         return;
       }
@@ -116,7 +113,7 @@ export async function GET(request: NextRequest) {
       const uuid = result.uuid;
       const search = result.search as ProductSearchData;
 
-      processSearchProduct(user, { uuid, lang, search });
+      processSearchProduct(headers, { uuid, lang, search });
     });
   });
 
