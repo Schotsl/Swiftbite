@@ -14,7 +14,7 @@ export default function repeatData({ uuid }: RepeatDataProps) {
     queryFn: async (): Promise<Repeat[]> => {
       const query = supabase
         .from("repeat")
-        .select(`*, product(*), meal(*)`)
+        .select(`*, product(*), meal(*, meal_products:meal_product(*))`)
         .order("created_at", { ascending: false });
 
       if (uuid) {

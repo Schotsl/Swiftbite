@@ -12,10 +12,7 @@ export default function mealData({ uuid }: MealDataProps) {
   return queryOptions({
     queryKey: ["mealData", uuid],
     queryFn: async (): Promise<MealWithProduct[]> => {
-      const select = uuid
-        ? `*, meal_products:meal_product(*, product:product(*))`
-        : `*, meal_products:meal_product(*)`;
-
+      const select = `*, meal_products:meal_product(*, product:product(*))`;
       const query = supabase
         .from("meal")
         .select(select)
