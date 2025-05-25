@@ -19,6 +19,7 @@ type RepeatContextType = {
 
   removeMeal: () => void;
   removeProduct: () => void;
+  removeServing: () => void;
 
   updateTime: (time: Date) => void;
   updateMeal: (meal: MealWithProduct) => void;
@@ -66,6 +67,10 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
 
   const removeProduct = () => {
     setProduct(null);
+    setServing(null);
+  };
+
+  const removeServing = () => {
     setServing(null);
   };
 
@@ -127,6 +132,7 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
 
         removeMeal,
         removeProduct,
+        removeServing,
 
         updateTime,
         updateMeal,

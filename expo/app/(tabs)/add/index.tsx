@@ -57,10 +57,10 @@ export default function Add() {
         <View style={{ gap: 32 }}>
           <View
             style={{
+              alignItems: "center",
               alignContent: "center",
               flexDirection: "row",
               justifyContent: "space-between",
-              alignItems: "center",
             }}
           >
             <HomeTitle date={date} />
