@@ -38,6 +38,7 @@ export default function PageSearchProduct({
   const { data: mostUsedProducts, isLoading: mostUsedProductsLoading } =
     useQuery(productData({ rpc: "product_most_used", type }));
 
+  const isTyping = queryWatched !== query && queryWatched?.length > 0;
   const isEmpty = products.length === 0;
   const isActive = queryWatched?.length > 0;
   const isSearchable = query.length >= 4;
@@ -97,6 +98,15 @@ export default function PageSearchProduct({
 
   if (overloaded) {
     return <Empty emoji="🥱" content={language.search.results.overloaded} />;
+  }
+
+  if (isTyping) {
+    return (
+      <Empty
+        emoji="🥳"
+        content={language.search.results.getDefault(labelPlural)}
+      />
+    );
   }
 
   if (isEmpty && isSearchable) {

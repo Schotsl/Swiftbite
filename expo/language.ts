@@ -294,7 +294,7 @@ export default {
         return `Start met zoeken naar ${type.toLowerCase()} door minimaal 4 letters te typen en druk op enter`;
       },
       getEmpty: (type: string) => {
-        return `We hebben geen ${type} gevonden met deze naam`;
+        return `We hebben geen ${type.toLowerCase()} gevonden met deze naam`;
       },
       getError: (type: string) => {
         return `Er is iets mis gegaan tijdens het zoeken naar ${type.toLowerCase()}`;
