@@ -3,14 +3,16 @@ import PageCamera from "@/components/Page/Camera";
 import { View } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import { CameraSelected } from "@/types";
 
 export default function AddCameraLayout() {
   const router = useRouter();
 
-  const { title, content } = useLocalSearchParams<{
+  const { title, content, initial } = useLocalSearchParams<{
     // By redirecting with the title and content we can keep the same state when returning from the estimation screen
     title?: string;
     content?: string;
+    initial?: CameraSelected;
   }>();
 
   const handleBarcode = (barcode: string) => {
@@ -31,7 +33,11 @@ export default function AddCameraLayout() {
     <View style={{ flex: 1 }}>
       <StatusBar style="dark" />
 
-      <PageCamera onBarcode={handleBarcode} onEstimation={handleEstimation} />
+      <PageCamera
+        initial={initial}
+        onBarcode={handleBarcode}
+        onEstimation={handleEstimation}
+      />
     </View>
   );
 }

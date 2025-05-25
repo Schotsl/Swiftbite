@@ -5,6 +5,7 @@ import { Product } from "@/types/product";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
+import { CameraSelected } from "@/types";
 import { ImageManipulator } from "expo-image-manipulator";
 import { router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -31,7 +32,7 @@ type PageEstimationAutomaticProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date
+    created: Date,
   ) => void;
 };
 
@@ -123,11 +124,9 @@ export default function PageEstimationAutomatic({
     router.push({
       pathname: "/add/camera",
       params: {
-        productPath: "add/product",
-        estimationPath: "add/estimation",
-
         title,
         content,
+        initial: CameraSelected.Estimation,
       },
     });
   };

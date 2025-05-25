@@ -9,11 +9,13 @@ import CameraSelectorGradient from "./Gradient";
 import language from "@/language";
 
 type CameraSelectorProps = {
+  initial: CameraSelected;
   estimation: boolean;
   onSelect: (item: CameraSelected) => void;
 };
 
 export default function CameraSelector({
+  initial,
   estimation,
   onSelect,
 }: CameraSelectorProps) {
@@ -23,7 +25,7 @@ export default function CameraSelector({
 
   const widthItem = 150;
 
-  const [activeItem, setActiveItem] = useState(CameraSelected.Barcode);
+  const [activeItem, setActiveItem] = useState(initial);
 
   const scrollMaskedRef = useRef<ScrollView>(null);
   const scrollOverlayRef = useRef<ScrollView>(null);
@@ -41,6 +43,8 @@ export default function CameraSelector({
         [CameraSelected.Barcode]: widthItem * 0,
         [CameraSelected.Label]: widthItem * 1,
       };
+
+  const snapOffset = snapPoints[initial] || 0;
 
   const handleOverlayScroll = (event: any) => {
     const x = event.nativeEvent.contentOffset.x;
@@ -122,7 +126,7 @@ export default function CameraSelector({
               }}
               horizontal={true}
               scrollEnabled={false}
-              contentOffset={{ x: estimation ? widthItem : 0, y: 0 }}
+              contentOffset={{ x: snapOffset, y: 0 }}
               contentContainerStyle={{ alignItems: "center", height: 60 }}
             >
               <View style={{ width: containerPadding }} />
@@ -169,7 +173,7 @@ export default function CameraSelector({
           position: "absolute",
         }}
         horizontal={true}
-        contentOffset={{ x: estimation ? widthItem : 0, y: 0 }}
+        contentOffset={{ x: snapOffset, y: 0 }}
         snapToOffsets={Object.values(snapPoints)}
         snapToAlignment="center"
         decelerationRate="fast"

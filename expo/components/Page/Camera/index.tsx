@@ -33,11 +33,14 @@ import * as ImagePicker from "expo-image-picker";
 import variables from "@/variables";
 
 type PageCameraProps = {
+  initial?: CameraSelected;
   onBarcode: (barcode: string) => void;
   onEstimation?: (uri: string, width: number, height: number) => void;
 };
 
 export default function PageCamera({
+  initial = CameraSelected.Barcode,
+
   onBarcode,
   onEstimation,
 }: PageCameraProps) {
@@ -47,7 +50,7 @@ export default function PageCamera({
 
   const [flash, setFlash] = useState<boolean>(false);
   const [facing, setFacing] = useState<CameraPosition>("back");
-  const [selected, setSelected] = useState(CameraSelected.Barcode);
+  const [selected, setSelected] = useState(initial);
   const [processing, setProcessing] = useState<boolean>(false);
 
   const focus = useIsFocused();
@@ -303,7 +306,11 @@ export default function PageCamera({
       {isEstimation && <CameraVision />}
 
       <View style={{ marginTop: "auto", gap: 24 }}>
-        <CameraSelector onSelect={setSelected} estimation={estimationEnabled} />
+        <CameraSelector
+          initial={initial}
+          estimation={estimationEnabled}
+          onSelect={setSelected}
+        />
 
         <CameraControls
           onFlip={handleFlip}
