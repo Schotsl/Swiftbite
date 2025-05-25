@@ -23,6 +23,7 @@ export function useProduct({
 
   const [search, setSearch] = useState(false);
   const [interval, setInterval] = useState<number | false>(false);
+
   // Use barcode query if barcode is provided
   const queryBarcode = useQuery({
     ...productBarcode({ barcode: barcodeId!, search }),
@@ -104,16 +105,24 @@ export function useProduct({
         {
           text: "Ok",
         },
-      ],
+      ]
     );
   }, [product, isLoadingQuery, search, router, barcodeId, redirect]);
 
-  const isLoadingProduct = isLoadingQuery;
-  const isLoadingBarcode = isLoadingQuery || (!search && !product);
-  const isLoading = enabled && productId ? isLoadingProduct : isLoadingBarcode;
+  const getLoading = () => {
+    if (!enabled) {
+      return false;
+    }
+
+    if (productId) {
+      return queryProduct.isLoading;
+    }
+
+    return queryBarcode.isLoading;
+  };
 
   return {
     product,
-    isLoading,
+    isLoading: getLoading(),
   };
 }
