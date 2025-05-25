@@ -61,7 +61,6 @@ export default function PageSearchProductCollapsable({
     <View>
       <TouchableOpacity
         onPress={toggleOpen}
-        activeOpacity={1}
         style={{
           flexDirection: "row",
           justifyContent: "space-between",

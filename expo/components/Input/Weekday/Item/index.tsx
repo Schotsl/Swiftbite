@@ -46,7 +46,6 @@ export default function InputWeekdayItem({
   return (
     <TouchableOpacity
       onPress={handlePress}
-      activeOpacity={1}
       style={{
         width: 36,
         height: 36,

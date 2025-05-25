@@ -47,7 +47,7 @@ export default function Item({
   const remaining = width - right - gap - icon - padding * 2;
 
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={1}>
+    <TouchableOpacity onPress={onPress}>
       <View
         onLayout={(event) => {
           const { width } = event.nativeEvent.layout;
