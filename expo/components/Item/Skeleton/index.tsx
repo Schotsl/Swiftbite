@@ -35,6 +35,7 @@ export default function ItemSkeleton({
         borderBottomColor: variables.border.color,
 
         flexDirection: "column",
+        backgroundColor: variables.colors.white,
         paddingVertical: variables.padding.small.horizontal,
         paddingHorizontal: padding,
       }}

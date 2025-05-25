@@ -105,7 +105,7 @@ export function useProduct({
         {
           text: "Ok",
         },
-      ]
+      ],
     );
   }, [product, isLoadingQuery, search, router, barcodeId, redirect]);
 

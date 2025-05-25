@@ -38,9 +38,9 @@ export default function Add() {
   useEffect(() => {
     const processingProduct = data.some((entry) => entry.product?.processing);
     const processingMeal = data.some((entry) =>
-      entry.meal.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing
-      )
+      entry.meal?.meal_products?.some(
+        (mealProduct) => mealProduct.product?.processing,
+      ),
     );
 
     const interval = processingProduct || processingMeal ? 500 : false;

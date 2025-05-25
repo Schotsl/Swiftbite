@@ -27,7 +27,13 @@ export default function EstimationImage({
   onEdit,
   onDelete,
 }: EstimationImageProps) {
-  const imageAspect = image ? image.height / image.width : 1;
+  // I honestly don't know why this works but I'm really struggling with the react-native-vision-camera aspect ratio but it works
+  const imageAspect = image
+    ? image.height < image.width
+      ? image.height / image.width
+      : image.width / image.height
+    : 1;
+
   const imageAspectCapped = Math.max(imageAspect, 4 / 5);
 
   return (
