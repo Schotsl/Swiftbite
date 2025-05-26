@@ -41,7 +41,7 @@ export default function Tabs({
 
   const tabsLayouts = useRef<({ x: number; width: number } | null)[]>([]);
 
-  // I've asked Gemini to write the API for centering on a tab when clicked although I do understand it it should be mentioned
+  // I've asked Gemini to write the API for centering on a tab when clicked
   useEffect(() => {
     const tabsLength = tabs.length;
     const tabsUpdated = Array(tabsLength).fill(null);
@@ -92,6 +92,7 @@ export default function Tabs({
           <View
             style={{
               gap: variables.padding.page,
+              paddingRight: add ? 64 : variables.padding.page,
               paddingHorizontal: variables.padding.page,
 
               alignItems: "center",
