@@ -27,7 +27,7 @@ export default function PageSearchProduct({
   queryWatched,
   onSelect,
 }: PageSearchProps) {
-  const { error, loading, products, overloaded, reset, search } = useSearch();
+  const { error, loading, products, overloaded, search } = useSearch();
 
   const { data: favoriteProducts, isLoading: favoriteProductsLoading } =
     useQuery(productData({ rpc: "product_favorite", type }));
@@ -64,18 +64,7 @@ export default function PageSearchProduct({
 
       return;
     }
-
-    reset();
-  }, [
-    query,
-    type,
-    isSearchable,
-    previousQuery,
-    search,
-    reset,
-    error,
-    overloaded,
-  ]);
+  }, [query, type, error, overloaded, isSearchable, previousQuery, search]);
 
   if (loading && isEmpty) {
     return (

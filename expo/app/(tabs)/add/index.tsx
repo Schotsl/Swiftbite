@@ -16,6 +16,7 @@ import entryData from "@/queries/entryData";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 
+import Empty from "@/components/Empty";
 import HomeWeek from "@/components/Home/Week";
 import HomeTitle from "@/components/Home/Title";
 import HomeStreak from "@/components/Home/Streak";
@@ -42,8 +43,8 @@ export default function Add() {
     const processingProduct = data.some((entry) => entry.product?.processing);
     const processingMeal = data.some((entry) =>
       entry.meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing,
-      ),
+        (mealProduct) => mealProduct.product?.processing
+      )
     );
 
     const interval = processingProduct || processingMeal ? 500 : false;
@@ -51,16 +52,22 @@ export default function Add() {
     setInterval(interval);
   }, [data]);
 
+  const isEmpty = data.length === 0;
+
   return (
     <ScrollView
       style={{
         minHeight: "100%",
+        backgroundColor: isEmpty
+          ? variables.colors.greyLight
+          : variables.colors.white,
       }}
     >
       <View
         style={{
           gap: variables.gap.large,
           padding: variables.padding.page,
+          backgroundColor: variables.colors.white,
         }}
       >
         <View style={{ gap: 32 }}>
@@ -193,6 +200,20 @@ function AddListEmpty() {
   return (
     <View>
       <ItemHeader title={language.time.morning} subtitle="06:00 - 12:00" />
+      <View
+        style={{
+          minHeight: 180,
+          backgroundColor: variables.colors.greyLight,
+          borderTopWidth: variables.border.width,
+          borderTopColor: variables.border.color,
+        }}
+      >
+        {/* TODO: language */}
+        <Empty
+          emoji="😶"
+          content="Op dit moment heb je nog geen logs toegevoegd aan deze dag"
+        />
+      </View>
     </View>
   );
 }

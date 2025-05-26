@@ -48,14 +48,17 @@ export default function ItemProduct({
   }
 
   if (product.type === "search_product") {
-    const { processing } = product;
+    const { search, quantity, processing } = product;
 
     const title = processing ? product.search.title : product.title;
     const subtitle = processing ? product.search.brand : product.brand;
-
-    const quantity = processing
-      ? `${product.search?.quantity_original} ${product.search?.quantity_original_unit}`
-      : `${product.quantity?.quantity} ${product.quantity?.option}`;
+    const stringified = processing
+      ? search.quantity_original
+        ? `${search?.quantity_original} ${search?.quantity_original_unit}`
+        : null
+      : quantity?.quantity
+        ? `${quantity?.quantity} ${quantity?.option}`
+        : null;
 
     return (
       <Item
@@ -65,7 +68,7 @@ export default function ItemProduct({
         subtitle={subtitle}
         subtitleIcon={processing ? "globe" : undefined}
         subtitleLoading={processing}
-        rightTop={overwriteTop || quantity}
+        rightTop={overwriteTop || stringified}
         rightBottom={overwriteBottom}
         onPress={() => onSelect(product.uuid)}
       />

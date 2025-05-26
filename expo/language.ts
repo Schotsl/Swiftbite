@@ -143,7 +143,9 @@ export default {
     },
     personal: {
       getSubtitle: (count: number) => {
-        return `Je hebt ${count} entries geregistreerd`;
+        return count === 0
+          ? "Je hebt nog geen logs toegevoegd"
+          : `Je hebt ${count} logs geregistreerd`;
       },
       details: {
         title: "Mijn gegevens",

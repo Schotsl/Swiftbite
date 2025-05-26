@@ -1,9 +1,8 @@
 import { View } from "react-native";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { ServingData } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useState } from "react";
 import { SearchData, searchSchema } from "@/schemas/search";
 
 import Tabs from "@/components/Tabs";
@@ -36,8 +35,6 @@ export default function PageSearch({
   onMealSelect,
   onProductSelect,
 }: PageSearchProps) {
-  const focus = useIsFocused();
-
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState(Type.PRODUCTS);
 
@@ -46,14 +43,6 @@ export default function PageSearch({
   });
 
   const queryWatched = watch("query");
-
-  useEffect(() => {
-    if (focus) {
-      return;
-    }
-
-    setQuery("");
-  }, [focus]);
 
   const handleSubmit = () => {
     setQuery(queryWatched);
@@ -116,7 +105,7 @@ export default function PageSearch({
       </View>
 
       {/* TODO: We'll just unmount the component to be sure no random requests get send */}
-      {focus && product && (
+      {product && (
         <PageSearchProduct
           type={type}
           query={query}
