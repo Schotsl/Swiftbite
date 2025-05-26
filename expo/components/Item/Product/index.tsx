@@ -77,7 +77,7 @@ export default function ItemProduct({
 
     // If we have no title we'll show a skeleton
     if (!title) {
-      return <ItemSkeleton {...props} />;
+      return <ItemSkeleton {...props} uuid={product.uuid} />;
     }
 
     const subtitleIcon = processing ? "spinner" : "wand-magic-sparkles";

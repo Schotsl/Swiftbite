@@ -7,12 +7,14 @@ import { View } from "react-native";
 import Skeleton from "react-native-reanimated-skeleton";
 
 type SkeletonItemProps = {
+  uuid?: string;
   icon?: boolean;
   small?: boolean;
   border?: boolean;
 };
 
 export default function ItemSkeleton({
+  uuid,
   icon = false,
   small = false,
   border = true,
@@ -20,11 +22,34 @@ export default function ItemSkeleton({
   const gap = 16;
   const padding = small ? 20 : variables.padding.page;
 
+  // I generated this function using Gemini and I do understand it except the hashing loop
+  const getRandom = (index: number) => {
+    if (!uuid) {
+      return Math.random();
+    }
+
+    let hash = 0;
+
+    const seed = uuid + index;
+
+    for (let i = 0; i < seed.length; i++) {
+      const char = seed.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash;
+    }
+
+    // Divide by 32-bit signed integer since the has should return that at most
+    const sumAbsolute = Math.abs(hash);
+    const sumDivided = sumAbsolute / 2147483647;
+
+    return sumDivided;
+  };
+
   // Random width variations (±10%)
-  const titleWidth = 100 + Math.random() * 20;
-  const subtitleWidth = 75 + Math.random() * 15;
-  const rightTopWidth = 50 + Math.random() * 20;
-  const rightBottomWidth = 25 + Math.random() * 15;
+  const titleWidth = 100 + getRandom(uuid, 0) * 20;
+  const subtitleWidth = 75 + getRandom(uuid, 1) * 15;
+  const rightTopWidth = 50 + getRandom(uuid, 2) * 20;
+  const rightBottomWidth = 25 + getRandom(uuid, 3) * 15;
 
   return (
     <View
