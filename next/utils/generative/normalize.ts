@@ -24,53 +24,43 @@ export async function normalizeMeal(
   const task = "normalize-meal";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
 
-  console.log("1, ?");
+  const { object, usage } = await generateObject({
+    model,
+    temperature,
 
-  try {
-    const { object, usage } = await generateObject({
-      model,
-      temperature,
+    output: "object",
+    schema: titleSchema,
+    abortSignal: signal,
 
-      output: "object",
-      schema: titleSchema,
-      abortSignal: signal,
+    messages: [
+      {
+        role: "system",
+        content: normalizeMealPrompt,
+      },
+      {
+        role: "user",
+        content: `Meal information: ${JSON.stringify({
+          title,
+          language: "Dutch",
+          ingredients,
+        })}`,
+      },
+    ],
+  });
 
-      messages: [
-        {
-          role: "system",
-          content: normalizeMealPrompt,
-        },
-        {
-          role: "user",
-          content: `Meal information: ${JSON.stringify({
-            title,
-            language: "Dutch",
-            ingredients,
-          })}`,
-        },
-      ],
+  after(async () => {
+    await insertUsage({
+      user,
+      task,
+      usage,
+      model: model.modelId,
     });
+  });
 
-    console.log("2, ?");
-    console.log(object);
+  const normalized = object.title;
+  const normalizedLowercase = normalized.toLowerCase();
 
-    after(async () => {
-      await insertUsage({
-        user,
-        task,
-        usage,
-        model: model.modelId,
-      });
-    });
-
-    const normalized = object.title;
-    const normalizedLowercase = normalized.toLowerCase();
-
-    return normalizedLowercase;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+  return normalizedLowercase;
 }
 
 export async function normalizeTitle(

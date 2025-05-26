@@ -2,7 +2,7 @@ import { handleError } from "@/helper";
 import { generateIcon } from "@/utils/generative/generate";
 import { normalizeMeal } from "@/utils/generative/normalize";
 import { validateUsage } from "@/utils/usage";
-import { after, NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import {
   fetchIcon,
   fetchIngredients,
@@ -62,20 +62,16 @@ const updateMealIcon = async (
     (ingredient) => ingredient.product.title
   );
 
-  console.log(ingredients);
-
   const iconTitle = await normalizeMeal(user, {
     title,
     ingredients,
   });
-  console.log(iconTitle);
+
   console.log(`[MEAL] Fetching icon from database`);
   const iconUuid = await fetchIcon(iconTitle);
 
   // If the icon already exists we'll update the product
   if (iconUuid) {
-    console.log(uuid);
-    console.log(iconUuid);
     console.log(`[MEAL] Updating meal with icon`);
     await updateMeal(uuid, iconUuid);
 
