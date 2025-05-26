@@ -19,7 +19,7 @@ export default function useDeleteMeal() {
 
       // Optimistically update to the new value
       client.setQueryData(["mealData"], (previous: any[] = []) =>
-        previous.filter((meal) => meal.uuid !== uuid),
+        previous.filter((meal) => meal.uuid !== uuid)
       );
 
       return { previous };

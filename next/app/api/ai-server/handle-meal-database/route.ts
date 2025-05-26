@@ -29,13 +29,10 @@ export async function POST(request: Request) {
 
   const uuid = body.record.uuid;
   const title = body.record.title;
-  const ingredients = body.record.ingredients;
-
   const titleOld = body.old_record?.title;
-  const ingredientsOld = body.old_record?.ingredients;
 
   // If the title and the ingredients haven't changed we don't need to do anything
-  if (title === titleOld && ingredients === ingredientsOld) {
+  if (title === titleOld) {
     return new Response("{}", { status: 200 });
   }
 
@@ -49,7 +46,7 @@ export async function POST(request: Request) {
 
 const updateMealIcon = async (
   user: string,
-  { uuid, title }: { uuid: string; title: string },
+  { uuid, title }: { uuid: string; title: string }
 ) => {
   // First we'll reset the icon to null so it shows the loading icon again
   console.log(`[MEAL] Resetting icon`);
@@ -60,7 +57,7 @@ const updateMealIcon = async (
 
   const ingredientsObjects = await fetchIngredients(uuid);
   const ingredients = ingredientsObjects.map(
-    (ingredient) => ingredient.product.title,
+    (ingredient) => ingredient.product.title
   );
 
   const iconTitle = await normalizeMeal(user, {
@@ -73,6 +70,8 @@ const updateMealIcon = async (
 
   // If the icon already exists we'll update the product
   if (iconUuid) {
+    console.log(uuid);
+    console.log(iconUuid);
     console.log(`[MEAL] Updating meal with icon`);
     await updateMeal(uuid, iconUuid);
 
