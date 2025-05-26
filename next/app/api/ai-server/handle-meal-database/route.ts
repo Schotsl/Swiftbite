@@ -36,10 +36,10 @@ export async function POST(request: Request) {
     return new Response("{}", { status: 200 });
   }
 
-  after(async () => {
-    updateMealIcon(user, { uuid, title });
-    updateMealEntries({ uuid });
-  });
+  // after(async () => {
+  updateMealIcon(user, { uuid, title });
+  updateMealEntries({ uuid });
+  // });
 
   return new Response("{}", { status: 200 });
 }
