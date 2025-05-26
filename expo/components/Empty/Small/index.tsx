@@ -5,7 +5,6 @@ import { View, StyleProp, ViewStyle, TouchableOpacity } from "react-native";
 
 type EmptySmallProps = {
   left?: boolean;
-  emoji?: string;
   style?: StyleProp<ViewStyle>;
   content: string;
 
@@ -14,7 +13,6 @@ type EmptySmallProps = {
 
 export default function EmptySmall({
   left = false,
-  emoji,
   style,
   content,
   onPress,
@@ -40,7 +38,6 @@ export default function EmptySmall({
             textAlign: left ? "left" : "center",
           }}
         >
-          {emoji}
           {content}
         </TextSmall>
       </View>

@@ -82,8 +82,9 @@ export default function Tabs({
       >
         <ScrollView
           ref={scrollRef}
-          showsHorizontalScrollIndicator={false}
+          style={{ overflow: "visible" }}
           horizontal={true}
+          showsHorizontalScrollIndicator={false}
           onLayout={(event: LayoutChangeEvent) => {
             scrollWidth.current = event.nativeEvent.layout.width;
           }}

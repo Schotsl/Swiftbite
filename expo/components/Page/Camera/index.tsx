@@ -12,6 +12,7 @@ import { Alert, View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
 import { detectBarcodes } from "react-native-barcodes-detector";
+import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
 
 // TODO: vision-camera-base64-v3 is a GitHub fork of mine
@@ -30,6 +31,7 @@ import {
 } from "react-native-vision-camera";
 
 import * as ImagePicker from "expo-image-picker";
+
 import variables from "@/variables";
 
 type PageCameraProps = {
@@ -73,6 +75,7 @@ export default function PageCamera({
 
   async function handleImage() {
     if (isBarcode) {
+      // TODO: language
       Alert.alert("We hebben geen barcode in deze afbeelding gevonden.");
 
       return;
@@ -172,7 +175,7 @@ export default function PageCamera({
       base64: string,
       width: number,
       height: number,
-      orientation: number,
+      orientation: number
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -195,7 +198,7 @@ export default function PageCamera({
         newHeight,
         "JPEG",
         50,
-        orientation,
+        orientation
       );
 
       sendImage(data.uri);
@@ -207,7 +210,7 @@ export default function PageCamera({
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    [],
+    []
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -239,7 +242,7 @@ export default function PageCamera({
     onCodeScanned: (codes) => {
       if (codes.length > 1) {
         Alert.alert(
-          "We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één.",
+          "We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één."
         );
 
         return;
@@ -261,7 +264,6 @@ export default function PageCamera({
       style={{
         flex: 1,
         gap: 24,
-        paddingBottom: 64,
         backgroundColor: variables.colors.black,
       }}
     >
@@ -305,11 +307,39 @@ export default function PageCamera({
 
       {isEstimation && <CameraVision />}
 
-      <View style={{ marginTop: "auto", gap: 24 }}>
+      <View
+        style={{
+          gap: 24,
+          marginTop: "auto",
+          alignItems: "center",
+
+          paddingTop: 16,
+          paddingBottom: 48,
+          backgroundColor: "rgba(0, 0, 0, 0.35)",
+        }}
+      >
         <CameraSelector
           initial={initial}
           estimation={estimationEnabled}
           onSelect={setSelected}
+        />
+
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={[
+            "rgba(255, 255, 255, .25)",
+            "rgba(255, 255, 255, .75)",
+            "rgba(255, 255, 255, .75)",
+            "rgba(255, 255, 255, .25)",
+          ]}
+          style={{
+            width: 264,
+            height: 2,
+            marginTop: -12,
+            borderRadius: 2,
+            marginBottom: 4,
+          }}
         />
 
         <CameraControls

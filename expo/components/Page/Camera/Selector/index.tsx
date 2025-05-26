@@ -110,11 +110,11 @@ export default function CameraSelector({
   };
 
   return (
-    <View style={{ height: 60, width: width }}>
+    <View style={{ height: 48, width }}>
       <MaskedView
         style={{
           width: width,
-          height: 60,
+          height: 48,
         }}
         maskElement={
           <View style={{ flex: 1 }}>
@@ -122,7 +122,8 @@ export default function CameraSelector({
               ref={scrollMaskedRef}
               style={{
                 width: width,
-                height: 60,
+                height: 48,
+                marginTop: -8,
               }}
               horizontal={true}
               scrollEnabled={false}
@@ -160,6 +161,7 @@ export default function CameraSelector({
       </MaskedView>
 
       <ScrollView
+        onScroll={handleOverlayScroll}
         onTouchEnd={handleTouch}
         onScrollBeginDrag={() => setIsDragging(true)}
         onScrollEndDrag={() => setIsDragging(false)}
@@ -168,7 +170,7 @@ export default function CameraSelector({
           top: 0,
           left: 0,
           width,
-          height: 60,
+          height: 48,
           opacity: 0,
           position: "absolute",
         }}
@@ -177,12 +179,11 @@ export default function CameraSelector({
         snapToOffsets={Object.values(snapPoints)}
         snapToAlignment="center"
         decelerationRate="fast"
-        onScroll={handleOverlayScroll}
         scrollEventThrottle={16}
+        contentContainerStyle={{ height: 48 }}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ height: 60 }}
       >
-        <View style={{ width: containerWidth, height: 60 }} />
+        <View style={{ width: containerWidth, height: 48 }} />
       </ScrollView>
     </View>
   );

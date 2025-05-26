@@ -165,7 +165,7 @@ export default function InputDropdown({
             ))}
           </Picker>
         ) : (
-          <View style={{ gap: 16 }}>
+          <View style={{ gap: 16, marginTop: -16 }}>
             {options.map((option) => (
               <InputDropdownRadio
                 key={option.value}

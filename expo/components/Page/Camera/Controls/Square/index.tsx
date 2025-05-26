@@ -17,8 +17,8 @@ export default function CameraControlsSquare({
     <TouchableOpacity onPress={onPress}>
       <View
         style={{
-          width: 58,
-          height: 58,
+          width: 60,
+          height: 60,
           borderColor: variables.colors.white,
           borderWidth: variables.border.width,
           borderRadius: variables.border.radius,
@@ -28,7 +28,7 @@ export default function CameraControlsSquare({
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
       >
-        <FontAwesome6 name={icon} size={24} color="#ffffff" />
+        <FontAwesome6 name={icon} size={24} color={variables.colors.white} />
       </View>
     </TouchableOpacity>
   );

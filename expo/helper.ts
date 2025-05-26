@@ -80,6 +80,7 @@ export const getOptions = ({
     });
   }
 
+  // TODO: language
   if (product?.quantity) {
     options.push({
       gram: product.quantity.gram,

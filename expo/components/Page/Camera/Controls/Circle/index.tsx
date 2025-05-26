@@ -13,7 +13,7 @@ export default function CameraControlsCircle({
       style={{
         borderColor: variables.border.color,
         borderWidth: variables.border.width,
-        borderRadius: 100,
+        borderRadius: 64,
       }}
       onPress={onPress}
     >
@@ -21,15 +21,15 @@ export default function CameraControlsCircle({
         style={{
           padding: 2,
           backgroundColor: "rgba(0, 0, 0, 0.5)",
-          borderRadius: 100,
+          borderRadius: 64,
         }}
       >
         <View
           style={{
-            width: 74,
-            height: 74,
-            backgroundColor: "#ffffff",
-            borderRadius: 100,
+            width: 60,
+            height: 60,
+            borderRadius: 60,
+            backgroundColor: variables.colors.white,
           }}
         />
       </View>

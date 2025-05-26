@@ -51,7 +51,11 @@ export default function Header({
         {onRepeat && <ButtonSmall icon="repeat" onPress={onRepeat} />}
 
         {onFavorite && (
-          <ButtonSmall icon="heart" onPress={onFavorite} gradient={favorite} />
+          <ButtonSmall
+            icon="heart"
+            action={favorite ? "secondary" : "primary"}
+            onPress={onFavorite}
+          />
         )}
       </View>
 

@@ -71,7 +71,7 @@ export default function Modal({
         >
           <View
             style={{
-              marginBottom: variables.gap.large,
+              marginBottom: button ? 24 : variables.gap.large,
               paddingBottom: 24,
 
               borderColor: variables.colors.grey,

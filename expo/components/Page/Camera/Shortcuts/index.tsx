@@ -24,10 +24,12 @@ export default function CameraShortcuts({
       style={{
         gap: 16,
         width: "100%",
-        paddingTop: 62,
+        paddingTop: 48,
+        paddingBottom: 16,
         paddingHorizontal: 32,
         flexDirection: "row",
         justifyContent: "space-between",
+        backgroundColor: "rgba(0, 0, 0, 0.35)",
       }}
     >
       <ButtonSmall
@@ -35,16 +37,18 @@ export default function CameraShortcuts({
         color="#fff"
         style={{
           marginRight: "auto",
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
+          // backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
+        action="tertiary"
         onPress={handleBack}
       />
 
       <ButtonSmall
         color="#fff"
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-        }}
+        // style={{
+        //   backgroundColor: "rgba(0, 0, 0, 0.5)",
+        // }}
+        action="tertiary"
         iconMaterial={flash ? "flashlight-on" : "flashlight-off"}
         onPress={onFlash}
       />
