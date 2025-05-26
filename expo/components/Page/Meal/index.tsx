@@ -1,5 +1,5 @@
+import { User } from "@/types/user";
 import { useForm } from "react-hook-form";
-import { useQuery } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { MealWithProduct } from "@/types/meal";
@@ -8,23 +8,23 @@ import { useEffect, useMemo, useState } from "react";
 import { MealPageData, mealPageSchema, ServingData } from "@/schemas/serving";
 import { getOptions, isMealFavorite, toggleMealFavorite } from "@/helper";
 
-import userData from "@/queries/userData";
 import useUpdateUser from "@/mutations/useUpdateUser";
 
+import language from "@/language";
 import variables from "@/variables";
 
 import Header from "@/components/Header";
+import TextBody from "@/components/Text/Body";
 import Input from "@/components/Input";
+import InputTime from "@/components/Input/Time";
 import InputDropdown from "@/components/Input/Dropdown";
 import ProductInfo from "@/components/Product/Info";
 import ProductImpact from "@/components/Product/Impact";
 import ButtonOverlay from "@/components/Button/Overlay";
-import InputTime from "@/components/Input/Time";
 import ProductNutrition from "@/components/Product/Nutrition";
-import language from "@/language";
-import TextBody from "@/components/Text/Body";
 
 export type PageMealProps = {
+  user: User;
   meal: MealWithProduct;
   serving?: ServingData | null;
   created?: Date | null;
@@ -36,6 +36,7 @@ export type PageMealProps = {
 };
 
 export default function PageMeal({
+  user,
   meal,
   serving: propServing,
   created: propCreated,
@@ -47,8 +48,6 @@ export default function PageMeal({
   const focus = useIsFocused();
 
   const updateUser = useUpdateUser();
-
-  const { data: user } = useQuery(userData());
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(isMealFavorite(user, meal.uuid));

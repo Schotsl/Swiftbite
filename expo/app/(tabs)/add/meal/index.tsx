@@ -1,3 +1,4 @@
+import userData from "@/queries/userData";
 import entryData from "@/queries/entryData";
 
 import useInsertEntry from "@/mutations/useInsertEntry";
@@ -22,26 +23,27 @@ export default function AddMeal() {
     entry: string;
   }>();
 
-  const { data: entry, isLoading } = useQuery({
+  const { data: user, isLoading: isLoadingUser } = useQuery(userData());
+  const { data: entry, isLoading: isLoadingEntry } = useQuery({
     ...entryData({ uuid: entryId }),
     select: (entries) => entries[0],
     enabled: !!entryId,
   });
 
-  if (isLoading) {
+  if (isLoadingEntry || isLoadingUser) {
     return <PageMealLoading editing={!!entry} />;
   }
 
   const meal = entry?.meal;
   const serving = entry?.serving;
 
-  if (!meal || !serving) {
+  if (!meal || !serving || !user) {
     return <Redirect href="/" />;
   }
 
   const handleSave = async (
     returnedServing: ServingData,
-    returnedCreated: Date,
+    returnedCreated: Date
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it
@@ -93,6 +95,7 @@ export default function AddMeal() {
 
   return (
     <PageMeal
+      user={user}
       meal={meal}
       serving={serving}
       created={entry?.created_at}

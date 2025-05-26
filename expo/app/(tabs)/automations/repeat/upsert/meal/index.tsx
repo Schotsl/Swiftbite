@@ -3,9 +3,12 @@ import PageMealLoading from "@/components/Page/Meal/Loading";
 
 import { ServingData } from "@/schemas/serving";
 
+import { useQuery } from "@tanstack/react-query";
 import { useMeal } from "@/hooks/useMeal";
 import { useEditRepeat } from "@/context/RepeatContext";
 import { useLocalSearchParams, Redirect, router } from "expo-router";
+
+import userData from "@/queries/userData";
 
 export default function AutomationsRepeatUpsertMeal() {
   const {
@@ -20,15 +23,16 @@ export default function AutomationsRepeatUpsertMeal() {
     meal: string;
   }>();
 
-  const { meal: mealSearch, isLoading } = useMeal({ mealId });
+  const { data: user, isLoading: isLoadingUser } = useQuery(userData());
+  const { meal: mealSearch, isLoading: isLoadingMeal } = useMeal({ mealId });
 
-  if (isLoading) {
+  if (isLoadingMeal || isLoadingUser) {
     return <PageMealLoading editing={!!serving} />;
   }
 
   const meal = mealEditing || mealSearch;
 
-  if (!meal) {
+  if (!meal || !user) {
     return <Redirect href="/(tabs)/automations/repeat/upsert" />;
   }
 
@@ -47,6 +51,7 @@ export default function AutomationsRepeatUpsertMeal() {
 
   return (
     <PageMeal
+      user={user}
       meal={meal}
       serving={serving}
       onSave={handleSave}
