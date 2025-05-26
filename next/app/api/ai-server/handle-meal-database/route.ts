@@ -2,7 +2,7 @@ import { handleError } from "@/helper";
 import { generateIcon } from "@/utils/generative/generate";
 import { normalizeMeal } from "@/utils/generative/normalize";
 import { validateUsage } from "@/utils/usage";
-import { NextResponse, after } from "next/server";
+import { NextResponse } from "next/server";
 import {
   fetchIcon,
   fetchIngredients,
