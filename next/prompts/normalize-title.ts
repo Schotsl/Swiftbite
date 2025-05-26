@@ -47,9 +47,18 @@ Your primary task is to transform the \`title\` into a **clear, simplified, sing
   - Example:
     - 'isometric sport drink' -> 'a sport drink'
 
-## Language:
+## Language of output:
   - The \`title\` may be in any language.
-  - The output description MUST be in clear, simple English.
+  - The output description MUST generally be in clear, simple English. However, exceptions apply for certain culturally specific items (see "Handling Culturally Specific Items" below).
+
+## Handling culturally specific items:
+  - For food items highly specific to a language or culture, if direct English translation is awkward, misleading, or loses the item's identity (e.g., "eierkoek" which is poorly translated as "egg cake"), retain the original term.
+  - The retained term should still be normalized (e.g., singularized: "eierkoeken" -> "eierkoek"; adjectives removed if not part of the core name).
+  - Ensure the output is phrased naturally, often by prefixing with "a" or "an" (e.g., "an eierkoek").
+  - Examples:
+    - Title: 'eierkoek', Language: 'nl' -> 'an eierkoek' (not 'an egg cake', as 'egg cake' is not a common or accurate representation)
+    - Title: 'stroopwafels', Language: 'nl' -> 'a stroopwafel'
+    - Title: 'Goudsche eierkoeken (jumbo)', Language: 'nl' -> 'an eierkoek'
 
 ## Handling non-food or unclear input:
   - If the \`title\` is clearly not a food item (e.g., \"table\", \"chair\", \"blue sky\") or is complete gibberish/nonsensical, return a very generic placeholder such as \"food item\" or \"a meal\".
