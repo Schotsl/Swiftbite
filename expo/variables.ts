@@ -23,7 +23,8 @@ export default {
   },
   colors: {
     text: {
-      error: "#7C0000",
+      error: "#ff0033",
+      repeat: "#ffa500",
       primary: "#2E2727",
       focused: "#007AFF",
       secondary: "#677798",

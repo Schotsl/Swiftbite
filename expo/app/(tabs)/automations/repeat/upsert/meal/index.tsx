@@ -11,8 +11,8 @@ export default function AutomationsRepeatUpsertMeal() {
   const {
     meal: mealEditing,
     serving,
+    remove,
     updateMeal,
-    removeMeal,
     updateServing,
   } = useEditRepeat();
 
@@ -40,7 +40,7 @@ export default function AutomationsRepeatUpsertMeal() {
   };
 
   const handleDelete = async () => {
-    removeMeal();
+    remove();
 
     router.replace("/");
   };

@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Position } from "@/types";
 import { rowTimeout } from "@/helper";
+import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditMeal } from "@/context/MealContext";
 import { Modal, View } from "react-native";
@@ -14,16 +15,16 @@ import Header from "@/components/Header";
 import Input from "@/components/Input";
 import EmptySmall from "@/components/Empty/Small";
 import InputLabel from "@/components/Input/Label";
-import ItemDelete from "@/components/Item/Delete";
+import ItemActions from "@/components/Item/Actions";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
 import ButtonOverlay from "@/components/Button/Overlay";
 import ButtonSmall from "@/components/Button/Small";
 import ItemProduct from "@/components/Item/Product";
 import ModalBackground from "@/components/Modal/Background";
 import NavigationAddList from "@/components/Navigation/Add/List";
-import { ScrollView } from "react-native-gesture-handler";
-import variables from "@/variables";
+
 import language from "@/language";
+import variables from "@/variables";
 
 export default function AutomationsMealUpsert() {
   const focus = useIsFocused();
@@ -133,18 +134,7 @@ export default function AutomationsMealUpsert() {
                     borderRadius: variables.border.radius,
                   }}
                   data={mealProducts}
-                  scrollEnabled={false}
                   keyExtractor={(item) => item.product.uuid}
-                  ListEmptyComponent={() => {
-                    return (
-                      <EmptySmall
-                        onPress={() => setOpen(true)}
-                        content={language.empty.getAdded(
-                          language.types.ingredient.plural,
-                        )}
-                      />
-                    );
-                  }}
                   renderItem={({ item, index }) => {
                     return (
                       <ItemProduct
@@ -157,17 +147,27 @@ export default function AutomationsMealUpsert() {
                       />
                     );
                   }}
-                  renderHiddenItem={({ item, index }) => {
+                  renderHiddenItem={({ item }) => {
                     return (
-                      <ItemDelete
-                        border={index !== mealProducts.length - 1}
+                      <ItemActions
                         onDelete={() => removeMealProduct(item.product.uuid)}
                       />
                     );
                   }}
+                  ListEmptyComponent={() => {
+                    return (
+                      <EmptySmall
+                        onPress={() => setOpen(true)}
+                        content={language.empty.getAdded(
+                          language.types.ingredient.plural,
+                        )}
+                      />
+                    );
+                  }}
                   onRowDidOpen={rowTimeout}
+                  scrollEnabled={false}
                   rightOpenValue={-75}
-                  useNativeDriver={true}
+                  closeOnRowOpen={true}
                   disableRightSwipe={true}
                 />
               </View>

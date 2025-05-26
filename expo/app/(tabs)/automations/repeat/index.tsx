@@ -1,15 +1,15 @@
 import Tabs from "@/components/Tabs";
 import Empty from "@/components/Empty";
-import ItemDelete from "@/components/Item/Delete";
 import ItemRepeat from "@/components/Item/Repeat";
+import ItemActions from "@/components/Item/Actions";
 import ItemSkeleton from "@/components/Item/Skeleton";
 
 import repeatData from "@/queries/repeatData";
 import useDeleteRepeat from "@/mutations/useDeleteRepeat";
 
-import { View } from "react-native";
 import { Suspense } from "react";
 import { rowTimeout } from "@/helper";
+import { Alert, View } from "react-native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { usePathname, useRouter } from "expo-router";
@@ -26,6 +26,13 @@ export default function AutomationsRepeat() {
 
   const handleDelete = (uuid: string) => {
     deleteRepeat.mutate(uuid);
+  };
+
+  const handleDuplicate = () => {
+    Alert.alert(
+      "Dupliceer",
+      "Deze functionaliteit is helaas nog niet beschikbaar.",
+    );
   };
 
   const handleSelect = (repeat: string) => {
@@ -54,16 +61,20 @@ export default function AutomationsRepeat() {
         <SwipeListView
           data={data}
           keyExtractor={(item) => item.uuid}
-          ListEmptyComponent={<AutomationsRepeatEmpty />}
           renderItem={({ item }) => (
             <ItemRepeat item={item} onSelect={handleSelect} />
           )}
           renderHiddenItem={({ item }) => (
-            <ItemDelete onDelete={() => handleDelete(item.uuid)} />
+            <ItemActions
+              onDelete={() => handleDelete(item.uuid)}
+              onDuplicate={() => handleDuplicate()}
+            />
           )}
+          ListEmptyComponent={<AutomationsRepeatEmpty />}
           onRowDidOpen={rowTimeout}
-          rightOpenValue={-75}
-          useNativeDriver={true}
+          scrollEnabled={false}
+          rightOpenValue={-150}
+          closeOnRowOpen={true}
           disableRightSwipe={true}
         />
       </Suspense>

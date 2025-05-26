@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import { Suspense } from "react";
 import { rowTimeout } from "@/helper";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -8,11 +8,12 @@ import { usePathname, useRouter } from "expo-router";
 import Tabs from "@/components/Tabs";
 import Empty from "@/components/Empty";
 import ItemMeal from "@/components/Item/Meal";
-import ItemDelete from "@/components/Item/Delete";
+import ItemActions from "@/components/Item/Actions";
 import ItemSkeleton from "@/components/Item/Skeleton";
 
 import mealData from "@/queries/mealData";
 import useDeleteMeal from "@/mutations/useDeleteMeal";
+
 import language from "@/language";
 
 export default function AutomationsMeal() {
@@ -27,6 +28,14 @@ export default function AutomationsMeal() {
 
   const handleDelete = (uuid: string) => {
     deleteMeal.mutate(uuid);
+  };
+
+  const handleDuplicate = () => {
+    // TODO: language
+    Alert.alert(
+      "Dupliceer",
+      "Deze functionaliteit is helaas nog niet beschikbaar.",
+    );
   };
 
   const handleSelect = (meal: string) => {
@@ -55,16 +64,20 @@ export default function AutomationsMeal() {
         <SwipeListView
           data={data}
           keyExtractor={(item) => item.uuid}
-          ListEmptyComponent={<AutomationsMealEmpty />}
           renderItem={({ item }) => (
             <ItemMeal icon={false} meal={item} onSelect={handleSelect} />
           )}
           renderHiddenItem={({ item }) => (
-            <ItemDelete onDelete={() => handleDelete(item.uuid)} />
+            <ItemActions
+              onDelete={() => handleDelete(item.uuid)}
+              onDuplicate={() => handleDuplicate()}
+            />
           )}
+          ListEmptyComponent={<AutomationsMealEmpty />}
           onRowDidOpen={rowTimeout}
-          rightOpenValue={-75}
-          useNativeDriver={true}
+          scrollEnabled={false}
+          rightOpenValue={-150}
+          closeOnRowOpen={true}
           disableRightSwipe={true}
         />
       </Suspense>

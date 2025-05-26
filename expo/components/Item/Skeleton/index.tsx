@@ -46,10 +46,10 @@ export default function ItemSkeleton({
   };
 
   // Random width variations (±10%)
-  const titleWidth = 100 + getRandom(uuid, 0) * 20;
-  const subtitleWidth = 75 + getRandom(uuid, 1) * 15;
-  const rightTopWidth = 50 + getRandom(uuid, 2) * 20;
-  const rightBottomWidth = 25 + getRandom(uuid, 3) * 15;
+  const titleWidth = 100 + getRandom(0) * 20;
+  const subtitleWidth = 75 + getRandom(1) * 15;
+  const rightTopWidth = 50 + getRandom(2) * 20;
+  const rightBottomWidth = 25 + getRandom(3) * 15;
 
   return (
     <View

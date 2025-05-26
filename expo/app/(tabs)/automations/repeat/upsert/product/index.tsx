@@ -10,9 +10,8 @@ export default function AutomationsRepeatUpsertProduct() {
   const {
     product: productEditing,
     serving,
+    remove,
     updateProduct,
-    removeProduct,
-    removeServing,
     updateServing,
   } = useEditRepeat();
 
@@ -46,8 +45,7 @@ export default function AutomationsRepeatUpsertProduct() {
   };
 
   const handleDelete = () => {
-    removeProduct();
-    removeServing();
+    remove();
 
     router.replace("/(tabs)/automations/repeat/upsert");
   };

@@ -1,5 +1,7 @@
 import Header from "@/components/Header";
 import ItemMeal from "@/components/Item/Meal";
+import ItemActions from "@/components/Item/Actions";
+
 import InputTime from "@/components/Input/Time";
 import InputLabel from "@/components/Input/Label";
 import EmptySmall from "@/components/Empty/Small";
@@ -25,8 +27,10 @@ import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
 
 import { useForm } from "react-hook-form";
+import { rowTimeout } from "@/helper";
 import { useIsFocused } from "@react-navigation/native";
 import { useEditRepeat } from "@/context/RepeatContext";
+import { SwipeListView } from "react-native-swipe-list-view";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 export default function AutomationsRepeatUpsert() {
@@ -49,6 +53,7 @@ export default function AutomationsRepeatUpsert() {
     serving,
     weekdays,
     updating,
+    remove,
     saveChanges,
     updateTime,
     updateWeekdays,
@@ -142,23 +147,46 @@ export default function AutomationsRepeatUpsert() {
               <View>
                 <InputLabel label={language.types.ingredient.single} />
 
-                <View
+                <SwipeListView
                   style={{
-                    overflow: "hidden",
-                    marginTop: 2,
+                    width: "100%",
                     borderColor: variables.border.color,
                     borderWidth: variables.border.width,
                     borderRadius: variables.border.radius,
                   }}
-                >
-                  <AutomationsRepeatUpsertItem
-                    meal={meal}
-                    product={product}
-                    serving={serving}
-                    onOpen={() => setOpen(true)}
-                    onSelect={handleSelect}
-                  />
-                </View>
+                  // This is kinda hacky but I want consistent support for swiping
+                  data={[serving ? [serving] : []]}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={() => {
+                    return (
+                      <AutomationsRepeatUpsertItem
+                        meal={meal}
+                        product={product}
+                        serving={serving}
+                        onOpen={() => setOpen(true)}
+                        onSelect={handleSelect}
+                      />
+                    );
+                  }}
+                  renderHiddenItem={() => {
+                    return <ItemActions onDelete={() => remove()} />;
+                  }}
+                  ListEmptyComponent={() => {
+                    return (
+                      <EmptySmall
+                        content={language.empty.getSelected(
+                          language.types.ingredient.single
+                        )}
+                        onPress={() => setOpen(true)}
+                      />
+                    );
+                  }}
+                  onRowDidOpen={rowTimeout}
+                  scrollEnabled={false}
+                  rightOpenValue={-75}
+                  closeOnRowOpen={true}
+                  disableRightSwipe={true}
+                />
               </View>
 
               {focus && (
@@ -167,10 +195,10 @@ export default function AutomationsRepeatUpsert() {
                   title={
                     isSet
                       ? language.modifications.getPick(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )
                       : language.modifications.getEdit(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )
                   }
                   onPress={() => setOpen(true)}
@@ -239,13 +267,6 @@ function AutomationsRepeatUpsertItem({
       />
     );
   }
-
-  return (
-    <EmptySmall
-      content={language.empty.getSelected(language.types.ingredient.single)}
-      onPress={onOpen}
-    />
-  );
 }
 
 type AutomationsRepeatUpsertAddProps = {

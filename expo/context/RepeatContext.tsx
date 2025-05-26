@@ -17,10 +17,7 @@ type RepeatContextType = {
   weekdays: string[];
   updating: boolean;
 
-  removeMeal: () => void;
-  removeProduct: () => void;
-  removeServing: () => void;
-
+  remove: () => void;
   updateTime: (time: Date) => void;
   updateMeal: (meal: MealWithProduct) => void;
   updateProduct: (product: Product) => void;
@@ -60,17 +57,9 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
   const [product, setProduct] = useState(initialProduct);
   const [serving, setServing] = useState(initialServing);
 
-  const removeMeal = () => {
+  const remove = () => {
     setMeal(null);
-    setServing(null);
-  };
-
-  const removeProduct = () => {
     setProduct(null);
-    setServing(null);
-  };
-
-  const removeServing = () => {
     setServing(null);
   };
 
@@ -130,10 +119,7 @@ export const RepeatProvider: React.FC<RepeatProviderProps> = ({
         weekdays,
         updating,
 
-        removeMeal,
-        removeProduct,
-        removeServing,
-
+        remove,
         updateTime,
         updateMeal,
         updateWeekdays,

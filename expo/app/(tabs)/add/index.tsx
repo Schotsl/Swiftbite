@@ -1,5 +1,7 @@
 import { View } from "react-native";
 import { Entry } from "@/types/entry";
+import { rowTimeout } from "@/helper";
+
 import { ScrollView } from "react-native-gesture-handler";
 import { getSections } from "./helper";
 import { Href, router } from "expo-router";
@@ -11,6 +13,7 @@ import language from "@/language";
 import variables from "@/variables";
 
 import entryData from "@/queries/entryData";
+import useInsertEntry from "@/mutations/useInsertEntry";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 
 import HomeWeek from "@/components/Home/Week";
@@ -21,7 +24,7 @@ import TextTitle from "@/components/Text/Title";
 
 import ItemMeal from "@/components/Item/Meal";
 import ItemHeader from "@/components/Item/Header";
-import ItemDelete from "@/components/Item/Delete";
+import ItemActions from "@/components/Item/Actions";
 import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
 
@@ -95,9 +98,20 @@ type AddListProps = {
 
 function AddList({ entries }: AddListProps) {
   const deleteEntry = useDeleteEntry();
+  const insertEntry = useInsertEntry();
 
   const handleDelete = (uuid: string) => {
     deleteEntry.mutate(uuid);
+  };
+
+  const handleRepeat = (entry: Entry) => {
+    const { meal_id, product_id, serving } = entry;
+
+    insertEntry.mutate({
+      meal_id,
+      product_id,
+      serving,
+    });
   };
 
   const handleSelect = (entry: string, type: string) => {
@@ -122,20 +136,28 @@ function AddList({ entries }: AddListProps) {
   return (
     <SwipeListView
       sections={sections}
+      keyExtractor={(item) => item.uuid}
       renderItem={({ item }) => (
         <AddListItem entry={item} handleSelect={handleSelect} />
       )}
       renderHiddenItem={({ item }) => (
-        <ItemDelete onDelete={() => handleDelete(item.uuid)} />
+        <ItemActions
+          onDelete={() => handleDelete(item.uuid)}
+          onRepeat={item.serving ? () => handleRepeat(item) : undefined}
+        />
       )}
       renderSectionHeader={({ section }) => (
         <ItemHeader title={section.title} subtitle={section.subtitle} />
       )}
-      scrollEnabled={false}
-      rightOpenValue={-75}
-      useSectionList={true}
-      disableRightSwipe={true}
       ListEmptyComponent={<AddListEmpty />}
+      onRowDidOpen={rowTimeout}
+      scrollEnabled={false}
+      rightOpenValue={-150}
+      useSectionList={true}
+      closeOnRowOpen={true}
+      disableRightSwipe={true}
+      // Create a quick preview of the first entry
+      previewRowKey={entries.length > 0 ? entries[0].uuid : undefined}
     />
   );
 }
