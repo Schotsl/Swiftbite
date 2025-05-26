@@ -97,6 +97,10 @@ export default function PageSearchProductCollapsable({
             products && (
               <FlatList
                 data={products}
+                style={{
+                  borderBottomColor: variables.colors.grey,
+                  borderBottomWidth: variables.border.width,
+                }}
                 scrollEnabled={false}
                 keyExtractor={(item) => item.uuid}
                 renderItem={({ item, index }) => (

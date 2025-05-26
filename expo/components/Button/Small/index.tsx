@@ -51,6 +51,7 @@ export default function ButtonSmall({
     if (action === "secondary") {
       return {
         color: variables.colors.white,
+        borderWidth: 0,
         borderColor: "transparent",
         backgroundColor: "transparent",
       };
@@ -59,6 +60,7 @@ export default function ButtonSmall({
     if (action === "tertiary") {
       return {
         color: variables.colors.white,
+        borderWidth: variables.border.width,
         borderColor: variables.colors.white,
         backgroundColor: "rgba(0, 0, 0, 0.5)",
       };
@@ -66,6 +68,7 @@ export default function ButtonSmall({
 
     return {
       color: variables.colors.text.secondary,
+      borderWidth: variables.border.width,
       borderColor: "transparent",
       backgroundColor: variables.colors.background.secondary,
     };
@@ -83,7 +86,7 @@ export default function ButtonSmall({
 
   const marker = useRef<View>(null);
 
-  const { backgroundColor, borderColor, color } = getStyle(action);
+  const { backgroundColor, borderColor, borderWidth, color } = getStyle(action);
 
   return (
     <View
@@ -122,7 +125,7 @@ export default function ButtonSmall({
           overflow: "hidden",
           borderRadius: 100,
           borderColor,
-          borderWidth: 2,
+          borderWidth,
           backgroundColor,
 
           opacity: disabled ? variables.input.disabled.opacity : 1,

@@ -1,10 +1,10 @@
+import { User } from "@/types/user";
 import { useForm } from "react-hook-form";
 import { Product } from "@/types/product";
-import { useQuery } from "@tanstack/react-query";
-import { getOption, getOptions } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { ScrollView, View } from "react-native";
+import { getOption, getOptions } from "@/helper";
 import { useEffect, useMemo, useState } from "react";
 import { isProductFavorite, toggleProductFavorite } from "@/helper";
 import {
@@ -13,7 +13,6 @@ import {
   ServingData,
 } from "@/schemas/serving";
 
-import userData from "@/queries/userData";
 import useUpdateUser from "@/mutations/useUpdateUser";
 
 import variables from "@/variables";
@@ -29,6 +28,7 @@ import Header from "@/components/Header";
 import Input from "@/components/Input";
 
 export type PageProductProps = {
+  user: User;
   product: Product;
   serving?: ServingData | null;
   created?: Date | null;
@@ -40,6 +40,7 @@ export type PageProductProps = {
 };
 
 export default function PageProduct({
+  user,
   product,
   serving: propServing,
   created: propCreated,
@@ -52,11 +53,11 @@ export default function PageProduct({
 
   const updateUser = useUpdateUser();
 
-  const { data: user } = useQuery(userData());
+  // const { data: user } = useQuery(userData());
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const isGeneric = product.type === "search_generic";

@@ -1,10 +1,13 @@
 import PageProduct from "@/components/Page/Product";
 import PageProductLoading from "@/components/Page/Product/Loading";
 
+import { useQuery } from "@tanstack/react-query";
 import { useProduct } from "@/hooks/useProduct";
 import { useEditMeal } from "@/context/MealContext";
 import { ServingData } from "@/schemas/serving";
 import { useLocalSearchParams, Redirect, router } from "expo-router";
+
+import userData from "@/queries/userData";
 
 export default function AutomationsMealUpsertProduct() {
   const {
@@ -19,7 +22,8 @@ export default function AutomationsMealUpsertProduct() {
     product?: string;
   }>();
 
-  const { product, isLoading } = useProduct({
+  const { data: user, isLoading: isLoadingUser } = useQuery(userData());
+  const { product, isLoading: isLoadingProduct } = useProduct({
     productId,
     barcodeId,
     enabled: !!productId || !!barcodeId,
@@ -27,19 +31,20 @@ export default function AutomationsMealUpsertProduct() {
   });
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId,
+    (mealProduct) => mealProduct.product.uuid === productId
   );
 
-  if (isLoading) {
+  if (isLoadingProduct || isLoadingUser) {
     return <PageProductLoading editing={!!mealProduct?.serving} />;
   }
 
-  if (!product) {
+  if (!product || !user) {
     return <Redirect href="/(tabs)/automations/meal" />;
   }
 
   return (
     <PageProduct
+      user={user}
       product={product}
       serving={mealProduct?.serving}
       onDelete={() => {

@@ -2,12 +2,13 @@ import entryData from "@/queries/entryData";
 import useInsertEntry from "@/mutations/useInsertEntry";
 import useUpdateEntry from "@/mutations/useUpdateEntry";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
+import userData from "@/queries/userData";
 
 import PageProduct from "@/components/Page/Product";
 import PageProductLoading from "@/components/Page/Product/Loading";
 
-import { useProduct } from "@/hooks/useProduct";
 import { useQuery } from "@tanstack/react-query";
+import { useProduct } from "@/hooks/useProduct";
 import { ServingData } from "@/schemas/serving";
 import { useLocalSearchParams, Redirect, useRouter } from "expo-router";
 
@@ -28,6 +29,7 @@ export default function AddProduct() {
     barcode: string;
   }>();
 
+  const { data: user, isLoading: isLoadingUser } = useQuery(userData());
   const { data: entry, isLoading: isLoadingEntry } = useQuery({
     ...entryData({ uuid: entryId }),
     select: (entries) => entries[0],
@@ -41,7 +43,7 @@ export default function AddProduct() {
     redirect: "/(tabs)/add/search",
   });
 
-  if (isLoadingEntry || isLoadingProduct) {
+  if (isLoadingEntry || isLoadingUser || isLoadingProduct) {
     return <PageProductLoading editing={!!entry} />;
   }
 
@@ -49,13 +51,13 @@ export default function AddProduct() {
   const product = productEntry || productObject;
   const serving = entry?.serving;
 
-  if (!product) {
+  if (!product || !user) {
     return <Redirect href="/" />;
   }
 
   const handleSave = async (
     returnedServing: ServingData,
-    returnedCreated: Date,
+    returnedCreated: Date
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it
@@ -108,6 +110,7 @@ export default function AddProduct() {
 
   return (
     <PageProduct
+      user={user}
       product={product}
       serving={serving}
       created={entry?.created_at}
