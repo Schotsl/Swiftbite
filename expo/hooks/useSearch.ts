@@ -29,7 +29,6 @@ export function useSearch() {
 
       if (search.length < 4) {
         setLoading(false);
-
         return;
       }
 
@@ -39,68 +38,74 @@ export function useSearch() {
 
       abort.current = new AbortController();
 
-      const session = await supabase.auth.getSession();
-      const bearer = session?.data.session?.access_token;
-
-      if (!bearer) {
-        throw new Error("User not authenticated");
-      }
-
       const signal = abort.current.signal;
-      const headers = {
-        Authorization: `Bearer ${bearer}`,
-        "Content-Type": "application/json",
-      };
 
-      const response = await fetch(
-        `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search?query=${encodeURIComponent(search)}&lang=${lang}&type=${type}`,
-        {
-          signal,
-          headers,
-        },
-      );
+      try {
+        const session = await supabase.auth.getSession();
+        const bearer = session?.data.session?.access_token;
 
-      if (response.status === 429) {
-        setProducts([]);
-        setOverloaded(true);
-        setLoading(false);
+        if (!bearer) {
+          throw new Error("User not authenticated");
+        }
 
-        return;
-      }
+        const headers = {
+          Authorization: `Bearer ${bearer}`,
+          "Content-Type": "application/json",
+        };
 
-      if (!response.body || response.status !== 200) {
+        const response = await fetch(
+          `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search?query=${encodeURIComponent(search)}&lang=${lang}&type=${type}`,
+          {
+            signal,
+            headers,
+          }
+        );
+
+        if (response.status === 429) {
+          setProducts([]);
+          setOverloaded(true);
+          return;
+        }
+
+        if (!response.body || response.status !== 200) {
+          setProducts([]);
+          setError(true);
+          return;
+        }
+
+        const decoder = new TextDecoder();
+        const reader = response.body.getReader();
+
+        while (true) {
+          const { done, value } = await reader.read();
+
+          if (done) {
+            break;
+          }
+
+          const decoded = decoder.decode(value);
+          const parsed = JSON.parse(decoded);
+
+          if (parsed.length > 0) {
+            setProducts(parsed);
+          }
+        }
+
+        await reader.closed;
+      } catch (error: any) {
+        if (signal.aborted || error.name === "AbortError") {
+          setProducts([]);
+
+          return;
+        }
+
         setProducts([]);
         setError(true);
+      } finally {
         setLoading(false);
-
-        return;
       }
-
-      const decoder = new TextDecoder();
-      const reader = response.body.getReader();
-
-      while (true) {
-        const { done, value } = await reader.read();
-
-        if (done) {
-          setLoading(false);
-
-          break;
-        }
-
-        const decoded = decoder.decode(value);
-        const parsed = JSON.parse(decoded);
-
-        if (parsed.length > 0) {
-          setProducts(parsed);
-        }
-      }
-
-      await reader.closed;
-
-      setLoading(false);
     },
-    [],
+    []
   );
 
   return { error, search, reset, products, loading, overloaded };

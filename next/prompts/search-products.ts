@@ -29,24 +29,28 @@ Your task is to find up to 6 specific, single-item products matching the user's 
 # Rules about semantics
 - The database results are returned based on semantic similarity to the user's query
 
-- Your additional results should also be semantically close to the user's query:
-  - Don't suggest products that are only tangentially related
-  - Keep product names and brands similar to what the user is looking for
-  - If the database results already satisfy the user's query, return an empty array
-  - This prevents creating duplicates that would be regenerated in future searches
-  - Example: If user searches for "Coca Cola" and database has "Coca-Cola Classic", "Coca-Cola Zero", "Coca-Cola Cherry", return [] as these already cover the query
-  - Example: If user searches for "Coca Cola" and database has "Pepsi", "Fanta", "Sprite", search for more Coca-Cola variants
-  - Conversely, if the database returns no relevant results, or results that are clearly not what the user is looking for (like the Pepsi example for a "Coca Cola" query), you should actively search for products matching the query. If the query is broad (e.g., "brand + product type" like "Unox hotdogs"), try to suggest a few common variants of that product.
+- Evaluate the relevance and coverage of the database results first:
+  - If the database results are **not relevant** to the user's query (e.g., database has "Pepsi" for a "Coca Cola" query, or "Lipton Ice Tea" for a "Coca-Cola Cherry" query), you **must** search for products matching the query. Do not return an empty array in this case.
+  - If the database results **are relevant**, but **do not sufficiently cover** the user's query, you should search for additional products. Sufficient coverage depends on the specificity of the query and quantity requirements (see quantity rules below).
+    - Example (insufficient coverage - not enough variety for a general query): User searches for "Coca Cola", database only has "Coca-Cola Classic". You should search for other variants like "Coca-Cola Zero", "Diet Coke", etc.
+  - Only if the database results are **both relevant AND sufficiently cover** the user's query, should you return an empty array \`[]\`. This prevents creating duplicates.
+    - Example (relevant and sufficient): User searches for "Coca Cola", database has "Coca-Cola Classic", "Coca-Cola Zero", "Coca-Cola Cherry". Return \`[]\`
+    - Example (relevant and sufficient for specific query): User searches for "Coca-Cola Cherry 330ml", database has "Coca-Cola Cherry 330ml". Return \`[]\`
+
+- If you proceed to search, your additional results should be semantically close to the user's query:
+  - Don't suggest products that are only tangentially related.
+  - Keep product names and brands similar to what the user is looking for.
   
-- Important exception for quantities:
-  - If the user specifies a quantity (e.g., "Coca-Cola 1L") and the database only has different quantities (e.g., "Coca-Cola 330ml", "Coca-Cola 1.5L"), still search for the requested quantity
-  - Example: If user searches for "Coca-Cola 1L" and database has "Coca-Cola 330ml", "Coca-Cola 1.5L", search for "Coca-Cola 1L" as it's a different quantity
-  - Example: If user searches for "Coca-Cola 1L" and database has "Coca-Cola 1L", "Coca-Cola Zero 1L", "Coca-Cola Cherry 1L", return [] as these already cover the query with the correct quantity
+- Important rules regarding quantities (these rules help determine "sufficient coverage" and have high priority):
+  - If the user specifies a specific quantity (e.g., "Coca-Cola 1L") and the database contains relevant products but **none of them match the specified quantity** (e.g., database only has "Coca-Cola 330ml" when "Coca-Cola 1L" is queried), you **must search** for the product with the requested quantity. These database results are considered relevant but not providing sufficient coverage for the *specific quantity requested*.
+    - Example: User queries "Coca-Cola 1L". Database has "Coca-Cola 330ml". You MUST search for "Coca-Cola 1L".
+  - If the database *does* contain relevant products matching the specified quantity, then evaluate if these (along with other relevant products) sufficiently cover the query before deciding to return \`[]\`
+    - Example: User queries "Coca-Cola 1L". Database has "Coca-Cola 1L". If this sufficiently covers the query (e.g., no other variants implied by a broader query), you can return \`[]\`
 
 # Rules specific to this task
 - Return an empty array \`[]\` if either:
-  - The database already contains 3 or more exact matches for the specific product and quantity requested
-  - The database already contains 3 or more distinct types/flavors of the requested product (for broad queries)
+  - The database already contains 3 or more exact matches for the specific product and quantity requested (and these are relevant and cover the query as per rules above)
+  - The database already contains 3 or more distinct types/flavors of the requested product (for broad queries, and these are relevant and cover the query as per rules above)
 
 - When searching for new products:
   - Product & Brand Requirements:

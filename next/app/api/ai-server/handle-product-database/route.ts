@@ -27,31 +27,33 @@ export async function POST(request: Request) {
     }
   }
 
-  const productIcon = body.record.icon_id;
-  const productUuid = body.record.uuid;
+  const icon = body.record.icon_id;
+  const uuid = body.record.uuid;
+  const title = body.record.title;
+  const brand = body.record.brand;
+  const category = body.record.category;
 
-  const productTitleNew = body.record.title;
-  const productTitleOld = body.old_record?.title;
+  const titleOld = body.old_record?.title;
 
   // If the product doesn't have a title we can't do anything
-  if (!productTitleNew) {
+  if (!title) {
     return new Response("{}", { status: 200 });
   }
 
   // If the title hasn't changed we don't need to do anything
-  if (productTitleOld === productTitleNew) {
+  if (titleOld === title) {
     return new Response("{}", { status: 200 });
   }
 
   // If the product already has an icon we don't need to
-  if (productIcon) {
+  if (icon) {
     return new Response("{}", { status: 200 });
   }
 
   after(async () => {
     // Normalize the title and look it up in the database
     console.log(`[ICON] Normalizing title`);
-    const iconTitle = await normalizeTitle(user, { title: productTitleNew });
+    const iconTitle = await normalizeTitle(user, { title, brand, category });
 
     console.log(`[ICON] Fetching icon from database`);
     const iconUuid = await fetchIcon(iconTitle);
@@ -60,7 +62,7 @@ export async function POST(request: Request) {
     if (iconUuid) {
       console.log(`[ICON] Updating product with icon`);
 
-      await updateProduct(productUuid, iconUuid);
+      await updateProduct(uuid, iconUuid);
 
       return;
     }
@@ -77,7 +79,7 @@ export async function POST(request: Request) {
 
       console.log(`[ICON] Uploading icon to storage`);
       await uploadIcon(`${iconUuid}-256`, newIconResized);
-      await updateProduct(productUuid, iconUuid);
+      await updateProduct(uuid, iconUuid);
       await uploadIcon(`${iconUuid}`, newIconBuffer);
     } catch (error: Error | unknown) {
       // If we get a unique constraint violation try to fetch the icon again
@@ -89,7 +91,7 @@ export async function POST(request: Request) {
         const iconUuid = await fetchIcon(iconTitle)!;
 
         console.log(`[ICON] Updating product with existing icon`);
-        await updateProduct(productUuid, iconUuid);
+        await updateProduct(uuid, iconUuid);
       }
       throw error;
     }

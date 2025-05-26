@@ -67,8 +67,12 @@ export async function normalizeTitle(
   user: string,
   {
     title,
+    brand,
+    category,
   }: {
     title: string;
+    brand?: string;
+    category?: string;
   },
   signal?: AbortSignal
 ): Promise<string> {
@@ -92,6 +96,8 @@ export async function normalizeTitle(
         role: "user",
         content: `Title information: ${JSON.stringify({
           title,
+          brand,
+          category,
           language: "Dutch",
         })}`,
       },

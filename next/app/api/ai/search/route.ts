@@ -123,19 +123,18 @@ export async function GET(request: NextRequest) {
 
       // First yield the Supabase results
       yield supabase;
-
       // Then yield combined results as AI results come in
       for await (const chunk of generativeStream.partialObjectStream) {
         console.log(chunk);
+
         const mapped = chunk.map((search) =>
           getProductFromSearch({ search, seed })
         );
 
-        yield [...supabase, ...mapped];
+        if (mapped.length > 0) {
+          yield [...supabase, ...mapped];
+        }
       }
-
-      // Close the stream after the last chunk
-      console.log("[SEARCH] Closing stream");
     })(),
   };
 

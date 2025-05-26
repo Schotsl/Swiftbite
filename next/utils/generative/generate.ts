@@ -10,8 +10,10 @@ import generateOptionsPrompt from "@/prompts/generate-options";
 
 import { after } from "next/dist/server/after";
 import { insertUsage } from "@/utils/usage";
-import { openai as openaiModel } from "@ai-sdk/openai";
 import { OptionData, optionSchema } from "@/schema";
+
+import { openai as openaiModel } from "@ai-sdk/openai";
+import { google as googleModel } from "@ai-sdk/google";
 
 export async function generateOptions(
   user: string | null,
@@ -25,7 +27,7 @@ export async function generateOptions(
     category?: string;
   }
 ): Promise<OptionData[]> {
-  const model = openaiModel("gpt-4o-mini");
+  const model = googleModel("gemini-2.5-flash-preview-05-20");
   const task = "generate-options";
 
   const { object, usage } = await generateObject({
