@@ -4,7 +4,7 @@ import { Product } from "@/types/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { ScrollView, View } from "react-native";
-import { getOption, getOptions } from "@/helper";
+import { displayQuantity, getOption, getOptions } from "@/helper";
 import { useEffect, useMemo, useState } from "react";
 import { isProductFavorite, toggleProductFavorite } from "@/helper";
 import {
@@ -123,7 +123,7 @@ export default function PageProduct({
       items.push({
         key: "serving",
         icon: "plate-wheat",
-        value: `${product.serving.gram} ${product.serving.option}`,
+        value: displayQuantity(product.serving),
       });
     }
 
@@ -131,7 +131,7 @@ export default function PageProduct({
       items.push({
         key: "quantity",
         icon: "weight-hanging",
-        value: `${product.quantity.gram} ${product.quantity.option}`,
+        value: displayQuantity(product.quantity),
       });
     } else if (product.search?.quantity_original) {
       items.push({

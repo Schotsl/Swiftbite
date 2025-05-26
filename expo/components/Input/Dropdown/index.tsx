@@ -48,7 +48,7 @@ export default function InputDropdown({
   const [visible, setVisible] = useState(false);
   const [temporary, setTemporary] = useState("test");
 
-  const extended = options.length > 6;
+  const extended = options.length > 8;
   const selected = options.find((option) => option.value === value);
 
   const handleClose = () => {

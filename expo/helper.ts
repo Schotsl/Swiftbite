@@ -83,7 +83,7 @@ export const getOptions = ({
   if (product?.quantity) {
     options.push({
       gram: product.quantity.gram,
-      title: `Productinhoud (${product.quantity.gram} ${product.quantity.option})`,
+      title: `Productinhoud (${displayQuantity(product.quantity)})`,
       value: `quantity`,
     });
   }
@@ -91,7 +91,7 @@ export const getOptions = ({
   if (product?.serving) {
     options.push({
       gram: product.serving?.gram,
-      title: `Portiegrootte (${product.serving?.gram} ${product.serving?.option})`,
+      title: `Portiegrootte (${displayQuantity(product.serving)})`,
       value: `serving`,
     });
   }
@@ -370,4 +370,18 @@ export function toggleMealFavorite(
     : [...user.favorite_meals, meal];
 
   return favoriteArray;
+}
+
+export function displayQuantity(serving: { option: string; quantity: number }) {
+  const { option, quantity } = serving;
+
+  let optionFormatted = option;
+
+  if (option === "l") {
+    optionFormatted = "L";
+  } else if (option === "ml") {
+    optionFormatted = "mL";
+  }
+
+  return `${quantity} ${optionFormatted}`;
 }

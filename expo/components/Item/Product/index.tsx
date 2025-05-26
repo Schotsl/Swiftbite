@@ -3,7 +3,7 @@ import ItemSkeleton from "../Skeleton";
 
 import { Product } from "@/types/product";
 import { ServingData } from "@/schemas/serving";
-import { getMacrosFromProduct } from "@/helper";
+import { displayQuantity, getMacrosFromProduct } from "@/helper";
 
 type ItemProductProps = {
   icon?: boolean;
@@ -53,11 +53,14 @@ export default function ItemProduct({
     const title = processing ? product.search.title : product.title;
     const subtitle = processing ? product.search.brand : product.brand;
     const stringified = processing
-      ? search.quantity_original
-        ? `${search?.quantity_original} ${search?.quantity_original_unit}`
+      ? search.quantity_original && search.quantity_original_unit
+        ? displayQuantity({
+            quantity: search.quantity_original,
+            option: search.quantity_original_unit,
+          })
         : null
-      : quantity?.quantity
-        ? `${quantity?.quantity} ${quantity?.option}`
+      : quantity && quantity.quantity
+        ? displayQuantity(quantity)
         : null;
 
     return (

@@ -70,7 +70,7 @@ export const productGenerativeNutritionSchema = nutritionSchema.extend({
   quantity_original_unit: z
     .string()
     .describe(
-      `Unit of the total quantity in the product's packaging, for example g, ml, etc.`,
+      `Unit of the total quantity in the product's packaging, for example g, ml, pieces, etc.`,
     )
     .optional()
     .nullable(),
