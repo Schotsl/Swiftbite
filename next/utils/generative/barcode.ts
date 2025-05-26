@@ -22,10 +22,12 @@ export async function searchBarcode(
     openfood: unknown[];
     fatsecret: unknown[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductSearchData | null> {
   const task = "search-barcode";
-  const model = googleModel("gemini-2.5-pro-preview-05-06");
+  const model = googleModel("gemini-2.5-pro-preview-05-06", {
+    useSearchGrounding: true,
+  });
 
   const { object, usage } = await generateObject({
     model,
@@ -91,6 +93,7 @@ export async function searchBarcode(
         task,
         usage,
         model: model.modelId,
+        grounding: true,
       }),
     ]);
   });

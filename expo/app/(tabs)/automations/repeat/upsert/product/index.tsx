@@ -28,7 +28,11 @@ export default function AutomationsRepeatUpsertProduct() {
     productId,
     barcodeId,
     enabled: !productEditing,
-    redirect: "/(tabs)/automations/repeat/upsert/search",
+    redirect: {
+      label: "/(tabs)/automations/repeat/upsert/camera",
+      cancel: "/(tabs)/automations/repeat/upsert",
+      search: "/(tabs)/automations/repeat/upsert/search",
+    },
   });
 
   if (isLoadingSearch || isLoadingUser) {

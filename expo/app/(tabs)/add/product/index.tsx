@@ -40,11 +40,15 @@ export default function AddProduct() {
     productId,
     barcodeId,
     enabled: !entryId,
-    redirect: "/(tabs)/add/search",
+    redirect: {
+      label: "/(tabs)/add/camera",
+      cancel: "/(tabs)/add",
+      search: "/(tabs)/add/search",
+    },
   });
 
   if (isLoadingEntry || isLoadingUser || isLoadingProduct) {
-    return <PageProductLoading editing={!!entry} />;
+    return <PageProductLoading editing={!!entryId} />;
   }
 
   const productEntry = entry?.product;
@@ -57,7 +61,7 @@ export default function AddProduct() {
 
   const handleSave = async (
     returnedServing: ServingData,
-    returnedCreated: Date,
+    returnedCreated: Date
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it

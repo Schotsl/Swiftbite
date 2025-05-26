@@ -27,11 +27,15 @@ export default function AutomationsMealUpsertProduct() {
     productId,
     barcodeId,
     enabled: !!productId || !!barcodeId,
-    redirect: "/(tabs)/automations/meal/upsert/search",
+    redirect: {
+      label: "/(tabs)/automations/meal/upsert/camera",
+      cancel: "/(tabs)/automations/meal/upsert",
+      search: "/(tabs)/automations/meal/upsert/search",
+    },
   });
 
   const mealProduct = mealProducts.find(
-    (mealProduct) => mealProduct.product.uuid === productId,
+    (mealProduct) => mealProduct.product.uuid === productId
   );
 
   if (isLoadingProduct || isLoadingUser) {
