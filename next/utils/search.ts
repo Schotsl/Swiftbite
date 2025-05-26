@@ -40,6 +40,7 @@ export const getProductFromSearch = ({
     estimated: false,
     processing: true,
 
+    other: null,
     title: null,
     brand: null,
     user_id: null,

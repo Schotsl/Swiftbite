@@ -25,14 +25,14 @@ export async function GET(request: NextRequest) {
   if (!barcode) {
     return NextResponse.json(
       { error: "Please provide a barcode" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 

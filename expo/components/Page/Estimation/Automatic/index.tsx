@@ -142,6 +142,7 @@ export default function PageEstimationAutomatic({
     const product = await insertProduct.mutateAsync({
       type: "generative",
       title: data.title ?? null,
+      other: null,
       brand: null,
       search: null,
       serving: null,
@@ -262,14 +263,14 @@ export default function PageEstimationAutomatic({
         </View>
       </ScrollView>
 
-      {/* <ButtonOverlay
+      <ButtonOverlay
         // TODO: Language
         tab={tab}
         title="Product opslaan"
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}
-      /> */}
+      />
     </View>
   );
 }

@@ -58,7 +58,7 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid)
+    isProductFavorite(user, product.uuid),
   );
 
   const isGeneric = product.type === "search_generic";

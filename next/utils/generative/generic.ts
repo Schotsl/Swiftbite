@@ -28,7 +28,7 @@ export async function searchGenerics(
   }: {
     generics: GenericSearchData[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<
   StreamObjectResult<
     GenericSearchData[],
@@ -101,7 +101,7 @@ export async function searchGeneric(
   }: {
     title: string;
     category: string;
-  }
+  },
 ): Promise<GenericData> {
   const task = "search-generic";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {

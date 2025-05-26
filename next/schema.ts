@@ -5,10 +5,10 @@ const otherSchema = z
     z.object({
       name: z.string().describe("The name of the nutritional value"),
       quantity: z.number().describe("The quantity of the nutritional value"),
-    })
+    }),
   )
   .describe(
-    `Any other nutritional values of note that are discovered, for example Vitamin A, Vitamin B12, alcohol, etc.`
+    `Any other nutritional values of note that are discovered, for example Vitamin A, Vitamin B12, alcohol, etc.`,
   )
   .optional()
   .nullable();
@@ -57,27 +57,27 @@ export const productGenerativeNutritionSchema = nutritionSchema.extend({
   serving_gram: z
     .number()
     .describe(
-      `Numeric value of the recommended serving size converted to grams`
+      `Numeric value of the recommended serving size converted to grams`,
     ),
 
   quantity_original: z
     .number()
     .describe(
-      "Numeric value of the total quantity in the product's packaging, for example 100"
+      "Numeric value of the total quantity in the product's packaging, for example 100",
     )
     .optional()
     .nullable(),
   quantity_original_unit: z
     .string()
     .describe(
-      `Unit of the total quantity in the product's packaging, for example g, ml, etc.`
+      `Unit of the total quantity in the product's packaging, for example g, ml, etc.`,
     )
     .optional()
     .nullable(),
   quantity_gram: z
     .number()
     .describe(
-      `Numeric value of the total quantity in the product's packaging converted to grams`
+      `Numeric value of the total quantity in the product's packaging converted to grams`,
     )
     .optional()
     .nullable(),
@@ -94,7 +94,7 @@ export const productSchema = nutritionSchema.extend({
   estimated: z
     .boolean()
     .describe(
-      `True if nutritional values are estimated due to not being able to find the product`
+      `True if nutritional values are estimated due to not being able to find the product`,
     ),
 
   serving_original: z
@@ -110,7 +110,7 @@ export const productSchema = nutritionSchema.extend({
   serving_gram: z
     .number()
     .describe(
-      `Numeric value of the recommended serving size converted to grams`
+      `Numeric value of the recommended serving size converted to grams`,
     )
     .optional()
     .nullable(),
@@ -128,7 +128,7 @@ export const productSchema = nutritionSchema.extend({
   quantity_gram: z
     .number()
     .describe(
-      `Numeric value of the total quantity in the product's packaging converted to grams`
+      `Numeric value of the total quantity in the product's packaging converted to grams`,
     )
     .optional()
     .nullable(),
@@ -149,7 +149,7 @@ export const productSearchSchema = z.object({
   quantity_original_unit: z
     .string()
     .describe(
-      `Unit for the quantity of the product in the packaging (e.g., g, ml)`
+      `Unit for the quantity of the product in the packaging (e.g., g, ml)`,
     )
     .optional()
     .nullable(),
@@ -163,7 +163,7 @@ export const genericSchema = nutritionSchema.extend({
   estimated: z
     .boolean()
     .describe(
-      `True if nutritional values are estimated due to not being able to find the product`
+      `True if nutritional values are estimated due to not being able to find the product`,
     ),
 });
 
@@ -197,7 +197,7 @@ export const optionSchema = z.object({
   gram: z
     .number()
     .describe(
-      "An estimate of the amount of grams in the option, for example 100"
+      "An estimate of the amount of grams in the option, for example 100",
     ),
 });
 

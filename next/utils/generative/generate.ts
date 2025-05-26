@@ -25,7 +25,7 @@ export async function generateOptions(
     title: string;
     brand?: string;
     category?: string;
-  }
+  },
 ): Promise<OptionData[]> {
   const model = googleModel("gemini-2.5-flash-preview-05-20");
   const task = "generate-options";
@@ -71,7 +71,7 @@ export async function generateIcon(
     title,
   }: {
     title: string;
-  }
+  },
 ): Promise<Buffer> {
   const { image } = await generateImage({
     size: "1024x1024",
@@ -94,7 +94,7 @@ export async function generateEmbedding(
     value,
   }: {
     value: string;
-  }
+  },
 ): Promise<number[]> {
   const model = openaiModel.embedding("text-embedding-3-small");
 

@@ -92,6 +92,7 @@ export default function PageEstimationManual({
       quantity: null,
 
       type: "manual",
+      other: null,
       brand: null,
       search: null,
       barcode: null,

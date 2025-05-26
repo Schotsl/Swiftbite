@@ -26,21 +26,21 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!type) {
     return NextResponse.json(
       { error: "Please provide a type" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
               quantity_original: quantity?.quantity,
               quantity_original_unit: quantity?.option,
             })),
-          }
+          },
         )
       : await searchGenerics(
           user,
@@ -88,13 +88,13 @@ export async function GET(request: NextRequest) {
               title,
               category,
             })),
-          }
+          },
         );
 
   after(async () => {
     const results = await generativeStream.object;
     const resultsMapped = results.map((search) =>
-      getProductFromSearch({ search, seed })
+      getProductFromSearch({ search, seed }),
     );
 
     // Normally we await the insert but since we won't automatically redirect to the user to product I'm assuming we'll insert before they click
@@ -128,7 +128,7 @@ export async function GET(request: NextRequest) {
         console.log(chunk);
 
         const mapped = chunk.map((search) =>
-          getProductFromSearch({ search, seed })
+          getProductFromSearch({ search, seed }),
         );
 
         if (mapped.length > 0) {
