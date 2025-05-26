@@ -155,7 +155,7 @@ export default function AutomationsRepeatUpsert() {
                     borderRadius: variables.border.radius,
                   }}
                   // This is kinda hacky but I want consistent support for swiping
-                  data={[serving ? [serving] : []]}
+                  data={serving ? [serving] : []}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={() => {
                     return (
@@ -175,7 +175,7 @@ export default function AutomationsRepeatUpsert() {
                     return (
                       <EmptySmall
                         content={language.empty.getSelected(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )}
                         onPress={() => setOpen(true)}
                       />
@@ -195,10 +195,10 @@ export default function AutomationsRepeatUpsert() {
                   title={
                     isSet
                       ? language.modifications.getPick(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )
                       : language.modifications.getEdit(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )
                   }
                   onPress={() => setOpen(true)}
