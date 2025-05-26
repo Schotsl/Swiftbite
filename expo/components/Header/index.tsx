@@ -35,7 +35,13 @@ export default function Header({
         paddingBottom: variables.gap.normal,
       }}
     >
-      <View style={{ flexDirection: "row", gap: 12 }}>
+      <View
+        style={{
+          gap: variables.gap.normal,
+          paddingBottom: 24,
+          flexDirection: "row",
+        }}
+      >
         <ButtonSmall
           icon="arrow-left"
           style={{ marginRight: "auto" }}
