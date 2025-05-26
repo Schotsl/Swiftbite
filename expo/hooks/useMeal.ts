@@ -16,7 +16,7 @@ export function useMeal({ mealId, enabled = true }: UseMealProps) {
     ...mealData({ uuid: mealId! }),
     select: (meals) => meals[0],
     refetchInterval: interval,
-    enabled: enabled && !!mealId,
+    enabled,
   });
 
   const { data: meal, isLoading } = queryMeal;
@@ -30,7 +30,7 @@ export function useMeal({ mealId, enabled = true }: UseMealProps) {
   }, [meal]);
 
   return {
-    meal,
+    meal: enabled ? meal : undefined,
     isLoading,
   };
 }

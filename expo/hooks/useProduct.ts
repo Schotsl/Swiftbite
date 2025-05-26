@@ -188,7 +188,8 @@ export function useProduct({
   };
 
   return {
-    product,
+    // @David idk why this is needed
+    product: enabled ? product : undefined,
     isLoading: getLoading(),
   };
 }

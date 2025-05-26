@@ -81,9 +81,6 @@ export default function ButtonSmall({
 
     requestAnimationFrame(() => {
       marker.current?.measureInWindow((x, y) => {
-        console.log("x", x);
-        console.log("y", y);
-
         onPosition({ x, y });
       });
     });

@@ -14,7 +14,7 @@ import { useMeal } from "@/hooks/useMeal";
 export default function AutomationsMealUpsertLayout() {
   const { meal: mealId } = useLocalSearchParams<{ meal: string }>();
 
-  const { meal, isLoading } = useMeal({ mealId });
+  const { meal, isLoading } = useMeal({ mealId, enabled: !!mealId });
 
   if (isLoading) {
     return <AutomationsMealUpsertLayoutLoading />;
