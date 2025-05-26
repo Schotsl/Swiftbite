@@ -79,8 +79,13 @@ export default function ButtonSmall({
       return;
     }
 
-    marker.current?.measureInWindow((x, y) => {
-      onPosition({ x, y });
+    requestAnimationFrame(() => {
+      marker.current?.measureInWindow((x, y) => {
+        console.log("x", x);
+        console.log("y", y);
+
+        onPosition({ x, y });
+      });
     });
   };
 
