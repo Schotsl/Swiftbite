@@ -10,10 +10,10 @@ import { View, ViewStyle, StyleProp, TouchableOpacity } from "react-native";
 
 type ButtonSmallBase = {
   nano?: boolean;
-  color?: string;
   style?: StyleProp<ViewStyle>;
   title?: string;
-  gradient?: boolean;
+  action?: "primary" | "secondary" | "tertiary";
+  disabled?: boolean;
   onPress: () => void;
   onPosition?: (position: { x: number; y: number }) => void;
 };
@@ -36,22 +36,40 @@ export default function ButtonSmall({
   nano = false,
   icon,
   iconMaterial,
-  color: colorProp,
+
   style,
   title,
-  gradient = false,
+  action = "primary",
+  disabled = false,
   onPress,
   onPosition,
 }: ButtonSmallProps) {
-  let color = variables.colors.text.secondary;
+  const isSecondary = action === "secondary";
+  const isTertiary = action === "tertiary";
 
-  if (gradient) {
-    color = variables.colors.white;
-  }
+  const getStyle = (action: "primary" | "secondary" | "tertiary") => {
+    if (action === "secondary") {
+      return {
+        color: variables.colors.white,
+        borderColor: "transparent",
+        backgroundColor: "transparent",
+      };
+    }
 
-  if (colorProp) {
-    color = colorProp;
-  }
+    if (action === "tertiary") {
+      return {
+        color: variables.colors.white,
+        borderColor: variables.colors.white,
+        backgroundColor: "transparent",
+      };
+    }
+
+    return {
+      color: variables.colors.text.secondary,
+      borderColor: "transparent",
+      backgroundColor: "transparent",
+    };
+  };
 
   const handleLayout = () => {
     if (!onPosition) {
@@ -64,20 +82,25 @@ export default function ButtonSmall({
   };
 
   const marker = useRef<View>(null);
+
+  const { backgroundColor, borderColor, color } = getStyle(action);
+
   return (
     <View
       style={[
-        {
-          shadowColor: "#000",
-          shadowRadius: 8,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.05,
+        isTertiary
+          ? {}
+          : {
+              shadowColor: "#000",
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.05,
 
-          // I added this background color to improve shadow performance
-          alignSelf: "flex-start",
-          borderRadius: 100,
-          backgroundColor: variables.colors.white,
-        },
+              // I added this background color to improve shadow performance
+              alignSelf: "flex-start",
+              borderRadius: 100,
+              backgroundColor: variables.colors.white,
+            },
         style,
       ]}
     >
@@ -85,6 +108,7 @@ export default function ButtonSmall({
         ref={marker}
         onPress={onPress}
         onLayout={handleLayout}
+        disabled={disabled}
         style={{
           gap: variables.gap.small,
           minWidth: nano ? 28 : 36,
@@ -97,7 +121,11 @@ export default function ButtonSmall({
 
           overflow: "hidden",
           borderRadius: 100,
-          backgroundColor: variables.colors.background.secondary,
+          borderColor,
+          borderWidth: 2,
+          backgroundColor,
+
+          opacity: disabled ? variables.input.disabled.opacity : 1,
         }}
       >
         {icon && (
@@ -118,7 +146,7 @@ export default function ButtonSmall({
           </TextSmall>
         )}
 
-        {gradient && <DecorativeLinear />}
+        {isSecondary && <DecorativeLinear />}
 
         <DecorativeNoise />
       </TouchableOpacity>

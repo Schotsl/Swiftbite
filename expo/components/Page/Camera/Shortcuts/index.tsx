@@ -34,20 +34,14 @@ export default function CameraShortcuts({
     >
       <ButtonSmall
         icon="arrow-left"
-        color="#fff"
         style={{
           marginRight: "auto",
-          // backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
         action="tertiary"
         onPress={handleBack}
       />
 
       <ButtonSmall
-        color="#fff"
-        // style={{
-        //   backgroundColor: "rgba(0, 0, 0, 0.5)",
-        // }}
         action="tertiary"
         iconMaterial={flash ? "flashlight-on" : "flashlight-off"}
         onPress={onFlash}
