@@ -122,7 +122,7 @@ export function useProduct({
               setAsking(false);
             },
           },
-        ]
+        ],
       );
 
       return;
@@ -166,7 +166,7 @@ export function useProduct({
               setAsking(false);
             },
           },
-        ]
+        ],
       );
     }
   }, [product, isLoadingQuery, search, router, barcodeId, redirect, asking]);

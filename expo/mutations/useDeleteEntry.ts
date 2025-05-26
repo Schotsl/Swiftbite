@@ -13,7 +13,6 @@ export default function useDeleteEntry() {
       handleError(error);
     },
     onMutate: async (uuid: string) => {
-      // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey: ["entryData"] });
       const previousEntries = queryClient.getQueryData(["entryData"]);
 

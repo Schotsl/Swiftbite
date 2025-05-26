@@ -9,7 +9,7 @@ import { Image, Macro, MacroExpanded, OptionWithGram } from "./types";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean
+  compressed: boolean,
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -120,7 +120,7 @@ export const getOptions = ({
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true
+  rounded = true,
 ): MacroExpanded & { gram: number } {
   const gram = serving.gram || 0;
 
@@ -176,7 +176,7 @@ export function getMacrosFromProduct(
 export const macroToCalories = (
   type: keyof MacroData,
   value: number,
-  calories: number
+  calories: number,
 ) => {
   let divider = 4;
 
@@ -204,7 +204,7 @@ export const macrosToCalories = (macro: MacroData, calories: number): Macro => {
 export function getMacrosFromMeal(
   meal: MealWithProduct,
   serving: ServingData,
-  rounded = true
+  rounded = true,
 ): MacroExpanded & { gram: number } {
   const products = meal.meal_products || [];
   const macros = products.reduce(
@@ -242,7 +242,7 @@ export function getMacrosFromMeal(
       fiber: 0,
       protein: 0,
       calories: 0,
-    }
+    },
   );
 
   return {
@@ -300,7 +300,7 @@ export const transformDate = (date: Date | string | number): string => {
 export const transformImage = (
   uri?: string,
   width?: string,
-  height?: string
+  height?: string,
 ): Image | null => {
   const complete = uri && width && height;
 
@@ -316,12 +316,12 @@ export const transformImage = (
 };
 
 export const mapMeal = (
-  meal: Omit<MealWithProduct, "quantity_gram">
+  meal: Omit<MealWithProduct, "quantity_gram">,
 ): MealWithProduct => {
   const total =
     meal.meal_products?.reduce(
       (sum: number, item: MealProductBase) => sum + item.serving.gram,
-      0
+      0,
     ) || 0;
 
   return { ...meal, quantity_gram: total };
@@ -329,7 +329,7 @@ export const mapMeal = (
 
 export function isProductFavorite(
   user: User | undefined,
-  product: string
+  product: string,
 ): boolean {
   if (!user) {
     return false;
@@ -348,7 +348,7 @@ export function isMealFavorite(user: User | undefined, meal: string): boolean {
 
 export function toggleProductFavorite(
   user: User | undefined,
-  product: string
+  product: string,
 ): string[] {
   if (!user) {
     return [product];
@@ -364,7 +364,7 @@ export function toggleProductFavorite(
 
 export function toggleMealFavorite(
   user: User | undefined,
-  meal: string
+  meal: string,
 ): string[] {
   if (!user) {
     return [meal];
