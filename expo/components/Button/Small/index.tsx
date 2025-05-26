@@ -60,14 +60,14 @@ export default function ButtonSmall({
       return {
         color: variables.colors.white,
         borderColor: variables.colors.white,
-        backgroundColor: "transparent",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
       };
     }
 
     return {
       color: variables.colors.text.secondary,
       borderColor: "transparent",
-      backgroundColor: "transparent",
+      backgroundColor: variables.colors.background.secondary,
     };
   };
 

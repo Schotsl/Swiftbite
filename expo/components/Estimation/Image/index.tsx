@@ -1,10 +1,10 @@
-import { Image, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 
 import variables from "@/variables";
 
-import TextLarge from "@/components/Text/Large";
+import TextInput from "@/components/Text/Input";
 import InputLabel from "@/components/Input/Label";
-import EstimationImageButton from "@/components/Estimation/Image/Button";
+import ButtonSmall from "@/components/Button/Small";
 
 type EstimationImageProps = {
   required?: boolean;
@@ -64,9 +64,19 @@ export default function EstimationImage({
               justifyContent: "space-between",
             }}
           >
-            <EstimationImageButton icon="pencil" onPress={onEdit} />
+            <ButtonSmall
+              nano={true}
+              icon="pencil"
+              action="tertiary"
+              onPress={onEdit}
+            />
 
-            <EstimationImageButton icon="xmark" onPress={onDelete} />
+            <ButtonSmall
+              nano={true}
+              icon="xmark"
+              action="tertiary"
+              onPress={onDelete}
+            />
           </View>
 
           <Image
@@ -79,19 +89,22 @@ export default function EstimationImage({
           />
         </View>
       ) : (
-        <View
-          style={{
-            flex: 1,
-            marginTop: -4,
-            alignItems: "center",
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <TextLarge>Geen afbeelding</TextLarge>
+        <TouchableOpacity onPress={onAdd}>
+          <View
+            style={{
+              flex: 1,
+              marginTop: -4,
+              alignItems: "center",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            {/* TODO: language */}
+            <TextInput>Geen afbeelding</TextInput>
 
-          <EstimationImageButton icon="plus" onPress={onAdd} />
-        </View>
+            <ButtonSmall nano={true} icon="pencil" onPress={onAdd} />
+          </View>
+        </TouchableOpacity>
       )}
     </View>
   );
