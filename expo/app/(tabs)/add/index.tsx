@@ -40,14 +40,17 @@ export default function Add() {
 
   // If any of the entries are processing we'll keep polling
   useEffect(() => {
-    const processingProduct = data.some((entry) => entry.product?.processing);
-    const processingMeal = data.some((entry) =>
-      entry.meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing,
-      ),
+    // If any icon_id is null then it's still processing
+    const processingIcon = data.some(({ product }) => !product?.icon_id);
+    const processingProduct = data.some(({ product }) => product?.processing);
+    const processingMeal = data.some(({ meal }) =>
+      meal?.meal_products?.some(
+        (mealProduct) => mealProduct.product?.processing
+      )
     );
 
-    const interval = processingProduct || processingMeal ? 500 : false;
+    const processing = processingIcon || processingProduct || processingMeal;
+    const interval = processing ? 500 : false;
 
     setInterval(interval);
   }, [data]);
