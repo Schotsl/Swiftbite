@@ -92,8 +92,8 @@ export default function Modal({
           {button && (
             <View
               style={{
-                marginTop: variables.gap.large,
-                paddingTop: variables.gap.large,
+                marginTop: 24,
+                paddingTop: 24,
 
                 borderTopWidth: variables.border.width,
                 borderColor: variables.colors.grey,
