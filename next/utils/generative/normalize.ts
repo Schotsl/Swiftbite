@@ -28,43 +28,48 @@ export async function normalizeMeal(
     language: "Dutch",
     ingredients,
   });
-  const { object, usage } = await generateObject({
-    model,
-    temperature,
 
-    output: "object",
-    schema: titleSchema,
-    abortSignal: signal,
+  try {
+    const { object, usage } = await generateObject({
+      model,
+      temperature,
 
-    messages: [
-      {
-        role: "system",
-        content: normalizeMealPrompt,
-      },
-      {
-        role: "user",
-        content: `Meal information: ${JSON.stringify({
-          title,
-          language: "Dutch",
-          ingredients,
-        })}`,
-      },
-    ],
-  });
+      output: "object",
+      schema: titleSchema,
+      abortSignal: signal,
 
-  after(async () => {
-    await insertUsage({
-      user,
-      task,
-      usage,
-      model: model.modelId,
+      messages: [
+        {
+          role: "system",
+          content: normalizeMealPrompt,
+        },
+        {
+          role: "user",
+          content: `Meal information: ${JSON.stringify({
+            title,
+            language: "Dutch",
+            ingredients,
+          })}`,
+        },
+      ],
     });
-  });
-  console.log("Meal normalized", object);
-  const normalized = object.title;
-  const normalizedLowercase = normalized.toLowerCase();
 
-  return normalizedLowercase;
+    after(async () => {
+      await insertUsage({
+        user,
+        task,
+        usage,
+        model: model.modelId,
+      });
+    });
+
+    const normalized = object.title;
+    const normalizedLowercase = normalized.toLowerCase();
+
+    return normalizedLowercase;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function normalizeTitle(
