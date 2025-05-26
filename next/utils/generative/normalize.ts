@@ -54,6 +54,8 @@ export async function normalizeMeal(
       ],
     });
 
+    console.log(object);
+
     after(async () => {
       await insertUsage({
         user,
