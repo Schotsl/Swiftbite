@@ -60,11 +60,13 @@ const updateMealIcon = async (
     (ingredient) => ingredient.product.title
   );
 
+  console.log(ingredients);
+
   const iconTitle = await normalizeMeal(user, {
     title,
     ingredients,
   });
-
+  console.log(iconTitle);
   console.log(`[MEAL] Fetching icon from database`);
   const iconUuid = await fetchIcon(iconTitle);
 
