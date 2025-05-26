@@ -60,7 +60,7 @@ export async function normalizeMeal(
       model: model.modelId,
     });
   });
-
+  console.log("Meal normalized", object);
   const normalized = object.title;
   const normalizedLowercase = normalized.toLowerCase();
 
