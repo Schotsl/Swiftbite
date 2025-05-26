@@ -116,7 +116,7 @@ export default function PageEstimationManual({
           style={{
             gap: variables.gap.large,
             padding: variables.padding.page,
-            paddingBottom: variables.paddingOverlay,
+            paddingBottom: variables.paddingOverlayTab,
           }}
         >
           <Header
@@ -143,6 +143,7 @@ export default function PageEstimationManual({
                 <Input
                   type="number-pad"
                   name="calorie_100g"
+                  style={{ flex: 1 }}
                   label="Calorieën"
                   suffix="kcal"
                   control={control}
@@ -152,6 +153,7 @@ export default function PageEstimationManual({
                 <Input
                   type="number-pad"
                   name="protein_100g"
+                  style={{ flex: 1 }}
                   label="Eiwit"
                   suffix="gram"
                   control={control}
@@ -163,6 +165,7 @@ export default function PageEstimationManual({
                 <Input
                   type="number-pad"
                   name="carbohydrate_100g"
+                  style={{ flex: 1 }}
                   label="Koolhydraten"
                   suffix="gram"
                   control={control}
@@ -172,6 +175,7 @@ export default function PageEstimationManual({
                 <Input
                   type="number-pad"
                   name="fat_100g"
+                  style={{ flex: 1 }}
                   label="Vetten"
                   suffix="gram"
                   control={control}

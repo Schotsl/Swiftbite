@@ -1,30 +1,33 @@
 import { View } from "react-native";
 
-import TextBody from "@/components/Text/Body";
-
 import variables from "@/variables";
+
+import TextSmall from "./Text/Small";
 
 export function Divider() {
   return (
-    <View style={{ alignItems: "center" }}>
-      <TextBody
+    <View
+      style={{ alignItems: "center", marginVertical: variables.gap.normal }}
+    >
+      <TextSmall
         weight="semibold"
         style={{
           backgroundColor: variables.colors.white,
           paddingHorizontal: variables.gap.small,
         }}
       >
+        {/* TODO: Language */}
         Of
-      </TextBody>
+      </TextSmall>
       <View
         style={{
           top: "50%",
           width: "100%",
-          height: 2,
+          height: variables.border.width,
 
           zIndex: -1,
           position: "absolute",
-          backgroundColor: variables.colors.text.primary,
+          backgroundColor: variables.border.color,
         }}
       />
     </View>

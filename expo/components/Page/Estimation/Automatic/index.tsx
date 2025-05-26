@@ -32,7 +32,7 @@ type PageEstimationAutomaticProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
@@ -223,7 +223,7 @@ export default function PageEstimationAutomatic({
           style={{
             gap: variables.gap.large,
             padding: variables.padding.page,
-            paddingBottom: variables.paddingOverlay,
+            paddingBottom: variables.paddingOverlayTab,
           }}
         >
           <Header
@@ -262,14 +262,14 @@ export default function PageEstimationAutomatic({
         </View>
       </ScrollView>
 
-      <ButtonOverlay
+      {/* <ButtonOverlay
         // TODO: Language
         tab={tab}
         title="Product opslaan"
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}
-      />
+      /> */}
     </View>
   );
 }

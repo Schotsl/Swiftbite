@@ -6,6 +6,8 @@ import {
   Keyboard,
   TextInput,
   TouchableWithoutFeedback,
+  StyleProp,
+  ViewStyle,
 } from "react-native";
 
 import React from "react";
@@ -29,6 +31,7 @@ type InputProps = {
 
   type?: Type;
   icon?: keyof typeof FontAwesome6.glyphMap;
+  style?: StyleProp<ViewStyle>;
   label?: string;
   suffix?: string;
   content?: string;
@@ -50,6 +53,7 @@ export default function Input({
 
   type = "default",
   icon,
+  style,
   label,
   suffix,
   content,
@@ -97,7 +101,7 @@ export default function Input({
         }
 
         return (
-          <View>
+          <View style={style}>
             {label && <InputLabel label={label} required={required} />}
 
             <View style={{ position: "relative" }}>
