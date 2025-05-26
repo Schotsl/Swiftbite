@@ -23,11 +23,8 @@ export async function normalizeMeal(
 ): Promise<string> {
   const task = "normalize-meal";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
-  console.log("Meal information", {
-    title,
-    language: "Dutch",
-    ingredients,
-  });
+
+  console.log("1, ?");
 
   try {
     const { object, usage } = await generateObject({
@@ -54,6 +51,7 @@ export async function normalizeMeal(
       ],
     });
 
+    console.log("2, ?");
     console.log(object);
 
     after(async () => {
@@ -70,6 +68,7 @@ export async function normalizeMeal(
 
     return normalizedLowercase;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 }
