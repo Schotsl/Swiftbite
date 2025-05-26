@@ -130,8 +130,8 @@ async function main() {
     const groundingUsage = await getGrounding();
     console.log(`Current grounding usage: ${groundingUsage}`);
 
-    if (groundingUsage >= 100) {
-      console.log("Grounding usage has reached 100");
+    if (groundingUsage >= 500) {
+      console.log("Grounding usage has reached 500");
 
       break;
     }
@@ -145,9 +145,6 @@ async function main() {
     console.log("Product search completed successfully");
 
     writeProduct(product);
-
-    // Wait to for the API to process the products in more detail
-    await new Promise((resolve) => setTimeout(resolve, 100000));
   }
 }
 
