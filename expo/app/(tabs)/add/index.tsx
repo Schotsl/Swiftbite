@@ -45,8 +45,8 @@ export default function Add() {
     const processingProduct = data.some(({ product }) => product?.processing);
     const processingMeal = data.some(({ meal }) =>
       meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing
-      )
+        (mealProduct) => mealProduct.product?.processing,
+      ),
     );
 
     const processing = processingIcon || processingProduct || processingMeal;

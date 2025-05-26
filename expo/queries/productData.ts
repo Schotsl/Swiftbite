@@ -36,7 +36,7 @@ export default function productData({
   search,
 }: productDataType) {
   return queryOptions({
-    queryKey: ["productData", rpc, uuid, uuids, search],
+    queryKey: ["productData", rpc, type, uuid, uuids, search],
     queryFn: async (): Promise<Product[]> => {
       // TODO: This should probably be handled by the type
       if (!rpc && !type && !uuid && !uuids && !search) {
