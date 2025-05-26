@@ -19,11 +19,15 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-meal";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
-
+  console.log("Meal information", {
+    title,
+    language: "Dutch",
+    ingredients,
+  });
   const { object, usage } = await generateObject({
     model,
     temperature,
@@ -74,7 +78,7 @@ export async function normalizeTitle(
     brand?: string;
     category?: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<string> {
   const task = "normalize-title";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
@@ -130,7 +134,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<QuantityData> {
   // If no combined or unit is provided there is no way to know the original unit
   if (!combined && !unit) {
