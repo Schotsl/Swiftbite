@@ -1,9 +1,8 @@
 import PageCamera from "@/components/Page/Camera";
 
 import { View } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import { CameraSelected } from "@/types";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 export default function AddCameraLayout() {
   const router = useRouter();
@@ -31,8 +30,6 @@ export default function AddCameraLayout() {
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar style="dark" />
-
       <PageCamera
         initial={initial}
         onBarcode={handleBarcode}
