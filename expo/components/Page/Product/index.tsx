@@ -30,6 +30,8 @@ import Input from "@/components/Input";
 export type PageProductProps = {
   user: User;
   product: Product;
+  favorite?: boolean;
+
   serving?: ServingData | null;
   created?: Date | null;
   createdVisible?: boolean;
@@ -42,6 +44,7 @@ export type PageProductProps = {
 export default function PageProduct({
   user,
   product,
+  favorite: propFavorite = true,
   serving: propServing,
   created: propCreated,
   createdVisible = false,
@@ -52,8 +55,6 @@ export default function PageProduct({
   const focus = useIsFocused();
 
   const updateUser = useUpdateUser();
-
-  // const { data: user } = useQuery(userData());
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
@@ -177,7 +178,7 @@ export default function PageProduct({
               favorite={favorite}
               onDelete={onDelete}
               onRepeat={onRepeat && (() => onRepeat(serving))}
-              onFavorite={handleFavorite}
+              onFavorite={propFavorite ? handleFavorite : undefined}
             />
 
             <ProductInfo items={info} />

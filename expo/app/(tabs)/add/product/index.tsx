@@ -112,6 +112,7 @@ export default function AddProduct() {
     <PageProduct
       user={user}
       product={product}
+      favorite={product.type !== "generative"}
       serving={serving}
       created={entry?.created_at}
       createdVisible={true}
