@@ -2,7 +2,7 @@ import { handleError } from "@/helper";
 import { generateIcon } from "@/utils/generative/generate";
 import { normalizeMeal } from "@/utils/generative/normalize";
 import { validateUsage } from "@/utils/usage";
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import {
   fetchIcon,
   fetchIngredients,
@@ -36,10 +36,12 @@ export async function POST(request: Request) {
     return new Response("{}", { status: 200 });
   }
 
-  // after(async () => {
-  updateMealIcon(user, { uuid, title });
-  updateMealEntries({ uuid });
-  // });
+  after(async () => {
+    await Promise.all([
+      updateMealIcon(user, { uuid, title }),
+      updateMealEntries({ uuid }),
+    ]);
+  });
 
   return new Response("{}", { status: 200 });
 }
