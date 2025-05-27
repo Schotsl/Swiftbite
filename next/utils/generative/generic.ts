@@ -1,6 +1,5 @@
 import { after } from "next/server";
 import { insertUsage } from "@/utils/usage";
-import { temperature, providerOptions } from "@/variables";
 import { generateObject, streamObject, StreamObjectResult } from "ai";
 import {
   GenericData,
@@ -28,7 +27,7 @@ export async function searchGenerics(
   }: {
     generics: GenericSearchData[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<
   StreamObjectResult<
     GenericSearchData[],
@@ -41,8 +40,7 @@ export async function searchGenerics(
 
   const genericStream = streamObject({
     model,
-    temperature,
-    providerOptions,
+    temperature: 0,
 
     output: "array",
     schema: genericSearchSchema,
@@ -101,7 +99,7 @@ export async function searchGeneric(
   }: {
     title: string;
     category: string;
-  }
+  },
 ): Promise<GenericData> {
   const task = "search-generic";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {
@@ -110,7 +108,7 @@ export async function searchGeneric(
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
+    temperature: 0,
 
     output: "object",
     schema: genericSchema,

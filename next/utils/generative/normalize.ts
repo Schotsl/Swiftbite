@@ -1,6 +1,5 @@
 import { after } from "next/server";
-import { insertUsage } from "../usage";
-import { temperature } from "@/variables";
+import { insertUsage } from "@/utils/usage";
 import { generateObject } from "ai";
 import { QuantityData, quantitySchema, titleSchema } from "@/schema";
 
@@ -19,14 +18,14 @@ export async function normalizeMeal(
     title: string;
     ingredients: string[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task = "normalize-meal";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
+    temperature: 0,
 
     output: "object",
     schema: titleSchema,
@@ -74,14 +73,14 @@ export async function normalizeTitle(
     brand?: string;
     category?: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<string> {
   const task = "normalize-title";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
+    temperature: 0,
 
     output: "object",
     schema: titleSchema,
@@ -130,7 +129,7 @@ export async function normalizeQuantity(
     numeric: string;
     combined: string;
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<QuantityData> {
   // If no combined or unit is provided there is no way to know the original unit
   if (!combined && !unit) {
@@ -146,7 +145,7 @@ export async function normalizeQuantity(
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
+    temperature: 0,
 
     output: "object",
     schema: quantitySchema,

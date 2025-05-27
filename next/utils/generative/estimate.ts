@@ -4,15 +4,14 @@ import {
   ProductGenerativeVisualsData,
   productGenerativeVisualsSchema,
 } from "@/schema";
-import { temperature } from "@/variables";
-import { CoreMessage, generateObject } from "ai";
 
 import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
 import estimateVisualPrompt from "@/prompts/estimate-visual";
 
 import { google as googleModel } from "@ai-sdk/google";
 import { after } from "next/server";
-import { insertUsage } from "../usage";
+import { insertUsage } from "@/utils/usage";
+import { CoreMessage, generateObject } from "ai";
 
 export async function estimateNutrition(
   user: string | null,
@@ -52,7 +51,7 @@ export async function estimateNutrition(
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
+    temperature: 0,
 
     output: "object",
     schema: productGenerativeNutritionSchema,
@@ -117,7 +116,7 @@ export async function estimateVisuals(
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
+    temperature: 0,
 
     output: "object",
     schema: productGenerativeVisualsSchema,

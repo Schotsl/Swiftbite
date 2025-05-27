@@ -3,7 +3,6 @@ import { insertUsage } from "../usage";
 import { generateObject } from "ai";
 import { ProductSearchData } from "@/schema";
 import { productSearchSchema } from "@/schema";
-import { providerOptions, temperature } from "@/variables";
 
 import { google as googleModel } from "@ai-sdk/google";
 
@@ -22,7 +21,7 @@ export async function searchBarcode(
     openfood: unknown[];
     fatsecret: unknown[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<ProductSearchData | null> {
   const task = "search-barcode";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {
@@ -31,8 +30,7 @@ export async function searchBarcode(
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
-    providerOptions,
+    temperature: 0,
 
     output: "object",
     schema: productSearchSchema.optional().nullable(),

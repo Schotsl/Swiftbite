@@ -1,6 +1,5 @@
 import { after } from "next/server";
 import { insertUsage } from "@/utils/usage";
-import { temperature, providerOptions } from "@/variables";
 import { generateObject, streamObject, StreamObjectResult } from "ai";
 import {
   ProductData,
@@ -32,7 +31,7 @@ export async function searchProducts(
   }: {
     products: ProductSearchData[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -45,8 +44,7 @@ export async function searchProducts(
 
   const stream = streamObject({
     model,
-    temperature,
-    providerOptions,
+    temperature: 0,
 
     output: "array",
     schema: productSearchSchema,
@@ -131,7 +129,7 @@ export async function searchProduct(
     barcode?: string;
     quantity_original?: number;
     quantity_original_unit?: string;
-  }
+  },
 ): Promise<ProductData> {
   const task = "search-product";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {
@@ -140,7 +138,7 @@ export async function searchProduct(
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
+    temperature: 0,
 
     output: "object",
     schema: productSchema,

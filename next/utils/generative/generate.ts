@@ -1,4 +1,3 @@
-import { temperature } from "@/variables";
 import {
   embed,
   generateObject,
@@ -32,7 +31,7 @@ export async function generateOptions(
 
   const { object, usage } = await generateObject({
     model,
-    temperature,
+    temperature: 0,
 
     output: "array",
     schema: optionSchema,
