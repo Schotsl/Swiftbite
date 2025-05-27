@@ -20,21 +20,6 @@ export default function AutomationsRepeat() {
   const path = usePathname();
   const router = useRouter();
 
-  const { data } = useSuspenseQuery(repeatData({}));
-
-  const deleteRepeat = useDeleteRepeat();
-
-  const handleDelete = (uuid: string) => {
-    deleteRepeat.mutate(uuid);
-  };
-
-  const handleDuplicate = () => {
-    Alert.alert(
-      "Dupliceer",
-      "Deze functionaliteit is helaas nog niet beschikbaar.",
-    );
-  };
-
   const handleSelect = (repeat: string) => {
     router.push({
       pathname: `/(tabs)/automations/repeat/upsert`,
@@ -58,27 +43,63 @@ export default function AutomationsRepeat() {
       />
 
       <Suspense fallback={<AutomationsRepeatLoading />}>
-        <SwipeListView
-          data={data}
-          keyExtractor={(item) => item.uuid}
-          renderItem={({ item }) => (
-            <ItemRepeat item={item} onSelect={handleSelect} />
-          )}
-          renderHiddenItem={({ item }) => (
-            <ItemActions
-              onDelete={() => handleDelete(item.uuid)}
-              onDuplicate={() => handleDuplicate()}
-            />
-          )}
-          ListEmptyComponent={<AutomationsRepeatEmpty />}
-          onRowDidOpen={rowTimeout}
-          scrollEnabled={false}
-          rightOpenValue={-150}
-          closeOnRowOpen={true}
-          disableRightSwipe={true}
-        />
+        <AutomationsRepeatList onSelect={handleSelect} />
       </Suspense>
     </View>
+  );
+}
+
+type AutomationsRepeatListProps = {
+  onSelect: (uuid: string) => void;
+};
+
+function AutomationsRepeatList({ onSelect }: AutomationsRepeatListProps) {
+  const { data } = useSuspenseQuery({
+    ...repeatData({}),
+  });
+
+  const deleteRepeat = useDeleteRepeat();
+
+  const handleDelete = (uuid: string) => {
+    deleteRepeat.mutate(uuid);
+  };
+
+  const handleDuplicate = () => {
+    // TODO: language
+    Alert.alert(
+      "Dupliceer",
+      "Deze functionaliteit is helaas nog niet beschikbaar.",
+    );
+  };
+
+  return (
+    <SwipeListView
+      data={data}
+      keyExtractor={(item) => item.uuid}
+      renderItem={({ item }) => <ItemRepeat item={item} onSelect={onSelect} />}
+      renderHiddenItem={({ item }) => (
+        <ItemActions
+          onDelete={() => handleDelete(item.uuid)}
+          onDuplicate={() => handleDuplicate()}
+        />
+      )}
+      ListEmptyComponent={<AutomationsRepeatListEmpty />}
+      onRowDidOpen={rowTimeout}
+      scrollEnabled={false}
+      rightOpenValue={-150}
+      closeOnRowOpen={true}
+      disableRightSwipe={true}
+    />
+  );
+}
+
+function AutomationsRepeatListEmpty() {
+  return (
+    <Empty
+      list={true}
+      emoji="🔁"
+      content={language.empty.getAdded(language.types.repeat.plural)}
+    />
   );
 }
 
@@ -90,15 +111,5 @@ function AutomationsRepeatLoading() {
       <ItemSkeleton />
       <ItemSkeleton />
     </View>
-  );
-}
-
-function AutomationsRepeatEmpty() {
-  return (
-    <Empty
-      list={true}
-      emoji="🔁"
-      content={language.empty.getAdded(language.types.repeat.plural)}
-    />
   );
 }

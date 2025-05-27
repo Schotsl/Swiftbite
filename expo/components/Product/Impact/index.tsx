@@ -2,9 +2,9 @@ import Progress from "@/components/Progress";
 import userData from "@/queries/userData";
 
 import { Product } from "@/types/product";
+import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
 import { MealWithProduct } from "@/types/meal";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { Fragment, Suspense, useState } from "react";
 import { View, ActivityIndicator, TouchableOpacity } from "react-native";
 import {
@@ -39,7 +39,7 @@ export default function ProductImpact({
 }: ProductImpactProps) {
   const [per100, setPer100] = useState(false);
 
-  const { data } = useSuspenseQuery(userData());
+  const { data, isLoading } = useQuery(userData());
   const { calories: userCalories, macro: userMacro } = data!;
 
   const servingAdjusted = per100
@@ -92,7 +92,7 @@ export default function ProductImpact({
           justifyContent: "center",
         }}
       >
-        {processing ? (
+        {processing || isLoading ? (
           <ProductImpactProcessing />
         ) : (
           <Suspense

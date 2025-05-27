@@ -20,24 +20,7 @@ export default function AutomationsMeal() {
   const path = usePathname();
   const router = useRouter();
 
-  const deleteMeal = useDeleteMeal();
-
-  const { data } = useSuspenseQuery({
-    ...mealData({}),
-  });
-
-  const handleDelete = (uuid: string) => {
-    deleteMeal.mutate(uuid);
-  };
-
-  const handleDuplicate = () => {
-    // TODO: language
-    Alert.alert(
-      "Dupliceer",
-      "Deze functionaliteit is helaas nog niet beschikbaar.",
-    );
-  };
-
+  // I've kept the navigation here so it's on a higher component level
   const handleSelect = (meal: string) => {
     router.push({
       pathname: `/(tabs)/automations/meal/upsert`,
@@ -61,27 +44,65 @@ export default function AutomationsMeal() {
       />
 
       <Suspense fallback={<AutomationsMealLoading />}>
-        <SwipeListView
-          data={data}
-          keyExtractor={(item) => item.uuid}
-          renderItem={({ item }) => (
-            <ItemMeal icon={false} meal={item} onSelect={handleSelect} />
-          )}
-          renderHiddenItem={({ item }) => (
-            <ItemActions
-              onDelete={() => handleDelete(item.uuid)}
-              onDuplicate={() => handleDuplicate()}
-            />
-          )}
-          ListEmptyComponent={<AutomationsMealEmpty />}
-          onRowDidOpen={rowTimeout}
-          scrollEnabled={false}
-          rightOpenValue={-150}
-          closeOnRowOpen={true}
-          disableRightSwipe={true}
-        />
+        <AutomationsMealList onSelect={handleSelect} />
       </Suspense>
     </View>
+  );
+}
+
+type AutomationsMealListProps = {
+  onSelect: (uuid: string) => void;
+};
+
+function AutomationsMealList({ onSelect }: AutomationsMealListProps) {
+  const { data } = useSuspenseQuery({
+    ...mealData({}),
+  });
+
+  const deleteMeal = useDeleteMeal();
+
+  const handleDelete = (uuid: string) => {
+    deleteMeal.mutate(uuid);
+  };
+
+  const handleDuplicate = () => {
+    // TODO: language
+    Alert.alert(
+      "Dupliceer",
+      "Deze functionaliteit is helaas nog niet beschikbaar.",
+    );
+  };
+
+  return (
+    <SwipeListView
+      data={data}
+      keyExtractor={(item) => item.uuid}
+      renderItem={({ item }) => (
+        <ItemMeal icon={false} meal={item} onSelect={onSelect} />
+      )}
+      renderHiddenItem={({ item }) => (
+        <ItemActions
+          onDelete={() => handleDelete(item.uuid)}
+          onDuplicate={handleDuplicate}
+        />
+      )}
+      ListEmptyComponent={<AutomationsMealListEmpty />}
+      onRowDidOpen={rowTimeout}
+      scrollEnabled={false}
+      rightOpenValue={-150}
+      closeOnRowOpen={true}
+      disableRightSwipe={true}
+    />
+  );
+}
+
+function AutomationsMealListEmpty() {
+  return (
+    <Empty
+      list={true}
+      emoji="🌮"
+      content={language.empty.getAdded(language.types.meal.plural)}
+    />
   );
 }
 
@@ -93,15 +114,5 @@ function AutomationsMealLoading() {
       <ItemSkeleton icon={false} />
       <ItemSkeleton icon={false} />
     </View>
-  );
-}
-
-function AutomationsMealEmpty() {
-  return (
-    <Empty
-      list={true}
-      emoji="🌮"
-      content={language.empty.getAdded(language.types.meal.plural)}
-    />
   );
 }

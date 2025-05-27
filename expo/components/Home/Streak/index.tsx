@@ -14,8 +14,6 @@ import { ActivityIndicator, View } from "react-native";
 import useSuspenseQueryFocus from "@/hooks/useSuspenseQueryFocus";
 
 export default function HomeStreak() {
-  const { data } = useSuspenseQueryFocus(streakData());
-
   return (
     <View
       style={{
@@ -56,13 +54,21 @@ export default function HomeStreak() {
           }}
         >
           <Suspense fallback={<HomeStreakLoading />}>
-            <TextBody weight="bold" style={{ color: variables.colors.white }}>
-              {data}
-            </TextBody>
+            <HomeStreakContent />
           </Suspense>
         </View>
       </View>
     </View>
+  );
+}
+
+function HomeStreakContent() {
+  const { data } = useSuspenseQueryFocus(streakData());
+
+  return (
+    <TextBody weight="bold" style={{ color: variables.colors.white }}>
+      {data}
+    </TextBody>
   );
 }
 

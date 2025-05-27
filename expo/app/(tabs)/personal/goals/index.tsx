@@ -7,12 +7,12 @@ import useUpdateUser from "@/mutations/useUpdateUser";
 import userData from "@/queries/userData";
 
 import { View } from "react-native";
+import { Fragment } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { Control, useForm } from "react-hook-form";
-import { Fragment, Suspense } from "react";
 import { GoalData, goalSchema } from "@/schemas/personal/goal";
 
 import language from "@/language";
@@ -20,7 +20,7 @@ import variables from "@/variables";
 import Empty from "@/components/Empty";
 
 export default function PersonalGoals() {
-  const { data: user } = useSuspenseQuery(userData());
+  const { data: user, isLoading } = useQuery(userData());
 
   const router = useRouter();
 
@@ -37,6 +37,11 @@ export default function PersonalGoals() {
   });
 
   const handleSave = (data: GoalData) => {
+    // If we switch to suspense we can remove this check
+    if (!user) {
+      return;
+    }
+
     updateUser.mutate({ ...user, ...data });
 
     router.back();
@@ -56,17 +61,19 @@ export default function PersonalGoals() {
         >
           <Header title={language.page.personal.goals.title} />
 
-          <Suspense fallback={<PersonalGoalsLoading />}>
+          {isLoading ? (
+            <PersonalGoalsLoading />
+          ) : (
             <PersonalGoalsForm control={control} calories={calories} />
-          </Suspense>
+          )}
         </View>
       </ScrollView>
 
       <ButtonOverlay
         title={language.page.personal.goals.button}
         onPress={handleSubmit(handleSave)}
-        loading={isSubmitting}
-        disabled={isSubmitting}
+        loading={isSubmitting || isLoading}
+        disabled={isSubmitting || isLoading}
       />
     </View>
   );

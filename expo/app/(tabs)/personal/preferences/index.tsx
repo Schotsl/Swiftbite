@@ -10,11 +10,10 @@ import useUpdateUser from "@/mutations/useUpdateUser";
 import userData from "@/queries/userData";
 
 import { View } from "react-native";
-import { Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { UseFormSetValue, Control, useForm } from "react-hook-form";
 
 import {
@@ -49,7 +48,7 @@ const languages = [
 ];
 
 export default function PersonalPreferences() {
-  const { data: user } = useSuspenseQuery(userData());
+  const { data: user, isLoading } = useQuery(userData());
 
   const router = useRouter();
   const updateUser = useUpdateUser();
@@ -68,6 +67,11 @@ export default function PersonalPreferences() {
   const measurement = watch("measurement");
 
   const handleSave = (data: PreferenceData) => {
+    // If we switch to suspense we can remove this check
+    if (!user) {
+      return;
+    }
+
     updateUser.mutate({ ...user, ...data });
 
     router.back();
@@ -85,21 +89,23 @@ export default function PersonalPreferences() {
         >
           <Header title={language.page.personal.preferences.title} />
 
-          <Suspense fallback={<PersonalPreferencesLoading />}>
+          {isLoading ? (
+            <PersonalPreferencesLoading />
+          ) : (
             <PersonalPreferencesForm
               control={control}
               measurement={measurement}
               setValue={setValue}
             />
-          </Suspense>
+          )}
         </View>
       </ScrollView>
 
       <ButtonOverlay
         title={language.page.personal.preferences.button}
         onPress={handleSubmit(handleSave)}
-        loading={isSubmitting}
-        disabled={isSubmitting}
+        loading={isSubmitting || isLoading}
+        disabled={isSubmitting || isLoading}
       />
     </View>
   );

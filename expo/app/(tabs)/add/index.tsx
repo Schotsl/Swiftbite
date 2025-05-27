@@ -31,37 +31,17 @@ import ItemSkeleton from "@/components/Item/Skeleton";
 
 export default function Add() {
   const [date, setDate] = useState<Date>(new Date());
-  const [interval, setInterval] = useState<number | false>(1000);
+  const [empty, setEmpty] = useState<boolean>(false);
 
-  const { data } = useSuspenseQuery({
-    ...entryData({ date }),
-    refetchInterval: interval,
-  });
-
-  // If any of the entries are processing we'll keep polling
-  useEffect(() => {
-    // If any icon_id is null then it's still processing
-    const processingIcon = data.some(({ product }) => !product?.icon_id);
-    const processingProduct = data.some(({ product }) => product?.processing);
-    const processingMeal = data.some(({ meal }) =>
-      meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing,
-      ),
-    );
-
-    const processing = processingIcon || processingProduct || processingMeal;
-    const interval = processing ? 500 : false;
-
-    setInterval(interval);
-  }, [data]);
-
-  const isEmpty = data.length === 0;
+  const handleEmpty = (empty: boolean) => {
+    setEmpty(empty);
+  };
 
   return (
     <ScrollView
       style={{
         minHeight: "100%",
-        backgroundColor: isEmpty
+        backgroundColor: empty
           ? variables.colors.greyLight
           : variables.colors.white,
       }}
@@ -96,19 +76,51 @@ export default function Add() {
       </View>
 
       <Suspense fallback={<AddListLoading />}>
-        <AddList entries={data} />
+        <AddList date={date} onEmpty={handleEmpty} />
       </Suspense>
     </ScrollView>
   );
 }
 
 type AddListProps = {
-  entries: Entry[];
+  date: Date;
+  onEmpty: (empty: boolean) => void;
 };
 
-function AddList({ entries }: AddListProps) {
+function AddList({ date, onEmpty }: AddListProps) {
   const deleteEntry = useDeleteEntry();
   const insertEntry = useInsertEntry();
+
+  const [interval, setInterval] = useState<number | false>(1000);
+
+  const { data: entries } = useSuspenseQuery({
+    ...entryData({ date }),
+    refetchInterval: interval,
+  });
+
+  const sections = getSections(entries);
+
+  useEffect(() => {
+    // If any icon_id is null then it's still processing
+    const processingIcon = entries.some(({ product }) => !product?.icon_id);
+    const processingProduct = entries.some(
+      ({ product }) => product?.processing,
+    );
+    const processingMeal = entries.some(({ meal }) =>
+      meal?.meal_products?.some(
+        (mealProduct) => mealProduct.product?.processing,
+      ),
+    );
+
+    const processing = processingIcon || processingProduct || processingMeal;
+    const interval = processing ? 500 : false;
+
+    setInterval(interval);
+  }, [entries]);
+
+  useEffect(() => {
+    onEmpty(entries.length === 0);
+  }, [entries, onEmpty]);
 
   const handleDelete = (uuid: string) => {
     deleteEntry.mutate(uuid);
@@ -140,8 +152,6 @@ function AddList({ entries }: AddListProps) {
       pathname,
     });
   };
-
-  const sections = getSections(entries);
 
   return (
     <SwipeListView

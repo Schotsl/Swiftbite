@@ -3,10 +3,11 @@
 import HomeWeekDay from "./Day";
 
 import weekData from "@/queries/weekData";
-import useSuspenseQueryFocus from "@/hooks/useSuspenseQueryFocus";
 
 import { View } from "react-native";
 import { getDay, getLetter } from "./helper";
+import { useQuery } from "@tanstack/react-query";
+import { useIsFocused } from "@react-navigation/native";
 
 type HomeWeekProps = {
   date: Date;
@@ -14,7 +15,9 @@ type HomeWeekProps = {
 };
 
 export default function HomeWeek({ date, onPress }: HomeWeekProps) {
-  const { data } = useSuspenseQueryFocus(weekData());
+  const focus = useIsFocused();
+
+  const { data } = useQuery({ ...weekData(), enabled: focus });
 
   const datesUsed = (data as string[] | undefined) || [];
   const datesArray = [];

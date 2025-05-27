@@ -1,6 +1,6 @@
 // HAPPY
 
-import { Suspense } from "react";
+import { Fragment, Suspense } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 import userData from "@/queries/userData";
@@ -15,8 +15,6 @@ import language from "@/language";
 import variables from "@/variables";
 
 export default function SettingHeader() {
-  const { data: user } = useSuspenseQueryFocus(userData());
-
   return (
     <View
       style={{
@@ -26,19 +24,27 @@ export default function SettingHeader() {
       }}
     >
       <Suspense fallback={<SettingHeaderLoading />}>
-        <SettingHeaderAvatar user={user} />
-
-        <View>
-          <TextLarge weight="semibold">
-            {user.first_name} {user.last_name}
-          </TextLarge>
-
-          <TextSmall>
-            {language.page.personal.getSubtitle(user.total)}
-          </TextSmall>
-        </View>
+        <SettingHeaderContent />
       </Suspense>
     </View>
+  );
+}
+
+function SettingHeaderContent() {
+  const { data: user } = useSuspenseQueryFocus(userData());
+
+  return (
+    <Fragment>
+      <SettingHeaderAvatar user={user} />
+
+      <View>
+        <TextLarge weight="semibold">
+          {user.first_name} {user.last_name}
+        </TextLarge>
+
+        <TextSmall>{language.page.personal.getSubtitle(user.total)}</TextSmall>
+      </View>
+    </Fragment>
   );
 }
 

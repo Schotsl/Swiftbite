@@ -8,19 +8,19 @@ import InputDate from "@/components/Input/Date";
 import ButtonOverlay from "@/components/Button/Overlay";
 
 import { View } from "react-native";
-import { Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Control, useForm } from "react-hook-form";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { DetailsData, detailsSchema } from "@/schemas/personal/details";
 
 import language from "@/language";
 import variables from "@/variables";
 
 export default function PersonalDetails() {
-  const { data: user } = useSuspenseQuery(userData());
+  // This could probably be discussed with David
+  const { data: user, isLoading } = useQuery(userData());
 
   const router = useRouter();
 
@@ -36,6 +36,11 @@ export default function PersonalDetails() {
   });
 
   const handleSave = (data: DetailsData) => {
+    // If we switch to suspense we can remove this check
+    if (!user) {
+      return;
+    }
+
     updateUser.mutate({ ...user, ...data });
 
     router.back();
@@ -53,17 +58,19 @@ export default function PersonalDetails() {
         >
           <Header title={language.page.personal.details.title} />
 
-          <Suspense fallback={<PersonalDetailsLoading />}>
+          {isLoading ? (
+            <PersonalDetailsLoading />
+          ) : (
             <PersonalDetailsForm control={control} />
-          </Suspense>
+          )}
         </View>
       </ScrollView>
 
       <ButtonOverlay
         title={language.page.personal.details.button}
         onPress={handleSubmit(handleSave)}
-        loading={isSubmitting}
-        disabled={isSubmitting}
+        loading={isSubmitting || isLoading}
+        disabled={isSubmitting || isLoading}
       />
     </View>
   );

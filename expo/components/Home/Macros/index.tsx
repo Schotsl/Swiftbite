@@ -1,9 +1,9 @@
 // HAPPY
 
 import { View } from "react-native";
+import { useQuery } from "@tanstack/react-query";
 import { useHealth } from "@/context/HealthContext";
 import { macrosToCalories } from "@/helper";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 import useMacros from "@/hooks/useMacros";
 import userData from "@/queries/userData";
@@ -19,11 +19,14 @@ type HomeMacrosProps = {
 };
 
 export default function HomeMacros({ date }: HomeMacrosProps) {
-  const { data } = useSuspenseQuery(userData());
+  // It would be preferable to use suspense here but I don't have time to implement a suspense state
+  const { data } = useQuery(userData());
   const { active } = useHealth();
 
   const macrosConsumed = useMacros(date);
-  const macrosTarget = macrosToCalories(data.macro, data.calories);
+  const macrosTarget = data
+    ? macrosToCalories(data.macro, data.calories)
+    : { calories: 0, fat: 0, carbs: 0, protein: 0 };
 
   return (
     <View style={{ gap: variables.gap.normal }}>

@@ -8,11 +8,10 @@ import userData from "@/queries/userData";
 import useUpdateUser from "@/mutations/useUpdateUser";
 
 import { View } from "react-native";
-import { Suspense } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { Control, useForm } from "react-hook-form";
 import { HealthData, healthSchema } from "@/schemas/personal/health";
 
@@ -20,7 +19,7 @@ import language from "@/language";
 import variables from "@/variables";
 
 export default function PersonalHealth() {
-  const { data: user } = useSuspenseQuery(userData());
+  const { data: user, isLoading } = useQuery(userData());
 
   const router = useRouter();
 
@@ -36,6 +35,11 @@ export default function PersonalHealth() {
   });
 
   const handleSave = (data: HealthData) => {
+    // If we switch to suspense we can remove this check
+    if (!user) {
+      return;
+    }
+
     updateUser.mutate({ ...user, ...data });
 
     router.back();
@@ -53,16 +57,18 @@ export default function PersonalHealth() {
         >
           <Header title={language.page.personal.health.title} />
 
-          <Suspense fallback={<PersonalHealthLoading />}>
+          {isLoading ? (
+            <PersonalHealthLoading />
+          ) : (
             <PersonalHealthForm control={control} />
-          </Suspense>
+          )}
         </View>
       </ScrollView>
 
       <ButtonOverlay
         title={language.page.personal.health.button}
-        loading={isSubmitting}
-        disabled={isSubmitting}
+        loading={isSubmitting || isLoading}
+        disabled={isSubmitting || isLoading}
         onPress={handleSubmit(handleSave)}
       />
     </View>
