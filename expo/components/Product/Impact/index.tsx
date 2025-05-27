@@ -40,7 +40,16 @@ export default function ProductImpact({
   const [per100, setPer100] = useState(false);
 
   const { data, isLoading } = useQuery(userData());
-  const { calories: userCalories, macro: userMacro } = data!;
+
+  const userCalories = data ? data.calories : 0;
+  const userMacro = data
+    ? data.macro
+    : {
+        calories: 0,
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+      };
 
   const servingAdjusted = per100
     ? {
