@@ -1,7 +1,6 @@
-import { StatusBar } from "react-native";
+import { StatusBar, AppState, View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { AppState, View } from "react-native";
 import { HealthProvider } from "@/context/HealthContext";
 import { Redirect, SplashScreen, Tabs } from "expo-router";
 import { Fragment, useEffect, useState } from "react";
@@ -187,7 +186,7 @@ function TabsLayoutIcon({ icon, title, focused }: TabsLayoutIconProps) {
         <View
           style={{
             gap: 4,
-            width: 60,
+            width: 65,
             height: 38,
             alignItems: "center",
             justifyContent: "center",
@@ -203,7 +202,7 @@ function TabsLayoutIcon({ icon, title, focused }: TabsLayoutIconProps) {
     >
       <View
         style={{
-          width: 60,
+          width: 65,
           height: 38,
         }}
       >

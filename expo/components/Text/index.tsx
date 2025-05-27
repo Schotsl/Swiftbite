@@ -34,6 +34,7 @@ export default function Text({
 
   return (
     <ReactText
+      maxFontSizeMultiplier={1.1}
       style={[
         {
           color: color || variables.colors.text.primary,
