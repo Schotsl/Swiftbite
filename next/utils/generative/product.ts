@@ -51,7 +51,7 @@ export async function searchProducts(
     providerOptions: {
       google: {
         thinkingConfig: {
-          thinkingBudget: 1024,
+          thinkingBudget: 2048,
         },
       } satisfies GoogleGenerativeAIProviderOptions,
     },
