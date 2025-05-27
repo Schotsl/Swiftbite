@@ -33,11 +33,6 @@ export function processSearchProduct(
     params.set("barcode", barcode);
   }
 
-  console.log(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`
-  );
-  console.log(headers);
-
   fetch(
     `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
     {
