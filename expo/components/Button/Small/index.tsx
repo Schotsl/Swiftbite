@@ -102,7 +102,6 @@ export default function ButtonSmall({
               shadowOpacity: 0.05,
 
               // I added this background color to improve shadow performance
-              alignSelf: "flex-start",
               borderRadius: 100,
               backgroundColor: variables.colors.white,
             },

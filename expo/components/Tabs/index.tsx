@@ -73,16 +73,14 @@ export default function Tabs({
         style={{
           height: variables.heightTab,
           alignItems: "center",
-          paddingTop: 12,
-          paddingBottom: 24,
+          paddingTop: 0,
+          paddingBottom: 12,
           borderColor: variables.border.color,
           borderBottomWidth: variables.border.width,
-          backgroundColor: "#fff",
         }}
       >
         <ScrollView
           ref={scrollRef}
-          style={{ overflow: "visible" }}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
           onLayout={(event: LayoutChangeEvent) => {
@@ -133,6 +131,7 @@ export default function Tabs({
               return (
                 <Fragment key={index}>
                   <TouchableOpacity
+                    style={{ padding: 4 }}
                     onLayout={handleLayout}
                     onPress={() => {
                       handleCenter(index);

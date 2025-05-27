@@ -1,28 +1,36 @@
 // HAPPY
 
-import { Meal } from "@/types/meal";
-import { FlatList } from "react-native";
+import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { ServingData } from "@/schemas/serving";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FlatList, View } from "react-native";
+import { MealWithProduct, Meal } from "@/types/meal";
+
+import { SearchData, searchSchema } from "@/schemas/search";
 
 import language from "@/language";
+import variables from "@/variables";
+
 import mealData from "@/queries/mealData";
 
 import Empty from "@/components/Empty";
+import Input from "@/components/Input";
 import ItemMeal from "@/components/Item/Meal";
 
 type PageSearchProps = {
-  query: string;
-
   onSelect: (meal: string, serving: ServingData) => void;
 };
 
-export default function PageSearchMeal({
-  query,
+export default function PageSearchMeal({ onSelect }: PageSearchProps) {
+  const { control, watch } = useForm<SearchData>({
+    resolver: zodResolver(searchSchema),
+    defaultValues: {
+      query: "",
+    },
+  });
 
-  onSelect,
-}: PageSearchProps) {
-  const label = language.types.meal.plural;
+  const query = watch("query");
   const lower = query.toLowerCase();
 
   const filter = (meal: Meal) => {
@@ -37,9 +45,58 @@ export default function PageSearchMeal({
     select: (data) => data?.filter(filter),
   });
 
-  const isEmpty = data?.length === 0;
+  return (
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flexDirection: "column",
 
-  if (isLoading) {
+          padding: variables.padding.small.horizontal,
+          paddingHorizontal: variables.padding.page,
+
+          borderBottomWidth: variables.border.width,
+          borderBottomColor: variables.border.color,
+        }}
+      >
+        <Input
+          name="query"
+          icon="magnifying-glass"
+          control={control}
+          placeholder={"Zoek naar een maaltijd..."}
+        />
+      </View>
+
+      <PageSearchMealContent
+        query={query}
+        meals={data ?? []}
+        error={isError}
+        loading={isLoading}
+        onSelect={onSelect}
+      />
+    </View>
+  );
+}
+
+type PageSearchMealContentProps = {
+  query: string;
+  meals: MealWithProduct[];
+  error: boolean;
+  loading: boolean;
+  onSelect: (meal: string, serving: ServingData) => void;
+};
+
+function PageSearchMealContent({
+  query,
+  meals,
+  loading,
+  error,
+  onSelect,
+}: PageSearchMealContentProps) {
+  const label = language.types.meal.plural;
+
+  const isEmpty = meals?.length === 0;
+
+  if (loading) {
     return (
       <Empty
         emoji="🔎"
@@ -49,7 +106,7 @@ export default function PageSearchMeal({
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <Empty emoji="⚠️" content={language.search.results.getError(label)} />
     );
@@ -67,7 +124,7 @@ export default function PageSearchMeal({
 
   return (
     <FlatList
-      data={data}
+      data={meals}
       keyExtractor={(item) => item.uuid}
       renderItem={({ item }) => {
         const handleSelect = (uuid: string) => {

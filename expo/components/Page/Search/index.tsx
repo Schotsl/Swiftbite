@@ -1,18 +1,14 @@
 import { View } from "react-native";
-import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { ServingData } from "@/schemas/serving";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SearchData, searchSchema } from "@/schemas/search";
 
 import Tabs from "@/components/Tabs";
-import Input from "@/components/Input";
 import PageSearchMeal from "./Meal";
 import PageSearchProduct from "./Product";
-import language from "@/language";
-import variables from "@/variables";
 
-enum Type {
+import language from "@/language";
+
+export enum SearchType {
   MEALS = "meals",
   BASICS = "basics",
   PRODUCTS = "products",
@@ -35,87 +31,53 @@ export default function PageSearch({
   onMealSelect,
   onProductSelect,
 }: PageSearchProps) {
-  const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState(Type.PRODUCTS);
+  const [selected, setSelected] = useState<SearchType>(SearchType.PRODUCTS);
 
-  const { control, watch, reset } = useForm<SearchData>({
-    resolver: zodResolver(searchSchema),
-  });
-
-  const queryWatched = watch("query");
-
-  const handleSubmit = () => {
-    setQuery(queryWatched);
-  };
-
-  const handleTab = (type: Type) => {
-    reset({ query: "" });
-
-    setQuery("");
+  const handleTab = (type: SearchType) => {
     setSelected(type);
   };
 
-  const placeholder =
-    selected === Type.PRODUCTS
-      ? "Zoek naar een product..."
-      : selected === Type.BASICS
-        ? "Zoek naar een basisitem..."
-        : "Zoek naar een maaltijd...";
-
-  const type = selected === Type.PRODUCTS ? "search_product" : "search_generic";
-  const product = selected === Type.PRODUCTS || selected === Type.BASICS;
+  const type =
+    selected === SearchType.PRODUCTS ? "search_product" : "search_generic";
 
   return (
     <View style={{ flex: 1 }}>
       <Tabs
         back={true}
-        onSelect={(value) => handleTab(value as Type)}
+        onSelect={(value) => handleTab(value as SearchType)}
         value={selected}
         tabs={
           meal
             ? [
-                { value: Type.PRODUCTS, title: language.types.product.plural },
-                { value: Type.BASICS, title: language.types.basic.plural },
-                { value: Type.MEALS, title: language.types.meal.plural },
+                {
+                  value: SearchType.PRODUCTS,
+                  title: language.types.product.plural,
+                },
+                {
+                  value: SearchType.BASICS,
+                  title: language.types.basic.plural,
+                },
+                { value: SearchType.MEALS, title: language.types.meal.plural },
               ]
             : [
-                { value: Type.PRODUCTS, title: language.types.product.plural },
-                { value: Type.BASICS, title: language.types.basic.plural },
+                {
+                  value: SearchType.PRODUCTS,
+                  title: language.types.product.plural,
+                },
+                {
+                  value: SearchType.BASICS,
+                  title: language.types.basic.plural,
+                },
               ]
         }
       />
-      <View
-        style={{
-          flexDirection: "column",
 
-          padding: variables.padding.small.horizontal,
-          paddingHorizontal: variables.padding.page,
-
-          borderBottomWidth: variables.border.width,
-          borderBottomColor: variables.border.color,
-        }}
-      >
-        <Input
-          name="query"
-          icon="magnifying-glass"
-          control={control}
-          placeholder={placeholder}
-          onSubmit={handleSubmit}
-        />
-      </View>
-
-      {/* TODO: We'll just unmount the component to be sure no random requests get send */}
-      {product && (
-        <PageSearchProduct
-          type={type}
-          query={query}
-          queryWatched={queryWatched}
-          onSelect={onProductSelect}
-        />
+      {(selected === SearchType.PRODUCTS || selected === SearchType.BASICS) && (
+        <PageSearchProduct type={type} onSelect={onProductSelect} />
       )}
 
-      {selected === Type.MEALS && onMealSelect && (
-        <PageSearchMeal query={query} onSelect={onMealSelect} />
+      {selected === SearchType.MEALS && onMealSelect && (
+        <PageSearchMeal onSelect={onMealSelect} />
       )}
     </View>
   );

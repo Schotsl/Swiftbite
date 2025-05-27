@@ -1,34 +1,106 @@
 import { Enums } from "@/database.types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@/hooks/useSearch";
+import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, View } from "react-native";
 
 import variables from "@/variables";
 import language from "@/language";
 import productData from "@/queries/productData";
 
+import Input from "@/components/Input";
 import Empty from "@/components/Empty";
 import ItemProduct from "@/components/Item/Product";
 import PageSearchProductCollapsable from "@/components/Page/Search/Product/Collapsable";
 
+import { useForm } from "react-hook-form";
+import { Product } from "@/types/product";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SearchData, searchSchema } from "@/schemas/search";
+
 type PageSearchProps = {
   type: Enums<"type">;
-  query: string;
-  queryWatched: string;
 
   onSelect: (product: string) => void;
 };
 
-export default function PageSearchProduct({
+export default function PageSearchProduct({ type, onSelect }: PageSearchProps) {
+  const { error, loading, products, overloaded, search, query } = useSearch();
+
+  const { control, watch, handleSubmit } = useForm<SearchData>({
+    resolver: zodResolver(searchSchema),
+  });
+
+  const queryWatched = watch("query");
+
+  const handleSearch = (data: SearchData) => {
+    search(data.query, type);
+  };
+
+  // TODO: language
+  const placeholder =
+    type === "search_product"
+      ? "Zoek naar een product..."
+      : "Zoek naar een basisitem...";
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flexDirection: "column",
+
+          padding: variables.padding.small.horizontal,
+          paddingHorizontal: variables.padding.page,
+
+          borderBottomWidth: variables.border.width,
+          borderBottomColor: variables.border.color,
+        }}
+      >
+        <Input
+          name="query"
+          icon="magnifying-glass"
+          control={control}
+          placeholder={placeholder}
+          onSubmit={handleSubmit(handleSearch)}
+        />
+      </View>
+
+      <PageSearchProductContent
+        type={type}
+        error={error}
+        loading={loading}
+        products={products}
+        overloaded={overloaded}
+        query={query}
+        queryWatched={queryWatched}
+        onSelect={onSelect}
+      />
+    </View>
+  );
+}
+
+type PageSearchProductContentProps = {
+  type: Enums<"type">;
+  error: boolean;
+  loading: boolean;
+  products: Product[];
+  overloaded: boolean;
+  query: string;
+  queryWatched: string;
+  onSelect: (product: string) => void;
+};
+
+function PageSearchProductContent({
   type,
+  loading,
   query,
   queryWatched,
+  error,
+  overloaded,
+  products,
   onSelect,
-}: PageSearchProps) {
-  const { error, loading, products, overloaded, search } = useSearch();
-
+}: PageSearchProductContentProps) {
   const { data: favoriteProducts, isLoading: favoriteProductsLoading } =
     useQuery(productData({ rpc: "product_favorite", type }));
 
@@ -43,28 +115,12 @@ export default function PageSearchProduct({
   const isActive = queryWatched?.length > 0;
   const isSearchable = query?.length >= 4;
 
+  const [opened, setOpened] = useState<string | null>(null);
+
   const labelPlural =
     type === "search_product"
       ? language.types.product.plural
       : language.types.basic.plural;
-
-  const [opened, setOpened] = useState<string | null>(null);
-
-  const [previousQuery, setPreviousQuery] = useState(query);
-
-  useEffect(() => {
-    if (isSearchable) {
-      // We'll only allow the user to query the same product again if there's a error or overloaded
-      if (previousQuery === query && !overloaded && !error) {
-        return;
-      }
-
-      search(query, type);
-      setPreviousQuery(query);
-
-      return;
-    }
-  }, [query, type, error, overloaded, isSearchable, previousQuery, search]);
 
   if (loading && isEmpty) {
     return (
