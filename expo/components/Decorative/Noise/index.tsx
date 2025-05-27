@@ -1,23 +1,24 @@
-import { ImageBackground } from "react-native";
+import { Image } from "expo-image";
+import { View } from "react-native";
 
 export default function DecorativeNoise() {
   return (
-    <ImageBackground
-      source={require("@/assets/images/noise.png")}
-      imageStyle={{
-        width: 450,
-        height: 450,
-      }}
+    <View
       style={{
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 1,
-        opacity: 0.05,
+        width: 250,
+        height: 250,
+        opacity: 0.06,
         position: "absolute",
       }}
-      resizeMode="repeat"
-    />
+    >
+      <Image
+        source={require("@/assets/images/noise.png")}
+        contentFit="cover"
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      />
+    </View>
   );
 }
