@@ -12,6 +12,9 @@ import {
   fetchProductByBarcode,
 } from "@/utils/supabase";
 
+// I've given this function a very high timeout since it has to await a bunch further AI processing calls
+export const maxDuration = 300;
+
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
   const headers = request.headers;
@@ -73,7 +76,7 @@ export async function GET(request: NextRequest) {
   after(async () => {
     const { uuid } = product;
 
-    processSearchProduct(headers, {
+    await processSearchProduct(headers, {
       uuid,
       lang,
       search,

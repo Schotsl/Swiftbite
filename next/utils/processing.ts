@@ -1,6 +1,6 @@
 import { GenericSearchData, ProductSearchData } from "@/schema";
 
-export function processSearchProduct(
+export async function processSearchProduct(
   headers: Headers,
   {
     uuid,
@@ -12,7 +12,7 @@ export function processSearchProduct(
     lang: string;
     search: ProductSearchData;
     barcode?: string;
-  },
+  }
 ) {
   const params = new URLSearchParams({
     uuid,
@@ -33,22 +33,24 @@ export function processSearchProduct(
     params.set("barcode", barcode);
   }
 
-  fetch(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
-    {
-      headers,
-    },
-  );
+  await Promise.all([
+    fetch(
+      `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
+      {
+        headers,
+      }
+    ),
 
-  fetch(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-product?${params.toString()}`,
-    {
-      headers,
-    },
-  );
+    fetch(
+      `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-product?${params.toString()}`,
+      {
+        headers,
+      }
+    ),
+  ]);
 }
 
-export function processSearchGeneric(
+export async function processSearchGeneric(
   headers: Headers,
   {
     uuid,
@@ -58,7 +60,7 @@ export function processSearchGeneric(
     uuid: string;
     lang: string;
     search: GenericSearchData;
-  },
+  }
 ) {
   const params = new URLSearchParams({
     uuid,
@@ -67,17 +69,18 @@ export function processSearchGeneric(
     category: search.category,
   });
 
-  fetch(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
-    {
-      headers,
-    },
-  );
-
-  fetch(
-    `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-generic?${params.toString()}`,
-    {
-      headers,
-    },
-  );
+  await Promise.all([
+    fetch(
+      `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
+      {
+        headers,
+      }
+    ),
+    fetch(
+      `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-generic?${params.toString()}`,
+      {
+        headers,
+      }
+    ),
+  ]);
 }

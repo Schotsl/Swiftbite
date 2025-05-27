@@ -13,6 +13,9 @@ import { fatsecretRequest, supabaseRequest } from "@/utils/internet";
 import { GenericSearchData, ProductSearchData } from "@/schema";
 import { processSearchGeneric, processSearchProduct } from "@/utils/processing";
 
+// I've given this function a very high timeout since it has to await a bunch further AI processing calls
+export const maxDuration = 300;
+
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
   const signal = request.signal;
@@ -105,7 +108,7 @@ export async function GET(request: NextRequest) {
         const uuid = result.uuid;
         const search = result.search as GenericSearchData;
 
-        processSearchGeneric(headers, { uuid, lang, search });
+        await processSearchGeneric(headers, { uuid, lang, search });
 
         return;
       }
@@ -113,7 +116,7 @@ export async function GET(request: NextRequest) {
       const uuid = result.uuid;
       const search = result.search as ProductSearchData;
 
-      processSearchProduct(headers, { uuid, lang, search });
+      await processSearchProduct(headers, { uuid, lang, search });
     });
   });
 
