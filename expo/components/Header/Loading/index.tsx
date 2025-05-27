@@ -16,7 +16,11 @@ export default function HeaderLoading() {
         flexDirection: "column",
       }}
     >
-      <ButtonSmall icon="arrow-left" onPress={() => router.back()} />
+      <ButtonSmall
+        icon="arrow-left"
+        style={{ marginRight: "auto" }}
+        onPress={() => router.back()}
+      />
 
       <Skeleton
         isLoading={true}
