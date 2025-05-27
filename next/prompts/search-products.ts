@@ -20,6 +20,8 @@ You will also receive information from the internet that we gathered by looking 
 
 You will also be informed if there are no results from any of the internet sources.
 
+**Important**: These internet results can sometimes be very broad or include irrelevant items. You should critically evaluate these results and feel free to filter out any products that do not closely match the user's query. Pay close attention to the **brand** and **product name** to ensure relevance, and apply all other rules outlined in this prompt.
+
 # Database results
 You will also receive the closest database results that we've found and already displayed to the user
 
