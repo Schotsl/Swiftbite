@@ -6,7 +6,7 @@ import { ActivityIndicator, View } from "react-native";
 import userData from "@/queries/userData";
 import useSuspenseQueryFocus from "@/hooks/useSuspenseQueryFocus";
 
-import TextBody from "@/components/Text/Body";
+import TextSmall from "@/components/Text/Small";
 import TextLarge from "@/components/Text/Large";
 
 import SettingHeaderAvatar from "./Avatar";
@@ -33,7 +33,9 @@ export default function SettingHeader() {
             {user.first_name} {user.last_name}
           </TextLarge>
 
-          <TextBody>{language.page.personal.getSubtitle(user.total)}</TextBody>
+          <TextSmall>
+            {language.page.personal.getSubtitle(user.total)}
+          </TextSmall>
         </View>
       </Suspense>
     </View>

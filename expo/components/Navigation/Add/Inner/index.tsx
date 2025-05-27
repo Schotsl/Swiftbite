@@ -1,6 +1,6 @@
 // HAPPY
 
-import {
+import Animated, {
   withTiming,
   useSharedValue,
   useAnimatedStyle,
@@ -10,7 +10,6 @@ import { useEffect } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 
-import Animated from "react-native-reanimated";
 import variables from "@/variables";
 import MaskedView from "@react-native-masked-view/masked-view";
 import DecorativeNoise from "@/components/Decorative/Noise";

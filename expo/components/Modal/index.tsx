@@ -1,5 +1,4 @@
-import { View } from "react-native";
-import { Modal as ReactModal } from "react-native";
+import { View, Modal as ReactModal } from "react-native";
 import { Fragment, ReactNode, useState } from "react";
 
 import Button from "@/components/Button";

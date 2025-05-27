@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState, useRef, useCallback } from "react";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { useWindowDimensions, View } from "react-native";
-import { useState, useRef, useCallback } from "react";
 
 import type { NativeLinearGradientPoint } from "expo-linear-gradient";
 

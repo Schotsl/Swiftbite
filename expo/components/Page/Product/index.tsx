@@ -4,14 +4,20 @@ import { Product } from "@/types/product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { ScrollView, View } from "react-native";
-import { displayQuantity, getOption, getOptions } from "@/helper";
 import { useEffect, useMemo, useState } from "react";
-import { isProductFavorite, toggleProductFavorite } from "@/helper";
 import {
   ProductPageData,
   productPageSchema,
   ServingData,
 } from "@/schemas/serving";
+
+import {
+  displayQuantity,
+  getOption,
+  getOptions,
+  isProductFavorite,
+  toggleProductFavorite,
+} from "@/helper";
 
 import useUpdateUser from "@/mutations/useUpdateUser";
 

@@ -2,8 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import * as Crypto from "expo-crypto";
 
 import { handleError } from "@/helper";
-import { ProductInsert } from "@/types/product";
-import { Product } from "@/types/product";
+import { ProductInsert, Product } from "@/types/product";
 
 import supabase from "@/utils/supabase";
 

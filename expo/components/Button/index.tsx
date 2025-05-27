@@ -1,5 +1,6 @@
+import React, { Fragment } from "react";
+
 import { FontAwesome6 } from "@expo/vector-icons";
-import { Fragment } from "react";
 import {
   StyleProp,
   ViewStyle,
@@ -7,7 +8,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import React from "react";
 import TextBody from "@/components/Text/Body";
 import variables from "@/variables";
 import DecorativeNoise from "@/components/Decorative/Noise";

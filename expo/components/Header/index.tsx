@@ -1,11 +1,11 @@
 import { View } from "react-native";
 import { router } from "expo-router";
-import { ButtonSmallProps } from "../Button/Small";
+
+import variables from "@/variables";
 
 import TextBody from "@/components/Text/Body";
 import TextTitle from "@/components/Text/Title";
-import ButtonSmall from "../Button/Small";
-import variables from "@/variables";
+import ButtonSmall, { ButtonSmallProps } from "@/components/Button/Small";
 
 type HeaderProps = {
   title: string;

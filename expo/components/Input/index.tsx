@@ -1,4 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
+
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Control, Controller } from "react-hook-form";
 import {
@@ -10,7 +11,6 @@ import {
   ViewStyle,
 } from "react-native";
 
-import React from "react";
 import InputLabel from "./Label";
 import TextBody from "@/components/Text/Body";
 

@@ -88,7 +88,7 @@ export default function SignIn() {
             marginTop: 16,
           }}
         >
-          <TextBody>Don't have an account? </TextBody>
+          <TextBody>Don&apos;t have an account? </TextBody>
           <Link href="/sign-up" asChild>
             <TextBody color="#0891b2" weight="medium">
               Sign up
