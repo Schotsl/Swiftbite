@@ -28,6 +28,7 @@ import ItemHeader from "@/components/Item/Header";
 import ItemActions from "@/components/Item/Actions";
 import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
+import useSuspenseQueryFocus from "@/hooks/useSuspenseQueryFocus";
 
 export default function Add() {
   const [date, setDate] = useState<Date>(new Date());
@@ -93,7 +94,7 @@ function AddList({ date, onEmpty }: AddListProps) {
 
   const [interval, setInterval] = useState<number | false>(1000);
 
-  const { data: entries } = useSuspenseQuery({
+  const { data: entries } = useSuspenseQueryFocus({
     ...entryData({ date }),
     refetchInterval: interval,
   });
@@ -104,12 +105,12 @@ function AddList({ date, onEmpty }: AddListProps) {
     // If any icon_id is null then it's still processing
     const processingIcon = entries.some(({ product }) => !product?.icon_id);
     const processingProduct = entries.some(
-      ({ product }) => product?.processing,
+      ({ product }) => product?.processing
     );
     const processingMeal = entries.some(({ meal }) =>
       meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing,
-      ),
+        (mealProduct) => mealProduct.product?.processing
+      )
     );
 
     const processing = processingIcon || processingProduct || processingMeal;

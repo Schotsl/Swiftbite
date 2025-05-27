@@ -2,9 +2,8 @@ import { User } from "@/types/user";
 import { useForm } from "react-hook-form";
 import { Product } from "@/types/product";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useIsFocused } from "@react-navigation/native";
 import { ScrollView, View } from "react-native";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ProductPageData,
   productPageSchema,
@@ -58,19 +57,17 @@ export default function PageProduct({
   onDelete,
   onRepeat,
 }: PageProductProps) {
-  const focus = useIsFocused();
-
   const updateUser = useUpdateUser();
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const isGeneric = product.type === "search_generic";
   const isProcessing = product.processing;
 
-  const { watch, control, reset, handleSubmit } = useForm<ProductPageData>({
+  const { watch, control, handleSubmit } = useForm<ProductPageData>({
     resolver: zodResolver(productPageSchema),
     defaultValues: {
       option: propServing?.option || getOption(product),
@@ -81,18 +78,6 @@ export default function PageProduct({
 
   const option = watch("option");
   const quantity = watch("quantity");
-
-  useEffect(() => {
-    if (!focus) {
-      return;
-    }
-
-    reset({
-      option: propServing?.option || getOption(product),
-      quantity: propServing?.quantity || 1,
-      created_at: propCreated || new Date(),
-    });
-  }, [focus, product, propServing, propCreated, reset]);
 
   const handleSave = async (data: ProductPageData) => {
     setSaving(true);
