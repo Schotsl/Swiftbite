@@ -8,6 +8,7 @@ import { useRef, useState, useCallback } from "react";
 export function useSearch() {
   const abort = useRef<AbortController | null>(null);
 
+  const [query, setQuery] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
@@ -22,6 +23,7 @@ export function useSearch() {
 
   const search = useCallback(
     async (search: string, type: Enums<"type">, lang: string = "nl") => {
+      setQuery(search);
       setError(false);
       setProducts([]);
       setLoading(true);
@@ -58,7 +60,7 @@ export function useSearch() {
           {
             signal,
             headers,
-          },
+          }
         );
 
         if (response.status === 429) {
@@ -84,15 +86,24 @@ export function useSearch() {
           }
 
           const decoded = decoder.decode(value);
-          const parsed = JSON.parse(decoded);
 
-          if (parsed.length > 0) {
+          try {
+            // Sometimes the LLM endpoint can return incomplete JSON so we'll try to parse it
+            const parsed = JSON.parse(decoded);
+
+            if (parsed.length === 0) {
+              return;
+            }
+
             setProducts(parsed);
+          } catch {
+            console.log("[SEARCH] JSON hasn't been completed by LLM");
           }
         }
 
         await reader.closed;
       } catch (error: any) {
+        console.log(error);
         if (signal.aborted || error.name === "AbortError") {
           setProducts([]);
 
@@ -105,8 +116,8 @@ export function useSearch() {
         setLoading(false);
       }
     },
-    [],
+    []
   );
 
-  return { error, search, reset, products, loading, overloaded };
+  return { error, query, search, reset, products, loading, overloaded };
 }
