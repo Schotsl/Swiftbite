@@ -135,7 +135,7 @@ export const supabaseRequest = async (
     query_embedding: vector,
     query_type: type,
     match_threshold: 0.5,
-    match_count: 8,
+    match_count: 6,
   });
 
   handleError(error);

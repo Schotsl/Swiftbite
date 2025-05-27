@@ -67,6 +67,7 @@ Your task is to find up to 6 specific, single-item products matching the user's 
   - Quantity & Packaging:
     - Prioritize finding the exact quantity if specified in the query
     - Ensure each product is a single-unit item, not a multi-pack
+    - Prefer products with explicitly defined quantities (e.g., '1L', '330ml'). If multiple similar products are available, and some have defined quantities while others don't (e.g., '7UP Zero Sugar 330ml' vs '7UP Zero Sugar'), prioritize the ones with defined quantities and omit the version without a specific quantity.
 
   - Data Cleaning & Reliability:
     - Clean messy titles from search results (e.g., "Coca-Cola Cachere- 1.5L- Klp -22 - 1.5 L" → "Coca-Cola 1.5L")
