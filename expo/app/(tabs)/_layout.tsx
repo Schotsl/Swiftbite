@@ -1,9 +1,9 @@
-import { StatusBar, AppState, View } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HealthProvider } from "@/context/HealthContext";
+import { useEffect, useState } from "react";
+import { StatusBar, AppState, View } from "react-native";
 import { Redirect, SplashScreen, Tabs } from "expo-router";
-import { Fragment, useEffect, useState } from "react";
 
 import supabase from "@/utils/supabase";
 import language from "@/language";
@@ -190,6 +190,7 @@ function TabsLayoutIcon({ icon, title, focused }: TabsLayoutIconProps) {
             height: 38,
             alignItems: "center",
             justifyContent: "center",
+            backgroundColor: "transparent",
           }}
         >
           <FontAwesome6 size={18} name={icon} color={variables.colors.black} />
@@ -200,27 +201,26 @@ function TabsLayoutIcon({ icon, title, focused }: TabsLayoutIconProps) {
         </View>
       }
     >
-      <View
-        style={{
-          width: 65,
-          height: 38,
-        }}
-      >
-        {focused ? (
-          <Fragment>
-            <DecorativeNoise />
-            <DecorativeLinear />
-          </Fragment>
-        ) : (
-          <View
-            style={{
-              width: "100%",
-              height: "100%",
-              backgroundColor: variables.border.color,
-            }}
-          />
-        )}
-      </View>
+      {focused ? (
+        <View
+          style={{
+            width: 65,
+            height: 38,
+            position: "relative",
+          }}
+        >
+          <DecorativeNoise />
+          <DecorativeLinear />
+        </View>
+      ) : (
+        <View
+          style={{
+            width: 65,
+            height: 38,
+            backgroundColor: variables.border.color,
+          }}
+        />
+      )}
     </MaskedView>
   );
 }

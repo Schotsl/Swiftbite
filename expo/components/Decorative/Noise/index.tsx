@@ -13,7 +13,7 @@ export default function DecorativeNoise() {
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: -1,
+        zIndex: 1,
         opacity: 0.05,
         position: "absolute",
       }}

@@ -171,7 +171,6 @@ export default function CameraSelector({
           left: 0,
           width,
           height: 48,
-          opacity: 0,
           position: "absolute",
         }}
         horizontal={true}

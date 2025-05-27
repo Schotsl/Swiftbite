@@ -1,7 +1,7 @@
-import { Href, Link, useRouter } from "expo-router";
 import { ScrollView } from "react-native-gesture-handler";
+import { Href, useRouter } from "expo-router";
 import { Fragment, useRef, useEffect } from "react";
-import { Pressable, View, type LayoutChangeEvent } from "react-native";
+import { TouchableOpacity, View, type LayoutChangeEvent } from "react-native";
 
 import TextLarge from "@/components/Text/Large";
 import ButtonSmall from "@/components/Button/Small";
@@ -113,19 +113,6 @@ export default function Tabs({
               const isActive =
                 "href" in tab ? value === tab.href : value === tab.value;
 
-              const tabVisualContent = (
-                <TextLarge
-                  weight="medium"
-                  color={
-                    isActive
-                      ? variables.colors.text.primary
-                      : variables.colors.greyDark
-                  }
-                >
-                  {tab.title}
-                </TextLarge>
-              );
-
               const handleLayout = (event: LayoutChangeEvent) => {
                 const { x, width } = event.nativeEvent.layout;
 
@@ -145,28 +132,29 @@ export default function Tabs({
 
               return (
                 <Fragment key={index}>
-                  {"href" in tab ? (
-                    <Link href={tab.href} asChild>
-                      <Pressable
-                        onLayout={handleLayout}
-                        onPress={() => {
-                          handleCenter(index);
-                        }}
-                      >
-                        {tabVisualContent}
-                      </Pressable>
-                    </Link>
-                  ) : (
-                    <Pressable
-                      onLayout={handleLayout}
-                      onPress={() => {
-                        handleCenter(index);
+                  <TouchableOpacity
+                    onLayout={handleLayout}
+                    onPress={() => {
+                      handleCenter(index);
+
+                      if ("href" in tab) {
+                        router.push(tab.href);
+                      } else {
                         onSelect?.(tab.value);
-                      }}
+                      }
+                    }}
+                  >
+                    <TextLarge
+                      weight="medium"
+                      color={
+                        isActive
+                          ? variables.colors.text.primary
+                          : variables.colors.greyDark
+                      }
                     >
-                      {tabVisualContent}
-                    </Pressable>
-                  )}
+                      {tab.title}
+                    </TextLarge>
+                  </TouchableOpacity>
 
                   {!isLast && (
                     <View

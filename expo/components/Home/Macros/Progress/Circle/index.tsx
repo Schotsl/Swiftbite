@@ -27,6 +27,7 @@ export default function HomeMacrosProgressCircle({
       style={{
         width: widthCircle,
         height: widthCircle * 0.73,
+        overflow: "hidden",
       }}
     >
       <View
