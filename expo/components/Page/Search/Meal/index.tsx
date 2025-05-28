@@ -2,11 +2,11 @@
 
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { ServingData } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FlatList, View } from "react-native";
 import { MealWithProduct, Meal } from "@/types/meal";
-
 import { SearchData, searchSchema } from "@/schemas/search";
 
 import language from "@/language";
@@ -17,7 +17,6 @@ import mealData from "@/queries/mealData";
 import Empty from "@/components/Empty";
 import Input from "@/components/Input";
 import ItemMeal from "@/components/Item/Meal";
-import { useRouter } from "expo-router";
 
 type PageSearchProps = {
   onSelect: (meal: string, serving: ServingData) => void;

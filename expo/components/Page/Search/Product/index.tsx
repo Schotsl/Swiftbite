@@ -1,7 +1,7 @@
 import { Enums } from "@/database.types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@/hooks/useSearch";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { ActivityIndicator, FlatList, Keyboard, View } from "react-native";
 
@@ -35,12 +35,39 @@ export default function PageSearchProduct({ type, onSelect }: PageSearchProps) {
   const queryWatched = watch("query");
 
   const handleSearch = (data: SearchData) => {
-    search(data.query, type);
+    const { query } = data;
+
+    if (!query) {
+      return;
+    }
+
+    if (query.length < 4) {
+      return;
+    }
+
+    search(query, type);
   };
 
-  Keyboard.addListener("keyboardWillHide", () => {
-    search(queryWatched, type);
-  });
+  useEffect(() => {
+    const subscription = Keyboard.addListener("keyboardDidHide", () => {
+      if (!queryWatched) {
+        return;
+      }
+
+      if (queryWatched.length === 0) {
+        return;
+      }
+
+      // If the query has already been triggered by the submit button we don't need to trigger it again
+      if (loading) {
+        return;
+      }
+
+      search(queryWatched, type);
+    });
+
+    return () => subscription.remove();
+  }, []);
 
   // TODO: language
   const placeholder =
