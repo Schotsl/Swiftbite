@@ -33,7 +33,7 @@ export default function InputWeights({
   });
 
   // TODO: Should be a type "normally" instead of having to cast
-  const weights: Weight[] = value;
+  const weights: Weight[] = value || [];
 
   const [visible, setVisible] = useState(false);
   const [temporary, setTemporary] = useState(75);
