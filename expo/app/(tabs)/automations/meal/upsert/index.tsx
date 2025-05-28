@@ -4,7 +4,13 @@ import { rowTimeout } from "@/helper";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEditMeal } from "@/context/MealContext";
-import { Modal, View } from "react-native";
+import {
+  Modal,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  View,
+} from "react-native";
+
 import { useIsFocused } from "@react-navigation/native";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { useEffect, useState } from "react";
@@ -33,6 +39,7 @@ export default function AutomationsMealUpsert() {
   const deleteMeal = useDeleteMeal();
 
   const [open, setOpen] = useState(false);
+  const [scroll, setScroll] = useState(0);
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -66,6 +73,10 @@ export default function AutomationsMealUpsert() {
     updateTitle(watchTitle);
   }, [watchTitle, updateTitle]);
 
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setScroll(event.nativeEvent.contentOffset.y);
+  };
+
   const handleSave = async () => {
     await saveChanges();
 
@@ -95,7 +106,7 @@ export default function AutomationsMealUpsert() {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView onScroll={handleScroll}>
         <View
           style={{
             gap: variables.gap.large,
@@ -159,7 +170,7 @@ export default function AutomationsMealUpsert() {
                       <EmptySmall
                         onPress={() => setOpen(true)}
                         content={language.empty.getAdded(
-                          language.types.ingredient.plural,
+                          language.types.ingredient.plural
                         )}
                       />
                     );
@@ -176,7 +187,7 @@ export default function AutomationsMealUpsert() {
                 <ButtonSmall
                   icon="plus"
                   title={language.modifications.getInsert(
-                    language.types.ingredient.plural,
+                    language.types.ingredient.plural
                   )}
                   onPress={() => setOpen(true)}
                   onPosition={setPosition}
@@ -185,6 +196,7 @@ export default function AutomationsMealUpsert() {
 
               <AutomationsMealUpsertAdd
                 open={open}
+                scroll={scroll}
                 position={position}
                 onClose={() => setOpen(false)}
               />
@@ -205,12 +217,14 @@ export default function AutomationsMealUpsert() {
 
 type AutomationsMealUpsertAddProps = {
   open: boolean;
+  scroll: number;
   position: Position;
   onClose: () => void;
 };
 
 function AutomationsMealUpsertAdd({
   open,
+  scroll,
   position,
   onClose,
 }: AutomationsMealUpsertAddProps) {
@@ -226,7 +240,7 @@ function AutomationsMealUpsertAdd({
       <View
         style={{
           gap: 18,
-          top: position.y - 133,
+          top: position.y - 133 - scroll,
           left: position.x,
           position: "absolute",
         }}
@@ -245,7 +259,7 @@ function AutomationsMealUpsertAdd({
         <ButtonSmall
           icon={"plus"}
           title={language.modifications.getInsert(
-            language.types.ingredient.plural,
+            language.types.ingredient.plural
           )}
           onPress={() => onClose()}
         />

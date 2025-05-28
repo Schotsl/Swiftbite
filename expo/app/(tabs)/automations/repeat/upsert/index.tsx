@@ -21,7 +21,12 @@ import { Position } from "@/types";
 import { ScrollView } from "react-native-gesture-handler";
 import { ServingData } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal, View } from "react-native";
+import {
+  Modal,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  View,
+} from "react-native";
 import { MealWithProduct } from "@/types/meal";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
@@ -40,6 +45,7 @@ export default function AutomationsRepeatUpsert() {
   const deleteRepeat = useDeleteRepeat();
 
   const [open, setOpen] = useState(false);
+  const [scroll, setScroll] = useState(0);
   const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -83,6 +89,10 @@ export default function AutomationsRepeatUpsert() {
     updateWeekdays(watchWeekdays);
   }, [watchWeekdays, updateWeekdays]);
 
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    setScroll(event.nativeEvent.contentOffset.y);
+  };
+
   const handleSave = async () => {
     await saveChanges();
 
@@ -112,7 +122,7 @@ export default function AutomationsRepeatUpsert() {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView onScroll={handleScroll}>
         <View
           style={{
             gap: variables.gap.large,
@@ -154,7 +164,6 @@ export default function AutomationsRepeatUpsert() {
                     borderWidth: variables.border.width,
                     borderRadius: variables.border.radius,
                   }}
-                  // This is kinda hacky but I want consistent support for swiping
                   data={serving ? [serving] : []}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={() => {
@@ -175,7 +184,7 @@ export default function AutomationsRepeatUpsert() {
                     return (
                       <EmptySmall
                         content={language.empty.getSelected(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )}
                         onPress={() => setOpen(true)}
                       />
@@ -195,10 +204,10 @@ export default function AutomationsRepeatUpsert() {
                   title={
                     isSet
                       ? language.modifications.getPick(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )
                       : language.modifications.getEdit(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )
                   }
                   onPress={() => setOpen(true)}
@@ -209,6 +218,7 @@ export default function AutomationsRepeatUpsert() {
               <AutomationsRepeatUpsertAdd
                 set={isSet}
                 open={open}
+                scroll={scroll}
                 position={position}
                 onClose={() => setOpen(false)}
               />
@@ -272,6 +282,7 @@ function AutomationsRepeatUpsertItem({
 type AutomationsRepeatUpsertAddProps = {
   set: boolean;
   open: boolean;
+  scroll: number;
   position: Position;
   onClose: () => void;
 };
@@ -279,6 +290,7 @@ type AutomationsRepeatUpsertAddProps = {
 function AutomationsRepeatUpsertAdd({
   set,
   open,
+  scroll,
   position,
   onClose,
 }: AutomationsRepeatUpsertAddProps) {
@@ -294,7 +306,7 @@ function AutomationsRepeatUpsertAdd({
       <View
         style={{
           gap: 18,
-          top: position.y - 133,
+          top: position.y - 133 - scroll,
           left: position.x,
           position: "absolute",
         }}
