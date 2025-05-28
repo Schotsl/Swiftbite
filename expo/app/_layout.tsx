@@ -4,6 +4,7 @@ import { runOnJS } from "react-native-reanimated";
 import { isRunningInExpoGo } from "expo";
 import { useEffect, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Stack, useRouter, useNavigationContainerRef } from "expo-router";
 import {
   Gesture,
@@ -27,8 +28,8 @@ import { OpenSans_500Medium_Italic } from "@expo-google-fonts/open-sans/500Mediu
 import { OpenSans_600SemiBold_Italic } from "@expo-google-fonts/open-sans/600SemiBold_Italic";
 import { OpenSans_700Bold_Italic } from "@expo-google-fonts/open-sans/700Bold_Italic";
 import { OpenSans_800ExtraBold_Italic } from "@expo-google-fonts/open-sans/800ExtraBold_Italic";
+
 import variables from "@/variables";
-// import DecorativeLinear from "@/components/Decorative/Linear";
 
 export const unstable_settings = {
   initialRouteName: "(tabs)",
@@ -100,28 +101,28 @@ function RootLayout() {
 
   return (
     <QueryClientProvider client={query}>
-      {/* <GestureHandlerRootView style={{ flex: 1 }}> */}
-      {/* <DecorativeLinear /> */}
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <GestureDetector gesture={handleGesture}>
-          <Stack
-            screenOptions={{
-              animation: "none",
-              headerShown: false,
-              contentStyle: {
-                backgroundColor: camera
-                  ? variables.colors.black
-                  : variables.colors.transparent,
-              },
-              gestureEnabled: true,
-            }}
-          >
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="sign-in/index" />
-            <Stack.Screen name="sign-up/index" />
-          </Stack>
-        </GestureDetector>
-      </GestureHandlerRootView>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <GestureDetector gesture={handleGesture}>
+            <Stack
+              screenOptions={{
+                animation: "none",
+                headerShown: false,
+                contentStyle: {
+                  backgroundColor: camera
+                    ? variables.colors.black
+                    : variables.colors.transparent,
+                },
+                gestureEnabled: true,
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="sign-in/index" />
+              <Stack.Screen name="sign-up/index" />
+            </Stack>
+          </GestureDetector>
+        </GestureHandlerRootView>
+      </TouchableWithoutFeedback>
     </QueryClientProvider>
   );
 }
