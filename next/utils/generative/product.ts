@@ -34,7 +34,7 @@ export async function searchProducts(
   }: {
     products: ProductSearchData[];
   },
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -139,7 +139,7 @@ export async function searchProduct(
     barcode?: string;
     quantity_original?: number;
     quantity_original_unit?: string;
-  }
+  },
 ): Promise<ProductData> {
   const task = "search-product";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {

@@ -53,7 +53,7 @@ export const googleRequest = async (query: string, signal: AbortSignal) => {
 export const openfoodRequest = async (
   query: string,
   lang: string,
-  signal: AbortSignal
+  signal: AbortSignal,
 ) => {
   try {
     const timeStart = performance.now();
@@ -117,7 +117,7 @@ export const openfoodRequest = async (
       const brandsUnique = brandsCombined.filter(
         (brand, index, self) =>
           index ===
-          self.findIndex((t) => t.toLowerCase() === brand.toLowerCase())
+          self.findIndex((t) => t.toLowerCase() === brand.toLowerCase()),
       );
 
       delete item.brands_tags;
@@ -143,7 +143,7 @@ export const openfoodRequest = async (
 export const supabaseRequest = async (
   user: string | null,
   value: string,
-  type: Enums<"type">
+  type: Enums<"type">,
 ): Promise<Product[]> => {
   const timeStart = performance.now();
 
