@@ -1,7 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import supabase from "@/utils/supabase";
 
 import { handleError } from "@/helper";
-import supabase from "@/utils/supabase";
+import { MealWithProduct } from "@/types/meal";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 export default function useDeleteMeal() {
   const client = useQueryClient();
@@ -13,28 +14,39 @@ export default function useDeleteMeal() {
       handleError(error);
     },
     onMutate: async (uuid: string) => {
-      // Cancel any outgoing refetches
       await client.cancelQueries({ queryKey: ["mealData"] });
-      const previous = client.getQueryData(["mealData"]);
+      await client.cancelQueries({ queryKey: ["mealData", uuid] });
 
-      // Optimistically update to the new value
-      client.setQueryData(["mealData"], (previous: any[] = []) =>
-        previous.filter((meal) => meal.uuid !== uuid),
-      );
+      // Filter out the list and specific meal from the cache
+      const previous =
+        client.getQueryData<MealWithProduct[]>(["mealData"]) || [];
 
-      return { previous };
+      const previousSpecific = client.getQueryData(["mealData", uuid]);
+      const previousFiltered = previous.filter((meal) => meal.uuid !== uuid);
+
+      client.setQueryData(["mealData"], previousFiltered);
+
+      if (previousSpecific) client.setQueryData(["mealData", uuid], []);
+
+      return { previous, previousSpecific, uuid };
     },
-    onError: (err, newMeal, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
-      client.setQueryData(["mealData"], context?.previous);
+    onError: (err, variables, context) => {
+      // Restore the entire list
+      if (context?.previous)
+        client.setQueryData(["mealData"], context.previous);
 
-      console.log("[Mutation] failed to delete meal");
+      // Restore the specific meal
+      if (context?.previousSpecific) {
+        client.setQueryData(
+          ["mealData", context.uuid],
+          context.previousSpecific
+        );
+      }
     },
-    onSettled: () => {
-      // Always refetch after error or success
+    onSettled: (data, error, uuid, context) => {
+      // Always refetch after error or success for both query types
       client.invalidateQueries({ queryKey: ["mealData"] });
-
-      console.log("[Mutation] deleted meal");
+      client.invalidateQueries({ queryKey: ["mealData", uuid] });
     },
   });
 }
