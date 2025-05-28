@@ -6,6 +6,8 @@ import { generateEmbedding } from "./generative/generate";
 
 export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
   try {
+    console.log("[SEARCH] Fatsecret request started");
+
     const timeStart = performance.now();
 
     const url = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=95e21b8a439b147f9&q=${query}&fields=items.title,items.link,items.snippet`;
@@ -29,6 +31,8 @@ export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
 
 export const googleRequest = async (query: string, signal: AbortSignal) => {
   try {
+    console.log("[SEARCH] Google request started");
+
     const timeStart = performance.now();
 
     const url = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=e245e29713fe4444b&q=${query}&fields=items.title,items.link,items.snippet`;
@@ -53,7 +57,7 @@ export const googleRequest = async (query: string, signal: AbortSignal) => {
 export const openfoodRequest = async (
   query: string,
   lang: string,
-  signal: AbortSignal,
+  signal: AbortSignal
 ) => {
   try {
     const timeStart = performance.now();
@@ -98,6 +102,8 @@ export const openfoodRequest = async (
       ],
     });
 
+    console.log("[SEARCH] Openfood request started");
+
     const response = await fetch(url, {
       body,
       signal,
@@ -117,7 +123,7 @@ export const openfoodRequest = async (
       const brandsUnique = brandsCombined.filter(
         (brand, index, self) =>
           index ===
-          self.findIndex((t) => t.toLowerCase() === brand.toLowerCase()),
+          self.findIndex((t) => t.toLowerCase() === brand.toLowerCase())
       );
 
       delete item.brands_tags;
@@ -143,7 +149,7 @@ export const openfoodRequest = async (
 export const supabaseRequest = async (
   user: string | null,
   value: string,
-  type: Enums<"type">,
+  type: Enums<"type">
 ): Promise<Product[]> => {
   const timeStart = performance.now();
 

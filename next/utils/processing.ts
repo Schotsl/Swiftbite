@@ -12,7 +12,7 @@ export async function processSearchProduct(
     lang: string;
     search: ProductSearchData;
     barcode?: string;
-  },
+  }
 ) {
   const params = new URLSearchParams({
     uuid,
@@ -33,19 +33,21 @@ export async function processSearchProduct(
     params.set("barcode", barcode);
   }
 
+  console.log("[SEARCH] Processing product search", params.toString());
+
   await Promise.all([
     fetch(
       `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
       {
         headers,
-      },
+      }
     ),
 
     fetch(
       `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-product?${params.toString()}`,
       {
         headers,
-      },
+      }
     ),
   ]);
 }
@@ -60,7 +62,7 @@ export async function processSearchGeneric(
     uuid: string;
     lang: string;
     search: GenericSearchData;
-  },
+  }
 ) {
   const params = new URLSearchParams({
     uuid,
@@ -69,18 +71,20 @@ export async function processSearchGeneric(
     category: search.category,
   });
 
+  console.log("[SEARCH] Processing generic search", params.toString());
+
   await Promise.all([
     fetch(
       `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-options?${params.toString()}`,
       {
         headers,
-      },
+      }
     ),
     fetch(
       `${process.env.SWIFTBITE_API_URL}/api/ai-functions/product-search-generic?${params.toString()}`,
       {
         headers,
-      },
+      }
     ),
   ]);
 }
