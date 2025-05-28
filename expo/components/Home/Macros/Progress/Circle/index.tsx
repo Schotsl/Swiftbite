@@ -159,12 +159,12 @@ export default function HomeMacrosProgressCircle({
                   style={{
                     borderLeftColor: variables.colors.transparent,
                     borderTopColor:
-                      progress > 0.5
+                      progress > 0.6
                         ? variables.colors.primary
                         : variables.colors.transparent,
 
                     borderRightColor:
-                      progress > 0.25
+                      progress > 0.3
                         ? variables.colors.primary
                         : variables.colors.transparent,
 
