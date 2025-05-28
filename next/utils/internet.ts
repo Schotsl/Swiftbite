@@ -5,37 +5,49 @@ import { handleError } from "@/helper";
 import { generateEmbedding } from "./generative/generate";
 
 export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
-  const timeStart = performance.now();
+  try {
+    const timeStart = performance.now();
 
-  const url = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=95e21b8a439b147f9&q=${query}&fields=items.title,items.link,items.snippet`;
-  const response = await fetch(url, { signal });
-  const parsed = await response.json();
-  const results = parsed.items;
+    const url = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=95e21b8a439b147f9&q=${query}&fields=items.title,items.link,items.snippet`;
+    const response = await fetch(url, { signal });
+    const parsed = await response.json();
+    const results = parsed.items;
 
-  const timeEnd = performance.now();
-  const timeDiff = Math.round(timeEnd - timeStart);
+    const timeEnd = performance.now();
+    const timeDiff = Math.round(timeEnd - timeStart);
 
-  console.log(`[SEARCH] Fatsecret request took ${timeDiff}ms`);
+    console.log(`[SEARCH] Fatsecret request took ${timeDiff}ms`);
 
-  const resultsSafe = results || [];
-  return resultsSafe;
+    const resultsSafe = results || [];
+    return resultsSafe;
+  } catch (error) {
+    console.error("[SEARCH] Fatsecret request error:", error);
+
+    return [];
+  }
 };
 
 export const googleRequest = async (query: string, signal: AbortSignal) => {
-  const timeStart = performance.now();
+  try {
+    const timeStart = performance.now();
 
-  const url = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=e245e29713fe4444b&q=${query}&fields=items.title,items.link,items.snippet`;
-  const response = await fetch(url, { signal });
-  const parsed = await response.json();
-  const results = parsed.items;
+    const url = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=e245e29713fe4444b&q=${query}&fields=items.title,items.link,items.snippet`;
+    const response = await fetch(url, { signal });
+    const parsed = await response.json();
+    const results = parsed.items;
 
-  const timeEnd = performance.now();
-  const timeDiff = Math.round(timeEnd - timeStart);
+    const timeEnd = performance.now();
+    const timeDiff = Math.round(timeEnd - timeStart);
 
-  console.log(`[SEARCH] Google request took ${timeDiff}ms`);
+    console.log(`[SEARCH] Google request took ${timeDiff}ms`);
 
-  const resultsSafe = results || [];
-  return resultsSafe;
+    const resultsSafe = results || [];
+    return resultsSafe;
+  } catch (error) {
+    console.error("[SEARCH] Google request error:", error);
+
+    return [];
+  }
 };
 
 export const openfoodRequest = async (
@@ -123,8 +135,8 @@ export const openfoodRequest = async (
     return minimizedSafe;
   } catch (error) {
     console.error("[SEARCH] Openfood request error:", error);
-    throw error;
-    // return [];
+
+    return [];
   }
 };
 
