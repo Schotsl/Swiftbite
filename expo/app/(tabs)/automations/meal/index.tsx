@@ -69,9 +69,14 @@ function AutomationsMealList({ onSelect }: AutomationsMealListProps) {
     // TODO: language
     Alert.alert(
       "Dupliceer",
-      "Deze functionaliteit is helaas nog niet beschikbaar.",
+      "Deze functionaliteit is helaas nog niet beschikbaar."
     );
   };
+
+  // I would use the empty prop in the list but then the button isn't clickable
+  if (data.length === 0) {
+    return <AutomationsMealListEmpty />;
+  }
 
   return (
     <SwipeListView
@@ -86,7 +91,6 @@ function AutomationsMealList({ onSelect }: AutomationsMealListProps) {
           onDuplicate={handleDuplicate}
         />
       )}
-      ListEmptyComponent={<AutomationsMealListEmpty />}
       onRowDidOpen={rowTimeout}
       scrollEnabled={false}
       rightOpenValue={-150}
@@ -97,11 +101,21 @@ function AutomationsMealList({ onSelect }: AutomationsMealListProps) {
 }
 
 function AutomationsMealListEmpty() {
+  const router = useRouter();
+
   return (
     <Empty
-      list={true}
       emoji="🌮"
       content={language.empty.getAdded(language.types.meal.plural)}
+      button={{
+        icon: "plus",
+        title: language.modifications.getInsert(language.types.meal.single),
+        onPress: () => {
+          router.push({
+            pathname: `/(tabs)/automations/meal/upsert`,
+          });
+        },
+      }}
     />
   );
 }

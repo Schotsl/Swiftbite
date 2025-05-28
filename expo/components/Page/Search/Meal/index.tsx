@@ -17,6 +17,7 @@ import mealData from "@/queries/mealData";
 import Empty from "@/components/Empty";
 import Input from "@/components/Input";
 import ItemMeal from "@/components/Item/Meal";
+import { useRouter } from "expo-router";
 
 type PageSearchProps = {
   onSelect: (meal: string, serving: ServingData) => void;
@@ -93,6 +94,7 @@ function PageSearchMealContent({
   onSelect,
 }: PageSearchMealContentProps) {
   const label = language.types.meal.plural;
+  const router = useRouter();
 
   const isEmpty = meals?.length === 0;
 
@@ -113,7 +115,21 @@ function PageSearchMealContent({
   }
 
   if (isEmpty && !query) {
-    return <Empty emoji="😲" content={language.empty.meal} />;
+    return (
+      <Empty
+        emoji="😲"
+        content={language.empty.meal}
+        button={{
+          icon: "plus",
+          title: language.modifications.getInsert(language.types.meal.single),
+          onPress: () => {
+            router.push({
+              pathname: `/(tabs)/automations/meal/upsert`,
+            });
+          },
+        }}
+      />
+    );
   }
 
   if (isEmpty) {

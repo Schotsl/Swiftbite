@@ -7,20 +7,22 @@ import TextSmall from "@/components/Text/Small";
 import TextTitle from "@/components/Text/Title";
 import variables from "@/variables";
 
+import ButtonSmall, { ButtonSmallProps } from "@/components/Button/Small";
+
 type EmptyProps = {
-  list?: boolean;
   emoji: string;
   content: string;
-  overlay?: boolean;
   active?: boolean;
+  overlay?: boolean;
+  button?: ButtonSmallProps;
 };
 
 export default function Empty({
-  list = false,
   emoji,
   content,
-  overlay = false,
   active = false,
+  overlay = false,
+  button,
 }: EmptyProps) {
   const [dots, setDots] = useState(0);
 
@@ -42,9 +44,17 @@ export default function Empty({
   }, [active]);
 
   const getOffset = () => {
-    return overlay
-      ? -variables.gap.normal - variables.heightOverlay / 2
-      : -variables.gap.normal;
+    let offset = -variables.gap.normal;
+
+    if (overlay) {
+      offset -= variables.heightOverlay / 2;
+    }
+
+    if (button) {
+      offset -= variables.gap.small;
+    }
+
+    return offset;
   };
 
   return (
@@ -52,7 +62,6 @@ export default function Empty({
       style={{
         gap: 4,
         flex: 1,
-        minHeight: list ? "100%" : undefined,
         marginTop: getOffset(),
         alignItems: "center",
         justifyContent: "center",
@@ -90,6 +99,13 @@ export default function Empty({
           </Fragment>
         )}
       </TextSmall>
+
+      {button && (
+        <ButtonSmall
+          {...button}
+          style={{ alignSelf: "center", marginTop: 32 }}
+        />
+      )}
     </View>
   );
 }

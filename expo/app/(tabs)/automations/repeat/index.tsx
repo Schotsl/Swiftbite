@@ -68,9 +68,14 @@ function AutomationsRepeatList({ onSelect }: AutomationsRepeatListProps) {
     // TODO: language
     Alert.alert(
       "Dupliceer",
-      "Deze functionaliteit is helaas nog niet beschikbaar.",
+      "Deze functionaliteit is helaas nog niet beschikbaar."
     );
   };
+
+  // I would use the empty prop in the list but then the button isn't clickable
+  if (data.length === 0) {
+    return <AutomationsRepeatListEmpty />;
+  }
 
   return (
     <SwipeListView
@@ -83,7 +88,6 @@ function AutomationsRepeatList({ onSelect }: AutomationsRepeatListProps) {
           onDuplicate={() => handleDuplicate()}
         />
       )}
-      ListEmptyComponent={<AutomationsRepeatListEmpty />}
       onRowDidOpen={rowTimeout}
       scrollEnabled={false}
       rightOpenValue={-150}
@@ -94,11 +98,22 @@ function AutomationsRepeatList({ onSelect }: AutomationsRepeatListProps) {
 }
 
 function AutomationsRepeatListEmpty() {
+  const router = useRouter();
+
   return (
     <Empty
-      list={true}
       emoji="🔁"
       content={language.empty.getAdded(language.types.repeat.plural)}
+      button={{
+        icon: "plus",
+        title: language.modifications.getInsert(language.types.repeat.single),
+        onPress: () => {
+          console.log("push");
+          router.push({
+            pathname: `/(tabs)/automations/repeat/upsert`,
+          });
+        },
+      }}
     />
   );
 }
