@@ -133,6 +133,10 @@ export default function ButtonSmall({
           opacity: disabled ? variables.input.disabled.opacity : 1,
         }}
       >
+        {/* This has to be rendered before the text and icons so it stays in the background */}
+        {isSecondary && <DecorativeLinear />}
+        <DecorativeNoise />
+
         {icon && (
           <FontAwesome6 name={icon} size={nano ? 12 : 14} color={color} />
         )}
@@ -150,10 +154,6 @@ export default function ButtonSmall({
             {title}
           </TextSmall>
         )}
-
-        {isSecondary && <DecorativeLinear />}
-
-        <DecorativeNoise />
       </TouchableOpacity>
     </View>
   );

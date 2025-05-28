@@ -55,9 +55,7 @@ type AutomationsMealListProps = {
 };
 
 function AutomationsMealList({ onSelect }: AutomationsMealListProps) {
-  const { data } = useSuspenseQuery({
-    ...mealData({}),
-  });
+  const { data } = useSuspenseQuery(mealData({}));
 
   const deleteMeal = useDeleteMeal();
 
