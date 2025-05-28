@@ -169,12 +169,12 @@ function AddList({ date, onEmpty }: AddListProps) {
     // If any icon_id is null then it's still processing
     const processingIcon = entries.some(({ product }) => !product?.icon_id);
     const processingProduct = entries.some(
-      ({ product }) => product?.processing
+      ({ product }) => product?.processing,
     );
     const processingMeal = entries.some(({ meal }) =>
       meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing
-      )
+        (mealProduct) => mealProduct.product?.processing,
+      ),
     );
 
     const processing = processingIcon || processingProduct || processingMeal;

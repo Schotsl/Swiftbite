@@ -60,7 +60,7 @@ export function useSearch() {
           {
             signal,
             headers,
-          }
+          },
         );
 
         if (response.status === 429) {
@@ -119,7 +119,7 @@ export function useSearch() {
         setProducts([]);
       }
     },
-    []
+    [],
   );
 
   return { error, query, search, reset, products, loading, overloaded };

@@ -68,7 +68,7 @@ function AutomationsRepeatList({ onSelect }: AutomationsRepeatListProps) {
     // TODO: language
     Alert.alert(
       "Dupliceer",
-      "Deze functionaliteit is helaas nog niet beschikbaar."
+      "Deze functionaliteit is helaas nog niet beschikbaar.",
     );
   };
 
