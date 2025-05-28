@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@/hooks/useSearch";
 import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
-import { ActivityIndicator, FlatList, View } from "react-native";
+import { ActivityIndicator, FlatList, Keyboard, View } from "react-native";
 
 import variables from "@/variables";
 import language from "@/language";
@@ -37,6 +37,10 @@ export default function PageSearchProduct({ type, onSelect }: PageSearchProps) {
   const handleSearch = (data: SearchData) => {
     search(data.query, type);
   };
+
+  Keyboard.addListener("keyboardWillHide", () => {
+    search(queryWatched, type);
+  });
 
   // TODO: language
   const placeholder =
