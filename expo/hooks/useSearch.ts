@@ -3,7 +3,7 @@ import supabase from "@/utils/supabase";
 import { fetch } from "expo/fetch";
 import { Enums } from "@/database.types";
 import { Product } from "@/types/product";
-import { useRef, useState, useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 
 export function useSearch() {
   const abort = useRef<AbortController | null>(null);
@@ -60,18 +60,20 @@ export function useSearch() {
           {
             signal,
             headers,
-          },
+          }
         );
 
         if (response.status === 429) {
+          setLoading(false);
           setProducts([]);
           setOverloaded(true);
           return;
         }
 
         if (!response.body || response.status !== 200) {
-          setProducts([]);
           setError(true);
+          setLoading(false);
+          setProducts([]);
           return;
         }
 
@@ -102,21 +104,22 @@ export function useSearch() {
         }
 
         await reader.closed;
-      } catch (error: any) {
-        console.log(error);
-        if (signal.aborted || error.name === "AbortError") {
-          setProducts([]);
 
+        setLoading(false);
+      } catch (error: any) {
+        const aborted = signal.aborted;
+        const message = error.message.toLowerCase();
+
+        if (aborted || message.includes("fetch request has been canceled")) {
           return;
         }
 
-        setProducts([]);
         setError(true);
-      } finally {
         setLoading(false);
+        setProducts([]);
       }
     },
-    [],
+    []
   );
 
   return { error, query, search, reset, products, loading, overloaded };
