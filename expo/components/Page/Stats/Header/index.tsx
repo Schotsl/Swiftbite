@@ -18,6 +18,7 @@ export default function PageStatsHeader({
   return (
     <View
       style={{
+        zIndex: 1,
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap-reverse",
@@ -37,7 +38,9 @@ export default function PageStatsHeader({
           <TextSmall weight="semibold">{titleSecondary}</TextSmall>
         </View>
       ) : (
-        <TextSmall weight="semibold">{title}</TextSmall>
+        <TextSmall weight="semibold" style={{ width: 36, textAlign: "right" }}>
+          {title}
+        </TextSmall>
       )}
 
       <View
