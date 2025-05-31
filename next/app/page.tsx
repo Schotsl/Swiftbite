@@ -1,11 +1,14 @@
-import styles from "./page.module.css";
+import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <h1>Swiftbite</h1>
-      </main>
-    </div>
+    <main>
+      <Image
+        src="/images/icon.png"
+        alt="Swiftbite Icon"
+        width={120}
+        height={120}
+      />
+    </main>
   );
 }
