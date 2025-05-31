@@ -2,13 +2,11 @@ import { View } from "react-native";
 
 import variables from "@/variables";
 
-import TextSmall from "./Text/Small";
+import TextSmall from "../Text/Small";
 
-export function Divider() {
+export default function Divider() {
   return (
-    <View
-      style={{ alignItems: "center", marginVertical: variables.gap.normal }}
-    >
+    <View style={{ alignItems: "center" }}>
       <TextSmall
         weight="semibold"
         style={{

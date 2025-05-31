@@ -6,16 +6,17 @@ import {
   View,
   Keyboard,
   TextInput,
-  TouchableWithoutFeedback,
   StyleProp,
   ViewStyle,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 import InputLabel from "./Label";
 import TextBody from "@/components/Text/Body";
+import Text from "../Text";
 
 import variables from "@/variables";
-import Text from "../Text";
 
 type Type =
   | "default"
@@ -45,6 +46,7 @@ type InputProps = {
   onBlur?: () => void;
   onFocus?: () => void;
   onSubmit?: () => void;
+  onContent?: () => void;
 };
 
 export default function Input({
@@ -66,6 +68,7 @@ export default function Input({
   onBlur,
   onFocus,
   onSubmit,
+  onContent,
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -195,14 +198,7 @@ export default function Input({
             </View>
 
             {content && (
-              <Text
-                size={12}
-                color={variables.colors.text.secondary}
-                style={{ marginTop: variables.input.margin }}
-                weight="semibold"
-              >
-                {content}
-              </Text>
+              <InputContent content={content} onContent={onContent} />
             )}
 
             {(fieldState.error || error) && (
@@ -219,5 +215,41 @@ export default function Input({
         );
       }}
     />
+  );
+}
+
+type InputContentProps = {
+  content: string;
+  onContent?: () => void;
+};
+
+export function InputContent({ content, onContent }: InputContentProps) {
+  if (onContent) {
+    return (
+      <TouchableOpacity onPress={onContent}>
+        <Text
+          size={14}
+          color={variables.colors.text.secondary}
+          style={{
+            marginTop: variables.input.margin,
+            textDecorationLine: "underline",
+          }}
+          weight="semibold"
+        >
+          {content}
+        </Text>
+      </TouchableOpacity>
+    );
+  }
+
+  return (
+    <Text
+      size={14}
+      color={variables.colors.text.secondary}
+      style={{ marginTop: variables.input.margin }}
+      weight="semibold"
+    >
+      {content}
+    </Text>
   );
 }

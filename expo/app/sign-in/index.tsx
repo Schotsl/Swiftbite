@@ -1,18 +1,21 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, router } from "expo-router";
-import React from "react";
+import { router } from "expo-router";
 import { useForm } from "react-hook-form";
-import { View } from "react-native";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AuthData, authSchema } from "@/schemas/auth";
+import { Alert, TouchableOpacity, View } from "react-native";
 
 import useSignInWithApple from "@/mutations/useSignInWithApple";
 import useSignInWithEmail from "@/mutations/useSignInWithEmail";
-import { AuthData, authSchema } from "@/schemas/auth";
 
-import Button from "../../components/Button";
-import Input from "../../components/Input";
-import TextTitle from "@/components/Text/Title";
+import React from "react";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
+import Divider from "@/components/Divider";
+import Text from "@/components/Text";
 import TextBody from "@/components/Text/Body";
+
+import variables from "@/variables";
 
 export default function SignIn() {
   const signInMutation = useSignInWithEmail();
@@ -53,47 +56,81 @@ export default function SignIn() {
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["right", "left", "top"]}>
-      <View style={{ flex: 1, justifyContent: "center", gap: 16 }}>
-        <TextTitle>Sign in</TextTitle>
+      <View
+        style={{
+          gap: variables.gap.large,
+          flex: 1,
+          padding: variables.padding.page,
+          paddingBottom: 48,
+        }}
+      >
+        {/* <Header buttons={false} title={"Inloggen"} /> */}
+        <Text size={32} weight="semibold">
+          Inloggen
+        </Text>
 
-        <Input control={control} name="email" placeholder="E-mail" />
+        <View style={{ gap: 32 }}>
+          <Input
+            control={control}
+            name="email"
+            placeholder="E-mail"
+            label="E-mail"
+          />
 
-        <Input
-          type="password"
-          name="password"
-          control={control}
-          placeholder="Password"
-        />
-      </View>
+          <Input
+            type="password"
+            name="password"
+            label="Wachtwoord"
+            control={control}
+            content="Wachtwoord vergeten?"
+            placeholder="Password"
+            onContent={() => {
+              Alert.alert(
+                "Excuses",
+                "Deze functionaliteit is nog niet beschikbaar"
+              );
+            }}
+          />
+        </View>
 
-      <View style={{ gap: 16 }}>
-        <Button
-          title="Sign in"
-          onPress={handleSubmit(handleSignIn)}
-          disabled={isLoading}
-          loading={signInMutation.isPending}
-        />
+        <View style={{ marginTop: "auto", gap: 20 }}>
+          <Button
+            title="Inloggen"
+            onPress={handleSubmit(handleSignIn)}
+            disabled={isLoading}
+            loading={signInMutation.isPending}
+          />
 
-        <Button
-          title="Sign in with Apple"
-          onPress={handleAppleSignIn}
-          disabled={isLoading}
-          loading={signInWithAppleMutation.isPending}
-        />
+          <Divider />
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: 16,
-          }}
-        >
-          <TextBody>Don&apos;t have an account? </TextBody>
-          <Link href="/sign-up" asChild>
-            <TextBody color="#0891b2" weight="medium">
-              Sign up
-            </TextBody>
-          </Link>
+          <Button
+            icon="apple"
+            title="Inloggen met Apple"
+            onPress={handleAppleSignIn}
+            disabled={isLoading}
+            loading={signInWithAppleMutation.isPending}
+          />
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+            }}
+          >
+            <TextBody weight="medium">Nog geen account? </TextBody>
+            <TouchableOpacity
+              onPress={() =>
+                Alert.alert(
+                  "Excuses",
+                  "We staan momenteel niet open voor nieuwe accounts"
+                )
+              }
+            >
+              <TextBody color={variables.colors.primary} weight="medium">
+                Registreren
+              </TextBody>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </SafeAreaView>
