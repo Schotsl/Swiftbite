@@ -1,7 +1,8 @@
 import TextSmall from "@/components/Text/Small";
+
 import { View } from "react-native";
 
-type PageStatsHeaderProps = {
+type PageStatsChartsHeaderProps = {
   title: string;
   titleSecondary?: string;
   options: {
@@ -10,19 +11,19 @@ type PageStatsHeaderProps = {
   }[];
 };
 
-export default function PageStatsHeader({
+export default function PageStatsChartsHeader({
   title,
   titleSecondary,
   options,
-}: PageStatsHeaderProps) {
+}: PageStatsChartsHeaderProps) {
   return (
     <View
       style={{
+        gap: 8,
         zIndex: 1,
         display: "flex",
-        flexDirection: "row",
         flexWrap: "wrap-reverse",
-        gap: 16,
+        flexDirection: "row",
         marginBottom: 16,
       }}
     >
@@ -34,8 +35,16 @@ export default function PageStatsHeader({
             justifyContent: "space-between",
           }}
         >
-          <TextSmall weight="semibold">{title}</TextSmall>
-          <TextSmall weight="semibold">{titleSecondary}</TextSmall>
+          <TextSmall
+            weight="semibold"
+            style={{ width: 36, textAlign: "right" }}
+          >
+            {title}
+          </TextSmall>
+
+          <TextSmall weight="semibold" style={{ width: 18, textAlign: "left" }}>
+            {titleSecondary}
+          </TextSmall>
         </View>
       ) : (
         <TextSmall weight="semibold" style={{ width: 36, textAlign: "right" }}>
@@ -45,14 +54,14 @@ export default function PageStatsHeader({
 
       <View
         style={{
-          marginLeft: "auto",
-          flexDirection: "row",
-          alignItems: "center",
           gap: 16,
+          marginLeft: "auto",
+          alignItems: "center",
+          flexDirection: "row",
         }}
       >
         {options.map((option) => (
-          <PageStatsHeaderOption
+          <PageStatsChartsHeaderOption
             key={option.label}
             label={option.label}
             color={option.color}
@@ -63,12 +72,15 @@ export default function PageStatsHeader({
   );
 }
 
-type PageStatsHeaderOptionProps = {
+type PageStatsChartsHeaderOptionProps = {
   label: string;
   color: string;
 };
 
-function PageStatsHeaderOption({ label, color }: PageStatsHeaderOptionProps) {
+function PageStatsChartsHeaderOption({
+  label,
+  color,
+}: PageStatsChartsHeaderOptionProps) {
   return (
     <View style={{ flexDirection: "row", alignItems: "center" }}>
       <View

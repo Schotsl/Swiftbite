@@ -87,7 +87,7 @@ export default function SignIn() {
             onContent={() => {
               Alert.alert(
                 "Excuses",
-                "Deze functionaliteit is nog niet beschikbaar"
+                "Deze functionaliteit is nog niet beschikbaar",
               );
             }}
           />
@@ -122,7 +122,7 @@ export default function SignIn() {
               onPress={() =>
                 Alert.alert(
                   "Excuses",
-                  "We staan momenteel niet open voor nieuwe accounts"
+                  "We staan momenteel niet open voor nieuwe accounts",
                 )
               }
             >
