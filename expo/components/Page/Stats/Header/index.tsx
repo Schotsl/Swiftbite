@@ -3,6 +3,7 @@ import { View } from "react-native";
 
 type PageStatsHeaderProps = {
   title: string;
+  titleSecondary?: string;
   options: {
     label: string;
     color: string;
@@ -11,6 +12,7 @@ type PageStatsHeaderProps = {
 
 export default function PageStatsHeader({
   title,
+  titleSecondary,
   options,
 }: PageStatsHeaderProps) {
   return (
@@ -18,11 +20,26 @@ export default function PageStatsHeader({
       style={{
         display: "flex",
         flexDirection: "row",
+        flexWrap: "wrap-reverse",
         gap: 16,
         marginBottom: 16,
       }}
     >
-      <TextSmall weight="semibold">{title}</TextSmall>
+      {titleSecondary ? (
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <TextSmall weight="semibold">{title}</TextSmall>
+          <TextSmall weight="semibold">{titleSecondary}</TextSmall>
+        </View>
+      ) : (
+        <TextSmall weight="semibold">{title}</TextSmall>
+      )}
+
       <View
         style={{
           marginLeft: "auto",

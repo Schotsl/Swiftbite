@@ -533,7 +533,8 @@ function CaloriesVsWeightChart({
   return (
     <View style={{ overflow: "hidden", paddingBottom: 18 }}>
       <PageStatsHeader
-        title="Calories vs Weight"
+        title="Calories"
+        titleSecondary="Weight"
         options={[
           {
             label: "Calories (kcal)",
