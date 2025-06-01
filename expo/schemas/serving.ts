@@ -1,9 +1,15 @@
 import { z } from "zod";
 
 export const servingSchema = z.object({
-  option: z.string({ required_error: "Selecteer een portie grootte" }),
+  option: z.string({
+    required_error: "Selecteer een portie grootte",
+    invalid_type_error: "Selecteer een portie grootte",
+  }),
   quantity: z.coerce
-    .number({ required_error: "Voer een portie aantal in" })
+    .number({
+      required_error: "Voer een portie aantal in",
+      invalid_type_error: "Voer een portie aantal in",
+    })
     .gt(0, "Portie aantal moet groter zijn dan 0"),
 });
 
@@ -13,18 +19,34 @@ export type ServingData = z.infer<typeof servingSchema> & {
 };
 
 export const mealSchema = z.object({
-  title: z.string({ required_error: "Voer een titel in" }),
+  title: z.string({
+    required_error: "Voer een titel in",
+    invalid_type_error: "Voer een titel in",
+  }),
 });
 
 export type MealData = z.infer<typeof mealSchema>;
 
 export const createdSchema = z.object({
-  created_at: z.date({ required_error: "Voer een datum in" }),
+  created_at: z.date({
+    required_error: "Voer een datum in",
+    invalid_type_error: "Voer een datum in",
+  }),
 });
 
 export const estimationSchema = z.object({
-  title: z.string({ required_error: "Voer een titel in" }).optional(),
-  content: z.string({ required_error: "Voer een beschrijving in" }).optional(),
+  title: z
+    .string({
+      required_error: "Voer een titel in",
+      invalid_type_error: "Voer een titel in",
+    })
+    .optional(),
+  content: z
+    .string({
+      required_error: "Voer een beschrijving in",
+      invalid_type_error: "Voer een beschrijving in",
+    })
+    .optional(),
 });
 
 export type EstimationData = z.infer<typeof estimationSchema>;
