@@ -11,6 +11,7 @@ import variables from "@/variables";
 import language from "@/language";
 
 import PageStatsChartsHeader from "@/components/Page/Stats/Charts/Header";
+import PageStatsChartsBackground from "../../../Background";
 
 import {
   height,
@@ -104,7 +105,7 @@ export default function PageStatsChartsPatternCaloriesDaily({
         ]}
       />
 
-      <View>
+      <View style={{ position: "relative" }}>
         <LineChart
           data={data}
           color={variables.macros.protein.background}
@@ -126,9 +127,11 @@ export default function PageStatsChartsPatternCaloriesDaily({
           endOpacity={0.1}
           startOpacity={0.4}
         />
+        <PageStatsChartsBackground key="background" />
+
         <View
           style={{
-            top: 0,
+            top: -1,
             right: 0,
             width: width - 15,
             height: height,
@@ -150,7 +153,7 @@ export default function PageStatsChartsPatternCaloriesDaily({
             yAxisLabelWidth={0}
             xAxisLabelsHeight={0}
             yAxisTextStyle={{ color: "transparent" }}
-            xAxisLabelTextStyle={{ color: "transparent" }} // Hide X-axis title/label if any
+            xAxisLabelTextStyle={{ color: "transparent" }}
           />
         </View>
       </View>

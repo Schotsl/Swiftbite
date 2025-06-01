@@ -2,10 +2,11 @@ import { View } from "react-native";
 import { useMemo } from "react";
 import { LineChartPropsType, LineChart } from "react-native-gifted-charts";
 
-import variables from "@/variables";
 import language from "@/language";
+import variables from "@/variables";
 
 import PageStatsChartsHeader from "@/components/Page/Stats/Charts/Header";
+import PageStatsChartsBackground from "@/components/Page/Stats/Charts/Background";
 
 import {
   height,
@@ -110,44 +111,48 @@ export default function PageStatsChartsPatternMacrosDaily({
         ]}
       />
 
-      <LineChart
-        data={dataFats}
-        data2={dataCarbs}
-        data3={dataProteins}
-        color={variables.macros.fats.background}
-        color2={variables.macros.carbs.background}
-        color3={variables.macros.protein.background}
-        zIndex1={3}
-        zIndex2={2}
-        zIndex3={1}
-        areaChart={true}
-        startFillColor={variables.macros.fats.background}
-        endFillColor={variables.macros.fats.background}
-        startOpacity={0.4}
-        endOpacity={0.1}
-        areaChart2={true}
-        startFillColor2={variables.macros.carbs.background}
-        endFillColor2={variables.macros.carbs.background}
-        startOpacity2={0.4}
-        endOpacity2={0.1}
-        areaChart3={true}
-        startFillColor3={variables.macros.protein.background}
-        endFillColor3={variables.macros.protein.background}
-        startOpacity3={0.4}
-        endOpacity3={0.1}
-        width={width}
-        height={height}
-        curved={true}
-        spacing={getWidth()}
-        maxValue={getMax()}
-        thickness={thickness}
-        noOfSections={sections}
-        disableScroll={true}
-        dataPointsRadius={0}
-        xAxisThickness={0}
-        yAxisThickness={0}
-        yAxisLabelContainerStyle={yAxisLabelContainerStyle}
-      />
+      <View style={{ position: "relative" }}>
+        <LineChart
+          data={dataFats}
+          data2={dataCarbs}
+          data3={dataProteins}
+          color={variables.macros.fats.background}
+          color2={variables.macros.carbs.background}
+          color3={variables.macros.protein.background}
+          zIndex1={3}
+          zIndex2={2}
+          zIndex3={1}
+          areaChart={true}
+          startFillColor={variables.macros.fats.background}
+          endFillColor={variables.macros.fats.background}
+          startOpacity={0.4}
+          endOpacity={0.1}
+          areaChart2={true}
+          startFillColor2={variables.macros.carbs.background}
+          endFillColor2={variables.macros.carbs.background}
+          startOpacity2={0.4}
+          endOpacity2={0.1}
+          areaChart3={true}
+          startFillColor3={variables.macros.protein.background}
+          endFillColor3={variables.macros.protein.background}
+          startOpacity3={0.4}
+          endOpacity3={0.1}
+          width={width}
+          height={height}
+          curved={true}
+          spacing={getWidth()}
+          maxValue={getMax()}
+          thickness={thickness}
+          noOfSections={sections}
+          disableScroll={true}
+          dataPointsRadius={0}
+          xAxisThickness={0}
+          yAxisThickness={0}
+          yAxisLabelContainerStyle={yAxisLabelContainerStyle}
+        />
+
+        <PageStatsChartsBackground />
+      </View>
     </View>
   );
 }
