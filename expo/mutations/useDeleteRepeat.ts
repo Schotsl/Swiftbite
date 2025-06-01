@@ -1,10 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import { handleError } from "@/helper";
 import supabase from "@/utils/supabase";
 
+import { Repeat } from "@/types/repeat";
+import { handleError } from "@/helper";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 export default function useDeleteRepeat() {
-  const queryClient = useQueryClient();
+  const client = useQueryClient();
 
   return useMutation({
     mutationFn: async (uuid: string): Promise<void> => {
@@ -13,28 +14,40 @@ export default function useDeleteRepeat() {
       handleError(error);
     },
     onMutate: async (uuid: string) => {
-      // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ["repeatData"] });
-      const previousEntries = queryClient.getQueryData(["repeatData"]);
+      await client.cancelQueries({ queryKey: ["repeatData"] });
+      await client.cancelQueries({ queryKey: ["repeatData", uuid] });
 
-      // Optimistically update to the new value
-      queryClient.setQueryData(["repeatData"], (old: any[] = []) =>
-        old.filter((repeat) => repeat.uuid !== uuid),
+      // Filter out the list and specific repeat from the cache
+      const previous = client.getQueryData<Repeat[]>(["repeatData"]) || [];
+
+      const previousSpecific = client.getQueryData(["repeatData", uuid]);
+      const previousFiltered = previous.filter(
+        (repeat) => repeat.uuid !== uuid
       );
 
-      return { previousEntries };
-    },
-    onError: (err, newRepeat, context) => {
-      // If the mutation fails, use the context returned from onMutate to roll back
-      queryClient.setQueryData(["repeatData"], context?.previousEntries);
+      client.setQueryData(["repeatData"], previousFiltered);
 
-      console.log("[Mutation] failed to delete repeat");
-    },
-    onSettled: () => {
-      // Always refetch after error or success
-      queryClient.invalidateQueries({ queryKey: ["repeatData"] });
+      if (previousSpecific) client.setQueryData(["repeatData", uuid], []);
 
-      console.log("[Mutation] deleted repeat");
+      return { previous, previousSpecific, uuid };
+    },
+    onError: (err, variables, context) => {
+      // Restore the entire list
+      if (context?.previous)
+        client.setQueryData(["repeatData"], context.previous);
+
+      // Restore the specific repeat
+      if (context?.previousSpecific) {
+        client.setQueryData(
+          ["repeatData", context.uuid],
+          context.previousSpecific
+        );
+      }
+    },
+    onSettled: (data, error, uuid, context) => {
+      // Always refetch after error or success for both query types
+      client.invalidateQueries({ queryKey: ["repeatData"] });
+      client.invalidateQueries({ queryKey: ["repeatData", uuid] });
     },
   });
 }
