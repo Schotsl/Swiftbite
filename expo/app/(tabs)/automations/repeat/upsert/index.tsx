@@ -184,7 +184,7 @@ export default function AutomationsRepeatUpsert() {
                     return (
                       <EmptySmall
                         content={language.empty.getSelected(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )}
                         onPress={() => setOpen(true)}
                       />
@@ -204,10 +204,10 @@ export default function AutomationsRepeatUpsert() {
                   title={
                     isSet
                       ? language.modifications.getPick(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )
                       : language.modifications.getEdit(
-                          language.types.ingredient.single,
+                          language.types.ingredient.single
                         )
                   }
                   onPress={() => setOpen(true)}
@@ -294,6 +294,10 @@ function AutomationsRepeatUpsertAdd({
   position,
   onClose,
 }: AutomationsRepeatUpsertAddProps) {
+  const border = variables.border.width;
+  const offset = 133;
+  const positionY = position.y;
+
   return (
     <Modal
       visible={open}
@@ -306,7 +310,7 @@ function AutomationsRepeatUpsertAdd({
       <View
         style={{
           gap: 18,
-          top: position.y - 133 - scroll,
+          top: positionY - offset - scroll - border,
           left: position.x,
           position: "absolute",
         }}
@@ -324,6 +328,7 @@ function AutomationsRepeatUpsertAdd({
 
         <ButtonSmall
           icon={set ? "pencil" : "plus"}
+          shadow={false}
           title={
             set
               ? language.modifications.getEdit(language.types.ingredient.single)
