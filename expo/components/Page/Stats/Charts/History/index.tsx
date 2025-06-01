@@ -37,7 +37,7 @@ export default function PageStatsChartsHistory({
 
   return (
     <View style={{ gap: 32 }}>
-      <TextTitle>{language.page.stats.charts.history.calories.title}</TextTitle>
+      <TextTitle>{language.page.stats.charts.history.title}</TextTitle>
       <InputRange
         name="date"
         label={language.input.range.title}
