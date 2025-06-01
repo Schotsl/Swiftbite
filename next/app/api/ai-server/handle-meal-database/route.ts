@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   after(async () => {
     await Promise.all([
       updateMealIcon(user, { uuid, title }),
-      updateMealEntries({ uuid }),
+      updateMealDependencies({ uuid }),
     ]);
   });
 
@@ -48,7 +48,7 @@ export async function POST(request: Request) {
 
 const updateMealIcon = async (
   user: string,
-  { uuid, title }: { uuid: string; title: string },
+  { uuid, title }: { uuid: string; title: string }
 ) => {
   // First we'll reset the icon to null so it shows the loading icon again
   console.log(`[MEAL] Resetting icon`);
@@ -59,7 +59,7 @@ const updateMealIcon = async (
 
   const ingredientsObjects = await fetchIngredients(uuid);
   const ingredients = ingredientsObjects.map(
-    (ingredient) => ingredient.product.title,
+    (ingredient) => ingredient.product.title
   );
 
   const iconTitle = await normalizeMeal(user, {
@@ -93,19 +93,33 @@ const updateMealIcon = async (
   await uploadIcon(`${newIconUuid}`, newIconBuffer);
 };
 
-const updateMealEntries = async ({ uuid }: { uuid: string }) => {
+const updateMealDependencies = async ({ uuid }: { uuid: string }) => {
   const ingredientsObjects = await fetchIngredients(uuid);
-  const ingredientsCount = ingredientsObjects.reduce((acc, ingredient) => {
+  const ingredientsGrams = ingredientsObjects.reduce((acc, ingredient) => {
     return acc + ingredient.serving.gram;
   }, 0);
 
   // Update every entry with this meal_id to update the serving
-  const { error } = await supabase
+  const promiseEntry = supabase
     .from("entry")
     .update({
-      serving: { gram: ingredientsCount, option: "quantity", quantity: 1 },
+      serving: { gram: ingredientsGrams, option: "quantity", quantity: 1 },
     })
     .eq("meal_id", uuid);
 
-  handleError(error);
+  // Update every repeat with this meal_id to update the serving
+  const promiseRepeat = supabase
+    .from("entry")
+    .update({
+      serving: { gram: ingredientsGrams, option: "quantity", quantity: 1 },
+    })
+    .eq("meal_id", uuid);
+
+  const [{ error: errorEntry }, { error: errorRepeat }] = await Promise.all([
+    promiseEntry,
+    promiseRepeat,
+  ]);
+
+  handleError(errorEntry);
+  handleError(errorRepeat);
 };
