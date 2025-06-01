@@ -11,7 +11,8 @@ import ButtonSmall, { ButtonSmallProps } from "@/components/Button/Small";
 
 type EmptyProps = {
   emoji: string;
-  content: string;
+  content: string | string[];
+  contentSecondary?: string;
   active?: boolean;
   overlay?: boolean;
   button?: ButtonSmallProps;
@@ -20,6 +21,7 @@ type EmptyProps = {
 export default function Empty({
   emoji,
   content,
+  contentSecondary,
   active = false,
   overlay = false,
   button,
@@ -60,7 +62,7 @@ export default function Empty({
   return (
     <View
       style={{
-        gap: 4,
+        gap: 8,
         flex: 1,
         marginTop: getOffset(),
         alignItems: "center",
@@ -99,6 +101,17 @@ export default function Empty({
           </Fragment>
         )}
       </TextSmall>
+
+      {contentSecondary && (
+        <TextSmall
+          align="center"
+          style={{
+            maxWidth: 250,
+          }}
+        >
+          {contentSecondary}
+        </TextSmall>
+      )}
 
       {button && (
         <ButtonSmall
