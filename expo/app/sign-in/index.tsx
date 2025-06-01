@@ -88,7 +88,7 @@ export default function SignIn() {
             onContent={() => {
               Alert.alert(
                 language.alert.development.title,
-                language.alert.development.subtitle
+                language.alert.development.subtitle,
               );
             }}
           />
@@ -125,7 +125,7 @@ export default function SignIn() {
               onPress={() =>
                 Alert.alert(
                   language.alert.closed.title,
-                  language.alert.closed.subtitle
+                  language.alert.closed.subtitle,
                 )
               }
             >

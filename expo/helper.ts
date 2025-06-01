@@ -11,7 +11,7 @@ import language from "./language";
 
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean
+  compressed: boolean,
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -79,7 +79,7 @@ export const getOptions = ({
       value: `meal`,
       title: language.options.getMeal(
         meal.quantity_gram,
-        language.measurement.units.gram.short
+        language.measurement.units.gram.short,
       ),
     });
   }
@@ -90,7 +90,7 @@ export const getOptions = ({
       value: `quantity`,
       title: language.options.getQuantity(
         product.quantity.gram,
-        product.quantity.option
+        product.quantity.option,
       ),
     });
   } else if (product?.search?.quantity_original) {
@@ -99,7 +99,7 @@ export const getOptions = ({
       value: `quantity`,
       title: language.options.getQuantity(
         product.search.quantity_original,
-        product.search.quantity_original_unit!
+        product.search.quantity_original_unit!,
       ),
     });
   }
@@ -110,7 +110,7 @@ export const getOptions = ({
       value: `serving`,
       title: language.options.getServing(
         product.serving.gram,
-        product.serving.option
+        product.serving.option,
       ),
     });
   }
@@ -125,7 +125,7 @@ export const getOptions = ({
         title: language.options.getOption(
           productOption.title,
           productOption.gram,
-          language.measurement.units.gram.short
+          language.measurement.units.gram.short,
         ),
       });
     });
@@ -137,7 +137,7 @@ export const getOptions = ({
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true
+  rounded = true,
 ): MacroExpanded & { gram: number } {
   const gram = serving.gram || 0;
 
@@ -193,7 +193,7 @@ export function getMacrosFromProduct(
 export const macroToCalories = (
   type: keyof MacroData,
   value: number,
-  calories: number
+  calories: number,
 ) => {
   let divider = 4;
 
@@ -221,7 +221,7 @@ export const macrosToCalories = (macro: MacroData, calories: number): Macro => {
 export function getMacrosFromMeal(
   meal: MealWithProduct,
   serving: ServingData,
-  rounded = true
+  rounded = true,
 ): MacroExpanded & { gram: number } {
   const products = meal.meal_products || [];
   const macros = products.reduce(
@@ -259,7 +259,7 @@ export function getMacrosFromMeal(
       fiber: 0,
       protein: 0,
       calories: 0,
-    }
+    },
   );
 
   return {
@@ -307,7 +307,7 @@ export function getMacrosFromMeal(
 
 export const transformDate = (
   date: Date | string | number,
-  short = false
+  short = false,
 ): string => {
   const dateObject = new Date(date);
   return dateObject.toLocaleDateString("nl-NL", {
@@ -320,7 +320,7 @@ export const transformDate = (
 export const transformImage = (
   uri?: string,
   width?: string,
-  height?: string
+  height?: string,
 ): Image | null => {
   const complete = uri && width && height;
 
@@ -336,12 +336,12 @@ export const transformImage = (
 };
 
 export const mapMeal = (
-  meal: Omit<MealWithProduct, "quantity_gram">
+  meal: Omit<MealWithProduct, "quantity_gram">,
 ): MealWithProduct => {
   const total =
     meal.meal_products?.reduce(
       (sum: number, item: MealProductBase) => sum + item.serving.gram,
-      0
+      0,
     ) || 0;
 
   return { ...meal, quantity_gram: total };
@@ -349,7 +349,7 @@ export const mapMeal = (
 
 export function isProductFavorite(
   user: User | undefined,
-  product: string
+  product: string,
 ): boolean {
   if (!user) {
     return false;
@@ -368,7 +368,7 @@ export function isMealFavorite(user: User | undefined, meal: string): boolean {
 
 export function toggleProductFavorite(
   user: User | undefined,
-  product: string
+  product: string,
 ): string[] {
   if (!user) {
     return [product];
@@ -384,7 +384,7 @@ export function toggleProductFavorite(
 
 export function toggleMealFavorite(
   user: User | undefined,
-  meal: string
+  meal: string,
 ): string[] {
   if (!user) {
     return [meal];

@@ -66,7 +66,7 @@ function AutomationsMealList({ onSelect }: AutomationsMealListProps) {
   const handleDuplicate = () => {
     Alert.alert(
       language.alert.development.title,
-      language.alert.development.subtitle
+      language.alert.development.subtitle,
     );
   };
 

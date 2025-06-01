@@ -6,7 +6,7 @@ export const repeatSchema = z.object({
       z.string({
         required_error: "Selecteer een dag",
         invalid_type_error: "Selecteer een dag",
-      })
+      }),
     )
     .min(1, "Selecteer minimaal eén dag")
     .max(7, "Selecteer maximaal zeven dagen"),

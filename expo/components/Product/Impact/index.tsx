@@ -87,7 +87,7 @@ export default function ProductImpact({
             {per100
               ? language.components.information.per100g
               : language.components.information.getServing(
-                  servingAdjusted.gram
+                  servingAdjusted.gram,
                 )}
           </TextSmall>
         </TouchableOpacity>

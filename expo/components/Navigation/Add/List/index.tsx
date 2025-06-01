@@ -50,7 +50,7 @@ export default function NavigationAddList({
       if (!response) {
         Alert.alert(
           language.alert.permission.title,
-          language.alert.permission.subtitle
+          language.alert.permission.subtitle,
         );
 
         return;

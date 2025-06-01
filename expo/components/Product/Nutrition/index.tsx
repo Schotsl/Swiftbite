@@ -117,7 +117,7 @@ export default function ProductNutrition({
             {per100
               ? language.components.information.per100g
               : language.components.information.getServing(
-                  servingAdjusted.gram
+                  servingAdjusted.gram,
                 )}
           </TextSmall>
         </TouchableOpacity>

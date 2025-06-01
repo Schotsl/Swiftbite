@@ -18,7 +18,7 @@ import Text from "../Text";
 
 import variables from "@/variables";
 
-type Type = "default" | "decimal-pad" | "password";
+type Type = "default" | "decimal-pad" | "password" | "email-address";
 
 type InputProps = {
   name: string;

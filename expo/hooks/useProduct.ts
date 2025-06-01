@@ -103,7 +103,7 @@ export function useProduct({
             onPress: () => {
               Alert.alert(
                 language.alert.development.title,
-                language.alert.development.subtitle
+                language.alert.development.subtitle,
               );
 
               setAsking(false);
@@ -126,7 +126,7 @@ export function useProduct({
               setAsking(false);
             },
           },
-        ]
+        ],
       );
 
       return;
@@ -151,7 +151,7 @@ export function useProduct({
             onPress: () => {
               Alert.alert(
                 language.alert.development.title,
-                language.alert.development.subtitle
+                language.alert.development.subtitle,
               );
               setAsking(false);
             },
@@ -172,7 +172,7 @@ export function useProduct({
               setAsking(false);
             },
           },
-        ]
+        ],
       );
     }
   }, [product, isLoadingQuery, search, router, barcodeId, redirect, asking]);
