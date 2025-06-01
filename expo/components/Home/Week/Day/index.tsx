@@ -30,7 +30,9 @@ export default function HomeWeekDay({
     <TouchableOpacity
       onPress={onPress}
       style={{
+        // We need to hide the overflow of the mask so the touchable opacity doesn't become huge
         gap: 4,
+        overflow: "hidden",
         alignItems: "center",
       }}
     >
