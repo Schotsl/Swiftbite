@@ -1,8 +1,7 @@
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Product } from "@/types/product";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ServingData } from "@/schemas/serving";
 import { ManualData, manualSchema } from "@/schemas/insert/manual";

@@ -37,7 +37,7 @@ export default function SignIn() {
       setError("password", { type: "custom", message: errorMessage });
     }
 
-    router.push("/");
+    router.replace("/(tabs)/add");
   };
 
   const handleAppleSignIn = async () => {
@@ -51,7 +51,7 @@ export default function SignIn() {
       });
     }
 
-    router.push("/");
+    router.replace("/(tabs)/add");
   };
 
   return (
@@ -88,7 +88,7 @@ export default function SignIn() {
             onContent={() => {
               Alert.alert(
                 "Excuses",
-                "Deze functionaliteit is nog niet beschikbaar"
+                "Deze functionaliteit is nog niet beschikbaar",
               );
             }}
           />
@@ -123,7 +123,7 @@ export default function SignIn() {
               onPress={() =>
                 Alert.alert(
                   "Excuses",
-                  "We staan momenteel niet open voor nieuwe accounts"
+                  "We staan momenteel niet open voor nieuwe accounts",
                 )
               }
             >

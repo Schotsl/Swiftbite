@@ -4,10 +4,9 @@ import ButtonOverlay from "@/components/Button/Overlay";
 
 import useUpdatePassword from "@/mutations/useUpdatePassword";
 
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useForm } from "react-hook-form";
 import { useRouter } from "expo-router";
-import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PasswordData, passwordSchema } from "@/schemas/personal/password";
 

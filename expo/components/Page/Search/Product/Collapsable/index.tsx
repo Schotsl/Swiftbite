@@ -5,9 +5,8 @@ import ItemSkeleton from "@/components/Item/Skeleton";
 
 import { useRef } from "react";
 import { Product } from "@/types/product";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, TouchableOpacity, View, Animated } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { TouchableOpacity, View, Animated } from "react-native";
 
 import variables from "@/variables";
 

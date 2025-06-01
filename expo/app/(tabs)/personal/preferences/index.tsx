@@ -9,10 +9,9 @@ import InputDropdownRadio from "@/components/Input/Dropdown/Radio";
 import useUpdateUser from "@/mutations/useUpdateUser";
 import userData from "@/queries/userData";
 
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UseFormSetValue, Control, useForm } from "react-hook-form";
 

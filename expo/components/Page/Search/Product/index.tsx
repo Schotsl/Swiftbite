@@ -2,8 +2,13 @@ import { Enums } from "@/database.types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@/hooks/useSearch";
 import { useEffect, useState } from "react";
-import { ScrollView } from "react-native-gesture-handler";
-import { ActivityIndicator, FlatList, Keyboard, View } from "react-native";
+import {
+  ScrollView,
+  ActivityIndicator,
+  FlatList,
+  Keyboard,
+  View,
+} from "react-native";
 
 import variables from "@/variables";
 import language from "@/language";

@@ -1,8 +1,7 @@
 import repeatData from "@/queries/repeatData";
 
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useQuery } from "@tanstack/react-query";
-import { ScrollView } from "react-native-gesture-handler";
 import { RepeatProvider } from "@/context/RepeatContext";
 import { useLocalSearchParams, Stack } from "expo-router";
 

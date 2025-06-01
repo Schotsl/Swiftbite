@@ -1,17 +1,10 @@
 import useCamera from "@/hooks/useCamera";
 
-import { runOnJS } from "react-native-reanimated";
 import { isRunningInExpoGo } from "expo";
 import { useEffect, useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
-import { Stack, useRouter, useNavigationContainerRef } from "expo-router";
-import {
-  Gesture,
-  Directions,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { TouchableWithoutFeedback, Keyboard } from "react-native";
+import { useNavigationContainerRef, Stack } from "expo-router";
 
 import * as Sentry from "@sentry/react-native";
 
@@ -49,7 +42,6 @@ Sentry.init({
 function RootLayout() {
   const query = new QueryClient();
 
-  const router = useRouter();
   const camera = useCamera();
   const container = useNavigationContainerRef();
 
@@ -86,42 +78,25 @@ function RootLayout() {
     OpenSans_800ExtraBold_Italic,
   });
 
-  const handleBack = () => {
-    if (!router.canGoBack()) {
-      return;
-    }
-
-    router.back();
-  };
-
-  // Define the gesture and handle the back action
-  const handleGesture = Gesture.Fling()
-    .direction(Directions.RIGHT)
-    .onEnd(() => runOnJS(handleBack)());
-
   return (
     <QueryClientProvider client={query}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <GestureDetector gesture={handleGesture}>
-            <Stack
-              screenOptions={{
-                animation: "none",
-                headerShown: false,
-                contentStyle: {
-                  backgroundColor: camera
-                    ? variables.colors.black
-                    : variables.colors.transparent,
-                },
-                gestureEnabled: true,
-              }}
-            >
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="sign-in/index" />
-              <Stack.Screen name="sign-up/index" />
-            </Stack>
-          </GestureDetector>
-        </GestureHandlerRootView>
+        <Stack
+          screenOptions={{
+            animation: "none",
+            headerShown: false,
+            gestureEnabled: true,
+            contentStyle: {
+              backgroundColor: camera
+                ? variables.colors.black
+                : variables.colors.transparent,
+            },
+          }}
+        >
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="sign-in/index" />
+          <Stack.Screen name="sign-up/index" />
+        </Stack>
       </TouchableWithoutFeedback>
     </QueryClientProvider>
   );

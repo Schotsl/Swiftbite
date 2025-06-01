@@ -41,7 +41,7 @@ export default function useDeleteMeal() {
       if (context?.previousSpecific) {
         client.setQueryData(
           ["mealData", context.uuid],
-          context.previousSpecific
+          context.previousSpecific,
         );
       }
     },

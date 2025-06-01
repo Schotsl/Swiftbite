@@ -4,8 +4,7 @@ import ButtonOverlay from "@/components/Button/Overlay";
 import language from "@/language";
 import variables from "@/variables";
 
-import { ScrollView } from "react-native-gesture-handler";
-import { Alert, View } from "react-native";
+import { ScrollView, Alert, View } from "react-native";
 
 export default function PersonalExport() {
   const handleExport = () => {

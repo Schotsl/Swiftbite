@@ -87,6 +87,7 @@ export default function TabsLayout() {
           screenOptions={() => {
             return {
               headerShown: false,
+              gestureEnabled: true,
               tabBarShowLabel: false,
               tabBarStyle: {
                 height: variables.heightNavigation,

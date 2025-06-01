@@ -1,8 +1,7 @@
-import { View } from "react-native";
 import { Entry } from "@/types/entry";
 import { rowTimeout } from "@/helper";
+import { ScrollView, View } from "react-native";
 
-import { ScrollView } from "react-native-gesture-handler";
 import { Href, router } from "expo-router";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { Suspense, useEffect, useState } from "react";

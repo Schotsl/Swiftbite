@@ -1,6 +1,10 @@
-import { GestureResponderEvent, useWindowDimensions, View } from "react-native";
+import {
+  GestureResponderEvent,
+  useWindowDimensions,
+  View,
+  ScrollView,
+} from "react-native";
 import { useState, useRef } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { CameraSelected } from "@/types";
 
 import MaskedView from "@react-native-masked-view/masked-view";

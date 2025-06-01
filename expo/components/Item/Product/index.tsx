@@ -96,7 +96,7 @@ export default function ItemProduct({
       if (processing) {
         Alert.alert(
           "Even wachten",
-          "We zijn dit product nog aan het analyseren"
+          "We zijn dit product nog aan het analyseren",
         );
 
         return;

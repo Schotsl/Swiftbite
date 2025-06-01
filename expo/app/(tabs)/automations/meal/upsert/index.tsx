@@ -1,15 +1,15 @@
 import { useForm } from "react-hook-form";
 import { Position } from "@/types";
 import { rowTimeout } from "@/helper";
-import { ScrollView } from "react-native-gesture-handler";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEditMeal } from "@/context/MealContext";
 import {
+  ScrollView,
   Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
   View,
 } from "react-native";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEditMeal } from "@/context/MealContext";
 
 import { useIsFocused } from "@react-navigation/native";
 import { SwipeListView } from "react-native-swipe-list-view";
@@ -173,7 +173,7 @@ export default function AutomationsMealUpsert() {
                           language.functions.getJoin([
                             language.types.product.plural,
                             language.types.basic.plural,
-                          ])
+                          ]),
                         )}
                       />
                     );
@@ -190,7 +190,7 @@ export default function AutomationsMealUpsert() {
                 <ButtonSmall
                   icon="plus"
                   title={language.modifications.getInsert(
-                    language.types.ingredient.plural
+                    language.types.ingredient.plural,
                   )}
                   onPress={() => setOpen(true)}
                   onPosition={setPosition}
@@ -267,7 +267,7 @@ function AutomationsMealUpsertAdd({
           icon={"plus"}
           shadow={false}
           title={language.modifications.getInsert(
-            language.types.ingredient.plural
+            language.types.ingredient.plural,
           )}
           onPress={() => onClose()}
         />

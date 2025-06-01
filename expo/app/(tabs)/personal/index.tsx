@@ -1,6 +1,5 @@
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useState } from "react";
-import { ScrollView } from "react-native-gesture-handler";
 import { handleError } from "@/helper";
 
 import supabase from "@/utils/supabase";

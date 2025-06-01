@@ -83,7 +83,7 @@ export default function PageStatsChartsHistoryMacros({
 
   const getMax = () => {
     const maxSummed = data.map(({ stacks }) =>
-      stacks.reduce((sum, { value }) => sum + value, 0)
+      stacks.reduce((sum, { value }) => sum + value, 0),
     );
 
     const maxValue = Math.max(...maxSummed);

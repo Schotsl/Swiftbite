@@ -24,7 +24,7 @@ export default function useDeleteRepeat() {
 
       const previousSpecific = client.getQueryData(["repeatData", uuid]);
       const previousFiltered = previous.filter(
-        (repeat) => repeat.uuid !== uuid
+        (repeat) => repeat.uuid !== uuid,
       );
 
       client.setQueryData(["repeatData"], previousFiltered);
@@ -42,7 +42,7 @@ export default function useDeleteRepeat() {
       if (context?.previousSpecific) {
         client.setQueryData(
           ["repeatData", context.uuid],
-          context.previousSpecific
+          context.previousSpecific,
         );
       }
     },

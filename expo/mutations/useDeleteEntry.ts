@@ -8,6 +8,8 @@ export default function useDeleteEntry() {
 
   return useMutation({
     mutationFn: async (uuid: string): Promise<void> => {
+      console.log(`[Mutation] deleting entry ${uuid}`);
+
       const { error } = await supabase.from("entry").delete().eq("uuid", uuid);
 
       handleError(error);

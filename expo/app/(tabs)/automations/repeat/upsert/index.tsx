@@ -18,15 +18,15 @@ import language from "@/language";
 
 import { Product } from "@/types/product";
 import { Position } from "@/types";
-import { ScrollView } from "react-native-gesture-handler";
-import { ServingData } from "@/schemas/serving";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  ScrollView,
   Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
   View,
 } from "react-native";
+import { ServingData } from "@/schemas/serving";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { MealWithProduct } from "@/types/meal";
 import { useEffect, useState } from "react";
 import { RepeatData, repeatSchema } from "@/schemas/repeat";
@@ -195,7 +195,7 @@ export default function AutomationsRepeatUpsert() {
                             language.types.product.plural,
                             language.types.basic.plural,
                             language.types.meal.plural,
-                          ])
+                          ]),
                         )}
                         onPress={() => setOpen(true)}
                       />
@@ -215,10 +215,10 @@ export default function AutomationsRepeatUpsert() {
                   title={
                     isSet
                       ? language.modifications.getPick(
-                          language.types.item.single
+                          language.types.item.single,
                         )
                       : language.modifications.getEdit(
-                          language.types.item.single
+                          language.types.item.single,
                         )
                   }
                   onPress={() => setOpen(true)}

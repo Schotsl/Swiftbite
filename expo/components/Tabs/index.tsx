@@ -1,4 +1,4 @@
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native";
 import { Href, useRouter } from "expo-router";
 import { Fragment, useRef, useEffect } from "react";
 import { TouchableOpacity, View, type LayoutChangeEvent } from "react-native";

@@ -7,10 +7,9 @@ import useDeleteAccount from "@/mutations/useDeleteAccount";
 
 import { useForm } from "react-hook-form";
 import { useRouter } from "expo-router";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, Alert, View } from "react-native";
 import { handleError } from "@/helper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert, View } from "react-native";
 import { DeleteData, deleteSchema } from "@/schemas/personal/delete";
 
 import language from "@/language";
@@ -45,7 +44,7 @@ export default function PersonalDelete() {
           style: "destructive",
           onPress: () => handleConfirm(data),
         },
-      ]
+      ],
     );
   };
 

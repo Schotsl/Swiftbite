@@ -1,5 +1,3 @@
-import * as crypto from "expo-crypto";
-
 import supabase from "@/utils/supabase";
 
 import { Repeat, RepeatInsert } from "@/types/repeat";

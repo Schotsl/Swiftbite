@@ -1,9 +1,8 @@
 import variables from "@/variables";
 import React, { useState } from "react";
 
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { useForm } from "react-hook-form";
-import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { statsSchema, StatsData } from "@/schemas/stats";
 

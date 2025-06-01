@@ -7,6 +7,8 @@ import supabase from "@/utils/supabase";
 export default function useDeleteAccount() {
   return useMutation({
     mutationFn: async ({ password }: DeleteData): Promise<boolean> => {
+      console.log(`[Mutation] deleting account`);
+
       const session = await supabase.auth.getSession();
       const user_id = session.data.session?.user.id;
 

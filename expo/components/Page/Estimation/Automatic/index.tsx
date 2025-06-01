@@ -1,8 +1,7 @@
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { decode } from "base64-arraybuffer";
 import { useForm } from "react-hook-form";
 import { Product } from "@/types/product";
-import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
