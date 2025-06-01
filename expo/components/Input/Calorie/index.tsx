@@ -81,7 +81,7 @@ export default function InputMacro({ name, label, control }: InputMacroProps) {
         onButton={handleSubmit(handleSave)}
       >
         <Input
-          type="number-pad"
+          type="decimal-pad"
           name="calories"
           suffix={language.macros.calories.short}
           control={localControl}

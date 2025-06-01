@@ -193,7 +193,7 @@ export default function PageProduct({
 
             <Input
               name="quantity"
-              type="number-pad"
+              type="decimal-pad"
               label={language.input.serving.amount.title}
               placeholder={language.input.serving.amount.placeholder}
               control={control}

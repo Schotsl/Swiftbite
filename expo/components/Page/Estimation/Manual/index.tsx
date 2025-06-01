@@ -140,7 +140,7 @@ export default function PageEstimationManual({
             <View style={{ gap: 18 }}>
               <View style={{ gap: 18, flexDirection: "row" }}>
                 <Input
-                  type="number-pad"
+                  type="decimal-pad"
                   name="calorie_100g"
                   style={{ flex: 1 }}
                   label={language.macros.calories.long}
@@ -150,7 +150,7 @@ export default function PageEstimationManual({
                 />
 
                 <Input
-                  type="number-pad"
+                  type="decimal-pad"
                   name="protein_100g"
                   style={{ flex: 1 }}
                   label={language.macros.protein.long}
@@ -162,7 +162,7 @@ export default function PageEstimationManual({
 
               <View style={{ gap: 18, flexDirection: "row" }}>
                 <Input
-                  type="number-pad"
+                  type="decimal-pad"
                   name="carbohydrate_100g"
                   style={{ flex: 1 }}
                   label={language.macros.carbs.long}
@@ -172,7 +172,7 @@ export default function PageEstimationManual({
                 />
 
                 <Input
-                  type="number-pad"
+                  type="decimal-pad"
                   name="fat_100g"
                   style={{ flex: 1 }}
                   label={language.macros.fats.long}
@@ -187,7 +187,7 @@ export default function PageEstimationManual({
 
             <View style={{ gap: 16 }}>
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="fat_saturated_100g"
                 label={language.macros.nutrients.fats.saturated}
                 suffix={language.measurement.units.gram.long}
@@ -196,7 +196,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="fat_unsaturated_100g"
                 label={language.macros.nutrients.fats.unsaturated}
                 suffix={language.measurement.units.gram.long}
@@ -205,7 +205,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="fat_trans_100g"
                 label={language.macros.nutrients.fats.trans}
                 suffix={language.measurement.units.gram.long}
@@ -214,7 +214,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="carbohydrate_sugar_100g"
                 label={language.macros.nutrients.carbs.sugar}
                 suffix={language.measurement.units.gram.long}
@@ -223,7 +223,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="fiber_100g"
                 label={language.macros.nutrients.carbs.fiber}
                 suffix={language.measurement.units.gram.long}
@@ -232,7 +232,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="sodium_100g"
                 label={language.macros.nutrients.salt}
                 suffix={language.measurement.units.gram.long}
@@ -241,7 +241,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="iron_100g"
                 label={language.macros.nutrients.iron}
                 suffix={language.measurement.units.milligram.long}
@@ -250,7 +250,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="potassium_100g"
                 label={language.macros.nutrients.potassium}
                 suffix={language.measurement.units.gram.long}
@@ -259,7 +259,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="calcium_100g"
                 label={language.macros.nutrients.calcium}
                 suffix={language.measurement.units.gram.long}
@@ -268,7 +268,7 @@ export default function PageEstimationManual({
               />
 
               <Input
-                type="number-pad"
+                type="decimal-pad"
                 name="cholesterol_100g"
                 label={language.macros.nutrients.cholesterol}
                 suffix={language.measurement.units.milligram.long}

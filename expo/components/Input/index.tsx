@@ -18,13 +18,7 @@ import Text from "../Text";
 
 import variables from "@/variables";
 
-type Type =
-  | "default"
-  | "numeric"
-  | "email-address"
-  | "phone-pad"
-  | "number-pad"
-  | "password";
+type Type = "default" | "decimal-pad" | "password";
 
 type InputProps = {
   name: string;
@@ -82,10 +76,11 @@ export default function Input({
             return;
           }
 
-          if (type === "numeric") {
-            const filtered = text.replace(/[^0-9]/g, "");
+          if (type === "decimal-pad") {
+            const filtered = text.replace(/[^0-9.,]/g, "");
+            const transformed = filtered.replace(/,/g, ".");
 
-            onChange(filtered);
+            onChange(transformed);
 
             return;
           }
