@@ -9,10 +9,11 @@ import InputDropdownRadio from "@/components/Input/Dropdown/Radio";
 import useUpdateUser from "@/mutations/useUpdateUser";
 import userData from "@/queries/userData";
 
-import { View, ScrollView } from "react-native";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ScrollView, View } from "react-native";
 import { UseFormSetValue, Control, useForm } from "react-hook-form";
 
 import {
@@ -53,6 +54,7 @@ export default function PersonalPreferences() {
   const updateUser = useUpdateUser();
 
   const {
+    reset,
     control,
     handleSubmit,
     setValue,
@@ -60,8 +62,15 @@ export default function PersonalPreferences() {
     formState: { isSubmitting },
   } = useForm<PreferenceData>({
     resolver: zodResolver(preferenceSchema),
-    defaultValues: user,
   });
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    reset(user);
+  }, [user, reset]);
 
   const measurement = watch("measurement");
 
@@ -78,9 +87,11 @@ export default function PersonalPreferences() {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView style={{ minHeight: "100%" }}>
         <View
           style={{
+            minHeight: "100%",
+
             gap: variables.gap.large,
             padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,

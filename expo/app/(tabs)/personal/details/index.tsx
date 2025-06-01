@@ -7,10 +7,11 @@ import Input from "@/components/Input";
 import InputDate from "@/components/Input/Date";
 import ButtonOverlay from "@/components/Button/Overlay";
 
-import { View, ScrollView } from "react-native";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ScrollView, View } from "react-native";
 import { Control, useForm } from "react-hook-form";
 import { DetailsData, detailsSchema } from "@/schemas/personal/details";
 
@@ -28,11 +29,19 @@ export default function PersonalDetails() {
   const {
     control,
     formState: { isSubmitting },
+    reset,
     handleSubmit,
   } = useForm<DetailsData>({
     resolver: zodResolver(detailsSchema),
-    defaultValues: user,
   });
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    reset(user);
+  }, [user, reset]);
 
   const handleSave = (data: DetailsData) => {
     // If we switch to suspense we can remove this check
@@ -47,9 +56,11 @@ export default function PersonalDetails() {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView style={{ minHeight: "100%" }}>
         <View
           style={{
+            minHeight: "100%",
+
             gap: variables.gap.large,
             padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,

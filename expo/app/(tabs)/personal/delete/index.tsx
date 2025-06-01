@@ -70,9 +70,11 @@ export default function PersonalDelete() {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView style={{ minHeight: "100%" }}>
         <View
           style={{
+            minHeight: "100%",
+
             gap: variables.gap.large,
             padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,

@@ -7,11 +7,12 @@ import ButtonOverlay from "@/components/Button/Overlay";
 import userData from "@/queries/userData";
 import useUpdateUser from "@/mutations/useUpdateUser";
 
-import { View, ScrollView } from "react-native";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Control, useForm } from "react-hook-form";
+import { ScrollView, View } from "react-native";
 import { HealthData, healthSchema } from "@/schemas/personal/health";
 
 import language from "@/language";
@@ -27,11 +28,19 @@ export default function PersonalHealth() {
   const {
     control,
     formState: { isSubmitting },
+    reset,
     handleSubmit,
   } = useForm<HealthData>({
     resolver: zodResolver(healthSchema),
-    defaultValues: user,
   });
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    reset(user);
+  }, [user, reset]);
 
   const handleSave = (data: HealthData) => {
     // If we switch to suspense we can remove this check
@@ -46,9 +55,11 @@ export default function PersonalHealth() {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView style={{ minHeight: "100%" }}>
         <View
           style={{
+            minHeight: "100%",
+
             gap: variables.gap.large,
             padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,

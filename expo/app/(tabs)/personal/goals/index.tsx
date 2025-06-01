@@ -6,11 +6,11 @@ import ButtonOverlay from "@/components/Button/Overlay";
 import useUpdateUser from "@/mutations/useUpdateUser";
 import userData from "@/queries/userData";
 
-import { View, ScrollView } from "react-native";
-import { Fragment } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { View, ScrollView } from "react-native";
+import { Fragment, useEffect } from "react";
 import { Control, useForm } from "react-hook-form";
 import { GoalData, goalSchema } from "@/schemas/personal/goal";
 
@@ -26,14 +26,22 @@ export default function PersonalGoals() {
   const updateUser = useUpdateUser();
 
   const {
+    reset,
     watch,
     handleSubmit,
     control,
     formState: { isSubmitting },
   } = useForm<GoalData>({
     resolver: zodResolver(goalSchema),
-    defaultValues: user,
   });
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    reset(user);
+  }, [user, reset]);
 
   const handleSave = (data: GoalData) => {
     // If we switch to suspense we can remove this check
@@ -46,13 +54,16 @@ export default function PersonalGoals() {
     router.back();
   };
 
+  const macro = watch("macro");
   const calories = watch("calories");
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView style={{ minHeight: "100%" }}>
         <View
           style={{
+            minHeight: "100%",
+
             gap: variables.gap.large,
             padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,
@@ -60,7 +71,7 @@ export default function PersonalGoals() {
         >
           <Header title={language.page.personal.goals.title} />
 
-          {isLoading ? (
+          {isLoading || !macro || !calories ? (
             <PersonalGoalsLoading />
           ) : (
             <PersonalGoalsForm control={control} calories={calories} />
