@@ -32,8 +32,8 @@ export default function HomeMacros({ date }: HomeMacrosProps) {
     <View style={{ gap: variables.gap.normal }}>
       <HomeMacrosProgress
         target={macrosTarget.calories}
-        burned={active || 0}
-        consumed={macrosConsumed.calories}
+        burned={data ? active || 0 : 0}
+        consumed={data ? macrosConsumed.calories : 0}
       />
 
       <View
@@ -47,7 +47,7 @@ export default function HomeMacros({ date }: HomeMacrosProps) {
         <Progress
           color={variables.macros.protein.border}
           label={language.macros.protein.short}
-          value={macrosConsumed.protein}
+          value={data ? macrosConsumed.protein : 0}
           target={macrosTarget.protein}
           style={{ maxWidth: 96 }}
         />
@@ -55,7 +55,7 @@ export default function HomeMacros({ date }: HomeMacrosProps) {
         <Progress
           color={variables.macros.carbs.border}
           label={language.macros.carbs.short}
-          value={macrosConsumed.carbs}
+          value={data ? macrosConsumed.carbs : 0}
           target={macrosTarget.carbs}
           style={{ maxWidth: 96 }}
         />
@@ -63,7 +63,7 @@ export default function HomeMacros({ date }: HomeMacrosProps) {
         <Progress
           color={variables.macros.fats.background}
           label={language.macros.fats.short}
-          value={macrosConsumed.fat}
+          value={data ? macrosConsumed.fat : 0}
           target={macrosTarget.fat}
           style={{ maxWidth: 96 }}
         />
