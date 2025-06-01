@@ -10,7 +10,11 @@ import PageStatsChartsHistoryMacros from "./Macros";
 import PageStatsChartsHistoryWeight from "./Weight";
 import PageStatsSection from "@/components/Page/Stats/Section";
 
+import InputRange from "@/components/Input/Range";
 import variables from "@/variables";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod";
 
 export default function PageStatsChartsHistory() {
   const [open, setOpen] = useState<string | null>("calories");
@@ -23,8 +27,29 @@ export default function PageStatsChartsHistory() {
     setOpen((prev) => (prev === value ? null : value));
   };
 
+  const endDate = new Date();
+  const endDays = endDate.getDate();
+
+  const startDate = new Date();
+
+  startDate.setDate(endDays - 7);
+
+  const { control } = useForm<any>({
+    resolver: zodResolver(
+      z.object({
+        date: z.object({
+          startDate: z.date(),
+          endDate: z.date(),
+        }),
+      })
+    ),
+    defaultValues: { date: { startDate, endDate } },
+  });
+
   return (
     <Fragment>
+      <InputRange name="date" label="Datum" control={control} />
+
       <PageStatsSection
         open={open === "calories"}
         title="Calorieën"
