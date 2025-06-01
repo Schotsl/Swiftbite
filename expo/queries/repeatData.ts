@@ -1,7 +1,7 @@
 import supabase from "@/utils/supabase";
 
 import { Repeat } from "@/types/repeat";
-import { handleError } from "@/helper";
+import { handleError, mapMeal } from "@/helper";
 import { queryOptions } from "@tanstack/react-query";
 
 type RepeatDataProps = {
@@ -28,6 +28,7 @@ export default function repeatData({ uuid }: RepeatDataProps) {
       const mapped = data?.map((repeat) => ({
         ...repeat,
         time: new Date(repeat.time),
+        meal: mapMeal(repeat.meal),
       }));
 
       console.log(`[Query] fetched ${data?.length} repeats`);

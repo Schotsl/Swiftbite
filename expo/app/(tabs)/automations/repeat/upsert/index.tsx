@@ -111,10 +111,17 @@ export default function AutomationsRepeatUpsert() {
     setIsDeleting(false);
   };
 
-  const handleSelect = (product: string) => {
+  const handleProduct = (product: string) => {
     router.push({
       pathname: `/(tabs)/automations/repeat/upsert/product`,
       params: { product },
+    });
+  };
+
+  const handleMeal = (meal: string) => {
+    router.push({
+      pathname: `/(tabs)/automations/repeat/upsert/meal`,
+      params: { meal },
     });
   };
 
@@ -155,7 +162,7 @@ export default function AutomationsRepeatUpsert() {
 
             <View style={{ gap: 12 }}>
               <View>
-                <InputLabel label={language.types.ingredient.single} />
+                <InputLabel label={language.types.item.single} />
 
                 <SwipeListView
                   style={{
@@ -172,8 +179,8 @@ export default function AutomationsRepeatUpsert() {
                         meal={meal}
                         product={product}
                         serving={serving}
-                        onOpen={() => setOpen(true)}
-                        onSelect={handleSelect}
+                        onMeal={handleMeal}
+                        onProduct={handleProduct}
                       />
                     );
                   }}
@@ -208,10 +215,10 @@ export default function AutomationsRepeatUpsert() {
                   title={
                     isSet
                       ? language.modifications.getPick(
-                          language.types.ingredient.single
+                          language.types.item.single
                         )
                       : language.modifications.getEdit(
-                          language.types.ingredient.single
+                          language.types.item.single
                         )
                   }
                   onPress={() => setOpen(true)}
@@ -245,16 +252,16 @@ type AutomationsRepeatUpsertItemProps = {
   meal?: MealWithProduct | null;
   product?: Product | null;
   serving?: ServingData | null;
-  onOpen: () => void;
-  onSelect: (product: string) => void;
+  onMeal: (meal: string) => void;
+  onProduct: (product: string) => void;
 };
 
 function AutomationsRepeatUpsertItem({
   meal,
   product,
   serving,
-  onOpen,
-  onSelect,
+  onMeal,
+  onProduct,
 }: AutomationsRepeatUpsertItemProps) {
   if (meal && serving) {
     return (
@@ -264,7 +271,7 @@ function AutomationsRepeatUpsertItem({
         small={true}
         border={false}
         serving={serving}
-        onSelect={onSelect}
+        onSelect={onMeal}
       />
     );
   }
@@ -277,7 +284,7 @@ function AutomationsRepeatUpsertItem({
         border={false}
         product={product}
         serving={serving}
-        onSelect={onSelect}
+        onSelect={onProduct}
       />
     );
   }
@@ -335,8 +342,8 @@ function AutomationsRepeatUpsertAdd({
           shadow={false}
           title={
             set
-              ? language.modifications.getEdit(language.types.ingredient.single)
-              : language.modifications.getPick(language.types.ingredient.single)
+              ? language.modifications.getEdit(language.types.item.single)
+              : language.modifications.getPick(language.types.item.single)
           }
           onPress={() => onClose()}
         />

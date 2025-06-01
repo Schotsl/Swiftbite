@@ -70,6 +70,10 @@ export default {
     afternoon: "Middag",
   },
   types: {
+    item: {
+      single: "Item",
+      plural: "Items",
+    },
     ingredient: {
       single: "Ingrediënt",
       plural: "Ingrediënten",
