@@ -4,14 +4,14 @@ export const repeatSchema = z.object({
   weekdays: z
     .array(
       z.string({
-        required_error: "Voer een dag in",
-      }),
+        required_error: "Selecteer een dag",
+      })
     )
-    .min(1, "Voer minimaal een dag in")
-    .max(7, "Voer maximaal 7 dagen in"),
+    .min(1, "Selecteer minimaal eén dag")
+    .max(7, "Selecteer maximaal zeven dagen"),
 
   time: z.date({
-    required_error: "Voer een tijdstip in (HH:MM)",
+    required_error: "Selecteer een tijdstip",
   }),
 });
 

@@ -1,8 +1,10 @@
 import { z } from "zod";
 
 export const servingSchema = z.object({
-  option: z.string().min(1, "Please select a serving size"),
-  quantity: z.coerce.number().min(1, "Quantity is required"),
+  option: z.string({ required_error: "Selecteer een portie grootte" }),
+  quantity: z.coerce
+    .number({ required_error: "Voer een portie aantal in" })
+    .gt(0, "Portie aantal moet groter zijn dan 0"),
 });
 
 export type ServingInput = z.infer<typeof servingSchema>;
@@ -11,18 +13,18 @@ export type ServingData = z.infer<typeof servingSchema> & {
 };
 
 export const mealSchema = z.object({
-  title: z.string().min(1, "Title is required"),
+  title: z.string({ required_error: "Voer een titel in" }),
 });
 
 export type MealData = z.infer<typeof mealSchema>;
 
 export const createdSchema = z.object({
-  created_at: z.date({ required_error: "Voer een tijd in" }),
+  created_at: z.date({ required_error: "Voer een datum in" }),
 });
 
 export const estimationSchema = z.object({
-  title: z.string().optional(),
-  content: z.string().optional(),
+  title: z.string({ required_error: "Voer een titel in" }).optional(),
+  content: z.string({ required_error: "Voer een beschrijving in" }).optional(),
 });
 
 export type EstimationData = z.infer<typeof estimationSchema>;

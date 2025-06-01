@@ -4,7 +4,7 @@ export const detailsSchema = z.object({
   birth: z.date({ required_error: "Voer een geboortedatum in" }),
 
   email: z
-    .string({ required_error: "Voer een geldig e-mailadres in" })
+    .string({ required_error: "Voer een e-mailadres in" })
     .email("Voer een geldig e-mailadres in"),
 
   first_name: z

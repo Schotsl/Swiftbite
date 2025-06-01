@@ -2,8 +2,8 @@ import { z } from "zod";
 
 export const statsSchema = z.object({
   date: z.object({
-    end: z.date(),
-    start: z.date(),
+    end: z.date({ required_error: "Selecteer een einddatum" }),
+    start: z.date({ required_error: "Selecteer een startdatum" }),
   }),
 });
 
