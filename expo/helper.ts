@@ -404,4 +404,6 @@ export const getLabel = (value: string) => {
   } else if (value === "ml") {
     return "mL";
   }
+
+  return value;
 };
