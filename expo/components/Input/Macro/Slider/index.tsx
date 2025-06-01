@@ -6,6 +6,7 @@ import Slider from "@react-native-community/slider";
 import TextSmall from "@/components/Text/Small";
 
 import variables from "@/variables";
+import language from "@/language";
 
 type InputMacroSliderProps = {
   type: "carbs" | "protein" | "fat";
@@ -71,7 +72,9 @@ export default function InputMacroSlider({
       >
         <TextSmall weight="semibold">{percentageRounded}%</TextSmall>
 
-        <TextSmall>{grams} g</TextSmall>
+        <TextSmall>
+          {grams} {language.measurement.units.gram.short}
+        </TextSmall>
       </View>
     </View>
   );

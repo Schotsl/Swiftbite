@@ -1,3 +1,5 @@
+import { getLabel } from "@/helper";
+
 export default {
   days: {
     today: "Vandaag",
@@ -11,6 +13,11 @@ export default {
     },
     getPast: (days: number) => {
       return `${days} dagen geleden`;
+    },
+  },
+  item: {
+    repeat: {
+      subtitle: (days: string) => `Herhaald elke ${days}`,
     },
   },
   weekdays: {
@@ -33,20 +40,33 @@ export default {
     fats: {
       long: "Vetten",
       short: "Vetten",
-      explanation:
-        "Langzame energiebron die hormonen en vitamine­opname ondersteunt. Komt uit onder andere avocado, noten en olijfolie",
+      explanation: `Langzame energiebron die hormonen en vitamine­opname ondersteunt. Komt uit onder andere avocado, noten en olijfolie`,
     },
     carbs: {
-      long: "Carbs",
+      long: "Koolhydraten",
       short: "Carbs",
-      explanation:
-        "Snelle brandstof voor spieren en hersenen. Handig vóór of tijdens inspanning, te vinden in brood, fruit en rijst",
+      explanation: `Snelle brandstof voor spieren en hersenen. Handig vóór of tijdens inspanning, te vinden in brood, fruit en rijst`,
     },
     protein: {
       long: "Eiwitten",
       short: "Eiwitten",
-      explanation:
-        "Bouwstenen voor spierherstel en -groei en houden je langer verzadigd. Komt uit yoghurt, peulvruchten, vlees en vis",
+      explanation: `Bouwstenen voor spierherstel en -groei en houden je langer verzadigd. Komt uit yoghurt, peulvruchten, vlees en vis`,
+    },
+    nutrients: {
+      fats: {
+        trans: "Transvet",
+        saturated: "Verzadigd vet",
+        unsaturated: "Onverzadigd vet",
+      },
+      carbs: {
+        sugar: "Suiker",
+        fiber: "Vezels",
+      },
+      salt: "Zout",
+      iron: "IJzer",
+      calcium: "Calcium",
+      potassium: "Kalium",
+      cholesterol: "Cholesterol",
     },
     button: "Macro's wijzigen",
   },
@@ -64,10 +84,50 @@ export default {
     },
   },
   time: {
-    night: "Nacht",
-    evening: "Avond",
-    morning: "Ochtend",
-    afternoon: "Middag",
+    night: {
+      label: "Nacht",
+      range: "21:00 - 06:00",
+    },
+    morning: {
+      label: "Ochtend",
+      range: "06:00 - 12:00",
+    },
+    afternoon: {
+      label: "Middag",
+      range: "12:00 - 17:00",
+    },
+    evening: {
+      label: "Avond",
+      range: "17:00 - 21:00",
+    },
+  },
+  components: {
+    divider: {
+      or: "Of",
+    },
+    product: {
+      manual: "Handmatige inschatting",
+      unknown: "Onbekend merk",
+      analyzing: "Wordt geanalyseerd...",
+      automatic: "Automatische inschatting",
+    },
+    // I've combined the impact and nutrition components since they share a lot of the same text.
+    information: {
+      impact: "Impact op je budget",
+      per100g: "Per 100g",
+      nutrition: "Voedingswaarde",
+      processing: {
+        primary: `We zijn de voedingswaarden van dit product online aan het controleren.`,
+        secondary: `Dit kan tot een minuut duren, maar voel je vrij om het product alvast aan je logs toe te voegen.`,
+      },
+      which: {
+        sugars: "Waarvan suikers",
+        saturated: "Waarvan verzadigd vet",
+        unsaturated: "Waarvan onverzadigd vet",
+      },
+
+      getServing: (value: number) => `Per ${value}g`,
+    },
   },
   types: {
     item: {
@@ -124,6 +184,16 @@ export default {
       weight: "lbs",
       distance: "in",
     },
+    units: {
+      gram: {
+        short: "g",
+        long: "gram",
+      },
+      milligram: {
+        short: "mg",
+        long: "milligram",
+      },
+    },
   },
   input: {
     optional: "optioneel",
@@ -132,8 +202,98 @@ export default {
       empty: "Je hebt nog geen gewicht aan je account toegevoegd",
       button: "Gewicht opslaan",
     },
+    email: {
+      title: "E-mail",
+      placeholder: "johndoe@example.com",
+    },
+    password: {
+      title: "Wachtwoord",
+      placeholder: "********",
+    },
+    time: {
+      title: "Tijd",
+      group: "Overige informatie",
+    },
+    description: {
+      title: "Beschrijving",
+    },
+    image: {
+      title: "Afbeelding",
+      empty: "Geen afbeelding",
+    },
+    range: {
+      title: "Datum range",
+    },
+    serving: {
+      group: "Portie",
+      size: {
+        title: "Portie grote",
+        placeholder: "Selecteer een portie grote",
+      },
+      amount: {
+        title: "Portie aantal",
+        placeholder: "Hoeveel porties heb je gegeten?",
+      },
+    },
+  },
+  alert: {
+    closed: {
+      title: "Helaas",
+      subtitle: "We staan momenteel niet open voor nieuwe accounts",
+    },
+    processing: {
+      title: "Even wachten",
+      subtitle: "We zijn dit product nog aan het analyseren",
+    },
+    development: {
+      title: "Onze excuses",
+      subtitle: "Deze functionaliteit is nog niet beschikbaar",
+    },
+    permission: {
+      title: "Toegang verleend",
+      subtitle: "Je hebt geen toegang verleend voor de camera",
+    },
+    barcode: {
+      empty: {
+        title: "Geen barcode gevonden",
+        subtitle: "We hebben geen barcode in deze afbeelding gevonden.",
+      },
+      multiple: {
+        title: "Meerdere barcodes gevonden",
+        subtitle: `We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één.`,
+      },
+    },
+  },
+  estimation: {
+    dateRange: {
+      to: "t/m",
+    },
+  },
+  options: {
+    getMeal: (value: number, label: string) =>
+      `Standaardmaaltijd (${value} ${getLabel(label)})`,
+
+    getQuantity: (value: number, label: string) =>
+      `Productinhoud (${value} ${getLabel(label)})`,
+
+    getServing: (value: number, label: string) =>
+      `Portiegrootte (${value} ${getLabel(label)})`,
+
+    getOption: (title: string, value: number, label: string) =>
+      `${title} (${value} ${getLabel(label)})`,
+  },
+  misc: {
+    separator: "/",
+  },
+  validation: {
+    titleRequiredNoImage:
+      "Een titel is verplicht als er geen afbeelding is geselecteerd",
   },
   page: {
+    add: {
+      title: "Logs",
+      empty: "Op dit moment heb je nog geen logs toegevoegd aan deze dag",
+    },
     camera: {
       options: {
         label: "Voedingslabel",
@@ -141,9 +301,105 @@ export default {
         estimation: "Inschatting",
       },
     },
+    signIn: {
+      title: "Inloggen",
+      forgot: "Wachtwoord vergeten?",
+      login: {
+        login: "Inloggen",
+        apple: "Inloggen met Apple",
+      },
+      error: {
+        apple: "Failed to sign in with Apple",
+      },
+      register: {
+        button: "Registreren",
+        question: "Nog geen account? ",
+      },
+    },
     stats: {
-      empty:
-        "Deze pagina is nog in ontwikkeling, we zien je later graag terug!",
+      empty: `Deze pagina is nog in ontwikkeling, we zien je later graag terug!`,
+      charts: {
+        history: {
+          title: "Geschiedenis",
+          calories: {
+            title: "Calorieën",
+            calories: {
+              in: "Calorieën in",
+              out: "Calorieën uit",
+              title: "Calorieën in versus uit",
+              content: `Deze grafiek vergelijkt direct hoeveel calorieën je op een dag consumeert met hoeveel je er verbrandt`,
+            },
+            balance: {
+              title: "Netto calorietrend",
+              content: `Deze grafiek toont de ontwikkeling van je dagelijkse calorieoverschot of -tekort over een gekozen periode`,
+              deficit: "Tekort",
+              surplus: "Overschot",
+            },
+          },
+          macros: {
+            title: "Macronutriënten",
+            macros: {
+              title: "Verdeling van macronutriënten",
+              content: `Deze grafiek toont de verdeling van geconsumeerde eiwitten, koolhydraten en vetten`,
+            },
+          },
+          weight: {
+            title: "Gewicht",
+            weight: {
+              title: "Calorietrend versus gewicht",
+              content: `Deze grafiek toont de calorie-inname op de lange termijn in relatie tot de gewichtsontwikkeling`,
+            },
+          },
+        },
+        pattern: {
+          title: "Patronen",
+          calories: {
+            title: "Calorieën",
+            weekly: {
+              title: "Wekelijkse calorieën",
+              content: `Deze grafiek toont uw gemiddelde calorie-inname per weekdag`,
+            },
+            daily: {
+              title: "Dagelijkse calorieën",
+              content: `Deze grafiek toont uw gemiddelde calorie-inname verspreid over de dag`,
+            },
+          },
+          macros: {
+            title: "Macronutriënten",
+            weekly: {
+              title: "Wekelijkse macronutriënten",
+              content: `Deze grafiek toont uw gemiddelde macronutriënten-inname per weekdag`,
+            },
+            daily: {
+              title: "Dagelijkse macronutriënten",
+              content: `Deze grafiek toont uw gemiddelde macronutriënten-inname verspreid over de dag`,
+            },
+          },
+        },
+      },
+    },
+    estimation: {
+      manual: {
+        tab: "Handmatig",
+        title: "Handmatig inschatten",
+        description: `Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product`,
+      },
+      automatic: {
+        tab: "Automatisch",
+        title: "Automatisch inschatten",
+        description: `Dit is een AI-inschatting van de calorieën en macro's van je maaltijd. Controleer het resultaat en pas het zo nodig aan op het volgende scherm.`,
+      },
+      input: {
+        title: {
+          title: "Titel",
+          placeholder: "Wrap",
+        },
+        content: {
+          title: "Beschrijving",
+          content: `Informatie die niet makkelijk uit de foto te halen is, is relevant, zoals bijvoorbeeld de inhoud van een wrap.`,
+          placeholder: "Een wrap met kip, sla, tomaat, avocado...",
+        },
+      },
     },
     personal: {
       getSubtitle: (count: number) => {
@@ -252,17 +508,22 @@ export default {
     pick: "kiezen",
     save: "opslaan",
     edit: "bewerken",
+
+    repeat: "herhaal",
     cancel: "annuleren",
     insert: "toevoegen",
     delete: "verwijderen",
+    duplicate: "dupliceer",
 
     uppercase: {
       pick: "Kiezen",
       save: "Opslaan",
       edit: "Bewerken",
+      repeat: "Herhaal",
       cancel: "Annuleren",
       insert: "Toevoegen",
       delete: "Verwijderen",
+      duplicate: "Dupliceer",
     },
 
     getPick: (type: string) => {
@@ -292,11 +553,30 @@ export default {
       return `Je hebt nog geen ${type.toLowerCase()} geselecteerd`;
     },
   },
+  barcode: {
+    actions: {
+      add: "Product zelf toevoegen",
+      label: "Voedingslabel scannen",
+      manual: "Product zelf zoeken",
+      barcode: "Barcode online zoeken",
+    },
+    alert: {
+      barcode: {
+        title: "Product niet gevonden",
+        subtitle:
+          "We hebben het product niet gevonden, maar we kunnen de barcode online proberen te zoeken",
+      },
+      search: {
+        title: "Product niet gevonden",
+        subtitle: `We hebben het product ook niet online gevonden. Wat wil je doen?`,
+      },
+    },
+  },
   search: {
     explanation: {
-      meal: `Maaltijden zijn samengestelde combinaties van producten of basisitems, zoals een “Caesarsalade”`,
-      basic: `Basisitems zijn merkloze, algemene items zoals “Banaan” of “Broodje pulled chicken met coleslaw”`,
-      product: `Producten zijn merkartikelen, zoals “Coca-Cola Zero”, die altijd naar een exact merk en smaak verwijzen`,
+      meal: `Maaltijden zijn samengestelde combinaties van producten of basisitems, zoals een "Caesarsalade"`,
+      basic: `Basisitems zijn merkloze, algemene items zoals "Banaan" of "Broodje pulled chicken met coleslaw"`,
+      product: `Producten zijn merkartikelen, zoals "Coca-Cola Zero", die altijd naar een exact merk en smaak verwijzen`,
     },
     results: {
       overloaded: "Je hebt je dagelijkse zoek limiet overschreden",
@@ -315,6 +595,9 @@ export default {
       },
       getLoading: (type: string) => {
         return `We zijn het hele internet aan het zoeken naar ${type.toLowerCase()}`;
+      },
+      getPlaceholder: (type: string) => {
+        return `Zoek naar een ${type.toLowerCase()}...`;
       },
     },
     favorite: {

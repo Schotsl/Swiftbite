@@ -82,7 +82,7 @@ export default function PageStatsChartsPatternMacrosWeekly({
 
   const getMax = () => {
     const maxSummed = data.map(({ stacks }) =>
-      stacks.reduce((sum, { value }) => sum + value, 0),
+      stacks.reduce((sum, { value }) => sum + value, 0)
     );
 
     const maxValue = Math.max(...maxSummed);
@@ -94,7 +94,7 @@ export default function PageStatsChartsPatternMacrosWeekly({
   return (
     <View style={{ paddingTop: 16, paddingBottom: 16, overflow: "hidden" }}>
       <PageStatsChartsHeader
-        title="gram"
+        title={language.measurement.units.gram.long}
         options={[
           {
             label: language.macros.fats.short,

@@ -7,6 +7,7 @@ import { ServingData } from "@/schemas/serving";
 import { ManualData, manualSchema } from "@/schemas/insert/manual";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import Input from "@/components/Input";
 import Header from "@/components/Header";
@@ -120,11 +121,9 @@ export default function PageEstimationManual({
           }}
         >
           <Header
-            title={product?.title || "Handmatig inschatten"}
+            title={product?.title || language.page.estimation.manual.title}
             content={
-              product
-                ? undefined
-                : "Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product"
+              product ? undefined : language.page.estimation.manual.description
             }
             onDelete={onDelete}
             onRepeat={onRepeat && (() => onRepeat(serving))}
@@ -132,9 +131,9 @@ export default function PageEstimationManual({
 
           <Input
             name="title"
-            label="Titel"
+            label={language.page.estimation.input.title.title}
             control={control}
-            placeholder="Wrap"
+            placeholder={language.page.estimation.input.title.placeholder}
           />
 
           <View style={{ gap: 24 }}>
@@ -144,8 +143,8 @@ export default function PageEstimationManual({
                   type="number-pad"
                   name="calorie_100g"
                   style={{ flex: 1 }}
-                  label="Calorieën"
-                  suffix="kcal"
+                  label={language.macros.calories.long}
+                  suffix={language.macros.calories.short}
                   control={control}
                   placeholder="0"
                 />
@@ -154,8 +153,8 @@ export default function PageEstimationManual({
                   type="number-pad"
                   name="protein_100g"
                   style={{ flex: 1 }}
-                  label="Eiwit"
-                  suffix="gram"
+                  label={language.macros.protein.long}
+                  suffix={language.measurement.units.gram.long}
                   control={control}
                   placeholder="0"
                 />
@@ -166,8 +165,8 @@ export default function PageEstimationManual({
                   type="number-pad"
                   name="carbohydrate_100g"
                   style={{ flex: 1 }}
-                  label="Koolhydraten"
-                  suffix="gram"
+                  label={language.macros.carbs.long}
+                  suffix={language.measurement.units.gram.long}
                   control={control}
                   placeholder="0"
                 />
@@ -176,8 +175,8 @@ export default function PageEstimationManual({
                   type="number-pad"
                   name="fat_100g"
                   style={{ flex: 1 }}
-                  label="Vetten"
-                  suffix="gram"
+                  label={language.macros.fats.long}
+                  suffix={language.measurement.units.gram.long}
                   control={control}
                   placeholder="0"
                 />
@@ -190,8 +189,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="fat_saturated_100g"
-                label="Verzadigd vet"
-                suffix="gram"
+                label={language.macros.nutrients.fats.saturated}
+                suffix={language.measurement.units.gram.long}
                 control={control}
                 placeholder="0"
               />
@@ -199,8 +198,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="fat_unsaturated_100g"
-                label="Onverzadigd vet"
-                suffix="gram"
+                label={language.macros.nutrients.fats.unsaturated}
+                suffix={language.measurement.units.gram.long}
                 control={control}
                 placeholder="0"
               />
@@ -208,8 +207,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="fat_trans_100g"
-                label="Transvet"
-                suffix="gram"
+                label={language.macros.nutrients.fats.trans}
+                suffix={language.measurement.units.gram.long}
                 control={control}
                 placeholder="0"
               />
@@ -217,8 +216,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="carbohydrate_sugar_100g"
-                label="Suiker"
-                suffix="gram"
+                label={language.macros.nutrients.carbs.sugar}
+                suffix={language.measurement.units.gram.long}
                 control={control}
                 placeholder="0"
               />
@@ -226,8 +225,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="fiber_100g"
-                label="Vezels"
-                suffix="gram"
+                label={language.macros.nutrients.carbs.fiber}
+                suffix={language.measurement.units.gram.long}
                 control={control}
                 placeholder="0"
               />
@@ -235,8 +234,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="sodium_100g"
-                label="Zout"
-                suffix="gram"
+                label={language.macros.nutrients.salt}
+                suffix={language.measurement.units.gram.long}
                 control={control}
                 placeholder="0"
               />
@@ -244,8 +243,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="iron_100g"
-                label="IJzer"
-                suffix="mg"
+                label={language.macros.nutrients.iron}
+                suffix={language.measurement.units.milligram.long}
                 control={control}
                 placeholder="0"
               />
@@ -253,8 +252,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="potassium_100g"
-                label="Kalium"
-                suffix="gram"
+                label={language.macros.nutrients.potassium}
+                suffix={language.measurement.units.gram.long}
                 control={control}
                 placeholder="0"
               />
@@ -262,8 +261,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="calcium_100g"
-                label="Calcium"
-                suffix="gram"
+                label={language.macros.nutrients.calcium}
+                suffix={language.measurement.units.gram.long}
                 control={control}
                 placeholder="0"
               />
@@ -271,8 +270,8 @@ export default function PageEstimationManual({
               <Input
                 type="number-pad"
                 name="cholesterol_100g"
-                label="Cholesterol"
-                suffix="mg"
+                label={language.macros.nutrients.cholesterol}
+                suffix={language.measurement.units.milligram.long}
                 control={control}
                 placeholder="0"
               />
@@ -281,9 +280,13 @@ export default function PageEstimationManual({
 
           {createdVisible && (
             <View style={{ gap: variables.gap.small }}>
-              <TextBody weight="semibold">Overige informatie</TextBody>
+              <TextBody weight="semibold">{language.input.time.group}</TextBody>
 
-              <InputTime name="created_at" label="Tijd" control={control} />
+              <InputTime
+                name="created_at"
+                label={language.input.time.title}
+                control={control}
+              />
             </View>
           )}
         </View>
@@ -291,7 +294,11 @@ export default function PageEstimationManual({
 
       <ButtonOverlay
         tab={!product}
-        title={product ? "Inschatting wijzigen" : "Inschatting opslaan"}
+        title={
+          product
+            ? language.modifications.getEdit(language.types.estimation.single)
+            : language.modifications.getSave(language.types.estimation.single)
+        }
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}

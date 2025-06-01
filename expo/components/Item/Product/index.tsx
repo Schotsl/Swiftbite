@@ -1,10 +1,12 @@
 import Item from "@/components/Item";
 import ItemSkeleton from "../Skeleton";
 
+import language from "@/language";
+
+import { Alert } from "react-native";
 import { Product } from "@/types/product";
 import { ServingData } from "@/schemas/serving";
-import { displayQuantity, getMacrosFromProduct } from "@/helper";
-import { Alert } from "react-native";
+import { getMacrosFromProduct, getLabel } from "@/helper";
 
 type ItemProductProps = {
   icon?: boolean;
@@ -55,13 +57,10 @@ export default function ItemProduct({
     const subtitle = processing ? product.search.brand : product.brand;
     const stringified = processing
       ? search.quantity_original && search.quantity_original_unit
-        ? displayQuantity({
-            quantity: search.quantity_original,
-            option: search.quantity_original_unit,
-          })
+        ? `${search.quantity_original} ${getLabel(search.quantity_original_unit!)}`
         : null
       : quantity && quantity.quantity
-        ? displayQuantity(quantity)
+        ? `${quantity.quantity} ${getLabel(quantity.option)}`
         : null;
 
     return (
@@ -89,14 +88,14 @@ export default function ItemProduct({
 
     const subtitleIcon = processing ? "spinner" : "wand-magic-sparkles";
     const subtitle = processing
-      ? "Wordt geanalyseerd..."
-      : "Automatische inschatting";
+      ? language.components.product.analyzing
+      : language.components.product.automatic;
 
     const handlePress = () => {
       if (processing) {
         Alert.alert(
-          "Even wachten",
-          "We zijn dit product nog aan het analyseren",
+          language.alert.processing.title,
+          language.alert.processing.subtitle
         );
 
         return;
@@ -126,7 +125,7 @@ export default function ItemProduct({
         {...props}
         iconId={icon}
         title={product.title}
-        subtitle={"Handmatige inschatting"}
+        subtitle={language.components.product.manual}
         subtitleIcon="wand-magic-sparkles"
         rightTop={overwriteTop}
         onPress={() => onSelect(product.uuid)}
@@ -136,7 +135,7 @@ export default function ItemProduct({
 
   if (product.type === "barcode") {
     const title = product.title;
-    const subtitle = product.brand || "Onbekend merk";
+    const subtitle = product.brand || language.components.product.unknown;
     return (
       <Item
         {...props}
@@ -151,12 +150,5 @@ export default function ItemProduct({
     );
   }
 
-  return (
-    <Item
-      {...props}
-      title={"Undefined state"}
-      subtitle="Undefined state"
-      onPress={() => {}}
-    />
-  );
+  throw new Error("Unknown product type");
 }

@@ -17,6 +17,7 @@ import {
 
 import supabase from "@/utils/supabase";
 import variables from "@/variables";
+import language from "@/language";
 
 import useInsertProduct from "@/mutations/useInsertProduct";
 import useInsertGenerative from "@/mutations/useInsertGenerative";
@@ -31,7 +32,7 @@ type PageEstimationAutomaticProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
@@ -110,7 +111,7 @@ export default function PageEstimationAutomatic({
     if (!data.title || data.title.trim() === "") {
       setError("title", {
         type: "manual",
-        message: `Een titel is verplicht als er geen afbeelding is geselecteerd`,
+        message: language.validation.titleRequiredNoImage,
       });
 
       return false;
@@ -227,8 +228,8 @@ export default function PageEstimationAutomatic({
           }}
         >
           <Header
-            title="Automatisch inschatten"
-            content="Dit is een AI-inschatting van de calorieën en macro's van je maaltijd. Controleer het resultaat en pas het zo nodig aan op het volgende scherm."
+            title={language.page.estimation.automatic.title}
+            content={language.page.estimation.automatic.description}
           />
 
           <View style={{ gap: 24 }}>
@@ -243,17 +244,17 @@ export default function PageEstimationAutomatic({
 
             <Input
               name="title"
-              label="Titel"
+              label={language.page.estimation.input.title.title}
               required={!image}
-              placeholder="Wrap"
+              placeholder={language.page.estimation.input.title.placeholder}
               control={control}
             />
 
             <Input
               name="content"
-              label="Beschrijving"
-              content="Informatie die niet makkelijk uit de foto te halen is, is relevant, zoals bijvoorbeeld de inhoud van een wrap."
-              placeholder="Een wrap met kip, sla, tomaat, avocado..."
+              label={language.page.estimation.input.content.title}
+              content={language.page.estimation.input.content.content}
+              placeholder={language.page.estimation.input.content.placeholder}
               control={control}
               required={false}
               multiline
@@ -263,9 +264,8 @@ export default function PageEstimationAutomatic({
       </ScrollView>
 
       <ButtonOverlay
-        // TODO: Language
         tab={tab}
-        title="Product opslaan"
+        title={language.modifications.getSave(language.types.estimation.single)}
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}

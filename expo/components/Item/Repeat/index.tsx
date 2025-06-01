@@ -24,8 +24,10 @@ export default function ItemRepeat({ item, onSelect }: RepeatRepeatProps) {
 
   const { product, meal, serving } = item;
 
-  // We can enforce this type since estimations aren't allowed for meals
-  const title = product ? product.title! : meal.title;
+  const title = product
+    ? product.title || language.components.product.unknown
+    : meal.title;
+
   const macros = product
     ? getMacrosFromProduct(product, serving)
     : getMacrosFromMeal(meal, serving);
@@ -33,11 +35,18 @@ export default function ItemRepeat({ item, onSelect }: RepeatRepeatProps) {
   return (
     <Item
       title={title}
-      // TODO: languages
-      subtitle={`Herhaald elke ${translationsJoined}`}
+      subtitle={language.item.repeat.subtitle(translationsJoined)}
       subtitleIcon="repeat"
-      rightTop={macros.calories ? `${macros.calories} kcal` : null}
-      rightBottom={macros.gram ? `${macros.gram} g` : null}
+      rightTop={
+        macros.calories
+          ? `${macros.calories} ${language.macros.calories.short}`
+          : null
+      }
+      rightBottom={
+        macros.gram
+          ? `${macros.gram} ${language.measurement.units.gram.short}`
+          : null
+      }
       onPress={() => onSelect(item.uuid)}
     />
   );

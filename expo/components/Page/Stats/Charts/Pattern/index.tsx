@@ -16,6 +16,7 @@ import PageStatsChartsPatternCaloriesWeekly from "./Calories/Weekly";
 import InputRange from "@/components/Input/Range";
 
 import variables from "@/variables";
+import language from "@/language";
 
 type PageStatsChartsPatternProps = {
   control: Control<StatsData>;
@@ -36,18 +37,20 @@ export default function PageStatsChartsPattern({
 
   return (
     <View style={{ gap: 32 }}>
-      <TextTitle>Patronen</TextTitle>
+      <TextTitle>{language.page.stats.charts.pattern.title}</TextTitle>
 
       <View style={{ gap: 24 }}>
         <PageStatsSection
           open={open === "calories"}
-          title="Calorieën"
+          title={language.macros.calories.long}
           onToggle={() => handleToggle("calories")}
         >
           <View style={{ gap: 8 }}>
-            <TextLarge weight="semibold">Wekelijkse calorieën</TextLarge>
+            <TextLarge weight="semibold">
+              {language.page.stats.charts.pattern.calories.weekly.title}
+            </TextLarge>
             <TextSmall>
-              Deze grafiek toont uw gemiddelde calorie-inname per weekdag
+              {language.page.stats.charts.pattern.calories.weekly.content}
             </TextSmall>
 
             <PageStatsChartsPatternCaloriesWeekly
@@ -57,10 +60,11 @@ export default function PageStatsChartsPattern({
           </View>
 
           <View style={{ gap: 8 }}>
-            <TextLarge weight="semibold">Dagelijkse calorieën</TextLarge>
+            <TextLarge weight="semibold">
+              {language.page.stats.charts.pattern.calories.daily.title}
+            </TextLarge>
             <TextSmall>
-              Deze grafiek toont uw gemiddelde calorie-inname verspreid over de
-              dagG
+              {language.page.stats.charts.pattern.calories.daily.content}
             </TextSmall>
 
             <PageStatsChartsPatternCaloriesDaily
@@ -75,14 +79,15 @@ export default function PageStatsChartsPattern({
 
         <PageStatsSection
           open={open === "macros"}
-          title="Macronutriënten"
+          title={language.page.stats.charts.pattern.macros.title}
           onToggle={() => handleToggle("macros")}
         >
           <View style={{ gap: 8 }}>
-            <TextLarge weight="semibold">Wekelijkse macronutriënten</TextLarge>
+            <TextLarge weight="semibold">
+              {language.page.stats.charts.pattern.macros.weekly.title}
+            </TextLarge>
             <TextSmall>
-              Deze grafiek toont uw gemiddelde macronutriënten-inname per
-              weekdag
+              {language.page.stats.charts.pattern.macros.weekly.content}
             </TextSmall>
 
             <PageStatsChartsPatternMacrosWeekly
@@ -100,10 +105,11 @@ export default function PageStatsChartsPattern({
           </View>
 
           <View style={{ gap: 8 }}>
-            <TextLarge weight="semibold">Dagelijkse macronutriënten</TextLarge>
+            <TextLarge weight="semibold">
+              {language.page.stats.charts.pattern.macros.daily.title}
+            </TextLarge>
             <TextSmall>
-              Deze grafiek toont uw gemiddelde macronutriënten-inname verspreid
-              over de dag
+              {language.page.stats.charts.pattern.macros.daily.content}
             </TextSmall>
 
             <PageStatsChartsPatternMacrosDaily
@@ -138,7 +144,11 @@ export default function PageStatsChartsPattern({
           </View>
         </PageStatsSection>
 
-        <InputRange name="date" label="Datum range" control={control} />
+        <InputRange
+          name="date"
+          label={language.input.range.title}
+          control={control}
+        />
       </View>
     </View>
   );

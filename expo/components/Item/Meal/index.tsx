@@ -43,8 +43,16 @@ export default function ItemMeal({
       iconId={icon ? meal.icon_id : undefined}
       subtitle={language.types.ingredient.getCount(length)}
       subtitleIcon="bowl-food"
-      rightTop={macros.calories ? `${macros.calories} kcal` : null}
-      rightBottom={macros.gram ? `${macros.gram} g` : null}
+      rightTop={
+        macros.calories
+          ? `${macros.calories} ${language.macros.calories.short}`
+          : null
+      }
+      rightBottom={
+        macros.gram
+          ? `${macros.gram} ${language.measurement.units.gram.short}`
+          : null
+      }
       onPress={() => onSelect(meal.uuid)}
     />
   );

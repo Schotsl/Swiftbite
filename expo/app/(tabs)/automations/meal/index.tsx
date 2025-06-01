@@ -64,10 +64,9 @@ function AutomationsMealList({ onSelect }: AutomationsMealListProps) {
   };
 
   const handleDuplicate = () => {
-    // TODO: language
     Alert.alert(
-      "Dupliceer",
-      "Deze functionaliteit is helaas nog niet beschikbaar.",
+      language.alert.development.title,
+      language.alert.development.subtitle
     );
   };
 

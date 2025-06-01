@@ -2,6 +2,8 @@ import Tabs from "@/components/Tabs";
 import PageEstimationManual from "./Manual";
 import PageEstimationAutomatic from "./Automatic";
 
+import language from "@/language";
+
 import { View } from "react-native";
 import { Image } from "@/types";
 import { Product } from "@/types/product";
@@ -17,7 +19,7 @@ type PageEstimationProps = {
   onSave: (
     product: Product,
     serving: ServingData | null,
-    created: Date,
+    created: Date
   ) => void;
 };
 
@@ -39,11 +41,11 @@ export default function PageEstimation({
         <Tabs
           tabs={[
             {
-              title: "Automatisch",
+              title: language.page.estimation.automatic.tab,
               value: "automatic",
             },
             {
-              title: "Handmatig",
+              title: language.page.estimation.manual.tab,
               value: "manual",
             },
           ]}

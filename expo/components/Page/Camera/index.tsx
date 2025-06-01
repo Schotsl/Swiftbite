@@ -33,6 +33,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 
 import variables from "@/variables";
+import language from "@/language";
 
 type PageCameraProps = {
   initial?: CameraSelected;
@@ -75,8 +76,10 @@ export default function PageCamera({
 
   async function handleImage() {
     if (isBarcode) {
-      // TODO: language
-      Alert.alert("We hebben geen barcode in deze afbeelding gevonden.");
+      Alert.alert(
+        language.alert.barcode.empty.title,
+        language.alert.barcode.empty.subtitle
+      );
 
       return;
     }
@@ -139,7 +142,10 @@ export default function PageCamera({
       const barcode = detected[0]?.rawValue;
 
       if (!barcode) {
-        Alert.alert("We hebben geen barcode in deze afbeelding gevonden.");
+        Alert.alert(
+          language.alert.barcode.empty.title,
+          language.alert.barcode.empty.subtitle
+        );
 
         return;
       }
@@ -175,7 +181,7 @@ export default function PageCamera({
       base64: string,
       width: number,
       height: number,
-      orientation: number,
+      orientation: number
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -198,7 +204,7 @@ export default function PageCamera({
         newHeight,
         "JPEG",
         50,
-        orientation,
+        orientation
       );
 
       sendImage(data.uri);
@@ -210,7 +216,7 @@ export default function PageCamera({
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    [],
+    []
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -242,7 +248,8 @@ export default function PageCamera({
     onCodeScanned: (codes) => {
       if (codes.length > 1) {
         Alert.alert(
-          "We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één.",
+          language.alert.barcode.multiple.title,
+          language.alert.barcode.multiple.subtitle
         );
 
         return;

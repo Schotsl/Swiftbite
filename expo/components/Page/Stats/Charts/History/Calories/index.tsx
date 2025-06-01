@@ -4,6 +4,7 @@ import { transformDate } from "@/helper";
 import { BarChartPropsType, BarChart } from "react-native-gifted-charts";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import PageStatsChartsHeader from "@/components/Page/Stats/Charts/Header";
 
@@ -85,14 +86,14 @@ export default function PageStatsChartsHistoryCalories({
   return (
     <View style={{ paddingTop: 16, paddingBottom: 32, overflow: "hidden" }}>
       <PageStatsChartsHeader
-        title="kcal"
+        title={language.macros.calories.short}
         options={[
           {
-            label: "Calorieën uit",
+            label: language.page.stats.charts.history.calories.calories.out,
             color: variables.macros.protein.background,
           },
           {
-            label: "Calorieën in",
+            label: language.page.stats.charts.history.calories.calories.in,
             color: variables.macros.carbs.background,
           },
         ]}

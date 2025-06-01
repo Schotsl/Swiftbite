@@ -94,18 +94,18 @@ export default function PageStatsChartsPatternMacrosDaily({
   return (
     <View style={{ paddingTop: 16, paddingBottom: 16, overflow: "hidden" }}>
       <PageStatsChartsHeader
-        title="gram"
+        title={language.measurement.units.gram.long}
         options={[
           {
-            label: language.macros.fats.long,
+            label: language.macros.fats.short,
             color: variables.macros.fats.background,
           },
           {
-            label: language.macros.carbs.long,
+            label: language.macros.carbs.short,
             color: variables.macros.carbs.background,
           },
           {
-            label: language.macros.protein.long,
+            label: language.macros.protein.short,
             color: variables.macros.protein.background,
           },
         ]}

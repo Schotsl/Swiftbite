@@ -6,6 +6,7 @@ import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
 import { View, TouchableOpacity, ActivityIndicator } from "react-native";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import TextBody from "@/components/Text/Body";
 import TextSmall from "@/components/Text/Small";
@@ -46,44 +47,53 @@ export default function ProductNutrition({
 
   const items = [
     {
-      name: "Calorieën",
+      name: language.macros.calories.long,
       value: macrosAdjusted.calories,
+      unit: language.macros.calories.short,
     },
     {
-      name: "Eiwitten",
+      name: language.macros.protein.long,
       value: macrosAdjusted.protein,
+      unit: language.measurement.units.gram.long,
     },
     {
-      name: "Vetten",
+      name: language.macros.fats.long,
       value: macrosAdjusted.fat,
+      unit: language.measurement.units.gram.long,
       items: [
         {
-          name: "Waarvan verzadigd vet",
+          name: language.components.information.which.saturated,
           value: macrosAdjusted.fatSaturated,
+          unit: language.measurement.units.gram.long,
         },
         {
-          name: "Waarvan onverzadigd vet",
+          name: language.components.information.which.unsaturated,
           value: macrosAdjusted.fatUnsaturated,
+          unit: language.measurement.units.gram.long,
         },
       ],
     },
     {
-      name: "Koolhydraten",
+      name: language.macros.carbs.long,
       value: macrosAdjusted.carbs,
+      unit: language.measurement.units.gram.long,
       items: [
         {
-          name: "Waarvan suikers",
+          name: language.components.information.which.sugars,
           value: macrosAdjusted.carbsSugars,
+          unit: language.measurement.units.gram.long,
         },
       ],
     },
     {
-      name: "Vezels",
+      name: language.macros.nutrients.carbs.fiber,
       value: macrosAdjusted.fiber,
+      unit: language.measurement.units.gram.long,
     },
     {
-      name: "Zout",
+      name: language.macros.nutrients.salt,
       value: macrosAdjusted.salt,
+      unit: language.measurement.units.gram.long,
     },
   ];
 
@@ -97,14 +107,18 @@ export default function ProductNutrition({
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <TextBody weight="semibold" style={{ marginBottom: 16 }}>
-          Voedingswaarde
+          {language.components.information.nutrition}
         </TextBody>
 
         <TouchableOpacity onPress={handleSwitch}>
           <TextSmall
             style={{ textDecorationLine: isDifferent ? "underline" : "none" }}
           >
-            {per100 ? "Per 100g" : `Per ${servingAdjusted.gram}g`}
+            {per100
+              ? language.components.information.per100g
+              : language.components.information.getServing(
+                  servingAdjusted.gram
+                )}
           </TextSmall>
         </TouchableOpacity>
       </View>
@@ -136,13 +150,15 @@ export default function ProductNutrition({
               }}
             >
               <TextBody weight="medium">{item.name}</TextBody>
-              <TextBody>{item.value} g</TextBody>
+              <TextBody>
+                {item.value} {item.unit}
+              </TextBody>
             </View>
 
             {item.items &&
-              item.items.map((item) => (
+              item.items.map((subItem) => (
                 <View
-                  key={item.name}
+                  key={subItem.name}
                   style={{
                     paddingTop: 4,
                     paddingLeft: 16,
@@ -150,8 +166,10 @@ export default function ProductNutrition({
                     justifyContent: "space-between",
                   }}
                 >
-                  <TextSmall weight="medium">{item.name}</TextSmall>
-                  <TextSmall>{item.value} g</TextSmall>
+                  <TextSmall weight="medium">{subItem.name}</TextSmall>
+                  <TextSmall>
+                    {subItem.value} {subItem.unit}
+                  </TextSmall>
                 </View>
               ))}
           </View>
@@ -182,7 +200,7 @@ export function ProductNutritionProcessing() {
         <ActivityIndicator size="small" color={variables.colors.text.primary} />
 
         <TextSmall weight="semibold">
-          We zijn de voedingswaarden van dit product online aan het controleren.
+          {language.components.information.processing.primary}
         </TextSmall>
       </View>
 

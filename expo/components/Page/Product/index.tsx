@@ -11,7 +11,7 @@ import {
 } from "@/schemas/serving";
 
 import {
-  displayQuantity,
+  getLabel,
   getOption,
   getOptions,
   isProductFavorite,
@@ -21,6 +21,7 @@ import {
 import useUpdateUser from "@/mutations/useUpdateUser";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import InputDropdown from "@/components/Input/Dropdown";
 import ButtonOverlay from "@/components/Button/Overlay";
@@ -61,7 +62,7 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const isGeneric = product.type === "search_generic";
@@ -114,7 +115,7 @@ export default function PageProduct({
       items.push({
         key: "serving",
         icon: "plate-wheat",
-        value: displayQuantity(product.serving),
+        value: `${product.serving.gram} ${getLabel(product.serving.option)}`,
       });
     }
 
@@ -122,13 +123,15 @@ export default function PageProduct({
       items.push({
         key: "quantity",
         icon: "weight-hanging",
-        value: displayQuantity(product.quantity),
+        value: `${product.quantity.gram} ${getLabel(product.quantity.option)}`,
       });
     } else if (product.search?.quantity_original) {
+      const { quantity_original, quantity_original_unit } = product.search;
+
       items.push({
         key: "quantity",
         icon: "weight-hanging",
-        value: `${product.search.quantity_original} ${product.search.quantity_original_unit}`,
+        value: `${quantity_original} ${getLabel(quantity_original_unit!)}`,
       });
     }
 
@@ -176,30 +179,36 @@ export default function PageProduct({
           </View>
 
           <View style={{ gap: variables.gap.small }}>
-            <TextBody weight="semibold">Portie</TextBody>
+            <TextBody weight="semibold">
+              {language.input.serving.group}
+            </TextBody>
 
             <InputDropdown
               name="option"
-              label="Portie grote"
+              label={language.input.serving.size.title}
               options={options}
               control={control}
-              placeholder="Selecteer een portie grote"
+              placeholder={language.input.serving.size.placeholder}
             />
 
             <Input
               name="quantity"
               type="number-pad"
-              label="Portie aantal"
-              placeholder="Hoeveel porties heb je gegeten?"
+              label={language.input.serving.amount.title}
+              placeholder={language.input.serving.amount.placeholder}
               control={control}
             />
           </View>
 
           {createdVisible && (
             <View style={{ gap: variables.gap.small }}>
-              <TextBody weight="semibold">Overige informatie</TextBody>
+              <TextBody weight="semibold">{language.input.time.group}</TextBody>
 
-              <InputTime name="created_at" label="Tijd" control={control} />
+              <InputTime
+                name="created_at"
+                label={language.input.time.title}
+                control={control}
+              />
             </View>
           )}
 
@@ -218,7 +227,11 @@ export default function PageProduct({
       </ScrollView>
 
       <ButtonOverlay
-        title={propServing ? "Product wijzigen" : "Product opslaan"}
+        title={
+          propServing
+            ? language.modifications.getEdit(language.types.product.single)
+            : language.modifications.getSave(language.types.product.single)
+        }
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}

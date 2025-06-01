@@ -150,30 +150,36 @@ export default function PageMeal({
           </View>
 
           <View style={{ gap: variables.gap.small }}>
-            <TextBody weight="semibold">Portie</TextBody>
+            <TextBody weight="semibold">
+              {language.input.serving.group}
+            </TextBody>
 
             <InputDropdown
               name="option"
-              label="Portie grote"
+              label={language.input.serving.size.title}
               options={options}
               control={control}
-              placeholder="Selecteer een portie grote"
+              placeholder={language.input.serving.size.placeholder}
             />
 
             <Input
               name="quantity"
               type="number-pad"
-              label="Portie aantal"
-              placeholder="Hoeveel porties heb je gegeten?"
+              label={language.input.serving.amount.title}
+              placeholder={language.input.serving.amount.placeholder}
               control={control}
             />
           </View>
 
           {createdVisible && (
             <View style={{ gap: variables.gap.small }}>
-              <TextBody weight="semibold">Overige informatie</TextBody>
+              <TextBody weight="semibold">{language.input.time.group}</TextBody>
 
-              <InputTime name="created_at" label="Tijd" control={control} />
+              <InputTime
+                name="created_at"
+                label={language.input.time.title}
+                control={control}
+              />
             </View>
           )}
 
@@ -184,10 +190,14 @@ export default function PageMeal({
       </ScrollView>
 
       <ButtonOverlay
-        title={propServing ? "Product wijzigen" : "Product opslaan"}
-        onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}
+        title={
+          propServing
+            ? language.modifications.getEdit(language.types.meal.single)
+            : language.modifications.getSave(language.types.meal.single)
+        }
+        onPress={handleSubmit(handleSave)}
       />
     </View>
   );

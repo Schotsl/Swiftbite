@@ -97,7 +97,7 @@ export default function PageStatsChartsHistoryWeight({
   return (
     <View style={{ paddingTop: 16, paddingBottom: 32, overflow: "hidden" }}>
       <PageStatsChartsHeader
-        title="kcal"
+        title={language.macros.calories.short}
         titleSecondary="kg"
         options={[
           {
@@ -105,7 +105,7 @@ export default function PageStatsChartsHistoryWeight({
             color: "orange",
           },
           {
-            label: "Gewicht",
+            label: language.page.personal.health.input.weight,
             color: "purple",
           },
         ]}

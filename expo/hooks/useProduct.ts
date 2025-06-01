@@ -6,6 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Href, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
+import language from "@/language";
+
 type UseProductProps = {
   productId?: string;
   barcodeId?: string;
@@ -77,20 +79,19 @@ export function useProduct({
     if (!search && !asking) {
       setAsking(true);
 
-      // TODO: language
       Alert.alert(
-        "Product niet gevonden",
-        "We hebben het product niet gevonden, maar we kunnen de barcode online proberen te zoeken",
+        language.barcode.alert.barcode.title,
+        language.barcode.alert.barcode.subtitle,
         [
           {
-            text: "Barcode online zoeken",
+            text: language.barcode.actions.barcode,
             onPress: () => {
               setSearch(true);
               setAsking(false);
             },
           },
           {
-            text: "Product online zoeken",
+            text: language.barcode.actions.manual,
             onPress: () => {
               router.replace(redirect.search);
 
@@ -98,15 +99,18 @@ export function useProduct({
             },
           },
           {
-            text: "Product zelf toevoegen",
+            text: language.barcode.actions.add,
             onPress: () => {
-              Alert.alert("TODO", "Voedingslabel scannen");
+              Alert.alert(
+                language.alert.development.title,
+                language.alert.development.subtitle
+              );
 
               setAsking(false);
             },
           },
           {
-            text: "Voedingslabel scannen",
+            text: language.barcode.actions.label,
             onPress: () => {
               router.replace(redirect.label);
 
@@ -114,7 +118,7 @@ export function useProduct({
             },
           },
           {
-            text: "Annuleren",
+            text: language.modifications.cancel,
             style: "cancel",
             onPress: () => {
               router.replace(redirect.cancel);
@@ -122,7 +126,7 @@ export function useProduct({
               setAsking(false);
             },
           },
-        ],
+        ]
       );
 
       return;
@@ -131,34 +135,36 @@ export function useProduct({
     // If we have searched online and still not found the product
     if (search && !product && !asking) {
       setAsking(true);
-      // TODO: language
       Alert.alert(
-        "Product niet gevonden",
-        "We hebben het product ook niet online gevonden. Wat wil je doen?",
+        language.barcode.alert.search.title,
+        language.barcode.alert.search.subtitle,
         [
           {
-            text: "Product online zoeken",
+            text: language.barcode.actions.manual,
             onPress: () => {
               router.replace(redirect.search);
               setAsking(false);
             },
           },
           {
-            text: "Product zelf toevoegen",
+            text: language.barcode.actions.add,
             onPress: () => {
-              Alert.alert("TODO", "Voedingslabel scannen");
+              Alert.alert(
+                language.alert.development.title,
+                language.alert.development.subtitle
+              );
               setAsking(false);
             },
           },
           {
-            text: "Voedingslabel scannen",
+            text: language.barcode.actions.label,
             onPress: () => {
               router.replace(redirect.label);
               setAsking(false);
             },
           },
           {
-            text: "Annuleren",
+            text: language.modifications.cancel,
             style: "cancel",
             onPress: () => {
               router.replace(redirect.cancel);
@@ -166,7 +172,7 @@ export function useProduct({
               setAsking(false);
             },
           },
-        ],
+        ]
       );
     }
   }, [product, isLoadingQuery, search, router, barcodeId, redirect, asking]);

@@ -74,7 +74,7 @@ export default function PageStatsChartsPatternCaloriesWeekly({
   return (
     <View style={{ paddingTop: 16, paddingBottom: 16, overflow: "hidden" }}>
       <PageStatsChartsHeader
-        title="kcal"
+        title={language.macros.calories.short}
         options={[
           {
             label: language.macros.calories.long,

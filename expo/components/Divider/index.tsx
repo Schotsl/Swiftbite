@@ -1,6 +1,7 @@
 import { View } from "react-native";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import TextSmall from "../Text/Small";
 
@@ -14,8 +15,7 @@ export default function Divider() {
           paddingHorizontal: variables.gap.small,
         }}
       >
-        {/* TODO: Language */}
-        Of
+        {language.components.divider.or}
       </TextSmall>
       <View
         style={{

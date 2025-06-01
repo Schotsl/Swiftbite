@@ -41,7 +41,7 @@ export default function PageStatsChartsBackground() {
           }}
         >
           <Text size={12} align="right">
-            {language.time.morning}
+            {language.time.morning.label}
           </Text>
         </View>
       </View>
@@ -61,7 +61,7 @@ export default function PageStatsChartsBackground() {
           }}
         >
           <Text size={12} align="right">
-            {language.time.afternoon}
+            {language.time.afternoon.label}
           </Text>
         </View>
       </View>
@@ -81,7 +81,7 @@ export default function PageStatsChartsBackground() {
           }}
         >
           <Text size={12} align="right">
-            {language.time.evening}
+            {language.time.evening.label}
           </Text>
         </View>
       </View>

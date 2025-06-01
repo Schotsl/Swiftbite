@@ -16,6 +16,8 @@ import {
   thickness,
 } from "@/components/Page/Stats/Charts/variables";
 
+import language from "@/language";
+
 type PageStatsChartsHistoryBalanceProps = {
   width: number;
   input: {
@@ -73,14 +75,14 @@ export default function PageStatsChartsHistoryBalance({
   return (
     <View style={{ paddingTop: 16, paddingBottom: 32, overflow: "hidden" }}>
       <PageStatsChartsHeader
-        title="kcal"
+        title={language.macros.calories.short}
         options={[
           {
-            label: "Overschot",
+            label: language.page.stats.charts.history.calories.balance.surplus,
             color: "green",
           },
           {
-            label: "Tekort",
+            label: language.page.stats.charts.history.calories.balance.deficit,
             color: "red",
           },
         ]}

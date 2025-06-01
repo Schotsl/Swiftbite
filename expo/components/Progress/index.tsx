@@ -1,6 +1,7 @@
 import { DimensionValue, StyleProp, View, ViewStyle } from "react-native";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import TextBody from "@/components/Text/Body";
 import TextSmall from "@/components/Text/Small";
@@ -75,7 +76,7 @@ export default function Progress({
           {value}
           {type}
         </TextSmall>
-        <TextSmall weight="semibold">/</TextSmall>
+        <TextSmall weight="semibold">{language.misc.separator}</TextSmall>
         <TextSmall weight="semibold">
           {target}
           {type}

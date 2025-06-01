@@ -65,10 +65,9 @@ function AutomationsRepeatList({ onSelect }: AutomationsRepeatListProps) {
   };
 
   const handleDuplicate = () => {
-    // TODO: language
     Alert.alert(
-      "Dupliceer",
-      "Deze functionaliteit is helaas nog niet beschikbaar.",
+      language.alert.development.title,
+      language.alert.development.subtitle
     );
   };
 
@@ -102,7 +101,7 @@ function AutomationsRepeatListEmpty() {
 
   return (
     <Empty
-      emoji="🔁"
+      emoji={"🔁"}
       content={language.empty.getAdded(language.types.repeat.plural)}
       button={{
         icon: "plus",

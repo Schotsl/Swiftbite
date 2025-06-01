@@ -112,7 +112,7 @@ export default function InputWeights({
             <Picker.Item
               key={option}
               value={option}
-              label={`${option.toFixed(1)} kg`}
+              label={`${option.toFixed(1)} ${language.measurement.metric.weight}`}
             />
           ))}
         </Picker>

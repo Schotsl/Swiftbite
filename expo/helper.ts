@@ -7,9 +7,11 @@ import { MealWithProduct, MealProductBase } from "@/types/meal";
 import { ImageManipulatorContext, SaveFormat } from "expo-image-manipulator";
 import { Image, Macro, MacroExpanded, OptionWithGram } from "./types";
 
+import language from "./language";
+
 export const renderToBase64 = async (
   manipulator: ImageManipulatorContext,
-  compressed: boolean,
+  compressed: boolean
 ) => {
   const format = SaveFormat.JPEG;
   const base64 = true;
@@ -61,12 +63,12 @@ export const getOptions = ({
   let options = [
     {
       gram: 1,
-      title: "1 g",
+      title: `1 ${language.measurement.units.gram.short}`,
       value: "1-gram",
     },
     {
       gram: 100,
-      title: "100 g",
+      title: `100 ${language.measurement.units.gram.short}`,
       value: "100-gram",
     },
   ];
@@ -74,31 +76,42 @@ export const getOptions = ({
   if (meal) {
     options.push({
       gram: meal.quantity_gram,
-      title: `Standaardmaaltijd (${meal.quantity_gram} g)`,
       value: `meal`,
+      title: language.options.getMeal(
+        meal.quantity_gram,
+        language.measurement.units.gram.short
+      ),
     });
   }
 
-  // TODO: language
   if (product?.quantity) {
     options.push({
       gram: product.quantity.gram,
-      title: `Productinhoud (${displayQuantity(product.quantity)})`,
       value: `quantity`,
+      title: language.options.getQuantity(
+        product.quantity.gram,
+        product.quantity.option
+      ),
     });
   } else if (product?.search?.quantity_original) {
     options.push({
       gram: product.search.quantity_original,
-      title: `Productinhoud (${product.search.quantity_original} ${product.search.quantity_original_unit})`,
       value: `quantity`,
+      title: language.options.getQuantity(
+        product.search.quantity_original,
+        product.search.quantity_original_unit!
+      ),
     });
   }
 
   if (product?.serving) {
     options.push({
       gram: product.serving?.gram,
-      title: `Portiegrootte (${displayQuantity(product.serving)})`,
       value: `serving`,
+      title: language.options.getServing(
+        product.serving.gram,
+        product.serving.option
+      ),
     });
   }
 
@@ -108,8 +121,12 @@ export const getOptions = ({
     productOptions.forEach((productOption) => {
       options.push({
         gram: productOption.gram,
-        title: `${productOption.title} (${productOption.gram} g)`,
         value: productOption.value,
+        title: language.options.getOption(
+          productOption.title,
+          productOption.gram,
+          language.measurement.units.gram.short
+        ),
       });
     });
   }
@@ -120,7 +137,7 @@ export const getOptions = ({
 export function getMacrosFromProduct(
   product: Product | ProductInsert,
   serving: ServingData,
-  rounded = true,
+  rounded = true
 ): MacroExpanded & { gram: number } {
   const gram = serving.gram || 0;
 
@@ -176,7 +193,7 @@ export function getMacrosFromProduct(
 export const macroToCalories = (
   type: keyof MacroData,
   value: number,
-  calories: number,
+  calories: number
 ) => {
   let divider = 4;
 
@@ -204,7 +221,7 @@ export const macrosToCalories = (macro: MacroData, calories: number): Macro => {
 export function getMacrosFromMeal(
   meal: MealWithProduct,
   serving: ServingData,
-  rounded = true,
+  rounded = true
 ): MacroExpanded & { gram: number } {
   const products = meal.meal_products || [];
   const macros = products.reduce(
@@ -242,7 +259,7 @@ export function getMacrosFromMeal(
       fiber: 0,
       protein: 0,
       calories: 0,
-    },
+    }
   );
 
   return {
@@ -290,7 +307,7 @@ export function getMacrosFromMeal(
 
 export const transformDate = (
   date: Date | string | number,
-  short = false,
+  short = false
 ): string => {
   const dateObject = new Date(date);
   return dateObject.toLocaleDateString("nl-NL", {
@@ -303,7 +320,7 @@ export const transformDate = (
 export const transformImage = (
   uri?: string,
   width?: string,
-  height?: string,
+  height?: string
 ): Image | null => {
   const complete = uri && width && height;
 
@@ -319,12 +336,12 @@ export const transformImage = (
 };
 
 export const mapMeal = (
-  meal: Omit<MealWithProduct, "quantity_gram">,
+  meal: Omit<MealWithProduct, "quantity_gram">
 ): MealWithProduct => {
   const total =
     meal.meal_products?.reduce(
       (sum: number, item: MealProductBase) => sum + item.serving.gram,
-      0,
+      0
     ) || 0;
 
   return { ...meal, quantity_gram: total };
@@ -332,7 +349,7 @@ export const mapMeal = (
 
 export function isProductFavorite(
   user: User | undefined,
-  product: string,
+  product: string
 ): boolean {
   if (!user) {
     return false;
@@ -351,7 +368,7 @@ export function isMealFavorite(user: User | undefined, meal: string): boolean {
 
 export function toggleProductFavorite(
   user: User | undefined,
-  product: string,
+  product: string
 ): string[] {
   if (!user) {
     return [product];
@@ -367,7 +384,7 @@ export function toggleProductFavorite(
 
 export function toggleMealFavorite(
   user: User | undefined,
-  meal: string,
+  meal: string
 ): string[] {
   if (!user) {
     return [meal];
@@ -381,16 +398,10 @@ export function toggleMealFavorite(
   return favoriteArray;
 }
 
-export function displayQuantity(serving: { option: string; quantity: number }) {
-  const { option, quantity } = serving;
-
-  let optionFormatted = option;
-
-  if (option === "l") {
-    optionFormatted = "L";
-  } else if (option === "ml") {
-    optionFormatted = "mL";
+export const getLabel = (value: string) => {
+  if (value === "l") {
+    return "L";
+  } else if (value === "ml") {
+    return "mL";
   }
-
-  return `${quantity} ${optionFormatted}`;
-}
+};

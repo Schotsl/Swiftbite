@@ -1,14 +1,16 @@
 import variables from "@/variables";
 import React, { useState } from "react";
 
-import { View, ScrollView } from "react-native";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ScrollView, View } from "react-native";
 import { statsSchema, StatsData } from "@/schemas/stats";
 
 import Tabs from "@/components/Tabs";
 import PageStatsChartsHistory from "@/components/Page/Stats/Charts/History";
 import PageStatsChartsPattern from "@/components/Page/Stats/Charts/Pattern";
+
+import language from "@/language";
 
 export default function Stats() {
   const [tab, setTab] = useState("history");
@@ -30,11 +32,11 @@ export default function Stats() {
       <Tabs
         tabs={[
           {
-            title: "Geschiedenis",
+            title: language.page.stats.charts.history.title,
             value: "history",
           },
           {
-            title: "Patronen",
+            title: language.page.stats.charts.pattern.title,
             value: "patterns",
           },
         ]}

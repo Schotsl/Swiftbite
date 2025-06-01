@@ -38,26 +38,26 @@ const getSections = (entries: Entry[]): Section[] => {
   const sections: Section[] = [
     {
       data: [],
-      title: language.time.night,
-      subtitle: "21:00 - 06:00",
+      title: language.time.night.label,
+      subtitle: language.time.night.range,
       startHour: 21,
     },
     {
       data: [],
-      title: language.time.evening,
-      subtitle: "17:00 - 21:00",
+      title: language.time.evening.label,
+      subtitle: language.time.evening.range,
       startHour: 17,
     },
     {
       data: [],
-      title: language.time.afternoon,
-      subtitle: "12:00 - 17:00",
+      title: language.time.afternoon.label,
+      subtitle: language.time.afternoon.range,
       startHour: 12,
     },
     {
       data: [],
-      title: language.time.morning,
-      subtitle: "06:00 - 12:00",
+      title: language.time.morning.label,
+      subtitle: language.time.morning.range,
       startHour: 6,
     },
   ];
@@ -70,13 +70,21 @@ const getSections = (entries: Entry[]): Section[] => {
     let targetSection;
 
     if (entryHour >= 6 && entryHour < 12) {
-      targetSection = sections.find((s) => s.title === language.time.morning);
+      targetSection = sections.find(
+        (s) => s.title === language.time.morning.label
+      );
     } else if (entryHour >= 12 && entryHour < 17) {
-      targetSection = sections.find((s) => s.title === language.time.afternoon);
+      targetSection = sections.find(
+        (s) => s.title === language.time.afternoon.label
+      );
     } else if (entryHour >= 17 && entryHour < 21) {
-      targetSection = sections.find((s) => s.title === language.time.evening);
+      targetSection = sections.find(
+        (s) => s.title === language.time.evening.label
+      );
     } else {
-      targetSection = sections.find((s) => s.title === language.time.night);
+      targetSection = sections.find(
+        (s) => s.title === language.time.night.label
+      );
     }
 
     if (targetSection) {
@@ -136,7 +144,7 @@ export default function Add() {
 
         <HomeMacros date={date} />
 
-        <TextTitle>Logs</TextTitle>
+        <TextTitle>{language.page.add.title}</TextTitle>
       </View>
 
       <Suspense fallback={<AddListLoading />}>
@@ -168,12 +176,12 @@ function AddList({ date, onEmpty }: AddListProps) {
     // If any icon_id is null then it's still processing
     const processingIcon = entries.some(({ product }) => !product?.icon_id);
     const processingProduct = entries.some(
-      ({ product }) => product?.processing,
+      ({ product }) => product?.processing
     );
     const processingMeal = entries.some(({ meal }) =>
       meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing,
-      ),
+        (mealProduct) => mealProduct.product?.processing
+      )
     );
 
     const processing = processingIcon || processingProduct || processingMeal;
@@ -276,7 +284,10 @@ function AddListItem({ entry, handleSelect }: AddListItemProps) {
 function AddListEmpty() {
   return (
     <View>
-      <ItemHeader title={language.time.morning} subtitle="06:00 - 12:00" />
+      <ItemHeader
+        title={language.time.morning.label}
+        subtitle={language.time.morning.range}
+      />
       <View
         style={{
           minHeight: 180,
@@ -285,11 +296,7 @@ function AddListEmpty() {
           borderTopColor: variables.border.color,
         }}
       >
-        {/* TODO: language */}
-        <Empty
-          emoji="😶"
-          content="Op dit moment heb je nog geen logs toegevoegd aan deze dag"
-        />
+        <Empty emoji={"😶"} content={language.page.add.empty} />
       </View>
     </View>
   );
@@ -298,7 +305,10 @@ function AddListEmpty() {
 function AddListLoading() {
   return (
     <View>
-      <ItemHeader title={language.time.morning} subtitle="06:00 - 12:00" />
+      <ItemHeader
+        title={language.time.morning.label}
+        subtitle={language.time.morning.range}
+      />
       <ItemSkeleton />
       <ItemSkeleton />
       <ItemSkeleton />

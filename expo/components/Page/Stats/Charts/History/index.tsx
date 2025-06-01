@@ -13,8 +13,10 @@ import PageStatsChartsHistoryWeight from "./Weight";
 import PageStatsSection from "@/components/Page/Stats/Section";
 
 import InputRange from "@/components/Input/Range";
-import variables from "@/variables";
 import TextTitle from "@/components/Text/Title";
+
+import variables from "@/variables";
+import language from "@/language";
 
 type PageStatsChartsHistoryProps = {
   control: Control<StatsData>;
@@ -35,20 +37,25 @@ export default function PageStatsChartsHistory({
 
   return (
     <View style={{ gap: 32 }}>
-      <TextTitle>Statistieken</TextTitle>
-      <InputRange name="date" label="Datum range" control={control} />
+      <TextTitle>{language.page.stats.charts.history.calories.title}</TextTitle>
+      <InputRange
+        name="date"
+        label={language.input.range.title}
+        control={control}
+      />
 
       <View style={{ gap: 24 }}>
         <PageStatsSection
           open={open === "calories"}
-          title="Calorieën"
+          title={language.macros.calories.long}
           onToggle={() => handleToggle("calories")}
         >
           <View style={{ gap: 8 }}>
-            <TextLarge weight="semibold">Calorieën in versus uit</TextLarge>
+            <TextLarge weight="semibold">
+              {language.page.stats.charts.history.calories.calories.title}
+            </TextLarge>
             <TextSmall>
-              Deze grafiek vergelijkt direct hoeveel calorieën je op een dag
-              consumeert met hoeveel je er verbrandt
+              {language.page.stats.charts.history.calories.calories.content}
             </TextSmall>
 
             <PageStatsChartsHistoryCalories
@@ -66,10 +73,11 @@ export default function PageStatsChartsHistory({
           </View>
 
           <View style={{ gap: 8 }}>
-            <TextLarge weight="semibold">Netto calorietrend</TextLarge>
+            <TextLarge weight="semibold">
+              {language.page.stats.charts.history.calories.balance.title}
+            </TextLarge>
             <TextSmall>
-              Deze grafiek toont de ontwikkeling van je dagelijkse
-              calorieoverschot of -tekort over een gekozen periode
+              {language.page.stats.charts.history.calories.balance.content}
             </TextSmall>
 
             <PageStatsChartsHistoryBalance
@@ -88,17 +96,16 @@ export default function PageStatsChartsHistory({
         </PageStatsSection>
 
         <PageStatsSection
-          title="Macronutriënten"
+          title={language.page.stats.charts.history.macros.title}
           open={open === "macros"}
           onToggle={() => handleToggle("macros")}
         >
           <View style={{ gap: 8 }}>
             <TextLarge weight="semibold">
-              Verdeling van macronutriënten
+              {language.page.stats.charts.history.macros.macros.title}
             </TextLarge>
             <TextSmall>
-              Deze grafiek toont de verdeling van geconsumeerde eiwitten,
-              koolhydraten en vetten
+              {language.page.stats.charts.history.macros.macros.content}
             </TextSmall>
 
             <PageStatsChartsHistoryMacros
@@ -119,14 +126,15 @@ export default function PageStatsChartsHistory({
         <PageStatsSection
           last={true}
           open={open === "weight"}
-          title="Gewicht"
+          title={language.page.personal.health.input.weight}
           onToggle={() => handleToggle("weight")}
         >
           <View style={{ gap: 8 }}>
-            <TextLarge weight="semibold">Calorietrend versus gewicht</TextLarge>
+            <TextLarge weight="semibold">
+              {language.page.stats.charts.history.weight.weight.title}
+            </TextLarge>
             <TextSmall>
-              Deze grafiek toont de calorie-inname op de lange termijn in
-              relatie tot de gewichtsontwikkeling
+              {language.page.stats.charts.history.weight.weight.content}
             </TextSmall>
 
             <PageStatsChartsHistoryWeight

@@ -74,11 +74,10 @@ export default function PageSearchProduct({ type, onSelect }: PageSearchProps) {
     return () => subscription.remove();
   }, []);
 
-  // TODO: language
   const placeholder =
     type === "search_product"
-      ? "Zoek naar een product..."
-      : "Zoek naar een basisitem...";
+      ? language.search.results.getPlaceholder(language.types.product.single)
+      : language.search.results.getPlaceholder(language.types.basic.single);
 
   return (
     <View style={{ flex: 1 }}>

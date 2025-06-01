@@ -66,17 +66,18 @@ export default function InputRange({ name, label, control }: InputRangeProps) {
     const shortEnd = formatShort(dateEnd);
     const shortStart = formatShort(dateStart);
 
-    if (yearStart === yearCurrent && yearEnd !== yearCurrent) {
-      return `${shortStart} t/m ${shortEnd} ${yearEnd}`;
-    } else if (yearStart !== yearCurrent && yearEnd === yearCurrent) {
-      return `${shortStart} ${yearStart} t/m ${shortEnd}`;
-    } else if (yearStart !== yearEnd) {
-      return `${shortStart} t/m ${shortEnd}`;
-    } else if (yearStart === yearEnd && yearStart !== yearCurrent) {
-      return `${shortStart} t/m ${shortEnd}`;
-    }
+    const separator = language.estimation.dateRange.to;
 
-    return `${shortStart} t/m ${shortEnd}`;
+    if (yearStart === yearCurrent && yearEnd !== yearCurrent) {
+      return `${shortStart} ${separator} ${shortEnd} ${yearEnd}`;
+    } else if (yearStart !== yearCurrent && yearEnd === yearCurrent) {
+      return `${shortStart} ${yearStart} ${separator} ${shortEnd}`;
+    } else if (yearStart !== yearEnd) {
+      return `${shortStart} ${yearStart} ${separator} ${shortEnd} ${yearEnd}`;
+    } else if (yearStart === yearEnd && yearStart !== yearCurrent) {
+      return `${shortStart} ${separator} ${shortEnd} ${yearStart}`;
+    }
+    return `${shortStart} ${separator} ${shortEnd}`;
   };
 
   return (

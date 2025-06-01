@@ -1,6 +1,7 @@
 import { Image, TouchableOpacity, View } from "react-native";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import TextInput from "@/components/Text/Input";
 import InputLabel from "@/components/Input/Label";
@@ -38,7 +39,7 @@ export default function EstimationImage({
 
   return (
     <View>
-      <InputLabel label="Afbeelding" required={required} />
+      <InputLabel label={language.input.image.title} required={required} />
 
       {image ? (
         <View
@@ -99,8 +100,7 @@ export default function EstimationImage({
               justifyContent: "space-between",
             }}
           >
-            {/* TODO: language */}
-            <TextInput>Geen afbeelding</TextInput>
+            <TextInput>{language.input.image.empty}</TextInput>
 
             <ButtonSmall nano={true} icon="pencil" onPress={onAdd} />
           </View>

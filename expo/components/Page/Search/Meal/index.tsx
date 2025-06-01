@@ -62,7 +62,9 @@ export default function PageSearchMeal({ onSelect }: PageSearchProps) {
           name="query"
           icon="magnifying-glass"
           control={control}
-          placeholder={"Zoek naar een maaltijd..."}
+          placeholder={language.search.results.getPlaceholder(
+            language.types.meal.single
+          )}
         />
       </View>
 

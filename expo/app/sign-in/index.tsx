@@ -15,6 +15,7 @@ import Divider from "@/components/Divider";
 import Text from "@/components/Text";
 import TextBody from "@/components/Text/Body";
 
+import language from "@/language";
 import variables from "@/variables";
 
 export default function SignIn() {
@@ -47,7 +48,7 @@ export default function SignIn() {
       setError("email", { type: "custom" });
       setError("password", {
         type: "custom",
-        message: error?.message || "Failed to sign in with Apple",
+        message: error?.message || language.page.signIn.login.apple,
       });
     }
 
@@ -64,31 +65,30 @@ export default function SignIn() {
           paddingBottom: 48,
         }}
       >
-        {/* <Header buttons={false} title={"Inloggen"} /> */}
         <Text size={32} weight="semibold">
-          Inloggen
+          {language.page.signIn.login.login}
         </Text>
 
         <View style={{ gap: 32 }}>
           <Input
             name="email"
             type="email-address"
-            label="E-mail"
+            label={language.input.email.title}
             control={control}
-            placeholder="E-mail"
+            placeholder={language.input.email.placeholder}
           />
 
           <Input
             type="password"
             name="password"
-            label="Wachtwoord"
+            label={language.input.password.title}
             control={control}
-            content="Wachtwoord vergeten?"
-            placeholder="Password"
+            content={language.page.signIn.forgot}
+            placeholder={language.input.password.placeholder}
             onContent={() => {
               Alert.alert(
-                "Excuses",
-                "Deze functionaliteit is nog niet beschikbaar",
+                language.alert.development.title,
+                language.alert.development.subtitle
               );
             }}
           />
@@ -96,7 +96,7 @@ export default function SignIn() {
 
         <View style={{ marginTop: "auto", gap: 20 }}>
           <Button
-            title="Inloggen"
+            title={language.page.signIn.login.login}
             onPress={handleSubmit(handleSignIn)}
             disabled={isLoading}
             loading={signInMutation.isPending}
@@ -106,7 +106,7 @@ export default function SignIn() {
 
           <Button
             icon="apple"
-            title="Inloggen met Apple"
+            title={language.page.signIn.login.apple}
             onPress={handleAppleSignIn}
             disabled={isLoading}
             loading={signInWithAppleMutation.isPending}
@@ -118,17 +118,19 @@ export default function SignIn() {
               justifyContent: "center",
             }}
           >
-            <TextBody weight="medium">Nog geen account? </TextBody>
+            <TextBody weight="medium">
+              {language.page.signIn.register.question}
+            </TextBody>
             <TouchableOpacity
               onPress={() =>
                 Alert.alert(
-                  "Excuses",
-                  "We staan momenteel niet open voor nieuwe accounts",
+                  language.alert.closed.title,
+                  language.alert.closed.subtitle
                 )
               }
             >
               <TextBody color={variables.colors.primary} weight="medium">
-                Registreren
+                {language.page.signIn.register.button}
               </TextBody>
             </TouchableOpacity>
           </View>

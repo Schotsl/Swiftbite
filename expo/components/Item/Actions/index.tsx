@@ -5,6 +5,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { TouchableOpacity, View } from "react-native";
 
 import variables from "@/variables";
+import language from "@/language";
 
 type ItemActionsProps = {
   onDelete: () => void;
@@ -36,7 +37,7 @@ export default function ItemActions({
         <ItemActionsButton
           onPress={onRepeat}
           color={variables.colors.text.repeat}
-          title="Herhaal"
+          title={language.modifications.uppercase.repeat}
           icon="repeat"
         />
       )}
@@ -45,7 +46,7 @@ export default function ItemActions({
         <ItemActionsButton
           onPress={onDuplicate}
           color={variables.colors.text.repeat}
-          title="Dupliceer"
+          title={language.modifications.uppercase.duplicate}
           icon="copy"
         />
       )}
@@ -53,7 +54,7 @@ export default function ItemActions({
       <ItemActionsButton
         onPress={onDelete}
         color={variables.colors.text.error}
-        title="Verwijder"
+        title={language.modifications.uppercase.delete}
         icon="trash"
       />
 

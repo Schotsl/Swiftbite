@@ -48,7 +48,10 @@ export default function NavigationAddList({
       const response = await requestPermission();
 
       if (!response) {
-        Alert.alert("Je hebt geen toegang verleend voor de camera");
+        Alert.alert(
+          language.alert.permission.title,
+          language.alert.permission.subtitle
+        );
 
         return;
       }
@@ -76,7 +79,7 @@ export default function NavigationAddList({
       {camera && (
         <Button
           icon="camera"
-          title="Camera"
+          title={language.navigation.add.camera}
           action="tertiary"
           onPress={handleCamera}
         />

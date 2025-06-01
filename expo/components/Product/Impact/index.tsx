@@ -14,6 +14,8 @@ import {
 } from "@/helper";
 
 import variables from "@/variables";
+import language from "@/language";
+
 import TextSmall from "@/components/Text/Small";
 import TextBody from "@/components/Text/Body";
 
@@ -75,14 +77,18 @@ export default function ProductImpact({
     <View>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <TextBody weight="semibold" style={{ marginBottom: 16 }}>
-          Impact op je budget
+          {language.components.information.impact}
         </TextBody>
 
         <TouchableOpacity onPress={isDifferent ? handleSwitch : undefined}>
           <TextSmall
             style={{ textDecorationLine: isDifferent ? "underline" : "none" }}
           >
-            {per100 ? "Per 100g" : `Per ${servingAdjusted.gram}g`}
+            {per100
+              ? language.components.information.per100g
+              : language.components.information.getServing(
+                  servingAdjusted.gram
+                )}
           </TextSmall>
         </TouchableOpacity>
       </View>
@@ -120,14 +126,14 @@ export default function ProductImpact({
                 }}
               >
                 <Progress
-                  label="Calorieën"
+                  label={language.macros.calories.long}
                   value={macrosAdjusted.calories}
                   target={target.calories}
                   type="kcal"
                 />
 
                 <Progress
-                  label="Eiwitten"
+                  label={language.macros.protein.long}
                   color={variables.macros.protein.background}
                   value={macrosAdjusted.protein}
                   target={target.protein}
@@ -141,14 +147,14 @@ export default function ProductImpact({
                 }}
               >
                 <Progress
-                  label="Carbs"
+                  label={language.macros.carbs.long}
                   color={variables.macros.carbs.background}
                   value={macrosAdjusted.carbs}
                   target={target.carbs}
                 />
 
                 <Progress
-                  label="Vetten"
+                  label={language.macros.fats.long}
                   color={variables.macros.fats.background}
                   value={macrosAdjusted.fat}
                   target={target.fat}
@@ -170,12 +176,11 @@ export function ProductImpactProcessing() {
       <ActivityIndicator size="small" color={variables.colors.text.primary} />
 
       <TextSmall weight="semibold">
-        We zijn de voedingswaarden van dit product online aan het controleren.
+        {language.components.information.processing.primary}
       </TextSmall>
 
       <TextSmall>
-        Dit kan tot een minuut duren, maar voel je vrij om het product alvast
-        aan je logs toe te voegen.
+        {language.components.information.processing.secondary}
       </TextSmall>
     </View>
   );
