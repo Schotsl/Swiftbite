@@ -2,9 +2,9 @@
   "expo": {
     "name": "Swiftbite",
     "slug": "swiftbite",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "orientation": "portrait",
-    "description": "Swiftbite makes food tracking easy with effortless input and no hassle.",
+    "description": "Swiftbite: scan barcodes of je maaltijd, log in seconden en zie direct calorieën & macro's. Slimme porties, herhaal favorieten en houd grip op je doelen zonder gedoe!",
     "icon": "./assets/images/icon.png",
     "scheme": "com.sjorsvanholst.swiftbite",
     "userInterfaceStyle": "automatic",
