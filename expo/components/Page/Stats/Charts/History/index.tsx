@@ -1,5 +1,7 @@
+import { Control } from "react-hook-form";
+import { useState } from "react";
+import { StatsData } from "@/schemas/stats";
 import { useWindowDimensions, View } from "react-native";
-import { Fragment, useState } from "react";
 
 import TextSmall from "@/components/Text/Small";
 import TextLarge from "@/components/Text/Large";
@@ -12,11 +14,15 @@ import PageStatsSection from "@/components/Page/Stats/Section";
 
 import InputRange from "@/components/Input/Range";
 import variables from "@/variables";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import z from "zod";
+import TextTitle from "@/components/Text/Title";
 
-export default function PageStatsChartsHistory() {
+type PageStatsChartsHistoryProps = {
+  control: Control<StatsData>;
+};
+
+export default function PageStatsChartsHistory({
+  control,
+}: PageStatsChartsHistoryProps) {
   const [open, setOpen] = useState<string | null>("calories");
 
   const { width: widthWindow } = useWindowDimensions();
@@ -27,131 +33,117 @@ export default function PageStatsChartsHistory() {
     setOpen((prev) => (prev === value ? null : value));
   };
 
-  const endDate = new Date();
-  const endDays = endDate.getDate();
-
-  const startDate = new Date();
-
-  startDate.setDate(endDays - 7);
-
-  const { control } = useForm<any>({
-    resolver: zodResolver(
-      z.object({
-        date: z.object({
-          startDate: z.date(),
-          endDate: z.date(),
-        }),
-      })
-    ),
-    defaultValues: { date: { startDate, endDate } },
-  });
-
   return (
-    <Fragment>
-      <InputRange name="date" label="Datum" control={control} />
+    <View style={{ gap: 32 }}>
+      <TextTitle>Statistieken</TextTitle>
+      <InputRange name="date" label="Datum range" control={control} />
 
-      <PageStatsSection
-        open={open === "calories"}
-        title="Calorieën"
-        onToggle={() => handleToggle("calories")}
-      >
-        <View style={{ gap: 8 }}>
-          <TextLarge weight="semibold">Calorieën in versus uit</TextLarge>
-          <TextSmall>
-            Deze grafiek vergelijkt direct hoeveel calorieën je op een dag
-            consumeert met hoeveel je er verbrandt
-          </TextSmall>
+      <View style={{ gap: 24 }}>
+        <PageStatsSection
+          open={open === "calories"}
+          title="Calorieën"
+          onToggle={() => handleToggle("calories")}
+        >
+          <View style={{ gap: 8 }}>
+            <TextLarge weight="semibold">Calorieën in versus uit</TextLarge>
+            <TextSmall>
+              Deze grafiek vergelijkt direct hoeveel calorieën je op een dag
+              consumeert met hoeveel je er verbrandt
+            </TextSmall>
 
-          <PageStatsChartsHistoryCalories
-            width={width}
-            input={[
-              { consumed: 2300, burned: 2500 },
-              { consumed: 3100, burned: 3000 },
-              { consumed: 2700, burned: 2800 },
-              { consumed: 3000, burned: 3200 },
-              { consumed: 2800, burned: 2700 },
-              { consumed: 3000, burned: 2900 },
-              { consumed: 2900, burned: 3100 },
-            ]}
-          />
-        </View>
+            <PageStatsChartsHistoryCalories
+              width={width}
+              input={[
+                { consumed: 2300, burned: 2500 },
+                { consumed: 3100, burned: 3000 },
+                { consumed: 2700, burned: 2800 },
+                { consumed: 3000, burned: 3200 },
+                { consumed: 2800, burned: 2700 },
+                { consumed: 3000, burned: 2900 },
+                { consumed: 2900, burned: 3100 },
+              ]}
+            />
+          </View>
 
-        <View style={{ gap: 8 }}>
-          <TextLarge weight="semibold">Netto calorietrend</TextLarge>
-          <TextSmall>
-            Deze grafiek toont de ontwikkeling van je dagelijkse
-            calorieoverschot of -tekort over een gekozen periode
-          </TextSmall>
+          <View style={{ gap: 8 }}>
+            <TextLarge weight="semibold">Netto calorietrend</TextLarge>
+            <TextSmall>
+              Deze grafiek toont de ontwikkeling van je dagelijkse
+              calorieoverschot of -tekort over een gekozen periode
+            </TextSmall>
 
-          <PageStatsChartsHistoryBalance
-            width={width}
-            input={[
-              { consumed: 2300, burned: 2500 },
-              { consumed: 3100, burned: 3000 },
-              { consumed: 2700, burned: 2800 },
-              { consumed: 3000, burned: 3200 },
-              { consumed: 2800, burned: 2700 },
-              { consumed: 3000, burned: 2900 },
-              { consumed: 2900, burned: 3100 },
-            ]}
-          />
-        </View>
-      </PageStatsSection>
+            <PageStatsChartsHistoryBalance
+              width={width}
+              input={[
+                { consumed: 2300, burned: 2500 },
+                { consumed: 3100, burned: 3000 },
+                { consumed: 2700, burned: 2800 },
+                { consumed: 3000, burned: 3200 },
+                { consumed: 2800, burned: 2700 },
+                { consumed: 3000, burned: 2900 },
+                { consumed: 2900, burned: 3100 },
+              ]}
+            />
+          </View>
+        </PageStatsSection>
 
-      <PageStatsSection
-        title="Macronutriënten"
-        open={open === "macros"}
-        onToggle={() => handleToggle("macros")}
-      >
-        <View style={{ gap: 8 }}>
-          <TextLarge weight="semibold">Verdeling van macronutriënten</TextLarge>
-          <TextSmall>
-            Deze grafiek toont de verdeling van geconsumeerde eiwitten,
-            koolhydraten en vetten
-          </TextSmall>
+        <PageStatsSection
+          title="Macronutriënten"
+          open={open === "macros"}
+          onToggle={() => handleToggle("macros")}
+        >
+          <View style={{ gap: 8 }}>
+            <TextLarge weight="semibold">
+              Verdeling van macronutriënten
+            </TextLarge>
+            <TextSmall>
+              Deze grafiek toont de verdeling van geconsumeerde eiwitten,
+              koolhydraten en vetten
+            </TextSmall>
 
-          <PageStatsChartsHistoryMacros
-            width={width}
-            input={[
-              { fats: 70, proteins: 150, carbs: 300 },
-              { fats: 75, proteins: 160, carbs: 320 },
-              { fats: 65, proteins: 155, carbs: 310 },
-              { fats: 80, proteins: 165, carbs: 330 },
-              { fats: 70, proteins: 150, carbs: 290 },
-              { fats: 72, proteins: 158, carbs: 315 },
-              { fats: 68, proteins: 162, carbs: 325 },
-            ]}
-          />
-        </View>
-      </PageStatsSection>
+            <PageStatsChartsHistoryMacros
+              width={width}
+              input={[
+                { fats: 70, proteins: 150, carbs: 300 },
+                { fats: 75, proteins: 160, carbs: 320 },
+                { fats: 65, proteins: 155, carbs: 310 },
+                { fats: 80, proteins: 165, carbs: 330 },
+                { fats: 70, proteins: 150, carbs: 290 },
+                { fats: 72, proteins: 158, carbs: 315 },
+                { fats: 68, proteins: 162, carbs: 325 },
+              ]}
+            />
+          </View>
+        </PageStatsSection>
 
-      <PageStatsSection
-        last={true}
-        open={open === "weight"}
-        title="Gewicht"
-        onToggle={() => handleToggle("weight")}
-      >
-        <View style={{ gap: 8 }}>
-          <TextLarge weight="semibold">Calorietrend versus gewicht</TextLarge>
-          <TextSmall>
-            Deze grafiek toont de calorie-inname op de lange termijn in relatie
-            tot de gewichtsontwikkeling
-          </TextSmall>
+        <PageStatsSection
+          last={true}
+          open={open === "weight"}
+          title="Gewicht"
+          onToggle={() => handleToggle("weight")}
+        >
+          <View style={{ gap: 8 }}>
+            <TextLarge weight="semibold">Calorietrend versus gewicht</TextLarge>
+            <TextSmall>
+              Deze grafiek toont de calorie-inname op de lange termijn in
+              relatie tot de gewichtsontwikkeling
+            </TextSmall>
 
-          <PageStatsChartsHistoryWeight
-            width={width}
-            input={[
-              { calories: 2200, weight: 70.5 },
-              { calories: 2350, weight: 70.3 },
-              { calories: 2100, weight: 70.4 },
-              { calories: 2400, weight: 70.1 },
-              { calories: 2250, weight: 70.2 },
-              { calories: 2300, weight: 70.0 },
-              { calories: 2150, weight: 69.9 },
-            ]}
-          />
-        </View>
-      </PageStatsSection>
-    </Fragment>
+            <PageStatsChartsHistoryWeight
+              width={width}
+              input={[
+                { calories: 2200, weight: 70.5 },
+                { calories: 2350, weight: 70.3 },
+                { calories: 2100, weight: 70.4 },
+                { calories: 2400, weight: 70.1 },
+                { calories: 2250, weight: 70.2 },
+                { calories: 2300, weight: 70.0 },
+                { calories: 2150, weight: 69.9 },
+              ]}
+            />
+          </View>
+        </PageStatsSection>
+      </View>
+    </View>
   );
 }

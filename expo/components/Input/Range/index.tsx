@@ -14,8 +14,8 @@ import DateTimePicker, {
 import language from "@/language";
 
 type DateRange = {
-  startDate: DateType;
-  endDate: DateType;
+  end: DateType;
+  start: DateType;
 };
 
 type InputRangeProps = {
@@ -34,8 +34,8 @@ export default function InputRange({ name, label, control }: InputRangeProps) {
     control,
   });
 
-  const [temporary, setTemporary] = useState<DateRange>(value);
   const [visible, setVisible] = useState(false);
+  const [temporary, setTemporary] = useState<DateRange>(value);
 
   const handleClose = () => {
     setVisible(false);
@@ -56,8 +56,8 @@ export default function InputRange({ name, label, control }: InputRangeProps) {
   };
 
   const displayDateRange = (range: DateRange) => {
-    const dateStart = range.startDate as Date;
-    const dateEnd = range.endDate as Date;
+    const dateEnd = range.end as Date;
+    const dateStart = range.start as Date;
 
     const yearEnd = dateEnd.getFullYear();
     const yearStart = dateStart.getFullYear();
@@ -105,15 +105,21 @@ export default function InputRange({ name, label, control }: InputRangeProps) {
         onClose={handleClose}
         onButton={handleSave}
       >
-        <DateTimePicker
-          mode="range"
-          startDate={temporary?.startDate}
-          endDate={temporary?.endDate}
-          onChange={({ startDate, endDate }) =>
-            setTemporary({ startDate, endDate })
-          }
-          styles={defaultStyles}
-        />
+        <View style={{ height: 310 }}>
+          <DateTimePicker
+            mode="range"
+            locale="nl"
+            styles={{
+              ...defaultStyles,
+              selected: { backgroundColor: "#EF6262" },
+            }}
+            endDate={temporary?.end}
+            startDate={temporary?.start}
+            onChange={({ startDate, endDate }) =>
+              setTemporary({ start: startDate, end: endDate })
+            }
+          />
+        </View>
       </Modal>
     </View>
   );

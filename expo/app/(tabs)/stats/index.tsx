@@ -2,7 +2,10 @@ import variables from "@/variables";
 import React, { useState } from "react";
 
 import { View } from "react-native";
+import { useForm } from "react-hook-form";
 import { ScrollView } from "react-native-gesture-handler";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { statsSchema, StatsData } from "@/schemas/stats";
 
 import Tabs from "@/components/Tabs";
 import PageStatsChartsHistory from "@/components/Page/Stats/Charts/History";
@@ -10,6 +13,18 @@ import PageStatsChartsPattern from "@/components/Page/Stats/Charts/Pattern";
 
 export default function Stats() {
   const [tab, setTab] = useState("history");
+
+  const end = new Date();
+  const endDays = end.getDate();
+
+  const start = new Date();
+
+  start.setDate(endDays - 7);
+
+  const { control } = useForm<StatsData>({
+    resolver: zodResolver(statsSchema),
+    defaultValues: { date: { start, end } },
+  });
 
   return (
     <View>
@@ -39,9 +54,9 @@ export default function Stats() {
           }}
         >
           {tab === "history" ? (
-            <PageStatsChartsHistory />
+            <PageStatsChartsHistory control={control} />
           ) : (
-            <PageStatsChartsPattern />
+            <PageStatsChartsPattern control={control} />
           )}
         </View>
       </ScrollView>

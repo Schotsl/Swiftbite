@@ -41,7 +41,7 @@ export default function PageStatsSection({
     <View
       style={{
         gap: variables.gap.normal,
-        paddingBottom: last ? 0 : variables.gap.normal,
+        paddingBottom: last ? 0 : 24,
         borderBottomWidth: last ? 0 : variables.border.width,
         borderBottomColor: last ? "transparent" : variables.border.color,
       }}
