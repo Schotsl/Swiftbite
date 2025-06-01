@@ -114,7 +114,7 @@ export default {
     // I've combined the impact and nutrition components since they share a lot of the same text.
     information: {
       impact: "Impact op je budget",
-      per100g: "Per 100g",
+      per100g: "Per 100 g",
       nutrition: "Voedingswaarde",
       processing: {
         primary: `We zijn de voedingswaarden van dit product online aan het controleren.`,
@@ -126,7 +126,7 @@ export default {
         unsaturated: "Waarvan onverzadigd vet",
       },
 
-      getServing: (value: number) => `Per ${value}g`,
+      getServing: (value: number) => `Per ${value} g`,
     },
   },
   types: {

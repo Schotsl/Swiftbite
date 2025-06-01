@@ -73,13 +73,11 @@ export default function Progress({
 
       <View style={{ flexDirection: "row", gap: 4 }}>
         <TextSmall>
-          {value}
-          {type}
+          {value} {type}
         </TextSmall>
         <TextSmall weight="semibold">{language.misc.separator}</TextSmall>
         <TextSmall weight="semibold">
-          {target}
-          {type}
+          {target} {type}
         </TextSmall>
       </View>
     </View>

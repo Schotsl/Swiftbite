@@ -54,46 +54,46 @@ export default function ProductNutrition({
     {
       name: language.macros.protein.long,
       value: macrosAdjusted.protein,
-      unit: language.measurement.units.gram.long,
+      unit: language.measurement.units.gram.short,
     },
     {
       name: language.macros.fats.long,
       value: macrosAdjusted.fat,
-      unit: language.measurement.units.gram.long,
+      unit: language.measurement.units.gram.short,
       items: [
         {
           name: language.components.information.which.saturated,
           value: macrosAdjusted.fatSaturated,
-          unit: language.measurement.units.gram.long,
+          unit: language.measurement.units.gram.short,
         },
         {
           name: language.components.information.which.unsaturated,
           value: macrosAdjusted.fatUnsaturated,
-          unit: language.measurement.units.gram.long,
+          unit: language.measurement.units.gram.short,
         },
       ],
     },
     {
       name: language.macros.carbs.long,
       value: macrosAdjusted.carbs,
-      unit: language.measurement.units.gram.long,
+      unit: language.measurement.units.gram.short,
       items: [
         {
           name: language.components.information.which.sugars,
           value: macrosAdjusted.carbsSugars,
-          unit: language.measurement.units.gram.long,
+          unit: language.measurement.units.gram.short,
         },
       ],
     },
     {
       name: language.macros.nutrients.carbs.fiber,
       value: macrosAdjusted.fiber,
-      unit: language.measurement.units.gram.long,
+      unit: language.measurement.units.gram.short,
     },
     {
       name: language.macros.nutrients.salt,
       value: macrosAdjusted.salt,
-      unit: language.measurement.units.gram.long,
+      unit: language.measurement.units.gram.short,
     },
   ];
 
