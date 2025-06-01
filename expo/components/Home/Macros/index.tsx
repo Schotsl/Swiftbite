@@ -45,6 +45,7 @@ export default function HomeMacros({ date }: HomeMacrosProps) {
         }}
       >
         <Progress
+          color={variables.macros.protein.border}
           label={language.macros.protein.short}
           value={macrosConsumed.protein}
           target={macrosTarget.protein}
@@ -52,6 +53,7 @@ export default function HomeMacros({ date }: HomeMacrosProps) {
         />
 
         <Progress
+          color={variables.macros.carbs.border}
           label={language.macros.carbs.short}
           value={macrosConsumed.carbs}
           target={macrosTarget.carbs}
@@ -59,6 +61,7 @@ export default function HomeMacros({ date }: HomeMacrosProps) {
         />
 
         <Progress
+          color={variables.macros.fats.background}
           label={language.macros.fats.short}
           value={macrosConsumed.fat}
           target={macrosTarget.fat}

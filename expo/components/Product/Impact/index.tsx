@@ -128,6 +128,7 @@ export default function ProductImpact({
 
                 <Progress
                   label="Eiwitten"
+                  color={variables.macros.protein.background}
                   value={macrosAdjusted.protein}
                   target={target.protein}
                 />
@@ -141,12 +142,14 @@ export default function ProductImpact({
               >
                 <Progress
                   label="Carbs"
+                  color={variables.macros.carbs.background}
                   value={macrosAdjusted.carbs}
                   target={target.carbs}
                 />
 
                 <Progress
                   label="Vetten"
+                  color={variables.macros.fats.background}
                   value={macrosAdjusted.fat}
                   target={target.fat}
                 />

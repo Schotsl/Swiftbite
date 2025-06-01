@@ -13,6 +13,7 @@ type ProgressProps = {
   label: string;
   value: number;
   style?: StyleProp<ViewStyle>;
+  color?: string;
   target: number;
 };
 
@@ -21,6 +22,7 @@ export default function Progress({
   label,
   value,
   style,
+  color,
   target,
 }: ProgressProps) {
   const progress = (value / target) * 100;
@@ -59,9 +61,11 @@ export default function Progress({
             width: progressWidth,
             height: variables.border.radius,
             borderRadius: variables.border.radius,
+            backgroundColor: color,
           }}
         >
-          <DecorativeLinear />
+          {!color && <DecorativeLinear />}
+
           <DecorativeNoise />
         </View>
       </View>

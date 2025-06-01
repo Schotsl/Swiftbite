@@ -17,8 +17,8 @@ export default {
       background: "#37a859",
     },
     fats: {
-      border: "#fc0000",
-      background: "#ff0202",
+      border: "#fc029e",
+      background: "#fd0ea3",
     },
   },
   colors: {
