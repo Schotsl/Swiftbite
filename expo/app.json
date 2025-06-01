@@ -2,7 +2,7 @@
   "expo": {
     "name": "Swiftbite",
     "slug": "swiftbite",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "description": "Swiftbite: scan barcodes of je maaltijd, log in seconden en zie direct calorieën & macro's. Slimme porties, herhaal favorieten en houd grip op je doelen zonder gedoe!",
     "icon": "./assets/images/icon.png",
