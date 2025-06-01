@@ -95,6 +95,7 @@ function PersonalDetailsForm({ control }: PersonalDetailsFormProps) {
     <View style={{ gap: 32 }}>
       <Input
         name="email"
+        type="email-address"
         label={language.page.personal.details.input.email}
         control={control}
         content={language.page.personal.details.input.emailContent}

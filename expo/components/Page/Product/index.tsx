@@ -61,7 +61,7 @@ export default function PageProduct({
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const isGeneric = product.type === "search_generic";
@@ -188,7 +188,7 @@ export default function PageProduct({
 
             <Input
               name="quantity"
-              type="numeric"
+              type="number-pad"
               label="Portie aantal"
               placeholder="Hoeveel porties heb je gegeten?"
               control={control}

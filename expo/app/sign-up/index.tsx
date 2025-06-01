@@ -41,7 +41,12 @@ export default function SignUp() {
       <View style={{ flex: 1, justifyContent: "center", gap: 16 }}>
         <TextTitle>Create Account</TextTitle>
 
-        <Input control={control} name="email" placeholder="E-mail" />
+        <Input
+          name="email"
+          type="email-address"
+          control={control}
+          placeholder="E-mail"
+        />
 
         <Input
           type="password"

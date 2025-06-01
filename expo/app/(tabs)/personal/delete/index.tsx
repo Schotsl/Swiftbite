@@ -45,7 +45,7 @@ export default function PersonalDelete() {
           style: "destructive",
           onPress: () => handleConfirm(data),
         },
-      ],
+      ]
     );
   };
 

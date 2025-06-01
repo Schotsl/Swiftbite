@@ -127,8 +127,8 @@ export default function AutomationsMealUpsert() {
           <View style={{ gap: 32 }}>
             <Input
               name="title"
-              control={control}
               label={language.types.meal.inputTitle}
+              control={control}
               placeholder={language.types.meal.inputTitlePlaceholder}
             />
 

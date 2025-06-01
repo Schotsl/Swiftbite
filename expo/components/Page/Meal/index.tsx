@@ -162,7 +162,7 @@ export default function PageMeal({
 
             <Input
               name="quantity"
-              type="numeric"
+              type="number-pad"
               label="Portie aantal"
               placeholder="Hoeveel porties heb je gegeten?"
               control={control}
