@@ -1,8 +1,7 @@
 import { View } from "react-native";
-import { useForm } from "react-hook-form";
-import { Divider } from "@/components/Divider";
-import { useState } from "react";
 import { Product } from "@/types/product";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ServingData } from "@/schemas/serving";
@@ -12,6 +11,7 @@ import variables from "@/variables";
 
 import Input from "@/components/Input";
 import Header from "@/components/Header";
+import Divider from "@/components/Divider";
 import TextBody from "@/components/Text/Body";
 import InputTime from "@/components/Input/Time";
 import ButtonOverlay from "@/components/Button/Overlay";

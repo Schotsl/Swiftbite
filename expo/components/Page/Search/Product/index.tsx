@@ -118,7 +118,7 @@ type PageSearchProductContentProps = {
   products: Product[];
   overloaded: boolean;
   query: string;
-  queryWatched: string;
+  queryWatched?: string;
   onSelect: (product: string) => void;
 };
 
@@ -143,7 +143,7 @@ function PageSearchProductContent({
 
   const isTyping = queryWatched !== query && query.length > 0;
   const isEmpty = products.length === 0;
-  const isActive = queryWatched?.length > 0;
+  const isActive = queryWatched && queryWatched?.length > 0;
   const isSearchable = query?.length >= 4;
 
   const [opened, setOpened] = useState<string | null>(null);

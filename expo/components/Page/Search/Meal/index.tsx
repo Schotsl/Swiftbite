@@ -31,11 +31,11 @@ export default function PageSearchMeal({ onSelect }: PageSearchProps) {
   });
 
   const query = watch("query");
-  const lower = query.toLowerCase();
+  const lower = query?.toLowerCase();
 
   const filter = (meal: Meal) => {
     const titleLower = meal.title.toLowerCase();
-    const titleMatch = titleLower.includes(lower);
+    const titleMatch = lower && titleLower.includes(lower);
 
     return titleMatch;
   };
@@ -78,7 +78,7 @@ export default function PageSearchMeal({ onSelect }: PageSearchProps) {
 }
 
 type PageSearchMealContentProps = {
-  query: string;
+  query?: string;
   meals: MealWithProduct[];
   error: boolean;
   loading: boolean;
