@@ -10,7 +10,7 @@ type RepeatDataProps = {
 
 export default function repeatData({ uuid }: RepeatDataProps) {
   return queryOptions({
-    queryKey: ["repeatData", uuid],
+    queryKey: uuid ? ["repeatData", uuid] : ["repeatData"],
     queryFn: async (): Promise<Repeat[]> => {
       const query = supabase
         .from("repeat")
@@ -26,11 +26,10 @@ export default function repeatData({ uuid }: RepeatDataProps) {
       const { error, data } = await query;
 
       handleError(error);
-
       const mapped = data?.map((repeat) => ({
         ...repeat,
         time: new Date(repeat.time),
-        meal: mapMeal(repeat.meal),
+        meal: repeat.meal ? mapMeal(repeat.meal) : null,
       }));
 
       console.log(`[Query] fetched ${data?.length} repeats`);
