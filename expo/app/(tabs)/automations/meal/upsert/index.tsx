@@ -170,7 +170,7 @@ export default function AutomationsMealUpsert() {
                       <EmptySmall
                         onPress={() => setOpen(true)}
                         content={language.empty.getAdded(
-                          language.types.ingredient.plural,
+                          language.types.ingredient.plural
                         )}
                       />
                     );
@@ -187,7 +187,7 @@ export default function AutomationsMealUpsert() {
                 <ButtonSmall
                   icon="plus"
                   title={language.modifications.getInsert(
-                    language.types.ingredient.plural,
+                    language.types.ingredient.plural
                   )}
                   onPress={() => setOpen(true)}
                   onPosition={setPosition}
@@ -228,6 +228,10 @@ function AutomationsMealUpsertAdd({
   position,
   onClose,
 }: AutomationsMealUpsertAddProps) {
+  const border = variables.border.width;
+  const offset = 133;
+  const positionY = position.y;
+
   return (
     <Modal
       visible={open}
@@ -240,7 +244,7 @@ function AutomationsMealUpsertAdd({
       <View
         style={{
           gap: 18,
-          top: position.y - 133 - scroll,
+          top: positionY - offset - scroll - border,
           left: position.x,
           position: "absolute",
         }}
@@ -258,8 +262,9 @@ function AutomationsMealUpsertAdd({
 
         <ButtonSmall
           icon={"plus"}
+          shadow={false}
           title={language.modifications.getInsert(
-            language.types.ingredient.plural,
+            language.types.ingredient.plural
           )}
           onPress={() => onClose()}
         />

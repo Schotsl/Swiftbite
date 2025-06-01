@@ -13,6 +13,7 @@ type ButtonSmallBase = {
   style?: StyleProp<ViewStyle>;
   title?: string;
   action?: "primary" | "secondary" | "tertiary";
+  shadow?: boolean;
   disabled?: boolean;
   onPress: () => void;
   onPosition?: (position: { x: number; y: number }) => void;
@@ -39,6 +40,7 @@ export default function ButtonSmall({
 
   style,
   title,
+  shadow = true,
   action = "primary",
   disabled = false,
   onPress,
@@ -96,10 +98,12 @@ export default function ButtonSmall({
         isTertiary
           ? {}
           : {
-              shadowColor: "#000",
-              shadowRadius: 8,
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.05,
+              shadowColor: shadow ? "#000" : "transparent",
+              shadowRadius: shadow ? 8 : 0,
+              shadowOpacity: shadow ? 0.05 : 0,
+              shadowOffset: shadow
+                ? { width: 0, height: 2 }
+                : { width: 0, height: 0 },
 
               // I added this background color to improve shadow performance
               alignSelf: title ? "flex-start" : "center",
