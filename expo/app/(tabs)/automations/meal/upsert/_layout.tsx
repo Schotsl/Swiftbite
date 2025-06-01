@@ -1,6 +1,6 @@
 import { MealProvider } from "@/context/MealContext";
 import { ScrollView, View } from "react-native";
-import { useLocalSearchParams, Slot } from "expo-router";
+import { useLocalSearchParams, Stack } from "expo-router";
 
 import Empty from "@/components/Empty";
 import Header from "@/components/Header";
@@ -19,10 +19,24 @@ export default function AutomationsMealUpsertLayout() {
   if (isLoading) {
     return <AutomationsMealUpsertLayoutLoading />;
   }
-
   return (
     <MealProvider initial={meal!}>
-      <Slot />
+      <Stack
+        screenOptions={{
+          animation: "none",
+          headerShown: false,
+          gestureEnabled: true,
+          contentStyle: {
+            backgroundColor: "#FFFFFF",
+          },
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="camera" />
+
+        <Stack.Screen name="search/index" />
+        <Stack.Screen name="product/index" />
+      </Stack>
     </MealProvider>
   );
 }

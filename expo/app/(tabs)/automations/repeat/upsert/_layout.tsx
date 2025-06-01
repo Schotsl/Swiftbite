@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollView } from "react-native-gesture-handler";
 import { RepeatProvider } from "@/context/RepeatContext";
-import { useLocalSearchParams, Slot } from "expo-router";
+import { useLocalSearchParams, Stack } from "expo-router";
 
 import Empty from "@/components/Empty";
 import Header from "@/components/Header";
@@ -30,7 +30,23 @@ export default function AutomationsRepeatUpsertLayout() {
 
   return (
     <RepeatProvider initial={repeat}>
-      <Slot />
+      <Stack
+        screenOptions={{
+          animation: "none",
+          headerShown: false,
+          gestureEnabled: true,
+          contentStyle: {
+            backgroundColor: "#FFFFFF",
+          },
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="camera" />
+
+        <Stack.Screen name="meal/index" />
+        <Stack.Screen name="search/index" />
+        <Stack.Screen name="product/index" />
+      </Stack>
     </RepeatProvider>
   );
 }
