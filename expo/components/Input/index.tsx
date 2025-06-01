@@ -157,7 +157,7 @@ export default function Input({
                     keyboardType={type === "password" ? "default" : type}
                     secureTextEntry={type === "password"}
                     selectTextOnFocus={!disabled}
-                    placeholderTextColor={"#999999"}
+                    placeholderTextColor={variables.border.color}
                     onBlur={() => {
                       setIsFocused(false);
 

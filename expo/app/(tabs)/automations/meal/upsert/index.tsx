@@ -170,7 +170,10 @@ export default function AutomationsMealUpsert() {
                       <EmptySmall
                         onPress={() => setOpen(true)}
                         content={language.empty.getAdded(
-                          language.types.ingredient.plural
+                          language.functions.getJoin([
+                            language.types.product.plural,
+                            language.types.basic.plural,
+                          ])
                         )}
                       />
                     );

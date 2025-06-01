@@ -184,7 +184,11 @@ export default function AutomationsRepeatUpsert() {
                     return (
                       <EmptySmall
                         content={language.empty.getSelected(
-                          language.types.ingredient.single
+                          language.functions.getJoin([
+                            language.types.product.plural,
+                            language.types.basic.plural,
+                            language.types.meal.plural,
+                          ])
                         )}
                         onPress={() => setOpen(true)}
                       />

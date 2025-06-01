@@ -346,4 +346,13 @@ export default {
       },
     },
   },
+  functions: {
+    getJoin: (parts: string[]) => {
+      const partsLowered = parts.map((part) => part.toLowerCase());
+      const partsJoined = partsLowered.join(", ");
+      const partsAnd = partsJoined.replace(/,([^,]*)$/, " en$1");
+
+      return partsAnd;
+    },
+  },
 };

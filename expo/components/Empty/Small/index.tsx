@@ -34,7 +34,8 @@ export default function EmptySmall({
           weight="medium"
           color={variables.border.color}
           style={{
-            maxWidth: 200,
+            maxWidth: 260,
+            marginTop: -2,
             textAlign: left ? "left" : "center",
           }}
         >
