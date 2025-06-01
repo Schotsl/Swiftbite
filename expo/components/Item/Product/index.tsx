@@ -4,6 +4,7 @@ import ItemSkeleton from "../Skeleton";
 import { Product } from "@/types/product";
 import { ServingData } from "@/schemas/serving";
 import { displayQuantity, getMacrosFromProduct } from "@/helper";
+import { Alert } from "react-native";
 
 type ItemProductProps = {
   icon?: boolean;
@@ -91,6 +92,19 @@ export default function ItemProduct({
       ? "Wordt geanalyseerd..."
       : "Automatische inschatting";
 
+    const handlePress = () => {
+      if (processing) {
+        Alert.alert(
+          "Even wachten",
+          "We zijn dit product nog aan het analyseren"
+        );
+
+        return;
+      }
+
+      onSelect(product.uuid);
+    };
+
     return (
       <Item
         {...props}
@@ -101,7 +115,7 @@ export default function ItemProduct({
         subtitleLoading={processing}
         rightTop={overwriteTop}
         rightBottom={overwriteBottom}
-        onPress={() => onSelect(product.uuid)}
+        onPress={handlePress}
       />
     );
   }
