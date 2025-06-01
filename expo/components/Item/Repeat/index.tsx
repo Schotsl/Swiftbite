@@ -1,7 +1,7 @@
 import Item from "@/components/Item";
 
 import { Repeat } from "@/types/repeat";
-import { getMacrosFromProduct } from "@/helper";
+import { getMacrosFromMeal, getMacrosFromProduct } from "@/helper";
 
 import language from "@/language";
 
@@ -22,11 +22,18 @@ export default function ItemRepeat({ item, onSelect }: RepeatRepeatProps) {
 
   const translationsJoined = translationsArray.join(", ");
 
-  const macros = getMacrosFromProduct(item.product!, item.serving);
+  const { product, meal, serving } = item;
+
+  // We can enforce this type since estimations aren't allowed for meals
+  const title = product ? product.title! : meal.title;
+  const macros = product
+    ? getMacrosFromProduct(product, serving)
+    : getMacrosFromMeal(meal, serving);
 
   return (
     <Item
-      title={item.product?.title ?? item.meal?.title ?? ""}
+      title={title}
+      // TODO: languages
       subtitle={`Herhaald elke ${translationsJoined}`}
       subtitleIcon="repeat"
       rightTop={macros.calories ? `${macros.calories} kcal` : null}

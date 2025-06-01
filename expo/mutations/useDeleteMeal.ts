@@ -9,6 +9,8 @@ export default function useDeleteMeal() {
 
   return useMutation({
     mutationFn: async (uuid: string): Promise<void> => {
+      console.log(`[Mutation] deleting meal ${uuid}`);
+
       const { error } = await supabase.from("meal").delete().eq("uuid", uuid);
 
       handleError(error);
@@ -39,7 +41,7 @@ export default function useDeleteMeal() {
       if (context?.previousSpecific) {
         client.setQueryData(
           ["mealData", context.uuid],
-          context.previousSpecific,
+          context.previousSpecific
         );
       }
     },

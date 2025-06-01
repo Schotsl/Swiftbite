@@ -14,6 +14,8 @@ export default function useDeleteRepeat() {
       handleError(error);
     },
     onMutate: async (uuid: string) => {
+      console.log(`[Mutation] deleting repeat ${uuid}`);
+
       await client.cancelQueries({ queryKey: ["repeatData"] });
       await client.cancelQueries({ queryKey: ["repeatData", uuid] });
 
