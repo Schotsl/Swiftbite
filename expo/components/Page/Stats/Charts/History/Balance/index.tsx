@@ -13,6 +13,7 @@ import {
   rotation,
   labelTextStyle,
   yAxisLabelContainerStyle,
+  thickness,
 } from "@/components/Page/Stats/Charts/variables";
 
 type PageStatsChartsHistoryBalanceProps = {
@@ -92,7 +93,7 @@ export default function PageStatsChartsHistoryBalance({
         height={height / 2}
         spacing={getWidth()}
         maxValue={getMax()}
-        thickness={5}
+        thickness={thickness}
         xAxisColor={variables.colors.greyDark}
         noOfSections={2}
         disableScroll

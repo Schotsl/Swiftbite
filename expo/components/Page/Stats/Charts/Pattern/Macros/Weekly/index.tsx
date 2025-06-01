@@ -1,16 +1,15 @@
 import { View } from "react-native";
 import { useMemo } from "react";
-import { transformDate } from "@/helper";
+import { weekdays } from "../../variables";
 import { BarChartPropsType, BarChart } from "react-native-gifted-charts";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import PageStatsChartsHeader from "@/components/Page/Stats/Charts/Header";
 
 import {
   height,
-  rotation,
-  sections,
   spacing,
   spacingGroup,
   labelWidth,
@@ -18,24 +17,25 @@ import {
   yAxisLabelContainerStyle,
 } from "@/components/Page/Stats/Charts/variables";
 
-type PageStatsChartsHistoryCaloriesProps = {
+type PageStatsChartsPatternMacrosWeeklyProps = {
   width: number;
   input: {
-    consumed: number;
-    burned: number;
+    fats: number;
+    carbs: number;
+    proteins: number;
   }[];
 };
 
-export default function PageStatsChartsHistoryCalories({
+export default function PageStatsChartsPatternMacrosWeekly({
   input = [],
   width,
-}: PageStatsChartsHistoryCaloriesProps) {
+}: PageStatsChartsPatternMacrosWeeklyProps) {
   const data = useMemo(() => {
-    const data: BarChartPropsType["data"] = [];
+    const data: BarChartPropsType["stackData"] = [];
     const today = new Date();
     const length = input.length;
 
-    input.forEach(({ consumed, burned }, index) => {
+    input.forEach(({ fats, carbs, proteins }, index) => {
       const dateObject = new Date(today);
       const dateNumber = today.getDate();
       const dateOffset = length - index;
@@ -43,20 +43,28 @@ export default function PageStatsChartsHistoryCalories({
       dateObject.setDate(dateNumber - dateOffset);
 
       data.push({
-        value: consumed,
-        spacing,
-        label: transformDate(dateObject, true),
+        stacks: [
+          {
+            value: fats,
+            color: variables.macros.fats.background,
+          },
+          {
+            value: proteins,
+            color: variables.macros.protein.background,
+            marginBottom: spacing,
+          },
+          {
+            value: carbs,
+            color: variables.macros.carbs.background,
+            marginBottom: spacing,
+          },
+        ],
+        label: weekdays[dateObject.getDay()],
         labelWidth,
         labelTextStyle: {
           ...labelTextStyle,
-          transform: [{ translateY: 14 }, { translateX: -12 }, rotation],
+          transform: [{ translateY: 4 }, { translateX: 6 }],
         },
-        frontColor: variables.macros.protein.background,
-      });
-
-      data.push({
-        value: burned,
-        frontColor: variables.macros.carbs.background,
       });
     });
 
@@ -65,49 +73,54 @@ export default function PageStatsChartsHistoryCalories({
 
   const getWidth = () => {
     const length = data.length;
-    const lengthGroup = length / 2;
 
-    const totalSpacing = spacing * lengthGroup;
-    const totalSpacingGroup = spacingGroup * lengthGroup;
+    const barMargin = spacingGroup * length;
+    const barWidth = (width - barMargin) / length;
 
-    const barWidth = (width - totalSpacing - totalSpacingGroup) / length;
     return barWidth;
   };
 
   const getMax = () => {
-    const maxValues = data.map((item) => item.value || 0);
-    const maxValue = Math.max(...maxValues);
+    const maxSummed = data.map(({ stacks }) =>
+      stacks.reduce((sum, { value }) => sum + value, 0)
+    );
+
+    const maxValue = Math.max(...maxSummed);
     const maxWithBuffer = Math.ceil(maxValue * 1.15);
 
     return maxWithBuffer;
   };
 
   return (
-    <View style={{ paddingTop: 16, paddingBottom: 32, overflow: "hidden" }}>
+    <View style={{ paddingTop: 16, paddingBottom: 16, overflow: "hidden" }}>
       <PageStatsChartsHeader
-        title="kcal"
+        title="gram"
         options={[
           {
-            label: "Calorieën uit",
+            label: language.macros.fats.short,
+            color: variables.macros.fats.background,
+          },
+          {
+            label: language.macros.protein.short,
             color: variables.macros.protein.background,
           },
           {
-            label: "Calorieën in",
+            label: language.macros.carbs.short,
             color: variables.macros.carbs.background,
           },
         ]}
       />
 
       <BarChart
-        data={data}
         color={variables.colors.text.primary}
         height={height}
         spacing={spacingGroup}
         barWidth={getWidth()}
         maxValue={getMax()}
+        stackData={data}
         roundedTop
         disablePress
-        noOfSections={sections}
+        noOfSections={4}
         disableScroll
         roundedBottom
         xAxisThickness={0}

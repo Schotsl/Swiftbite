@@ -6,6 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 import Tabs from "@/components/Tabs";
 import PageStatsChartsHistory from "@/components/Page/Stats/Charts/History";
+import PageStatsChartsPattern from "@/components/Page/Stats/Charts/Pattern";
 
 export default function Stats() {
   const [tab, setTab] = useState("history");
@@ -37,7 +38,11 @@ export default function Stats() {
             paddingBottom: variables.paddingTab,
           }}
         >
-          {tab === "history" && <PageStatsChartsHistory />}
+          {tab === "history" ? (
+            <PageStatsChartsHistory />
+          ) : (
+            <PageStatsChartsPattern />
+          )}
         </View>
       </ScrollView>
     </View>

@@ -1,6 +1,8 @@
 import variables from "@/variables";
 
 export const height = 200;
+export const sections = 3;
+export const thickness = 3;
 
 export const spacing = 4;
 export const spacingGroup = 16;

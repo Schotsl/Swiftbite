@@ -1,99 +1,84 @@
 import { View } from "react-native";
 import { useMemo } from "react";
-import { transformDate } from "@/helper";
 import { BarChartPropsType, BarChart } from "react-native-gifted-charts";
 
 import variables from "@/variables";
+import language from "@/language";
 
 import PageStatsChartsHeader from "@/components/Page/Stats/Charts/Header";
 
 import {
   height,
-  rotation,
   sections,
-  spacing,
   spacingGroup,
   labelWidth,
   labelTextStyle,
   yAxisLabelContainerStyle,
 } from "@/components/Page/Stats/Charts/variables";
+import { weekdays } from "../../variables";
 
-type PageStatsChartsHistoryCaloriesProps = {
+type PageStatsChartsPatternCaloriesWeeklyProps = {
   width: number;
-  input: {
-    consumed: number;
-    burned: number;
-  }[];
+  input: number[];
 };
 
-export default function PageStatsChartsHistoryCalories({
+export default function PageStatsChartsPatternCaloriesWeekly({
   input = [],
   width,
-}: PageStatsChartsHistoryCaloriesProps) {
+}: PageStatsChartsPatternCaloriesWeeklyProps) {
   const data = useMemo(() => {
-    const data: BarChartPropsType["data"] = [];
+    const date: BarChartPropsType["data"] = [];
     const today = new Date();
     const length = input.length;
 
-    input.forEach(({ consumed, burned }, index) => {
+    input.forEach((value, index) => {
       const dateObject = new Date(today);
       const dateNumber = today.getDate();
       const dateOffset = length - index;
 
       dateObject.setDate(dateNumber - dateOffset);
 
-      data.push({
-        value: consumed,
-        spacing,
-        label: transformDate(dateObject, true),
+      const dayIndex = dateObject.getDay();
+      const dayString = weekdays[dayIndex];
+
+      date.push({
+        value: value,
+        label: dayString,
         labelWidth,
         labelTextStyle: {
           ...labelTextStyle,
-          transform: [{ translateY: 14 }, { translateX: -12 }, rotation],
+          transform: [{ translateY: 10 }, { translateX: -10 }],
         },
-        frontColor: variables.macros.protein.background,
-      });
-
-      data.push({
-        value: burned,
-        frontColor: variables.macros.carbs.background,
       });
     });
 
-    return data;
+    return date;
   }, [input]);
 
-  const getWidth = () => {
+  const getBarWidth = () => {
     const length = data.length;
-    const lengthGroup = length / 2;
+    const barMargin = spacingGroup * length;
+    const barWidth = (width - barMargin) / length;
 
-    const totalSpacing = spacing * lengthGroup;
-    const totalSpacingGroup = spacingGroup * lengthGroup;
-
-    const barWidth = (width - totalSpacing - totalSpacingGroup) / length;
     return barWidth;
   };
 
   const getMax = () => {
     const maxValues = data.map((item) => item.value || 0);
-    const maxValue = Math.max(...maxValues);
+    const maxValue = Math.max(0, ...maxValues);
     const maxWithBuffer = Math.ceil(maxValue * 1.15);
 
-    return maxWithBuffer;
+    return maxWithBuffer === 0 ? 10 : maxWithBuffer;
   };
 
   return (
-    <View style={{ paddingTop: 16, paddingBottom: 32, overflow: "hidden" }}>
+    <View style={{ paddingTop: 16, paddingBottom: 16, overflow: "hidden" }}>
       <PageStatsChartsHeader
         title="kcal"
         options={[
           {
-            label: "Calorieën uit",
+            label: language.macros.calories.long,
             color: variables.macros.protein.background,
-          },
-          {
-            label: "Calorieën in",
-            color: variables.macros.carbs.background,
           },
         ]}
       />
@@ -103,13 +88,14 @@ export default function PageStatsChartsHistoryCalories({
         color={variables.colors.text.primary}
         height={height}
         spacing={spacingGroup}
-        barWidth={getWidth()}
+        barWidth={getBarWidth()}
         maxValue={getMax()}
-        roundedTop
-        disablePress
+        frontColor={variables.macros.protein.background}
+        roundedTop={true}
+        disablePress={true}
         noOfSections={sections}
-        disableScroll
-        roundedBottom
+        disableScroll={true}
+        roundedBottom={true}
         xAxisThickness={0}
         yAxisThickness={0}
         yAxisLabelContainerStyle={yAxisLabelContainerStyle}

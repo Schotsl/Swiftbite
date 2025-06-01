@@ -8,6 +8,7 @@ import variables from "@/variables";
 import PageStatsChartsHeader from "@/components/Page/Stats/Charts/Header";
 
 import {
+  height,
   rotation,
   spacing,
   spacingGroup,
@@ -82,7 +83,7 @@ export default function PageStatsChartsHistoryMacros({
 
   const getMax = () => {
     const maxSummed = data.map(({ stacks }) =>
-      stacks.reduce((sum, { value }) => sum + value, 0),
+      stacks.reduce((sum, { value }) => sum + value, 0)
     );
 
     const maxValue = Math.max(...maxSummed);
@@ -113,7 +114,7 @@ export default function PageStatsChartsHistoryMacros({
 
       <BarChart
         color={variables.colors.text.primary}
-        height={200}
+        height={height}
         spacing={spacingGroup}
         barWidth={getWidth()}
         maxValue={getMax()}
