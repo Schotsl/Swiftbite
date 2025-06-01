@@ -42,7 +42,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
 
     if (socketRef.current) {
       console.log(
-        "[VISION] Closing existing connection before reconnecting...",
+        "[VISION] Closing existing connection before reconnecting..."
       );
 
       socketRef.current.onopen = null;
@@ -124,7 +124,7 @@ export const VisionProvider: React.FC<VisionProviderProps> = ({ children }) => {
       const timeRecevied = performance.now();
       const timeDifference = timeRecevied - timingRef.current!;
 
-      console.log(`[VISION] Response time: ${timeDifference}ms`);
+      console.log(`[VISION] Response time: ${Math.round(timeDifference)}ms`);
     }
   };
 

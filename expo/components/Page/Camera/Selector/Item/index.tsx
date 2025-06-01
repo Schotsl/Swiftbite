@@ -46,7 +46,7 @@ export default function CameraSelectorItem({
           color: color,
 
           fontSize: fontSize,
-          fontFamily: "OpenSans_700Bold",
+          fontFamily: "OpenSans_600SemiBold",
 
           textAlign: "center",
           paddingVertical: 4,

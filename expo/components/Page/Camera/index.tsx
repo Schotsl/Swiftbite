@@ -175,7 +175,7 @@ export default function PageCamera({
       base64: string,
       width: number,
       height: number,
-      orientation: number,
+      orientation: number
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -198,7 +198,7 @@ export default function PageCamera({
         newHeight,
         "JPEG",
         50,
-        orientation,
+        orientation
       );
 
       sendImage(data.uri);
@@ -210,7 +210,7 @@ export default function PageCamera({
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    [],
+    []
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -242,7 +242,7 @@ export default function PageCamera({
     onCodeScanned: (codes) => {
       if (codes.length > 1) {
         Alert.alert(
-          "We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één.",
+          "We hebben meerdere barcodes gevonden in deze afbeelding, scan één voor één."
         );
 
         return;
@@ -313,7 +313,7 @@ export default function PageCamera({
           marginTop: "auto",
           alignItems: "center",
 
-          paddingTop: 16,
+          paddingTop: 14,
           paddingBottom: 48,
           backgroundColor: "rgba(0, 0, 0, 0.35)",
         }}
@@ -328,14 +328,14 @@ export default function PageCamera({
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           colors={[
-            "rgba(255, 255, 255, .25)",
-            "rgba(255, 255, 255, .75)",
-            "rgba(255, 255, 255, .75)",
-            "rgba(255, 255, 255, .25)",
+            "rgba(255, 255, 255, .1)",
+            "rgba(255, 255, 255, .3)",
+            "rgba(255, 255, 255, .3)",
+            "rgba(255, 255, 255, .1)",
           ]}
           style={{
             width: 264,
-            height: 2,
+            height: 1,
             marginTop: -12,
             borderRadius: 2,
             marginBottom: 4,

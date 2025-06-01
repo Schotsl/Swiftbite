@@ -44,9 +44,9 @@ export default function CameraVision() {
   return (
     <Animated.View
       style={{
-        top: 68,
         left: "50%",
         width: 200,
+        bottom: 288,
         opacity: animationRef,
         maxWidth: 200,
         alignSelf: "center",
