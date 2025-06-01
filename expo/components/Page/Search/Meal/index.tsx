@@ -116,8 +116,8 @@ function PageSearchMealContent({
   if (isEmpty && !query) {
     return (
       <Empty
-        emoji="😲"
-        content={language.empty.meal}
+        emoji="🍲"
+        content={language.search.explanation.meal}
         button={{
           icon: "plus",
           title: language.modifications.getInsert(language.types.meal.single),

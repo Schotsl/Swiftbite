@@ -141,9 +141,8 @@ function PageSearchProductContent({
   const { data: mostUsedProducts, isLoading: mostUsedProductsLoading } =
     useQuery(productData({ rpc: "product_most_used", type }));
 
-  const isTyping = queryWatched !== query && query.length > 0;
   const isEmpty = products.length === 0;
-  const isActive = queryWatched && queryWatched?.length > 0;
+  const isPreviewing = queryWatched === query;
   const isSearchable = query?.length >= 4;
 
   const [opened, setOpened] = useState<string | null>(null);
@@ -152,16 +151,6 @@ function PageSearchProductContent({
     type === "search_product"
       ? language.types.product.plural
       : language.types.basic.plural;
-
-  if (loading && isEmpty) {
-    return (
-      <Empty
-        emoji="🔎"
-        active={true}
-        content={language.search.results.getLoading(labelPlural)}
-      />
-    );
-  }
 
   if (error) {
     return (
@@ -176,56 +165,86 @@ function PageSearchProductContent({
     return <Empty emoji="🥱" content={language.search.results.overloaded} />;
   }
 
-  if (isTyping) {
+  if (queryWatched === undefined || queryWatched.length === 0) {
+    return (
+      <View style={{ flex: 1 }}>
+        <PageSearchProductCollapsable
+          title={language.search.favorite.getTitle(labelPlural)}
+          empty={language.search.favorite.getEmpty(labelPlural)}
+          emoji="😊"
+          opened={opened}
+          loading={favoriteProductsLoading}
+          products={favoriteProducts}
+          onOpen={setOpened}
+          onSelect={onSelect}
+        />
+
+        <PageSearchProductCollapsable
+          title={language.search.manual.getTitle(labelPlural)}
+          empty={language.search.manual.getEmpty(labelPlural)}
+          emoji="📝"
+          opened={opened}
+          loading={false}
+          products={[]}
+          onOpen={setOpened}
+          onSelect={onSelect}
+        />
+
+        <PageSearchProductCollapsable
+          title={language.search.often.getTitle(labelPlural)}
+          empty={language.search.often.getEmpty(labelPlural)}
+          emoji="👀"
+          opened={opened}
+          loading={mostUsedProductsLoading}
+          products={mostUsedProducts}
+          onOpen={setOpened}
+          onSelect={onSelect}
+        />
+
+        <PageSearchProductCollapsable
+          title={language.search.recent.getTitle(labelPlural)}
+          empty={language.search.recent.getEmpty(labelPlural)}
+          emoji="🆕"
+          opened={opened}
+          loading={mostRecentProductsLoading}
+          products={mostRecentProducts}
+          onOpen={setOpened}
+          onSelect={onSelect}
+        />
+
+        <Empty
+          emoji={type === "search_product" ? "🥤" : "🍎"}
+          content={
+            type === "search_product"
+              ? language.search.explanation.product
+              : language.search.explanation.basic
+          }
+        />
+      </View>
+    );
+  }
+
+  if (isEmpty && loading) {
     return (
       <Empty
-        emoji="🥳"
-        content={language.search.results.getDefault(labelPlural)}
+        emoji="🔎"
+        active={true}
+        content={language.search.results.getLoading(labelPlural)}
       />
     );
   }
 
-  if (isEmpty && isSearchable) {
+  if (isEmpty && isPreviewing && isSearchable) {
     return (
       <Empty
         emoji="😲"
         content={language.search.results.getEmpty(labelPlural)}
+        contentSecondary={language.search.results.getAdvice(labelPlural)}
       />
     );
   }
 
-  if (isSearchable) {
-    return (
-      <ScrollView style={{ flex: 1 }}>
-        <FlatList
-          data={products}
-          scrollEnabled={false}
-          keyExtractor={(item) => item.uuid}
-          renderItem={({ item }) => (
-            <ItemProduct icon={false} product={item} onSelect={onSelect} />
-          )}
-        />
-
-        {loading && (
-          <View
-            style={{
-              width: "100%",
-              padding: 32,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <ActivityIndicator
-              size="small"
-              color={variables.colors.text.primary}
-            />
-          </View>
-        )}
-      </ScrollView>
-    );
-  }
-
-  if (isActive) {
+  if (!isPreviewing || !isSearchable) {
     return (
       <Empty
         emoji="🥳"
@@ -235,50 +254,31 @@ function PageSearchProductContent({
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <PageSearchProductCollapsable
-        title={language.search.favorite.getTitle(labelPlural)}
-        empty={language.search.favorite.getEmpty(labelPlural)}
-        emoji="😊"
-        opened={opened}
-        loading={favoriteProductsLoading}
-        products={favoriteProducts}
-        onOpen={setOpened}
-        onSelect={onSelect}
+    <ScrollView style={{ flex: 1 }}>
+      <FlatList
+        data={products}
+        scrollEnabled={false}
+        keyExtractor={(item) => item.uuid}
+        renderItem={({ item }) => (
+          <ItemProduct icon={false} product={item} onSelect={onSelect} />
+        )}
       />
 
-      <PageSearchProductCollapsable
-        title={language.search.manual.getTitle(labelPlural)}
-        empty={language.search.manual.getEmpty(labelPlural)}
-        emoji="📝"
-        opened={opened}
-        loading={false}
-        products={[]}
-        onOpen={setOpened}
-        onSelect={onSelect}
-      />
-
-      <PageSearchProductCollapsable
-        title={language.search.often.getTitle(labelPlural)}
-        empty={language.search.often.getEmpty(labelPlural)}
-        emoji="👀"
-        opened={opened}
-        loading={mostUsedProductsLoading}
-        products={mostUsedProducts}
-        onOpen={setOpened}
-        onSelect={onSelect}
-      />
-
-      <PageSearchProductCollapsable
-        title={language.search.recent.getTitle(labelPlural)}
-        empty={language.search.recent.getEmpty(labelPlural)}
-        emoji="🆕"
-        opened={opened}
-        loading={mostRecentProductsLoading}
-        products={mostRecentProducts}
-        onOpen={setOpened}
-        onSelect={onSelect}
-      />
-    </View>
+      {loading && (
+        <View
+          style={{
+            width: "100%",
+            padding: 32,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ActivityIndicator
+            size="small"
+            color={variables.colors.text.primary}
+          />
+        </View>
+      )}
+    </ScrollView>
   );
 }

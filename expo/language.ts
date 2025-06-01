@@ -289,6 +289,11 @@ export default {
     },
   },
   search: {
+    explanation: {
+      meal: `Maaltijden zijn samengestelde combinaties van producten of basisitems, zoals een “Caesarsalade”`,
+      basic: `Basisitems zijn merkloze, algemene items zoals “Banaan” of “Broodje pulled chicken met coleslaw”`,
+      product: `Producten zijn merkartikelen, zoals “Coca-Cola Zero”, die altijd naar een exact merk en smaak verwijzen`,
+    },
     results: {
       overloaded: "Je hebt je dagelijkse zoek limiet overschreden",
 
@@ -296,7 +301,10 @@ export default {
         return `Start met zoeken naar ${type.toLowerCase()} door minimaal 4 letters te typen en druk op enter`;
       },
       getEmpty: (type: string) => {
-        return `We hebben geen ${type.toLowerCase()} gevonden met deze naam`;
+        return `We hebben geen helaas ${type.toLowerCase()} gevonden met deze naam`;
+      },
+      getAdvice: (type: string) => {
+        return `Onze AI zoekt de ${type.toLowerCase()} voor je, hoe specifieker je zoekt, hoe beter de resultaten`;
       },
       getError: (type: string) => {
         return `Er is iets mis gegaan tijdens het zoeken naar ${type.toLowerCase()}`;
