@@ -30,6 +30,7 @@ export default {
     saturday: "Zaterdag",
   },
   burned: "Verbrand",
+  overflow: "Over",
   consumed: "Verbruikt",
   remaining: "Resterend",
   macros: {

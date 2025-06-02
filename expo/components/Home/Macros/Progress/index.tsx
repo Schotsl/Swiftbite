@@ -2,10 +2,11 @@
 
 import { View } from "react-native";
 
-import HomeProgressCircle from "./Circle";
 import HomeProgressLabel from "./Label";
+import HomeMacrosProgressCircle from "./Circle";
 
 import language from "@/language";
+
 type HomeMacrosProgressProps = {
   target: number;
   burned: number;
@@ -17,7 +18,11 @@ export default function HomeMacrosProgress({
   burned,
   consumed,
 }: HomeMacrosProgressProps) {
-  const progress = consumed / target;
+  const progressUnlimited = consumed / target;
+  const progress = Math.min(progressUnlimited, 1);
+
+  const remainingUnlimited = target - consumed;
+  const remaining = Math.abs(remainingUnlimited);
 
   return (
     <View style={{ width: "100%", alignItems: "center" }}>
@@ -37,14 +42,16 @@ export default function HomeMacrosProgress({
         <HomeProgressLabel value={consumed} label={language.consumed} />
 
         <HomeProgressLabel
-          value={target - consumed}
-          label={language.remaining}
+          value={remaining}
+          label={
+            remainingUnlimited > 0 ? language.remaining : language.overflow
+          }
         />
 
         <HomeProgressLabel value={burned} label={language.burned} />
       </View>
 
-      <HomeProgressCircle progress={progress} />
+      <HomeMacrosProgressCircle progress={progress} />
     </View>
   );
 }
