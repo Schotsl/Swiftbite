@@ -75,7 +75,7 @@ export default {
       dairy: "Dagboek",
       personal: "Instellingen",
       statistics: "Statistieken",
-      automations: "Automaties",
+      automations: "Automatisch",
     },
     add: {
       camera: "Camera",
@@ -227,11 +227,11 @@ export default {
     serving: {
       group: "Portie",
       size: {
-        title: "Portie grote",
-        placeholder: "Selecteer een portie grote",
+        title: "Portiegrootte",
+        placeholder: "Selecteer een portiegrootte",
       },
       amount: {
-        title: "Portie aantal",
+        title: "Portieaantal",
         placeholder: "Hoeveel porties heb je gegeten?",
       },
     },

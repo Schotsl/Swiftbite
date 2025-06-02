@@ -2,15 +2,15 @@ import { z } from "zod";
 
 export const servingSchema = z.object({
   option: z.string({
-    required_error: "Selecteer een portie grootte",
-    invalid_type_error: "Selecteer een portie grootte",
+    required_error: "Selecteer een portiegrootte",
+    invalid_type_error: "Selecteer een portiegrootte",
   }),
   quantity: z.coerce
     .number({
-      required_error: "Voer een portie aantal in",
-      invalid_type_error: "Voer een portie aantal in",
+      required_error: "Voer een portieaantal in",
+      invalid_type_error: "Voer een portieaantal in",
     })
-    .gt(0, "Portie aantal moet groter zijn dan 0"),
+    .gt(0, "Portieaantal moet groter zijn dan 0"),
 });
 
 export type ServingInput = z.infer<typeof servingSchema>;
