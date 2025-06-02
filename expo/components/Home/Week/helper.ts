@@ -25,7 +25,7 @@ export function getDay(
   dateItem: Date,
   dateToday: Date,
   dateView: Date,
-  datesUsed: string[]
+  datesUsed: string[],
 ): Day {
   const dateString = dateItem.toISOString().split("T")[0];
 

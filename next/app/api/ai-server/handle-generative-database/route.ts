@@ -74,14 +74,11 @@ export async function POST(request: Request) {
           }
         : null;
 
-    const serving =
-      servingGram && servingOriginalUnit && servingOriginal
-        ? {
-            gram: servingGram,
-            option: servingOriginalUnit,
-            quantity: servingOriginal,
-          }
-        : null;
+    const serving = {
+      gram: servingGram,
+      option: servingOriginalUnit,
+      quantity: servingOriginal,
+    };
 
     // Update the product with nutritional data
     const { error: productError } = await supabase
@@ -106,8 +103,8 @@ export async function POST(request: Request) {
       .from("entry")
       .update({
         serving: {
-          gram: nutrition.quantity_gram,
-          option: "quantity",
+          gram: serving.gram,
+          option: "serving",
           quantity: 1,
         },
       })

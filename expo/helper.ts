@@ -89,7 +89,7 @@ export const getOptions = ({
       gram: product.quantity.gram,
       value: `quantity`,
       title: language.options.getQuantity(
-        product.quantity.gram,
+        product.quantity.quantity,
         product.quantity.option,
       ),
     });
@@ -109,7 +109,7 @@ export const getOptions = ({
       gram: product.serving?.gram,
       value: `serving`,
       title: language.options.getServing(
-        product.serving.gram,
+        product.serving.quantity,
         product.serving.option,
       ),
     });

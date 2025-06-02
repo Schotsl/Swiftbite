@@ -115,7 +115,7 @@ export default function PageProduct({
       items.push({
         key: "serving",
         icon: "plate-wheat",
-        value: `${product.serving.gram} ${getLabel(product.serving.option)}`,
+        value: `${product.serving.quantity} ${getLabel(product.serving.option)}`,
       });
     }
 
@@ -123,7 +123,7 @@ export default function PageProduct({
       items.push({
         key: "quantity",
         icon: "weight-hanging",
-        value: `${product.quantity.gram} ${getLabel(product.quantity.option)}`,
+        value: `${product.quantity.quantity} ${getLabel(product.quantity.option)}`,
       });
     } else if (product.search?.quantity_original) {
       const { quantity_original, quantity_original_unit } = product.search;
