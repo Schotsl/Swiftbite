@@ -28,15 +28,24 @@ export async function POST(request: Request) {
   }
 
   const uuid = body.record.uuid;
+
   const title = body.record.title;
   const titleOld = body.old_record?.title;
+  const titleChanged = title !== titleOld;
+
+  const ingredients = await fetchIngredients(uuid);
+  const ingredientsOld = body.old_record?.ingredients;
+  const ingredientsJSON = JSON.stringify(ingredients);
+  const ingredientsChanged = ingredientsJSON !== ingredientsOld;
 
   // If the title and the ingredients haven't changed we don't need to do anything
-  if (title === titleOld) {
+  if (!titleChanged && !ingredientsChanged) {
     return new Response("{}", { status: 200 });
   }
 
   after(async () => {
+    // First we'll update the ingredients to prevent callback loops
+    await updateIngredients(uuid);
     await Promise.all([
       updateMealIcon(user, { uuid, title }),
       updateMealDependencies({ uuid }),
@@ -45,6 +54,18 @@ export async function POST(request: Request) {
 
   return new Response("{}", { status: 200 });
 }
+
+const updateIngredients = async (uuid: string) => {
+  const ingredientsObjects = await fetchIngredients(uuid);
+  const ingredientsJSON = JSON.stringify(ingredientsObjects);
+
+  const { error } = await supabase
+    .from("meal")
+    .update({ ingredients: ingredientsJSON })
+    .eq("uuid", uuid);
+
+  handleError(error);
+};
 
 const updateMealIcon = async (
   user: string,
@@ -109,7 +130,7 @@ const updateMealDependencies = async ({ uuid }: { uuid: string }) => {
 
   // Update every repeat with this meal_id to update the serving
   const promiseRepeat = supabase
-    .from("entry")
+    .from("repeat")
     .update({
       serving: { gram: ingredientsGrams, option: "quantity", quantity: 1 },
     })
