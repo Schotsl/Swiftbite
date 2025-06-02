@@ -29,12 +29,13 @@ export async function POST(request: Request) {
 
   const uuid = body.record.uuid;
   const title = body.record.title;
-  const titleOld = body.old_record?.title;
+  // const titleOld = body.old_record?.title;
 
   // If the title and the ingredients haven't changed we don't need to do anything
-  if (title === titleOld) {
-    return new Response("{}", { status: 200 });
-  }
+  // I need to implement a better check that also takes the ingredient list into account
+  // if (title === titleOld) {
+  //   return new Response("{}", { status: 200 });
+  // }
 
   after(async () => {
     await Promise.all([
@@ -48,7 +49,7 @@ export async function POST(request: Request) {
 
 const updateMealIcon = async (
   user: string,
-  { uuid, title }: { uuid: string; title: string },
+  { uuid, title }: { uuid: string; title: string }
 ) => {
   // First we'll reset the icon to null so it shows the loading icon again
   console.log(`[MEAL] Resetting icon`);
@@ -59,7 +60,7 @@ const updateMealIcon = async (
 
   const ingredientsObjects = await fetchIngredients(uuid);
   const ingredients = ingredientsObjects.map(
-    (ingredient) => ingredient.product.title,
+    (ingredient) => ingredient.product.title
   );
 
   const iconTitle = await normalizeMeal(user, {
