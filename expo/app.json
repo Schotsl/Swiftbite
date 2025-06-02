@@ -2,12 +2,13 @@
   "expo": {
     "name": "Swiftbite",
     "slug": "swiftbite",
-    "version": "1.0.7",
-    "orientation": "portrait",
-    "description": "Swiftbite: scan barcodes of je maaltijd, log in seconden en zie direct calorieën & macro's. Slimme porties, herhaal favorieten en houd grip op je doelen zonder gedoe!",
     "icon": "./assets/images/icon.png",
     "scheme": "com.sjorsvanholst.swiftbite",
+    "version": "1.0.8",
+    "orientation": "portrait",
+    "description": "Swiftbite: scan barcodes of je maaltijd, log in seconden en zie direct calorieën & macro's. Slimme porties, herhaal favorieten en houd grip op je doelen zonder gedoe!",
     "userInterfaceStyle": "automatic",
+    "newArchEnabled": false,
     "ios": {
       "supportsTablet": true,
       "usesAppleSignIn": true,
@@ -15,6 +16,8 @@
       "bundleIdentifier": "com.sjorsvanholst.swiftbite",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
+        "NSHealthShareUsageDescription": "Read length and weight to calculate relevant default values.",
+        "NSHealthUpdateUsageDescription": "Update Health data to insert calories and macronutrients.",
         "NSCameraUsageDescription": "Allow camera access to scan barcodes, nutrition labels, and take photos of meals.",
         "NSLocationWhenInUseUsageDescription": "Location access helps improve product relevance."
       },
