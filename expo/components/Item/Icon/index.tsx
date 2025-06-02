@@ -3,7 +3,7 @@
 import variables from "@/variables";
 
 import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 type ItemIconProps = {
@@ -11,7 +11,11 @@ type ItemIconProps = {
 };
 
 export default function ItemIcon({ iconId }: ItemIconProps) {
-  const [loadedImage, setLoadedImage] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    setLoaded(false);
+  }, [iconId]);
 
   return (
     <View
@@ -27,7 +31,7 @@ export default function ItemIcon({ iconId }: ItemIconProps) {
       {iconId && (
         <Image
           source={`${process.env.EXPO_PUBLIC_SUPABASE_URL}/storage/v1/object/public/icon/${iconId}-256`}
-          onLoad={() => setLoadedImage(true)}
+          onLoad={() => setLoaded(true)}
           contentFit="contain"
           contentPosition="center"
           style={{
@@ -39,7 +43,7 @@ export default function ItemIcon({ iconId }: ItemIconProps) {
         />
       )}
 
-      {!loadedImage && (
+      {!loaded && (
         <ActivityIndicator
           size="small"
           style={{ transform: [variables.scale] }}
