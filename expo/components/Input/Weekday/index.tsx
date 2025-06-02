@@ -44,13 +44,13 @@ export default function InputWeekday({
   };
 
   const weekdays = [
+    { value: "sunday", title: language.weekdays.sunday },
     { value: "monday", title: language.weekdays.monday },
     { value: "tuesday", title: language.weekdays.tuesday },
     { value: "wednesday", title: language.weekdays.wednesday },
     { value: "thursday", title: language.weekdays.thursday },
     { value: "friday", title: language.weekdays.friday },
     { value: "saturday", title: language.weekdays.saturday },
-    { value: "sunday", title: language.weekdays.sunday },
   ];
 
   return (

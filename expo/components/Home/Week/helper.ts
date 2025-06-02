@@ -6,13 +6,13 @@ import { Border, Color, Day } from "./types";
 
 export const getLetter = (date: Date): string => {
   const weekdays = [
+    language.weekdays.sunday,
     language.weekdays.monday,
     language.weekdays.tuesday,
     language.weekdays.wednesday,
     language.weekdays.thursday,
     language.weekdays.friday,
     language.weekdays.saturday,
-    language.weekdays.sunday,
   ].map((day) => day.slice(0, 1));
 
   const index = date.getDay();
@@ -25,7 +25,7 @@ export function getDay(
   dateItem: Date,
   dateToday: Date,
   dateView: Date,
-  datesUsed: string[],
+  datesUsed: string[]
 ): Day {
   const dateString = dateItem.toISOString().split("T")[0];
 
