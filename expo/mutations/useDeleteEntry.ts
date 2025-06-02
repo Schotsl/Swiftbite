@@ -1,41 +1,65 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 import { handleError } from "@/helper";
+import { Entry } from "@/types/entry";
+
 import supabase from "@/utils/supabase";
 
 export default function useDeleteEntry() {
-  const queryClient = useQueryClient();
+  const client = useQueryClient();
 
   return useMutation({
-    mutationFn: async (uuid: string): Promise<void> => {
-      console.log(`[Mutation] deleting entry ${uuid}`);
+    mutationFn: async (entry: Entry): Promise<void> => {
+      console.log(`[Mutation] deleting entry ${entry.uuid}`);
 
-      const { error } = await supabase.from("entry").delete().eq("uuid", uuid);
+      const { error } = await supabase
+        .from("entry")
+        .delete()
+        .eq("uuid", entry.uuid);
 
       handleError(error);
     },
-    onMutate: async (uuid: string) => {
-      await queryClient.cancelQueries({ queryKey: ["entryData"] });
-      const previousEntries = queryClient.getQueryData(["entryData"]);
+    onMutate: async (entry: Entry) => {
+      const uuid = entry.uuid;
+      const date = getDate(entry.created_at);
 
-      // Optimistically update to the new value
-      queryClient.setQueryData(["entryData"], (old: any[] = []) =>
-        old.filter((entry) => entry.uuid !== uuid),
-      );
+      await client.cancelQueries({ queryKey: ["entryData", uuid] });
+      await client.cancelQueries({ queryKey: ["entryData", date] });
 
-      return { previousEntries };
+      const previousUuid =
+        client.getQueryData<Entry[]>(["entryData", uuid]) || [];
+
+      const previousDate =
+        client.getQueryData<Entry[]>(["entryData", date]) || [];
+
+      const filteredUuid = previousUuid.filter((entry) => entry.uuid !== uuid);
+      const filteredDate = previousDate.filter((entry) => entry.uuid !== uuid);
+
+      client.setQueryData(["entryData", uuid], filteredUuid);
+      client.setQueryData(["entryData", date], filteredDate);
+
+      return { uuid, date, previousUuid, previousDate };
     },
-    onError: (err, newEntry, context) => {
+    onError: (err, entry, context) => {
       // If the mutation fails, use the context returned from onMutate to roll back
-      queryClient.setQueryData(["entryData"], context?.previousEntries);
+      client.setQueryData(["entryData", context?.uuid], context?.previousUuid);
+      client.setQueryData(["entryData", context?.date], context?.previousDate);
 
       console.log("[Mutation] failed to delete entry");
     },
-    onSettled: () => {
+    onSettled: (data, error, uuid, context) => {
       // Always refetch after error or success
-      queryClient.invalidateQueries({ queryKey: ["entryData"] });
+      client.invalidateQueries({ queryKey: ["entryData", context?.uuid] });
+      client.invalidateQueries({ queryKey: ["entryData", context?.date] });
 
       console.log("[Mutation] deleted entry");
     },
   });
+}
+
+function getDate(date?: Date) {
+  if (!date) {
+    return undefined;
+  }
+
+  return date.toISOString().split("T")[0];
 }

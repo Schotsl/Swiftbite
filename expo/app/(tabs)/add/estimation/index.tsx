@@ -80,7 +80,7 @@ export default function AddEstimation() {
       return;
     }
 
-    await deleteEntry.mutateAsync(entry.uuid);
+    await deleteEntry.mutateAsync(entry);
 
     router.replace("/");
   };

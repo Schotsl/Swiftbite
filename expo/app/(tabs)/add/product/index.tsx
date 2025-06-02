@@ -61,7 +61,7 @@ export default function AddProduct() {
 
   const handleSave = async (
     returnedServing: ServingData,
-    returnedCreated: Date,
+    returnedCreated: Date
   ) => {
     if (entry) {
       // If we have a existing entry we'll update it
@@ -92,7 +92,7 @@ export default function AddProduct() {
       return;
     }
 
-    await deleteEntry.mutateAsync(entry.uuid);
+    await deleteEntry.mutateAsync(entry);
 
     router.replace("/");
   };

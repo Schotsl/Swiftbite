@@ -6,8 +6,8 @@ import supabase from "@/utils/supabase";
 
 type EntryDataProps =
   | {
-      date: Date;
       uuid?: never;
+      date: Date;
     }
   | {
       uuid: string;
@@ -16,12 +16,12 @@ type EntryDataProps =
 
 export default function entryData({ date, uuid }: EntryDataProps) {
   return queryOptions({
-    queryKey: ["entryData", getDate(date), uuid],
+    queryKey: uuid ? ["entryData", uuid] : ["entryData", getDate(date)],
     queryFn: async (): Promise<Entry[]> => {
       const query = supabase
         .from("entry")
         .select(
-          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`,
+          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`
         )
         .order("created_at", { ascending: false });
 

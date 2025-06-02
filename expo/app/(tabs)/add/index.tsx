@@ -198,8 +198,8 @@ function AddList({ date, onEmpty }: AddListProps) {
     onEmpty(entries.length === 0);
   }, [entries, onEmpty]);
 
-  const handleDelete = (uuid: string) => {
-    deleteEntry.mutate(uuid);
+  const handleDelete = (entry: Entry) => {
+    deleteEntry.mutate(entry);
   };
 
   const handleRepeat = (entry: Entry) => {
@@ -238,7 +238,7 @@ function AddList({ date, onEmpty }: AddListProps) {
       )}
       renderHiddenItem={({ item }) => (
         <ItemActions
-          onDelete={() => handleDelete(item.uuid)}
+          onDelete={() => handleDelete(item)}
           onRepeat={item.serving ? () => handleRepeat(item) : undefined}
         />
       )}
