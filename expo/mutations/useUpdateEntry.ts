@@ -9,11 +9,12 @@ export default function useUpdateEntry() {
 
   return useMutation({
     mutationFn: async (entry: Entry): Promise<Entry> => {
-      const { serving } = entry;
+      // TODO: This should be switched to ...rest
+      const { serving, created_at } = entry;
 
       const { data, error } = await supabase
         .from("entry")
-        .update({ serving })
+        .update({ serving, created_at })
         .eq("uuid", entry.uuid)
         .select()
         .single();
@@ -27,7 +28,7 @@ export default function useUpdateEntry() {
 
       const previous = query.getQueryData<Entry[]>(["entryData"]);
       const updated = previous?.map((entry) =>
-        entry.uuid === entryUpdate.uuid ? { ...entry, ...entryUpdate } : entry,
+        entry.uuid === entryUpdate.uuid ? { ...entry, ...entryUpdate } : entry
       );
 
       query.setQueryData<Entry[]>(["entryData"], updated);
