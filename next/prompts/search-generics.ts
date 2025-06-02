@@ -33,26 +33,29 @@ Your task is to find up to 6 new, relevant, unbranded generic food items or simp
   - Example: If query is "Apple," semantically close items are other apple varietals, or "Apple" itself. "Pear" is related but less semantically close than another apple type.
   - Example: If query is "Coca-Cola" (a branded query, but for illustration of semantic closeness for generic counterparts), semantically close generic items might be "Cola," "Soda Pop," or "Fizzy Drink." A less ideal (broader) suggestion might be "Sweet Beverage."
 
-- If the provided database results ALREADY contain several (e.g., 3 or more) distinct generic items that are **strong semantic matches** for the user's \`query\` and adequately cover its core meaning, you MUST return an empty array \`[]\`.
-  - This prevents suggesting redundant items if the database already offers good coverage.
-  - Example: If query is "Appel" and database has "Apple," "Red Apple," "Elstar Apple", return \`[]\`.
-  - Example: If user query is "Chicken sandwich" and database has "Chicken Sandwich", "Grilled Chicken Sandwich", "Toasted Chicken Sandwich", return \`[]\`.
+- **When to return an empty array \`[]\` (i.e., suggest no new items):**
+  You MUST return an empty array \`[]\` if ANY of the following conditions are met:
+  1.  **Sufficient coverage including exact match:** The database ALREADY contains the direct generic equivalent of the user's \`query\` (e.g., "Apple" for a query of "Apple" or "apple") AND it also contains at least two OTHER distinct generic items that are strong semantic matches to the \`query\`. In this scenario, the core meaning is well covered by the exact match plus variations.
+      - Example: User query "Appel". Database contains: "Apple" (exact equivalent), "Red Apple", "Elstar Apple". Result: \`[]\`.
+  2.  **Sufficient coverage with strong varietals/substitutes (exact match missing):** The user's \`query\` is for a generic item (e.g. "Apple"), its direct generic equivalent is MISSING from the database, BUT the database ALREADY contains three or more distinct items that are *all strong semantic matches and very close variations/direct substitutes* for the queried item (e.g., multiple specific varietals of the same fruit).
+      - Example: User query "Apple". Database contains: "Gala Apple", "Fuji Apple", "Granny Smith Apple". Result: \`[]\`. (Assumes these cover "Apple" adequately).
+      - THIS RULE IS TRICKY: If the database items are related but not direct variations (e.g., "Apple Pie", "Apple Juice" for query "Apple"), this condition is likely NOT met for returning \`[]\`, and you should proceed to suggest "Apple" if missing (see 'Crafting suggestions').
+  3.  **General sufficient coverage (non-specific query):** For queries that aren't specific food items (e.g., "healthy snack"), if the database contains three or more distinct generic items that are strong semantic matches and adequately cover the query's intent.
+      - Example: User query "healthy snack". Database contains: "Yogurt", "Almonds", "Fruit Salad". Result: \`[]\`.
+  4.  **No sensible new items:** Regardless of database content, if no sensible *new*, semantically close, and *distinct* generic items can be derived that meet all other criteria.
 
 # Rules specific to this task
-- Return an empty array \`[]\` if either:
-  - The database already contains 3 or more distinct generic items that are strong semantic matches for the user's query (as detailed in 'Rules about semantics').
-  - No sensible *new*, semantically close generic items can be derived even if database has low to no coverage.
-
 - When suggesting new generic items:
-  - Crafting Suggestions:
+  - Crafting suggestions:
+    - **Prioritize direct generic match:** If the user's \`query\` itself names a common, unbranded food item (e.g., "Apple", "Banana", "Chicken Breast"), and its direct, normalized form (e.g., "apple") is NOT found in the database results, you SHOULD prioritize suggesting this exact item. This is crucial even if other related items (e.g., "Gala Apple", "Apple Pie") are in the database, UNLESS the conditions for returning an empty array \`[]\` (as defined in '# Rules about semantics') are already met.
     - Provide specific variations if relevant and semantically close (e.g., for produce query "Appel", suggest common varietals like "Fuji Apple," "Gala Apple", or descriptors like "Crisp Green Apple"; for dish query "Chicken Sandwich", suggest direct variations like "Toasted Chicken Sandwich," "Chicken Salad Sandwich"). All items must conform to the general rules for generic items.
 
-  - Search Scope & Limits:
+  - Search scope & limits:
     - Use your general knowledge of common foods.
     - Google Search results are for understanding the query's core meaning, not for finding broadly related items.
     - Return up to 6 new, relevant, and semantically close suggestions. If very few make sense, return just those.
 
-  - Avoid Duplicates:
+  - Avoid duplicates:
     - Each new item you suggest MUST be different from any item name already present in the provided database results.
     - Your new suggestions should also be distinct from each other.
 
