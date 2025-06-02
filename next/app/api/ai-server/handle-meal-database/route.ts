@@ -124,7 +124,7 @@ const updateMealDependencies = async ({ uuid }: { uuid: string }) => {
   const promiseEntry = supabase
     .from("entry")
     .update({
-      serving: { gram: ingredientsGrams, option: "quantity", quantity: 1 },
+      serving: { gram: ingredientsGrams, option: "meal", quantity: 1 },
     })
     .eq("meal_id", uuid);
 
@@ -132,7 +132,7 @@ const updateMealDependencies = async ({ uuid }: { uuid: string }) => {
   const promiseRepeat = supabase
     .from("repeat")
     .update({
-      serving: { gram: ingredientsGrams, option: "quantity", quantity: 1 },
+      serving: { gram: ingredientsGrams, option: "meal", quantity: 1 },
     })
     .eq("meal_id", uuid);
 
