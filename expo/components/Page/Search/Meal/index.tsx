@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { ServingData } from "@/schemas/serving";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useIsFocused } from "@react-navigation/native";
 import { FlatList, View } from "react-native";
 import { MealWithProduct, Meal } from "@/types/meal";
 import { SearchData, searchSchema } from "@/schemas/search";
@@ -23,6 +24,8 @@ type PageSearchProps = {
 };
 
 export default function PageSearchMeal({ onSelect }: PageSearchProps) {
+  const focus = useIsFocused();
+
   const { control, watch } = useForm<SearchData>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
@@ -31,18 +34,21 @@ export default function PageSearchMeal({ onSelect }: PageSearchProps) {
   });
 
   const query = watch("query");
-  const lower = query?.toLowerCase();
 
   const filter = (meal: Meal) => {
-    const titleLower = meal.title.toLowerCase();
-    const titleMatch = lower && titleLower.includes(lower);
+    if (!query || query.length === 0) {
+      return true;
+    }
+    const lowerQuery = query.toLowerCase();
+    const lowerTitle = meal.title.toLowerCase();
 
-    return titleMatch;
+    return lowerTitle.includes(lowerQuery);
   };
 
   const { data, isError, isLoading } = useQuery({
     ...mealData({}),
     select: (data) => data?.filter(filter),
+    enabled: focus,
   });
 
   return (
@@ -63,7 +69,7 @@ export default function PageSearchMeal({ onSelect }: PageSearchProps) {
           icon="magnifying-glass"
           control={control}
           placeholder={language.search.results.getPlaceholder(
-            language.types.meal.single,
+            language.types.meal.single
           )}
         />
       </View>
