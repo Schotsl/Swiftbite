@@ -68,15 +68,15 @@ export async function validateUsage(user: string) {
   const yearInput = yearResult.data?.[0]?.input_tokens || 0;
   const yearOutput = yearResult.data?.[0]?.output_tokens || 0;
 
-  if (minuteInput > 50000 || minuteOutput > 50000) {
+  if (minuteInput > 500000 || minuteOutput > 500000) {
     return "Minute limit exceeded";
   }
 
-  if (hourInput > 500000 || hourOutput > 500000) {
+  if (hourInput > 5000000 || hourOutput > 5000000) {
     return "Hourly limit exceeded";
   }
 
-  if (yearInput > 5000000 || yearOutput > 5000000) {
+  if (yearInput > 50000000 || yearOutput > 50000000) {
     return "Yearly limit exceeded";
   }
 }
