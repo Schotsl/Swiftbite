@@ -2,7 +2,7 @@
   "expo": {
     "name": "Swiftbite",
     "slug": "swiftbite",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "orientation": "portrait",
     "description": "Swiftbite: scan barcodes of je maaltijd, log in seconden en zie direct calorieën & macro's. Slimme porties, herhaal favorieten en houd grip op je doelen zonder gedoe!",
     "icon": "./assets/images/icon.png",
@@ -15,8 +15,6 @@
       "bundleIdentifier": "com.sjorsvanholst.swiftbite",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSHealthShareUsageDescription": "Read length and weight to calculate smart default values.",
-        "NSHealthUpdateUsageDescription": "Update Health data to insert calories and macronutrients.",
         "NSCameraUsageDescription": "Allow camera access to scan barcodes, nutrition labels, and take photos of meals.",
         "NSLocationWhenInUseUsageDescription": "Location access helps improve product relevance."
       },
@@ -34,7 +32,13 @@
     "plugins": [
       "expo-router",
       "expo-apple-authentication",
-      "react-native-health",
+      [
+        "react-native-health",
+        {
+          "healthSharePermission": "Read length and weight to calculate relevant default values.",
+          "healthUpdatePermission": "Update Health data to insert calories and macronutrients."
+        }
+      ],
       [
         "@sentry/react-native/expo",
         {
