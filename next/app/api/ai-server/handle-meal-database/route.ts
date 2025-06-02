@@ -29,13 +29,12 @@ export async function POST(request: Request) {
 
   const uuid = body.record.uuid;
   const title = body.record.title;
-  // const titleOld = body.old_record?.title;
+  const titleOld = body.old_record?.title;
 
   // If the title and the ingredients haven't changed we don't need to do anything
-  // I need to implement a better check that also takes the ingredient list into account
-  // if (title === titleOld) {
-  //   return new Response("{}", { status: 200 });
-  // }
+  if (title === titleOld) {
+    return new Response("{}", { status: 200 });
+  }
 
   after(async () => {
     await Promise.all([
