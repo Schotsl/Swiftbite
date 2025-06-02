@@ -30,7 +30,7 @@ export async function searchGenerics(
   }: {
     generics: GenericSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     GenericSearchData[],
@@ -44,13 +44,13 @@ export async function searchGenerics(
   const genericStream = streamObject({
     model,
     temperature: 0,
-    providerOptions: {
-      google: {
-        thinkingConfig: {
-          thinkingBudget: 2048,
-        },
-      } satisfies GoogleGenerativeAIProviderOptions,
-    },
+    // providerOptions: {
+    //   google: {
+    //     thinkingConfig: {
+    //       thinkingBudget: 2048,
+    //     },
+    //   } satisfies GoogleGenerativeAIProviderOptions,
+    // },
 
     output: "array",
     schema: genericSearchSchema,
@@ -109,7 +109,7 @@ export async function searchGeneric(
   }: {
     title: string;
     category: string;
-  },
+  }
 ): Promise<GenericData> {
   const task = "search-generic";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {
