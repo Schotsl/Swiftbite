@@ -10,7 +10,6 @@ import language from "@/language";
 import variables from "@/variables";
 
 import entryData from "@/queries/entryData";
-import useInsertEntry from "@/mutations/useInsertEntry";
 import useDeleteEntry from "@/mutations/useDeleteEntry";
 
 import Empty from "@/components/Empty";
@@ -26,6 +25,7 @@ import ItemActions from "@/components/Item/Actions";
 import ItemProduct from "@/components/Item/Product";
 import ItemSkeleton from "@/components/Item/Skeleton";
 import useSuspenseQueryFocus from "@/hooks/useSuspenseQueryFocus";
+import useDuplicateEntry from "@/mutations/useDuplicateEntry";
 
 type Section = {
   data: Entry[];
@@ -161,7 +161,7 @@ type AddListProps = {
 
 function AddList({ date, onEmpty }: AddListProps) {
   const deleteEntry = useDeleteEntry();
-  const insertEntry = useInsertEntry();
+  const duplicateEntry = useDuplicateEntry();
 
   const [interval, setInterval] = useState<number | false>(1000);
 
@@ -203,13 +203,7 @@ function AddList({ date, onEmpty }: AddListProps) {
   };
 
   const handleRepeat = (entry: Entry) => {
-    const { meal_id, product_id, serving } = entry;
-
-    insertEntry.mutate({
-      meal_id,
-      product_id,
-      serving,
-    });
+    duplicateEntry.mutate(entry);
   };
 
   const handleSelect = (entry: string, type: string) => {
