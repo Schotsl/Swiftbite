@@ -29,6 +29,7 @@ export function useProduct({
 
   const [asking, setAsking] = useState(false);
   const [search, setSearch] = useState(false);
+  const [cancel, setCancel] = useState(false);
   const [interval, setInterval] = useState<number | false>(false);
 
   // Use barcode query if barcode is provided
@@ -76,7 +77,8 @@ export function useProduct({
       return;
     }
 
-    if (!search && !asking) {
+    // TODO: This really needs to be refactored
+    if (!search && !asking && !cancel) {
       setAsking(true);
 
       Alert.alert(
@@ -96,6 +98,7 @@ export function useProduct({
               router.replace(redirect.search);
 
               setAsking(false);
+              setCancel(true);
             },
           },
           {
@@ -103,10 +106,11 @@ export function useProduct({
             onPress: () => {
               Alert.alert(
                 language.alert.development.title,
-                language.alert.development.subtitle,
+                language.alert.development.subtitle
               );
 
               setAsking(false);
+              setCancel(true);
             },
           },
           {
@@ -115,25 +119,27 @@ export function useProduct({
               router.replace(redirect.label);
 
               setAsking(false);
+              setCancel(true);
             },
           },
           {
-            text: language.modifications.cancel,
+            text: language.modifications.uppercase.cancel,
             style: "cancel",
             onPress: () => {
               router.replace(redirect.cancel);
 
               setAsking(false);
+              setCancel(true);
             },
           },
-        ],
+        ]
       );
 
       return;
     }
 
     // If we have searched online and still not found the product
-    if (search && !product && !asking) {
+    if (search && !product && !asking && !cancel) {
       setAsking(true);
       Alert.alert(
         language.barcode.alert.search.title,
@@ -144,6 +150,7 @@ export function useProduct({
             onPress: () => {
               router.replace(redirect.search);
               setAsking(false);
+              setCancel(true);
             },
           },
           {
@@ -151,34 +158,52 @@ export function useProduct({
             onPress: () => {
               Alert.alert(
                 language.alert.development.title,
-                language.alert.development.subtitle,
+                language.alert.development.subtitle
               );
+
               setAsking(false);
+              setCancel(true);
             },
           },
           {
             text: language.barcode.actions.label,
             onPress: () => {
               router.replace(redirect.label);
+
               setAsking(false);
+              setCancel(true);
             },
           },
           {
-            text: language.modifications.cancel,
+            text: language.modifications.uppercase.cancel,
             style: "cancel",
             onPress: () => {
               router.replace(redirect.cancel);
 
               setAsking(false);
+              setCancel(true);
             },
           },
-        ],
+        ]
       );
     }
-  }, [product, isLoadingQuery, search, router, barcodeId, redirect, asking]);
+  }, [
+    product,
+    isLoadingQuery,
+    search,
+    router,
+    barcodeId,
+    redirect,
+    asking,
+    cancel,
+  ]);
 
   const getLoading = () => {
     if (!enabled) {
+      return false;
+    }
+
+    if (cancel) {
       return false;
     }
 
