@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const authSchema = z.object({
+export const signInSchema = z.object({
   email: z
     .string({
       required_error: "Voer een e-mailadres in",
@@ -14,4 +14,12 @@ export const authSchema = z.object({
   }),
 });
 
-export type AuthData = z.infer<typeof authSchema>;
+export const passwordForgottenSchema = z.object({
+  email: z.string({
+    required_error: "Voer een e-mailadres in",
+    invalid_type_error: "Voer een e-mailadres in",
+  }),
+});
+
+export type SignInData = z.infer<typeof signInSchema>;
+export type PasswordForgottenData = z.infer<typeof passwordForgottenSchema>;
