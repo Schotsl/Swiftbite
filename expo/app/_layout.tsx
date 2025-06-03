@@ -63,7 +63,7 @@ function RootLayout() {
     setConfigured(true);
   }, [container, configured]);
 
-  useFonts({
+  const [loaded] = useFonts({
     OpenSans_300Light,
     OpenSans_400Regular,
     OpenSans_500Medium,
@@ -77,6 +77,10 @@ function RootLayout() {
     OpenSans_700Bold_Italic,
     OpenSans_800ExtraBold_Italic,
   });
+
+  if (!loaded) {
+    return null;
+  }
 
   return (
     <QueryClientProvider client={query}>
