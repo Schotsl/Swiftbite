@@ -8,6 +8,7 @@ import TextTitle from "@/components/Text/Title";
 import ButtonSmall, { ButtonSmallProps } from "@/components/Button/Small";
 
 type HeaderProps = {
+  back?: boolean;
   title: string;
   content?: string | null;
   buttons?: ButtonSmallProps[];
@@ -18,6 +19,7 @@ type HeaderProps = {
 };
 
 export default function Header({
+  back = true,
   title,
   content,
   buttons,
@@ -42,11 +44,13 @@ export default function Header({
           flexDirection: "row",
         }}
       >
-        <ButtonSmall
-          icon="arrow-left"
-          style={{ marginRight: "auto" }}
-          onPress={() => router.back()}
-        />
+        {back && (
+          <ButtonSmall
+            icon="arrow-left"
+            style={{ marginRight: "auto" }}
+            onPress={() => router.back()}
+          />
+        )}
 
         {buttons?.map((button, index) => (
           <ButtonSmall key={index} {...button} />
