@@ -79,7 +79,7 @@ export default function PageCamera({
     if (isBarcode) {
       Alert.alert(
         language.alert.barcode.empty.title,
-        language.alert.barcode.empty.subtitle
+        language.alert.barcode.empty.subtitle,
       );
 
       return;
@@ -88,7 +88,7 @@ export default function PageCamera({
     if (isLabel) {
       Alert.alert(
         language.alert.development.title,
-        language.alert.development.subtitle
+        language.alert.development.subtitle,
       );
 
       return;
@@ -154,7 +154,7 @@ export default function PageCamera({
       if (!barcode) {
         Alert.alert(
           language.alert.barcode.empty.title,
-          language.alert.barcode.empty.subtitle
+          language.alert.barcode.empty.subtitle,
         );
 
         return;
@@ -168,7 +168,7 @@ export default function PageCamera({
     if (isLabel) {
       Alert.alert(
         language.alert.development.title,
-        language.alert.development.subtitle
+        language.alert.development.subtitle,
       );
 
       return;
@@ -200,7 +200,7 @@ export default function PageCamera({
       base64: string,
       width: number,
       height: number,
-      orientation: number
+      orientation: number,
     ) => {
       const originalData = `data:image/jpeg;base64,${base64}`;
       const originalRatio = width / height;
@@ -223,7 +223,7 @@ export default function PageCamera({
         newHeight,
         "JPEG",
         50,
-        orientation
+        orientation,
       );
 
       sendImage(data.uri);
@@ -235,7 +235,7 @@ export default function PageCamera({
       setPreviewUri(data.uri);
       setPreviewAspect(adjustedRatio);
     },
-    []
+    [],
   );
 
   const handleFrame = useFrameProcessor((frame) => {
@@ -268,7 +268,7 @@ export default function PageCamera({
       if (codes.length > 1) {
         Alert.alert(
           language.alert.barcode.multiple.title,
-          language.alert.barcode.multiple.subtitle
+          language.alert.barcode.multiple.subtitle,
         );
 
         return;

@@ -1,6 +1,11 @@
 import { Entry } from "@/types/entry";
 import { queryOptions } from "@tanstack/react-query";
-import { handleError, mapMeal } from "@/helper";
+import {
+  getDateKey,
+  getDateRange,
+  handleError,
+  mapMeal,
+} from "@/helper";
 
 import supabase from "@/utils/supabase";
 
@@ -16,19 +21,21 @@ type EntryDataProps =
 
 export default function entryData({ date, uuid }: EntryDataProps) {
   return queryOptions({
-    queryKey: uuid ? ["entryData", uuid] : ["entryData", getDate(date)],
+    queryKey: date ? ["entryData", getDateKey(date)] : ["entryData", uuid],
     queryFn: async (): Promise<Entry[]> => {
       const query = supabase
         .from("entry")
         .select(
-          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`
+          `*,product:product_id (*),meal:meal_id (*,meal_products:meal_product (*,product (*))))`,
         )
         .order("created_at", { ascending: false });
 
       if (date) {
+        const { start, end } = getDateRange(date);
+
         query
-          .lte("created_at", `${getDate(date)}T23:59:59.999Z`)
-          .gte("created_at", `${getDate(date)}T00:00:00.000Z`);
+          .gte("created_at", start.toISOString())
+          .lte("created_at", end.toISOString());
       }
 
       if (uuid) {
@@ -53,12 +60,4 @@ export default function entryData({ date, uuid }: EntryDataProps) {
     },
     refetchInterval: 60000,
   });
-}
-
-function getDate(date?: Date) {
-  if (!date) {
-    return undefined;
-  }
-
-  return date.toISOString().split("T")[0];
 }

@@ -106,7 +106,7 @@ export function useProduct({
             onPress: () => {
               Alert.alert(
                 language.alert.development.title,
-                language.alert.development.subtitle
+                language.alert.development.subtitle,
               );
 
               setAsking(false);
@@ -132,7 +132,7 @@ export function useProduct({
               setCancel(true);
             },
           },
-        ]
+        ],
       );
 
       return;
@@ -158,7 +158,7 @@ export function useProduct({
             onPress: () => {
               Alert.alert(
                 language.alert.development.title,
-                language.alert.development.subtitle
+                language.alert.development.subtitle,
               );
 
               setAsking(false);
@@ -184,7 +184,7 @@ export function useProduct({
               setCancel(true);
             },
           },
-        ]
+        ],
       );
     }
   }, [

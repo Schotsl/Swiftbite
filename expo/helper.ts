@@ -407,3 +407,24 @@ export const getLabel = (value: string) => {
 
   return value;
 };
+
+export const getDateRange = (date: Date) => {
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(date);
+  end.setHours(23, 59, 59, 999);
+
+  return {
+    end,
+    start,
+  };
+};
+
+export const getDateKey = (date: Date) => {
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+
+  return `${year}-${month}-${day}`;
+};

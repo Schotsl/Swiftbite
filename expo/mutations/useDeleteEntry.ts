@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { handleError } from "@/helper";
+import { getDateKey, handleError } from "@/helper";
 import { Entry } from "@/types/entry";
 
 import supabase from "@/utils/supabase";
@@ -20,7 +20,7 @@ export default function useDeleteEntry() {
     },
     onMutate: async (entry: Entry) => {
       const uuid = entry.uuid;
-      const date = getDate(entry.created_at);
+      const date = getDateKey(entry.created_at);
 
       await client.cancelQueries({ queryKey: ["entryData", uuid] });
       await client.cancelQueries({ queryKey: ["entryData", date] });
@@ -54,12 +54,4 @@ export default function useDeleteEntry() {
       console.log("[Mutation] deleted entry");
     },
   });
-}
-
-function getDate(date?: Date) {
-  if (!date) {
-    return undefined;
-  }
-
-  return date.toISOString().split("T")[0];
 }

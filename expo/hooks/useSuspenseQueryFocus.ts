@@ -13,7 +13,7 @@ export default function useSuspenseQueryFocus<
   TData = TQuery,
   TKey extends QueryKey = QueryKey,
 >(
-  query: UseSuspenseQueryOptions<TQuery, TError, TData, TKey>
+  query: UseSuspenseQueryOptions<TQuery, TError, TData, TKey>,
 ): UseSuspenseQueryResult<TData, TError> {
   const focus = useIsFocused();
   const result = useSuspenseQuery<TQuery, TError, TData, TKey>(query);

@@ -3,7 +3,7 @@ import supabase from "@/utils/supabase";
 import * as Crypto from "expo-crypto";
 
 import { Entry } from "@/types/entry";
-import { handleError } from "@/helper";
+import { getDateKey, handleError } from "@/helper";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function useDuplicateEntry() {
@@ -33,7 +33,7 @@ export default function useDuplicateEntry() {
       return data;
     },
     onMutate: async (entry: Entry) => {
-      const date = getDate(entry.created_at);
+      const date = getDateKey(entry.created_at);
       const insert = {
         ...entry,
         uuid: Crypto.randomUUID(),
@@ -62,12 +62,4 @@ export default function useDuplicateEntry() {
       console.log("[Mutation] duplicated entry");
     },
   });
-}
-
-function getDate(date?: Date) {
-  if (!date) {
-    return undefined;
-  }
-
-  return date.toISOString().split("T")[0];
 }
