@@ -44,7 +44,7 @@ export type PageProductProps = {
 
   onSave: (serving: ServingData, created: Date) => void;
   onDelete?: () => void;
-  onRepeat?: (serving: ServingData) => void;
+  onDuplicate?: (serving: ServingData) => void;
 };
 
 export default function PageProduct({
@@ -56,13 +56,13 @@ export default function PageProduct({
   createdVisible = false,
   onSave,
   onDelete,
-  onRepeat,
+  onDuplicate,
 }: PageProductProps) {
   const updateUser = useUpdateUser();
 
   const [saving, setSaving] = useState(false);
   const [favorite, setFavorite] = useState(
-    isProductFavorite(user, product.uuid),
+    isProductFavorite(user, product.uuid)
   );
 
   const isGeneric = product.type === "search_generic";
@@ -171,7 +171,7 @@ export default function PageProduct({
               content={content}
               favorite={favorite}
               onDelete={onDelete}
-              onRepeat={onRepeat && (() => onRepeat(serving))}
+              onDuplicate={onDuplicate && (() => onDuplicate(serving))}
               onFavorite={propFavorite ? handleFavorite : undefined}
             />
 

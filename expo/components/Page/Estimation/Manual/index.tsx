@@ -25,7 +25,7 @@ export default function PageEstimationManual({
   createdVisible = false,
   onSave,
   onDelete,
-  onRepeat,
+  onDuplicate,
 }: {
   product?: Product;
   created?: Date;
@@ -33,7 +33,7 @@ export default function PageEstimationManual({
 
   onSave: (product: Product, serving: ServingData, created: Date) => void;
   onDelete?: () => void;
-  onRepeat?: (serving: ServingData) => void;
+  onDuplicate?: (serving: ServingData) => void;
 }) {
   const [saving, setSaving] = useState(false);
 
@@ -126,7 +126,7 @@ export default function PageEstimationManual({
               product ? undefined : language.page.estimation.manual.description
             }
             onDelete={onDelete}
-            onRepeat={onRepeat && (() => onRepeat(serving))}
+            onDuplicate={onDuplicate && (() => onDuplicate(serving))}
           />
 
           <Input

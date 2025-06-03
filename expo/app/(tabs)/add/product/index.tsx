@@ -97,7 +97,7 @@ export default function AddProduct() {
     router.replace("/");
   };
 
-  const handleRepeat = async (serving: ServingData) => {
+  const handleDuplicate = async (serving: ServingData) => {
     if (!entry) {
       return;
     }
@@ -122,7 +122,7 @@ export default function AddProduct() {
       createdVisible={true}
       onSave={handleSave}
       onDelete={entry ? handleDelete : undefined}
-      onRepeat={entry ? handleRepeat : undefined}
+      onDuplicate={entry ? handleDuplicate : undefined}
     />
   );
 }

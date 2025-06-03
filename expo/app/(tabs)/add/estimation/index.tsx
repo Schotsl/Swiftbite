@@ -85,7 +85,7 @@ export default function AddEstimation() {
     router.replace("/");
   };
 
-  const handleRepeat = async (serving: ServingData) => {
+  const handleDuplicate = async (serving: ServingData) => {
     if (!product) {
       return;
     }
@@ -106,7 +106,7 @@ export default function AddEstimation() {
       created={entry?.created_at}
       onSave={handleSave}
       onDelete={product ? handleDelete : undefined}
-      onRepeat={product ? handleRepeat : undefined}
+      onDuplicate={product ? handleDuplicate : undefined}
     />
   );
 }

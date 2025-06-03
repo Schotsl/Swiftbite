@@ -32,7 +32,7 @@ export type PageMealProps = {
 
   onSave: (serving: ServingData, created: Date) => void;
   onDelete?: () => void;
-  onRepeat?: (serving: ServingData) => void;
+  onDuplicate?: (serving: ServingData) => void;
 };
 
 export default function PageMeal({
@@ -43,7 +43,7 @@ export default function PageMeal({
   createdVisible = false,
   onSave,
   onDelete,
-  onRepeat,
+  onDuplicate,
 }: PageMealProps) {
   const focus = useIsFocused();
 
@@ -142,7 +142,7 @@ export default function PageMeal({
               title={meal.title}
               favorite={favorite}
               onDelete={onDelete}
-              onRepeat={onRepeat && (() => onRepeat(serving))}
+              onDuplicate={onDuplicate && (() => onDuplicate(serving))}
               onFavorite={handleFavorite}
             />
 

@@ -15,7 +15,7 @@ type PageEstimationProps = {
   product?: Product;
   created?: Date;
   onDelete?: () => void;
-  onRepeat?: (serving: ServingData) => void;
+  onDuplicate?: (serving: ServingData) => void;
   onSave: (
     product: Product,
     serving: ServingData | null,
@@ -29,7 +29,7 @@ export default function PageEstimation({
   created,
   onSave,
   onDelete,
-  onRepeat,
+  onDuplicate,
 }: PageEstimationProps) {
   const [tab, setTab] = useState(product ? "manual" : "automatic");
 
@@ -63,7 +63,7 @@ export default function PageEstimation({
           createdVisible={true}
           onSave={onSave}
           onDelete={onDelete}
-          onRepeat={onRepeat}
+          onDuplicate={onDuplicate}
         />
       )}
     </View>

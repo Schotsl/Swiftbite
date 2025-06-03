@@ -202,7 +202,7 @@ function AddList({ date, onEmpty }: AddListProps) {
     deleteEntry.mutate(entry);
   };
 
-  const handleRepeat = (entry: Entry) => {
+  const handleDuplicate = (entry: Entry) => {
     duplicateEntry.mutate(entry);
   };
 
@@ -233,7 +233,7 @@ function AddList({ date, onEmpty }: AddListProps) {
       renderHiddenItem={({ item }) => (
         <ItemActions
           onDelete={() => handleDelete(item)}
-          onRepeat={item.serving ? () => handleRepeat(item) : undefined}
+          onDuplicate={item.serving ? () => handleDuplicate(item) : undefined}
         />
       )}
       renderSectionHeader={({ section }) => (

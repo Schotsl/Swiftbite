@@ -24,10 +24,10 @@ export default {
   colors: {
     text: {
       error: "#ff0033",
-      repeat: "#ffa500",
       primary: "#2E2727",
       focused: "#007AFF",
       secondary: "#677798",
+      duplicate: "#ffa500",
     },
     background: {
       primary: "#FFFFFF",

@@ -13,7 +13,7 @@ type HeaderProps = {
   buttons?: ButtonSmallProps[];
   favorite?: boolean;
   onDelete?: () => void;
-  onRepeat?: () => void;
+  onDuplicate?: () => void;
   onFavorite?: () => void;
 };
 
@@ -23,7 +23,7 @@ export default function Header({
   buttons,
   favorite = false,
   onDelete,
-  onRepeat,
+  onDuplicate,
   onFavorite,
 }: HeaderProps) {
   return (
@@ -54,7 +54,7 @@ export default function Header({
 
         {onDelete && <ButtonSmall icon="trash" onPress={onDelete} />}
 
-        {onRepeat && <ButtonSmall icon="repeat" onPress={onRepeat} />}
+        {onDuplicate && <ButtonSmall icon="copy" onPress={onDuplicate} />}
 
         {onFavorite && (
           <ButtonSmall

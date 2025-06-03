@@ -510,7 +510,6 @@ export default {
     save: "opslaan",
     edit: "bewerken",
 
-    repeat: "herhaal",
     cancel: "annuleren",
     insert: "toevoegen",
     delete: "verwijderen",
@@ -520,7 +519,6 @@ export default {
       pick: "Kiezen",
       save: "Opslaan",
       edit: "Bewerken",
-      repeat: "Herhaal",
       cancel: "Annuleren",
       insert: "Toevoegen",
       delete: "Verwijderen",

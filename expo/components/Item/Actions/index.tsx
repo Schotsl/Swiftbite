@@ -9,17 +9,17 @@ import language from "@/language";
 
 type ItemActionsProps = {
   onDelete: () => void;
-  onRepeat?: () => void;
   onDuplicate?: () => void;
 };
 
 export default function ItemActions({
   onDelete,
-  onRepeat,
   onDuplicate,
 }: ItemActionsProps) {
-  const width = onRepeat || onDuplicate ? 150 : 75;
-  const color = onRepeat ? "#ffa500" : onDuplicate ? "#ffa500" : "#ffa500";
+  const width = onDuplicate ? 150 : 75;
+  const color = onDuplicate
+    ? variables.colors.text.duplicate
+    : variables.colors.text.error;
 
   return (
     <View
@@ -33,19 +33,10 @@ export default function ItemActions({
         backgroundColor: color,
       }}
     >
-      {onRepeat && (
-        <ItemActionsButton
-          onPress={onRepeat}
-          color={variables.colors.text.repeat}
-          title={language.modifications.uppercase.repeat}
-          icon="repeat"
-        />
-      )}
-
       {onDuplicate && (
         <ItemActionsButton
           onPress={onDuplicate}
-          color={variables.colors.text.repeat}
+          color={variables.colors.text.duplicate}
           title={language.modifications.uppercase.duplicate}
           icon="copy"
         />
