@@ -30,6 +30,7 @@ The options should be intuitive and reflect how people typically consume or meas
 # Rules for estimating weights
 - Provide a single integer gram weight for each portion option in the \`gram\` field.
 - The weights should be reasonable estimates for the described portion of the item.
+- For items that are typically prepared with a large amount of a non-caloric or non-primary component (e.g., tea prepared with water, a coffee pod for a cup of coffee), the gram weight should reflect the primary ingredient (e.g., the tea leaves, the coffee grounds), not the total weight including the water or other diluents.
 - Use your knowledge of typical food densities, package sizes (if \`brand\` is relevant), and serving standards.
 
 # Rules for language
