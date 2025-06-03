@@ -31,9 +31,22 @@ type PageSearchProps = {
 };
 
 export default function PageSearchProduct({ type, onSelect }: PageSearchProps) {
-  const { error, loading, products, overloaded, search, query } = useSearch();
+  const {
+    query,
+    error,
+    loading,
+    products,
+    overloaded,
+    search,
+    reset: resetSearch,
+  } = useSearch();
 
-  const { control, watch, handleSubmit } = useForm<SearchData>({
+  const {
+    control,
+    watch,
+    handleSubmit,
+    reset: resetForm,
+  } = useForm<SearchData>({
     resolver: zodResolver(searchSchema),
   });
 
@@ -73,6 +86,11 @@ export default function PageSearchProduct({ type, onSelect }: PageSearchProps) {
 
     return () => subscription.remove();
   }, []);
+
+  useEffect(() => {
+    resetForm();
+    resetSearch();
+  }, [type]);
 
   const placeholder =
     type === "search_product"
