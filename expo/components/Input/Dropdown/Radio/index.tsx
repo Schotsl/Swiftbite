@@ -1,4 +1,5 @@
 import TextBody from "@/components/Text/Body";
+import TextSmall from "@/components/Text/Small";
 
 import variables from "@/variables";
 
@@ -6,6 +7,8 @@ import { View, StyleProp, ViewStyle, TouchableOpacity } from "react-native";
 
 export type InputDropdownRadioProps = {
   style?: StyleProp<ViewStyle>;
+  subtitle?: string;
+
   label: string;
   selected: boolean;
   onSelect: () => void;
@@ -13,6 +16,8 @@ export type InputDropdownRadioProps = {
 
 export default function InputDropdownRadio({
   style,
+  subtitle,
+
   label,
   selected,
 
@@ -34,6 +39,7 @@ export default function InputDropdownRadio({
           borderBottomWidth: 2,
 
           flexDirection: "row",
+
           alignItems: "center",
         },
         style,
@@ -50,6 +56,9 @@ export default function InputDropdownRadio({
 
           alignItems: "center",
           justifyContent: "center",
+
+          alignSelf: subtitle ? "flex-start" : "center",
+          marginTop: subtitle ? 4 : 0,
         }}
       >
         {selected && (
@@ -64,7 +73,11 @@ export default function InputDropdownRadio({
         )}
       </View>
 
-      <TextBody weight="semibold">{label}</TextBody>
+      <View>
+        <TextBody weight="semibold">{label}</TextBody>
+
+        {subtitle && <TextSmall>{subtitle}</TextSmall>}
+      </View>
     </TouchableOpacity>
   );
 }
