@@ -16,7 +16,9 @@
     "build:internal": "eas build --platform ios --profile preview --non-interactive --local",
     "build:simulator": "eas build --platform ios --profile simulator --non-interactive --local",
     "build:production": "eas build --platform ios --profile production --non-interactive --local",
-    "build:development": "eas build --platform ios --profile development --non-interactive --local"
+    "build:development": "eas build --platform ios --profile development --non-interactive --local",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "jest": {
     "preset": "jest-expo"
@@ -68,7 +70,7 @@
     "react-native-reanimated": "~3.17.5",
     "react-native-reanimated-skeleton": "^1.6.0",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.10.0",
+    "react-native-screens": "~4.11.1",
     "react-native-svg": "15.11.2",
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-ui-datepicker": "^3.1.2",
