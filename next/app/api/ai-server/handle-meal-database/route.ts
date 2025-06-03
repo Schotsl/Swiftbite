@@ -69,7 +69,7 @@ const updateIngredients = async (uuid: string) => {
 
 const updateMealIcon = async (
   user: string,
-  { uuid, title }: { uuid: string; title: string }
+  { uuid, title }: { uuid: string; title: string },
 ) => {
   // First we'll reset the icon to null so it shows the loading icon again
   console.log(`[MEAL] Resetting icon`);
@@ -80,7 +80,7 @@ const updateMealIcon = async (
 
   const ingredientsObjects = await fetchIngredients(uuid);
   const ingredients = ingredientsObjects.map(
-    (ingredient) => ingredient.product.title
+    (ingredient) => ingredient.product.title,
   );
 
   const iconTitle = await normalizeMeal(user, {

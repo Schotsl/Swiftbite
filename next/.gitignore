@@ -40,3 +40,6 @@ next-env.d.ts
 
 # Supabase
 database.types.ts
+
+# Sentry Config File
+.env.sentry-build-plugin
