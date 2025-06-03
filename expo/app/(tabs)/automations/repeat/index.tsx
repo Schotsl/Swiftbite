@@ -67,7 +67,7 @@ function AutomationsRepeatList({ onSelect }: AutomationsRepeatListProps) {
   const handleDuplicate = () => {
     Alert.alert(
       language.alert.development.title,
-      language.alert.development.subtitle,
+      language.alert.development.subtitle
     );
   };
 
@@ -107,7 +107,6 @@ function AutomationsRepeatListEmpty() {
         icon: "plus",
         title: language.modifications.getInsert(language.types.repeat.single),
         onPress: () => {
-          console.log("push");
           router.push({
             pathname: `/(tabs)/automations/repeat/upsert`,
           });

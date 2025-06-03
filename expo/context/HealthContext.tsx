@@ -7,6 +7,8 @@ import React, {
   useState,
 } from "react";
 
+import * as Device from "expo-device";
+
 import HealthService from "@/service/HealthService";
 
 // Keys for local storage
@@ -154,7 +156,9 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       setHealthInitialized(true);
     };
 
-    initializeHealth();
+    if (Device.isDevice) {
+      initializeHealth();
+    }
   }, []);
 
   const value: HealthContextType = {
