@@ -86,7 +86,7 @@ export default function ItemProduct({
       if (processing) {
         Alert.alert(
           language.alert.processing.title,
-          language.alert.processing.subtitle
+          language.alert.processing.subtitle,
         );
 
         return;

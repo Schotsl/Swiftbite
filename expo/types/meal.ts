@@ -7,7 +7,7 @@ type MealTable = Tables<"meal">;
 export type Meal = MealTable;
 export type MealInsert = Omit<
   MealTable,
-  "uuid" | "user_id" | "created_at" | "updated_at" | "icon_id"
+  "uuid" | "user_id" | "created_at" | "updated_at" | "icon_id" | "ingredients"
 >;
 
 export type MealWithProduct = MealTable & {
