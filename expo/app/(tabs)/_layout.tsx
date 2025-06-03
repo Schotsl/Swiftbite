@@ -113,7 +113,6 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="add"
             options={{
-              href: "/(tabs)/add",
               tabBarIcon: ({ focused }: { focused: boolean }) => (
                 <TabsLayoutIcon
                   icon="book"
@@ -127,7 +126,6 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="stats"
             options={{
-              href: "/(tabs)/stats",
               tabBarIcon: ({ focused }: { focused: boolean }) => (
                 <TabsLayoutIcon
                   icon="chart-line"
@@ -148,7 +146,6 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="automations"
             options={{
-              href: "/(tabs)/automations",
               tabBarIcon: ({ focused }: { focused: boolean }) => (
                 <TabsLayoutIcon
                   icon="wand-magic-sparkles"
@@ -162,7 +159,6 @@ export default function TabsLayout() {
           <Tabs.Screen
             name="personal"
             options={{
-              href: "/(tabs)/personal",
               tabBarIcon: ({ focused }: { focused: boolean }) => (
                 <TabsLayoutIcon
                   icon="circle-user"
