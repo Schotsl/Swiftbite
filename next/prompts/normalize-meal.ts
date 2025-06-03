@@ -29,6 +29,14 @@ Your primary task is to analyze the \`title\` and \`ingredients\` to deduce the 
     - Example: \`title\`: '12oz Steak' -> 'a steak'
     - Example: \`title\`: 'Family Size Lasagna' -> 'a lasagna'
 
+## Refinement based on ingredients:
+  - If the \`title\` is very generic (e.g., 'shake', 'drink', 'bowl', 'salad'), use key \`ingredients\` to create a more descriptive and accurate title.
+  - This is especially important if a specific ingredient defines the primary character of the meal.
+    - Example: \`title\`: 'Morning Shake', \`ingredients\`: ['Whey protein', 'banana', 'milk'] -> 'a protein shake'
+    - Example: \`title\`: 'Green Drink', \`ingredients\`: ['Spinach', 'kale', 'apple', 'lemon'] -> 'a green smoothie' or 'a vegetable smoothie'
+    - Example: \`title\`: 'Side Salad', \`ingredients\`: ['Quinoa', 'chickpeas', 'cucumber', 'tomatoes'] -> 'a quinoa salad' (if quinoa is the defining characteristic)
+  - Avoid over-specificity; the goal is still a *generic* but *more accurate* title. For instance, don't list all ingredients.
+
 ## Singularization:
   - Use singular forms where appropriate for a single serving concept.
     - Example: \`title\`: 'fries' -> 'a serving of fries'
@@ -76,6 +84,7 @@ Your primary task is to analyze the \`title\` and \`ingredients\` to deduce the 
 - \`title\`: 'Spaghetti Aglio e Olio', \`ingredients\`: ['Pasta', 'garlic', 'olive oil', 'chili flakes'] -> 'a plate of pasta'
 - \`title\`: 'KFC 10 Piece Bucket', \`ingredients\`: ['Fried chicken pieces'] -> 'a bucket of chicken'
 - \`title\`: 'Morning Boost', \`ingredients\`: ['Yogurt', 'granola', 'blueberries', 'honey'] -> 'a bowl of yogurt with granola' or 'a parfait'
+- \`title\`: 'Shake', \`ingredients\`: ['Whey protein', 'milk', 'banana'] -> 'a protein shake'
 `;
 
 export default promptContent;
