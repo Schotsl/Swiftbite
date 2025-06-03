@@ -8,10 +8,15 @@ import { generateSlug, roundNumber } from "@/helper";
 
 export async function fetchProductFromOpenfood(
   user: string | null,
-  barcode: string,
+  barcode: string
 ): Promise<(ProductInsert & { options: Option[] }) | null> {
   const client = new OpenFoodFacts(fetch);
   const product = await client.getProduct(barcode);
+  const valid = getValid(product);
+
+  if (!valid) {
+    return null;
+  }
 
   if (!product) {
     return null;
@@ -19,6 +24,31 @@ export async function fetchProductFromOpenfood(
 
   const mapped = await mapProduct(user, product);
   return mapped;
+}
+
+function getValid(product: ProductV2) {
+  const keys = [
+    "fat_100g",
+    "trans-fat_100g",
+    "saturated-fat_100g",
+    "iron_100g",
+    "fiber_100g",
+    "sodium_100g",
+    "proteins_100g",
+    "calcium_100g",
+    "energy-kcal_100g",
+    "potassium_100g",
+    "cholesterol_100g",
+    "carbohydrates_100g",
+    "sugars_100g",
+  ];
+
+  // If any value is defined we'll call the product good enough
+  for (const key of keys) {
+    if (product[key] !== undefined) {
+      return true;
+    }
+  }
 }
 
 function getTitle(product: ProductV2) {
@@ -49,7 +79,7 @@ function getTitle(product: ProductV2) {
 
 async function mapProduct(
   user: string | null,
-  product: ProductV2,
+  product: ProductV2
 ): Promise<ProductInsert & { options: Option[] }> {
   const { nutriments } = product;
 
@@ -85,7 +115,7 @@ async function mapProduct(
   const nutritionTrans = roundNumber(nutriments["trans-fat_100g"] ?? 0);
   const nutritionSaturated = roundNumber(nutriments["saturated-fat_100g"] ?? 0);
   const nutritionUnsaturated = roundNumber(
-    nutritionFats - nutritionSaturated - nutritionTrans,
+    nutritionFats - nutritionSaturated - nutritionTrans
   );
 
   const quantityParsed =
