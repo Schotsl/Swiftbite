@@ -13,6 +13,7 @@ type HeaderProps = {
   content?: string | null;
   buttons?: ButtonSmallProps[];
   favorite?: boolean;
+  onBack?: () => void;
   onDelete?: () => void;
   onDuplicate?: () => void;
   onFavorite?: () => void;
@@ -24,6 +25,7 @@ export default function Header({
   content,
   buttons,
   favorite = false,
+  onBack,
   onDelete,
   onDuplicate,
   onFavorite,
@@ -48,7 +50,15 @@ export default function Header({
           <ButtonSmall
             icon="arrow-left"
             style={{ marginRight: "auto" }}
-            onPress={() => router.back()}
+            onPress={() => {
+              if (onBack) {
+                onBack();
+
+                return;
+              }
+
+              router.back();
+            }}
           />
         )}
 

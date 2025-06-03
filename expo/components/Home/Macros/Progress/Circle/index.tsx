@@ -189,8 +189,8 @@ export default function HomeMacrosProgressCircle({
           }
         >
           <View style={{ width: "100%", height: "100%" }}>
-            <DecorativeNoise />
             <DecorativeLinear />
+            <DecorativeNoise />
           </View>
         </MaskedView>
       </View>

@@ -58,6 +58,10 @@ export default function SignIn() {
     router.push("/sign-in/password-forgotten");
   };
 
+  const handleRegister = () => {
+    router.push("/sign-up");
+  };
+
   return (
     <View
       style={{
@@ -117,7 +121,7 @@ export default function SignIn() {
             {language.page.signIn.register.question}
           </TextBody>
 
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity onPress={handleRegister}>
             <TextBody color={variables.colors.primary} weight="medium">
               {language.page.signIn.register.button}
             </TextBody>

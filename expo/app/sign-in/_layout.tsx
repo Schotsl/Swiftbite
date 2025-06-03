@@ -15,8 +15,8 @@ export default function SignInLayout() {
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="password-success" />
-        <Stack.Screen name="password-forgotten" />
+        <Stack.Screen name="password-success/index" />
+        <Stack.Screen name="password-forgotten/index" />
       </Stack>
     </SafeAreaView>
   );

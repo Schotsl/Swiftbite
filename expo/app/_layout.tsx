@@ -99,7 +99,7 @@ function RootLayout() {
         >
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="sign-in" />
-          <Stack.Screen name="sign-up/index" />
+          <Stack.Screen name="sign-up" />
         </Stack>
       </TouchableWithoutFeedback>
     </QueryClientProvider>
