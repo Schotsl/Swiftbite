@@ -9,8 +9,10 @@ import estimateNutritionPrompt from "@/prompts/estimate-nutrition";
 import estimateVisualPrompt from "@/prompts/estimate-visual";
 
 import { google as googleModel } from "@ai-sdk/google";
+
 import { after } from "next/server";
 import { insertUsage } from "@/utils/usage";
+import { providerFast } from "@/variables";
 import { CoreMessage, generateObject } from "ai";
 
 export async function estimateNutrition(
@@ -24,7 +26,7 @@ export async function estimateNutrition(
     title?: string;
     content?: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeNutritionData> {
   const task = "estimate-nutrition";
   const model = googleModel("gemini-2.5-pro-preview-05-06");
@@ -89,7 +91,7 @@ export async function estimateVisuals(
     title?: string;
     content?: string;
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<ProductGenerativeVisualsData> {
   const task = "estimate-visuals";
   const model = googleModel("gemini-2.5-flash-preview-05-20");
@@ -117,6 +119,7 @@ export async function estimateVisuals(
   const { object, usage } = await generateObject({
     model,
     temperature: 0,
+    providerOptions: providerFast,
 
     output: "object",
     schema: productGenerativeVisualsSchema,

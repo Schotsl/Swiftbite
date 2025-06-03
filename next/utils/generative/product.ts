@@ -1,5 +1,6 @@
 import { after } from "next/server";
 import { insertUsage } from "@/utils/usage";
+import { providerFast } from "@/variables";
 import { generateObject, streamObject, StreamObjectResult } from "ai";
 import {
   ProductData,
@@ -8,10 +9,7 @@ import {
   productSearchSchema,
 } from "@/schema";
 
-import {
-  GoogleGenerativeAIProviderOptions,
-  google as googleModel,
-} from "@ai-sdk/google";
+import { google as googleModel } from "@ai-sdk/google";
 
 import searchProductPrompt from "@/prompts/search-product";
 import searchProductsPrompt from "@/prompts/search-products";
@@ -34,7 +32,7 @@ export async function searchProducts(
   }: {
     products: ProductSearchData[];
   },
-  signal?: AbortSignal,
+  signal?: AbortSignal
 ): Promise<
   StreamObjectResult<
     ProductSearchData[],
@@ -48,13 +46,7 @@ export async function searchProducts(
   const stream = streamObject({
     model,
     temperature: 0,
-    // providerOptions: {
-    //   google: {
-    //     thinkingConfig: {
-    //       thinkingBudget: 2048,
-    //     },
-    //   } satisfies GoogleGenerativeAIProviderOptions,
-    // },
+    providerOptions: providerFast,
 
     output: "array",
     schema: productSearchSchema,
@@ -139,7 +131,7 @@ export async function searchProduct(
     barcode?: string;
     quantity_original?: number;
     quantity_original_unit?: string;
-  },
+  }
 ): Promise<ProductData> {
   const task = "search-product";
   const model = googleModel("gemini-2.5-pro-preview-05-06", {
