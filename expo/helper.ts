@@ -167,26 +167,22 @@ export function getMacrosFromProduct(
   const proteinCalculated = (protein / 100) * gram;
   const caloriesCalculated = (calories / 100) * gram;
 
+  const decimals = rounded ? 0 : 2;
+
   return {
     gram: gram,
 
-    fat: rounded ? Math.round(fatCalculated) : fatCalculated,
-    fatSaturated: rounded
-      ? Math.round(fatSaturatedCalculated)
-      : fatSaturatedCalculated,
-    fatUnsaturated: rounded
-      ? Math.round(fatUnsaturatedCalculated)
-      : fatUnsaturatedCalculated,
+    fat: roundNumber(fatCalculated, decimals),
+    fatSaturated: roundNumber(fatSaturatedCalculated, decimals),
+    fatUnsaturated: roundNumber(fatUnsaturatedCalculated, decimals),
 
-    carbs: rounded ? Math.round(carbsCalculated) : carbsCalculated,
-    carbsSugars: rounded
-      ? Math.round(carbsSugarsCalculated)
-      : carbsSugarsCalculated,
+    carbs: roundNumber(carbsCalculated, decimals),
+    carbsSugars: roundNumber(carbsSugarsCalculated, decimals),
 
-    salt: rounded ? Math.round(saltCalculated) : saltCalculated,
-    fiber: rounded ? Math.round(fiberCalculated) : fiberCalculated,
-    protein: rounded ? Math.round(proteinCalculated) : proteinCalculated,
-    calories: rounded ? Math.round(caloriesCalculated) : caloriesCalculated,
+    salt: roundNumber(saltCalculated, decimals),
+    fiber: roundNumber(fiberCalculated, decimals),
+    protein: roundNumber(proteinCalculated, decimals),
+    calories: roundNumber(caloriesCalculated, decimals),
   };
 }
 
@@ -262,46 +258,34 @@ export function getMacrosFromMeal(
     },
   );
 
+  const grams = (macros.gram / macros.gram) * serving.gram;
+  const salt = (macros.salt / macros.gram) * serving.gram;
+  const fiber = (macros.fiber / macros.gram) * serving.gram;
+  const protein = (macros.protein / macros.gram) * serving.gram;
+  const calories = (macros.calories / macros.gram) * serving.gram;
+
+  const fat = (macros.fat / macros.gram) * serving.gram;
+  const fatSaturated = (macros.fatSaturated / macros.gram) * serving.gram;
+  const fatUnsaturated = (macros.fatUnsaturated / macros.gram) * serving.gram;
+
+  const carbs = (macros.carbs / macros.gram) * serving.gram;
+  const carbsSugars = (macros.carbsSugars / macros.gram) * serving.gram;
+
+  const decimals = rounded ? 0 : 2;
+
   return {
-    gram: rounded
-      ? Math.round((macros.gram / macros.gram) * serving.gram)
-      : (macros.gram / macros.gram) * serving.gram,
+    gram: roundNumber(grams, decimals),
+    salt: roundNumber(salt, decimals),
+    fiber: roundNumber(fiber, decimals),
+    protein: roundNumber(protein, decimals),
+    calories: roundNumber(calories, decimals),
 
-    fat: rounded
-      ? Math.round((macros.fat / macros.gram) * serving.gram)
-      : (macros.fat / macros.gram) * serving.gram,
+    fat: roundNumber(fat, decimals),
+    fatSaturated: roundNumber(fatSaturated, decimals),
+    fatUnsaturated: roundNumber(fatUnsaturated, decimals),
 
-    fatSaturated: rounded
-      ? Math.round((macros.fatSaturated / macros.gram) * serving.gram)
-      : (macros.fatSaturated / macros.gram) * serving.gram,
-
-    fatUnsaturated: rounded
-      ? Math.round((macros.fatUnsaturated / macros.gram) * serving.gram)
-      : (macros.fatUnsaturated / macros.gram) * serving.gram,
-
-    carbs: rounded
-      ? Math.round((macros.carbs / macros.gram) * serving.gram)
-      : (macros.carbs / macros.gram) * serving.gram,
-
-    carbsSugars: rounded
-      ? Math.round((macros.carbsSugars / macros.gram) * serving.gram)
-      : (macros.carbsSugars / macros.gram) * serving.gram,
-
-    salt: rounded
-      ? Math.round((macros.salt / macros.gram) * serving.gram)
-      : (macros.salt / macros.gram) * serving.gram,
-
-    fiber: rounded
-      ? Math.round((macros.fiber / macros.gram) * serving.gram)
-      : (macros.fiber / macros.gram) * serving.gram,
-
-    protein: rounded
-      ? Math.round((macros.protein / macros.gram) * serving.gram)
-      : (macros.protein / macros.gram) * serving.gram,
-
-    calories: rounded
-      ? Math.round((macros.calories / macros.gram) * serving.gram)
-      : (macros.calories / macros.gram) * serving.gram,
+    carbs: roundNumber(carbs, decimals),
+    carbsSugars: roundNumber(carbsSugars, decimals),
   };
 }
 
@@ -428,3 +412,12 @@ export const getDateKey = (date: Date) => {
 
   return `${year}-${month}-${day}`;
 };
+
+export const roundNumber = (number: number, decimals = 2) => {
+  const factor = Math.pow(10, decimals);
+  const rounded = Math.round(number * factor);
+
+  return rounded / factor;
+};
+
+console.log(roundNumber(1.23456789, 2));

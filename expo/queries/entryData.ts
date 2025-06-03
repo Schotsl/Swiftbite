@@ -1,11 +1,6 @@
 import { Entry } from "@/types/entry";
 import { queryOptions } from "@tanstack/react-query";
-import {
-  getDateKey,
-  getDateRange,
-  handleError,
-  mapMeal,
-} from "@/helper";
+import { getDateKey, getDateRange, handleError, mapMeal } from "@/helper";
 
 import supabase from "@/utils/supabase";
 
