@@ -1,12 +1,12 @@
 import { router } from "expo-router";
-import { View } from "react-native";
+import { useRegister } from "@/context/RegisterContext";
+import { ScrollView, View } from "react-native";
 
 import React from "react";
-import Steps from "@/components/Steps";
-import Button from "@/components/Button";
 import Header from "@/components/Header";
-
-import { useRegister } from "@/context/RegisterContext";
+import ButtonOverlay from "@/components/Button/Overlay";
+import RegisterSteps from "@/components/Register/Steps";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import variables from "@/variables";
 
@@ -24,25 +24,39 @@ export default function Step3() {
   };
 
   return (
-    <View
-      style={{
-        gap: variables.gap.large,
-        flex: 1,
-        padding: variables.padding.page,
-        paddingBottom: variables.gap.large,
-      }}
-    >
-      <Steps value={3} total={8} />
+    <View>
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            flex: 1,
+            padding: variables.padding.page,
+            paddingBottom: variables.gap.large,
+          }}
+        >
+          <RegisterSteps value={3} total={8} />
 
-      <Header
-        onBack={handleBack}
-        title="Leeftijd"
-        content="Je leeftijd beïnvloedt je verbranding. Zo krijgen we een beter beeld van je calorie­doel"
+          <Header
+            onBack={handleBack}
+            title="Leeftijd"
+            content="Je leeftijd beïnvloedt je verbranding. Zo krijgen we een beter beeld van je calorie­doel"
+          />
+
+          <DateTimePicker
+            mode="date"
+            value={new Date()}
+            style={{ marginVertical: -16 }}
+            display="spinner"
+          />
+        </View>
+      </ScrollView>
+
+      <ButtonOverlay
+        tab={false}
+        nav={false}
+        title="Volgende stap"
+        onPress={handleNext}
       />
-
-      <View style={{ marginTop: "auto" }}>
-        <Button title={"Volgende stap"} onPress={handleNext} />
-      </View>
     </View>
   );
 }

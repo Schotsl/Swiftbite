@@ -1,48 +1,82 @@
 import { router } from "expo-router";
-import { View } from "react-native";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRegister } from "@/context/RegisterContext";
+import { ScrollView, View } from "react-native";
+import { Step1Data, step1Schema } from "@/schemas/register/step-1";
 
 import React from "react";
-import Steps from "@/components/Steps";
-import Button from "@/components/Button";
+import Input from "@/components/Input";
 import Header from "@/components/Header";
-
-import { useRegister } from "@/context/RegisterContext";
+import RegisterSteps from "@/components/Register/Steps";
+import ButtonOverlay from "@/components/Button/Overlay";
 
 import variables from "@/variables";
 
 export default function Step1() {
   const { setPrevious } = useRegister();
 
+  const { control, handleSubmit } = useForm<Step1Data>({
+    resolver: zodResolver(step1Schema),
+  });
+
   const handleNext = () => {
     setPrevious(1);
+
     router.replace("/sign-up/step-2");
   };
 
   const handleBack = () => {
     setPrevious(1);
+
     router.replace("/sign-in");
   };
 
   return (
-    <View
-      style={{
-        gap: variables.gap.large,
-        flex: 1,
-        padding: variables.padding.page,
-        paddingBottom: variables.gap.large,
-      }}
-    >
-      <Steps value={1} total={8} />
+    <View>
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            flex: 1,
+            padding: variables.padding.page,
+            paddingBottom: variables.gap.large,
+          }}
+        >
+          <RegisterSteps value={1} total={8} />
 
-      <Header
-        onBack={handleBack}
-        title="Voor- en achternaam"
-        content="We gebruiken je voor- en achternaam alleen om je aan te spreken in de app"
+          <Header
+            onBack={handleBack}
+            title="Voor- en achternaam"
+            content="We gebruiken je voor- en achternaam alleen om je aan te spreken in de app"
+          />
+
+          <View style={{ gap: 16 }}>
+            <Input
+              type="default"
+              name="first_name"
+              label={"Voornaam"}
+              control={control}
+              placeholder={"John"}
+            />
+
+            <Input
+              type="default"
+              name="last_name"
+              label={"Achternaam"}
+              control={control}
+              placeholder={"Doe"}
+            />
+          </View>
+        </View>
+      </ScrollView>
+
+      <ButtonOverlay
+        tab={false}
+        nav={false}
+        title="Volgende stap"
+        onPress={handleSubmit(handleNext)}
       />
-
-      <View style={{ marginTop: "auto" }}>
-        <Button title={"Volgende stap"} onPress={handleNext} />
-      </View>
     </View>
   );
 }

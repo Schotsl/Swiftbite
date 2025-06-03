@@ -1,14 +1,17 @@
 import { router } from "expo-router";
-import { View } from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import { useRegister } from "@/context/RegisterContext";
+import { ScrollView, View } from "react-native";
 
 import React from "react";
-import Steps from "@/components/Steps";
-import Button from "@/components/Button";
 import Header from "@/components/Header";
-
-import { useRegister } from "@/context/RegisterContext";
+import TextLarge from "@/components/Text/Large";
+import ButtonOverlay from "@/components/Button/Overlay";
+import RegisterSteps from "@/components/Register/Steps";
+import RegisterSwitch from "@/components/Register/Switch";
 
 import variables from "@/variables";
+import language from "@/language";
 
 export default function Step2() {
   const { setPrevious } = useRegister();
@@ -24,25 +27,103 @@ export default function Step2() {
   };
 
   return (
-    <View
-      style={{
-        gap: variables.gap.large,
-        flex: 1,
-        padding: variables.padding.page,
-        paddingBottom: variables.gap.large,
-      }}
-    >
-      <Steps value={2} total={8} />
+    <View>
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            flex: 1,
+            padding: variables.padding.page,
+            paddingBottom: variables.gap.large,
+          }}
+        >
+          <RegisterSteps value={2} total={8} />
 
-      <Header
-        onBack={handleBack}
-        title="Lengte en gewicht"
-        content="Met deze gegevens schatten we je dagelijkse energie- en macro­behoefte in"
+          <Header
+            title="Lengte en gewicht"
+            content="Met deze gegevens schatten we je dagelijkse energie- en macro­behoefte in"
+            onBack={handleBack}
+          />
+
+          <Step2Switcher />
+
+          <View style={{ flexDirection: "row" }}>
+            <Step2Weight />
+            <Step2Length />
+          </View>
+        </View>
+      </ScrollView>
+
+      <ButtonOverlay
+        tab={false}
+        nav={false}
+        title="Volgende stap"
+        onPress={handleNext}
       />
+    </View>
+  );
+}
 
-      <View style={{ marginTop: "auto" }}>
-        <Button title={"Volgende stap"} onPress={handleNext} />
+function Step2Switcher() {
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <View style={{ flex: 1 }}>
+        <TextLarge weight="semibold" align="center">
+          Pond
+        </TextLarge>
       </View>
+
+      <RegisterSwitch />
+
+      <View style={{ flex: 1 }}>
+        <TextLarge weight="semibold" align="center">
+          Kilo
+        </TextLarge>
+      </View>
+    </View>
+  );
+}
+
+function Step2Weight() {
+  const weights = Array.from({ length: 2010 }, (_, i) => i / 10 + 50);
+
+  return (
+    <View style={{ flex: 1, marginRight: -8 }}>
+      <TextLarge weight="semibold" align="center">
+        Gewicht
+      </TextLarge>
+
+      <Picker selectedValue={70.5}>
+        {weights.map((option) => (
+          <Picker.Item
+            key={option}
+            value={option}
+            label={`${option.toFixed(1)} ${language.measurement.metric.weight}`}
+          />
+        ))}
+      </Picker>
+    </View>
+  );
+}
+
+function Step2Length() {
+  const lengths = Array.from({ length: 200 }, (_, i) => i + 50);
+
+  return (
+    <View style={{ flex: 1, marginLeft: -8 }}>
+      <TextLarge weight="semibold" align="center">
+        Lengte
+      </TextLarge>
+
+      <Picker selectedValue={180}>
+        {lengths.map((option) => (
+          <Picker.Item
+            key={option}
+            value={option}
+            label={`${option} ${language.measurement.metric.distance}`}
+          />
+        ))}
+      </Picker>
     </View>
   );
 }

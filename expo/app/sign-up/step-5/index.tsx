@@ -1,12 +1,12 @@
 import { router } from "expo-router";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
+import { useRegister } from "@/context/RegisterContext";
 
 import React from "react";
-import Steps from "@/components/Steps";
-import Button from "@/components/Button";
 import Header from "@/components/Header";
-
-import { useRegister } from "@/context/RegisterContext";
+import ButtonOverlay from "@/components/Button/Overlay";
+import RegisterSteps from "@/components/Register/Steps";
+import InputDropdownRadio from "@/components/Input/Dropdown/Radio";
 
 import variables from "@/variables";
 
@@ -24,25 +24,55 @@ export default function Step5() {
   };
 
   return (
-    <View
-      style={{
-        gap: variables.gap.large,
-        flex: 1,
-        padding: variables.padding.page,
-        paddingBottom: variables.gap.large,
-      }}
-    >
-      <Steps value={5} total={8} />
+    <View>
+      <ScrollView>
+        <View
+          style={{
+            gap: variables.gap.large,
+            flex: 1,
+            padding: variables.padding.page,
+            paddingBottom: variables.gap.large,
+          }}
+        >
+          <RegisterSteps value={5} total={8} />
 
-      <Header
-        onBack={handleBack}
-        title="Activiteitsniveau"
-        content="Op basis hiervan schatten we je verbruik, onder elke optie zie je hoeveel extra calorieën dat betekent"
+          <Header
+            onBack={handleBack}
+            title="Activiteitsniveau"
+            content="Op basis hiervan schatten we je verbruik, onder elke optie zie je hoeveel extra calorieën dat betekent"
+          />
+
+          <View style={{ gap: 16 }}>
+            <InputDropdownRadio
+              label="0 - 2 keer per week"
+              subtitle="± 0 kcal per dag"
+              selected={true}
+              onSelect={() => {}}
+            />
+
+            <InputDropdownRadio
+              label="3 - 5 keer per week"
+              subtitle="+≈ 200 kcal per dag"
+              selected={false}
+              onSelect={() => {}}
+            />
+
+            <InputDropdownRadio
+              label="Meer dan 6 keer per week"
+              subtitle="+≈ 400 kcal per dag"
+              selected={false}
+              onSelect={() => {}}
+            />
+          </View>
+        </View>
+      </ScrollView>
+
+      <ButtonOverlay
+        tab={false}
+        nav={false}
+        title="Volgende stap"
+        onPress={handleNext}
       />
-
-      <View style={{ marginTop: "auto" }}>
-        <Button title={"Volgende stap"} onPress={handleNext} />
-      </View>
     </View>
   );
 }
