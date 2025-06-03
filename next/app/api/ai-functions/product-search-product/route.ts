@@ -4,7 +4,8 @@ import { getUser, supabase } from "@/utils/supabase";
 import { generateEmbedding } from "@/utils/generative/generate";
 import { NextRequest, NextResponse } from "next/server";
 
-export const maxDuration = 120;
+// I've given this function a very high timeout since it can do long research using google
+export const maxDuration = 300;
 
 export async function GET(request: NextRequest) {
   const user = await getUser(request);
