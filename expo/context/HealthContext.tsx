@@ -92,9 +92,7 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       const calories = await HealthService.getTotalCalories();
 
       setCalories(calories);
-      setTimeout(() => {
-        setCaloriesStatus(HealthStatus.Ready);
-      }, 1500);
+      setCaloriesStatus(HealthStatus.Ready);
 
       const stringified = calories.toString();
       await AsyncStorage.setItem(CALORIES_STORAGE_KEY, stringified);
@@ -114,9 +112,7 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       const weight = await HealthService.getLatestWeight();
 
       setWeight(weight);
-      setTimeout(() => {
-        setWeightStatus(HealthStatus.Ready);
-      }, 1500);
+      setWeightStatus(HealthStatus.Ready);
 
       const stringified = weight.toString();
       await AsyncStorage.setItem(WEIGHT_STORAGE_KEY, stringified);
@@ -152,8 +148,8 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       setStorageInitialized(storageInitialized);
 
       // Initialize the health service
-      await HealthService.initHealthKit();
-      setHealthInitialized(true);
+      const healthInitialized = await HealthService.initHealthKit();
+      setHealthInitialized(healthInitialized);
     };
 
     if (Device.isDevice) {

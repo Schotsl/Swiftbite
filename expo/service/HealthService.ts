@@ -56,15 +56,16 @@ const OPTIONS = {
 } as HealthKitPermissions;
 
 class HealthService {
-  async initHealthKit(): Promise<void> {
+  async initHealthKit(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      AppleHealthKit.initHealthKit(OPTIONS, (error) => {
+      AppleHealthKit.initHealthKit(OPTIONS, (error, results) => {
         if (error) {
-          reject(error);
+          resolve(false);
+
           return;
         }
 
-        resolve();
+        resolve(true);
       });
     });
   }
