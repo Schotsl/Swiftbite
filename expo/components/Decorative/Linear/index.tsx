@@ -28,7 +28,11 @@ export default function DecorativeLinear() {
     }
 
     wrapper.current.measure((x, y, width, height, pageX, pageY) => {
-      if (width <= 0 && height <= 0) {
+      if (width <= 0 || height <= 0) {
+        return;
+      }
+
+      if (windowWidth <= 0) {
         return;
       }
 
