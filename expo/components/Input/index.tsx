@@ -150,6 +150,7 @@ export default function Input({
                     multiline={multiline}
                     placeholder={placeholder}
                     keyboardType={type === "password" ? "default" : type}
+                    autoCapitalize={type === "default" ? "sentences" : "none"}
                     secureTextEntry={type === "password"}
                     selectTextOnFocus={!disabled}
                     placeholderTextColor={variables.border.color}
