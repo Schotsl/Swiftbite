@@ -139,7 +139,7 @@ export default function Item({
           <View
             style={{
               flex: 1,
-              minWidth: right,
+              width: right,
               alignItems: "flex-end",
               justifyContent: "space-between",
             }}

@@ -6,7 +6,7 @@ import language from "@/language";
 import { Alert } from "react-native";
 import { Product } from "@/types/product";
 import { ServingData } from "@/schemas/serving";
-import { getMacrosFromProduct, getLabel } from "@/helper";
+import { getMacrosFromProduct } from "@/helper";
 
 type ItemProductProps = {
   icon?: boolean;
@@ -26,8 +26,8 @@ export default function ItemProduct({
   const icon = props.icon === false ? undefined : product.icon_id;
   const macros = serving ? getMacrosFromProduct(product, serving) : null;
 
-  const overwriteTop = macros?.calories ? `${macros.calories} kcal` : null;
-  const overwriteBottom = macros?.gram ? `${macros.gram} g` : null;
+  const overwriteTop = macros !== null ? `${macros.calories} kcal` : null;
+  const overwriteBottom = macros !== null ? `${macros.gram} g` : null;
 
   if (product.type === "search_generic") {
     const { processing } = product;
@@ -51,17 +51,10 @@ export default function ItemProduct({
   }
 
   if (product.type === "search_product") {
-    const { search, quantity, processing } = product;
+    const { processing } = product;
 
     const title = processing ? product.search.title : product.title;
     const subtitle = processing ? product.search.brand : product.brand;
-    const stringified = processing
-      ? search.quantity_original && search.quantity_original_unit
-        ? `${search.quantity_original} ${getLabel(search.quantity_original_unit!)}`
-        : null
-      : quantity && quantity.quantity
-        ? `${quantity.quantity} ${getLabel(quantity.option)}`
-        : null;
 
     return (
       <Item
@@ -71,7 +64,7 @@ export default function ItemProduct({
         subtitle={subtitle}
         subtitleIcon={processing ? "globe" : undefined}
         subtitleLoading={processing}
-        rightTop={overwriteTop || stringified}
+        rightTop={processing ? null : overwriteTop}
         rightBottom={overwriteBottom}
         onPress={() => onSelect(product.uuid)}
       />
@@ -95,7 +88,7 @@ export default function ItemProduct({
       if (processing) {
         Alert.alert(
           language.alert.processing.title,
-          language.alert.processing.subtitle,
+          language.alert.processing.subtitle
         );
 
         return;
