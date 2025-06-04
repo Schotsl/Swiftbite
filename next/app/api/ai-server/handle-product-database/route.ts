@@ -37,17 +37,17 @@ export async function POST(request: Request) {
 
   // If the product doesn't have a title we can't do anything
   if (!title) {
-    return new Response("{}", { status: 200 });
+    return new Response("{}", { status: 204 });
   }
 
   // If the title hasn't changed we don't need to do anything
   if (titleOld === title) {
-    return new Response("{}", { status: 200 });
+    return new Response("{}", { status: 204 });
   }
 
   // If the product already has an icon we don't need to
   if (icon) {
-    return new Response("{}", { status: 200 });
+    return new Response("{}", { status: 204 });
   }
 
   after(async () => {
