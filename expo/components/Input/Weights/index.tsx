@@ -88,11 +88,15 @@ export default function InputWeights({
 
         <View
           style={{
-            alignItems: "flex-end",
             paddingVertical: 12,
           }}
         >
-          <ButtonSmall icon="plus" onPress={handleOpen} nano={true} />
+          <ButtonSmall
+            icon="plus"
+            nano={true}
+            style={{ marginLeft: "auto" }}
+            onPress={handleOpen}
+          />
         </View>
       </View>
 

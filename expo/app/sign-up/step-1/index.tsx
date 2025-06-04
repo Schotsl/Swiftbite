@@ -34,13 +34,14 @@ export default function Step1() {
 
   return (
     <View>
-      <ScrollView>
+      <ScrollView style={{ minHeight: "100%" }}>
         <View
           style={{
+            minHeight: "100%",
+
             gap: variables.gap.large,
-            flex: 1,
             padding: variables.padding.page,
-            paddingBottom: variables.gap.large,
+            paddingBottom: variables.paddingOverlay,
           }}
         >
           <RegisterSteps value={1} total={8} />
@@ -71,12 +72,7 @@ export default function Step1() {
         </View>
       </ScrollView>
 
-      <ButtonOverlay
-        tab={false}
-        nav={false}
-        title="Volgende stap"
-        onPress={handleSubmit(handleNext)}
-      />
+      <ButtonOverlay title="Volgende stap" onPress={handleSubmit(handleNext)} />
     </View>
   );
 }

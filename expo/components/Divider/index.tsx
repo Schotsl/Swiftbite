@@ -5,7 +5,11 @@ import language from "@/language";
 
 import TextSmall from "../Text/Small";
 
-export default function Divider() {
+type DividerProps = {
+  label?: string;
+};
+
+export default function Divider({ label }: DividerProps) {
   return (
     <View style={{ alignItems: "center" }}>
       <TextSmall
@@ -15,7 +19,7 @@ export default function Divider() {
           paddingHorizontal: variables.gap.small,
         }}
       >
-        {language.components.divider.or}
+        {label || language.components.divider.or}
       </TextSmall>
       <View
         style={{

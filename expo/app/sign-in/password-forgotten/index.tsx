@@ -1,8 +1,8 @@
 import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { TouchableOpacity, View } from "react-native";
 import { PasswordForgottenData, passwordForgottenSchema } from "@/schemas/auth";
-import { Alert, TouchableOpacity, View } from "react-native";
 
 import React from "react";
 import Input from "@/components/Input";

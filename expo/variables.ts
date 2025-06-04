@@ -68,10 +68,10 @@ export default {
   },
 
   heightTab: 62,
+  heightButton: 50,
   heightOverlay: 75,
-  heightNavigation: 83,
 
   paddingTab: 32 + 62,
-  paddingOverlay: 32 + 75,
-  paddingOverlayTab: 32 + 75 + 62 + 62,
+  paddingOverlay: 32 + 50 + 24,
+  paddingOverlayTab: 32 + 50 + 24 + 62,
 };

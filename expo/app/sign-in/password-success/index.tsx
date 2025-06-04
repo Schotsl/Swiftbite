@@ -1,11 +1,10 @@
 import { router } from "expo-router";
-import { Alert, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 import React from "react";
 import Button from "@/components/Button";
 import TextBody from "@/components/Text/Body";
 
-import language from "@/language";
 import variables from "@/variables";
 import Header from "@/components/Header";
 

@@ -1,7 +1,7 @@
 import { View, ScrollView } from "react-native";
 import { Product } from "@/types/product";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ServingData } from "@/schemas/serving";
 import { ManualData, manualSchema } from "@/schemas/insert/manual";
@@ -111,10 +111,12 @@ export default function PageEstimationManual({
   };
 
   return (
-    <View>
-      <ScrollView>
+    <Fragment>
+      <ScrollView style={{ minHeight: "100%" }}>
         <View
           style={{
+            minHeight: "100%",
+
             gap: variables.gap.large,
             padding: variables.padding.page,
             paddingBottom: variables.paddingOverlayTab,
@@ -242,15 +244,6 @@ export default function PageEstimationManual({
 
               <Input
                 type="decimal-pad"
-                name="iron_100g"
-                label={language.macros.nutrients.iron}
-                suffix={language.measurement.units.milligram.long}
-                control={control}
-                placeholder="0"
-              />
-
-              <Input
-                type="decimal-pad"
                 name="potassium_100g"
                 label={language.macros.nutrients.potassium}
                 suffix={language.measurement.units.gram.long}
@@ -263,6 +256,15 @@ export default function PageEstimationManual({
                 name="calcium_100g"
                 label={language.macros.nutrients.calcium}
                 suffix={language.measurement.units.gram.long}
+                control={control}
+                placeholder="0"
+              />
+
+              <Input
+                type="decimal-pad"
+                name="iron_100g"
+                label={language.macros.nutrients.iron}
+                suffix={language.measurement.units.milligram.long}
                 control={control}
                 placeholder="0"
               />
@@ -293,16 +295,15 @@ export default function PageEstimationManual({
       </ScrollView>
 
       <ButtonOverlay
-        tab={!product}
         title={
           product
             ? language.modifications.getEdit(language.types.estimation.single)
             : language.modifications.getSave(language.types.estimation.single)
         }
-        onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}
+        onPress={handleSubmit(handleSave)}
       />
-    </View>
+    </Fragment>
   );
 }

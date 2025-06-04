@@ -1,12 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
-
 import { handleError } from "@/helper";
-import { AuthData } from "@/schemas/auth";
+import { SignInData } from "@/schemas/auth";
+
 import supabase from "@/utils/supabase";
 
 export default function useSignInWithEmail() {
   return useMutation({
-    mutationFn: async ({ email, password }: AuthData) => {
+    mutationFn: async ({ email, password }: SignInData) => {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,

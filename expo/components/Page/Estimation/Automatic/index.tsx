@@ -7,7 +7,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { CameraSelected } from "@/types";
 import { ImageManipulator } from "expo-image-manipulator";
 import { router, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { handleError, renderToBase64, transformImage } from "@/helper";
 import {
   EstimationData,
@@ -218,8 +218,8 @@ export default function PageEstimationAutomatic({
   }, [focus]);
 
   return (
-    <View>
-      <ScrollView>
+    <Fragment>
+      <ScrollView style={{ minHeight: "100%" }}>
         <View
           style={{
             gap: variables.gap.large,
@@ -264,12 +264,11 @@ export default function PageEstimationAutomatic({
       </ScrollView>
 
       <ButtonOverlay
-        tab={tab}
         title={language.modifications.getSave(language.types.estimation.single)}
         onPress={handleSubmit(handleSave)}
         loading={saving}
         disabled={saving}
       />
-    </View>
+    </Fragment>
   );
 }

@@ -44,6 +44,7 @@ export default function PageSearch({
     <View style={{ flex: 1 }}>
       <Tabs
         back={true}
+        add={"/add/product-add"}
         onSelect={(value) => handleTab(value as SearchType)}
         value={selected}
         tabs={

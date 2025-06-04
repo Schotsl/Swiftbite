@@ -7,7 +7,7 @@ type RegisterContextType = {
 };
 
 const RegisterContext = createContext<RegisterContextType | undefined>(
-  undefined
+  undefined,
 );
 
 type RegisterProviderProps = {
@@ -29,7 +29,7 @@ export const useRegister = () => {
 
   if (context === undefined) {
     throw new Error(
-      `useRegisterContext must be used within a RegisterProvider`
+      `useRegisterContext must be used within a RegisterProvider`,
     );
   }
 

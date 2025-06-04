@@ -36,7 +36,7 @@ export default function PageEstimation({
   const tabVisible = !image && !product;
 
   return (
-    <View>
+    <View style={{ maxHeight: "100%" }}>
       {tabVisible && (
         <Tabs
           tabs={[

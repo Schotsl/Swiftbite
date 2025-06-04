@@ -129,9 +129,11 @@ export default function AutomationsRepeatUpsert() {
 
   return (
     <View>
-      <ScrollView onScroll={handleScroll}>
+      <ScrollView style={{ minHeight: "100%" }} onScroll={handleScroll}>
         <View
           style={{
+            minHeight: "100%",
+
             gap: variables.gap.large,
             padding: variables.padding.page,
             paddingBottom: variables.paddingOverlay,
