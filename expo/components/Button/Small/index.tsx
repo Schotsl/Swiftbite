@@ -72,11 +72,11 @@ export default function ButtonSmall({
       borderWidth: variables.border.width,
       borderColor: "transparent",
 
-      color: variables.colors.text.secondary,
-      backgroundColor: variables.colors.background.secondary,
+      // color: variables.colors.text.secondary,
+      // backgroundColor: variables.colors.background.secondary,
 
-      // color: variables.colors.white,
-      // backgroundColor: "#0076D6",
+      color: variables.colors.white,
+      backgroundColor: "#0076D6",
     };
   };
 
