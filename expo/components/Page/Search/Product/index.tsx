@@ -234,14 +234,16 @@ function PageSearchProductContent({
           onSelect={onSelect}
         />
 
-        <Empty
-          emoji={type === "search_product" ? "🥤" : "🍎"}
-          content={
-            type === "search_product"
-              ? language.search.explanation.product
-              : language.search.explanation.basic
-          }
-        />
+        {!opened && (
+          <Empty
+            emoji={type === "search_product" ? "🥤" : "🍎"}
+            content={
+              type === "search_product"
+                ? language.search.explanation.product
+                : language.search.explanation.basic
+            }
+          />
+        )}
       </View>
     );
   }

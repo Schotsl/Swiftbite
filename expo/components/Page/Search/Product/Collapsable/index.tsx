@@ -94,22 +94,25 @@ export default function PageSearchProductCollapsable({
             <SearchCollapsableEmpty empty={empty} emoji={emoji} />
           ) : (
             products && (
-              <FlatList
-                data={products}
+              <View
                 style={{
                   borderBottomColor: variables.colors.grey,
                   borderBottomWidth: variables.border.width,
                 }}
-                scrollEnabled={false}
-                keyExtractor={(item) => item.uuid}
-                renderItem={({ item, index }) => (
-                  <ItemProduct
-                    border={index !== products.length - 1}
-                    product={item}
-                    onSelect={() => onSelect(item.uuid)}
-                  />
-                )}
-              />
+              >
+                <FlatList
+                  data={products}
+                  style={{ height: 374 }}
+                  keyExtractor={(item) => item.uuid}
+                  renderItem={({ item, index }) => (
+                    <ItemProduct
+                      border={index !== products.length - 1}
+                      product={item}
+                      onSelect={() => onSelect(item.uuid)}
+                    />
+                  )}
+                />
+              </View>
             )
           )}
         </View>
