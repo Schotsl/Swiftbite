@@ -1,5 +1,3 @@
-// HAPPY
-
 import { View } from "react-native";
 import { useState, useEffect, Fragment } from "react";
 

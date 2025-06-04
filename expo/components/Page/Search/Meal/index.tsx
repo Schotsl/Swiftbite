@@ -1,5 +1,3 @@
-// HAPPY
-
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
@@ -69,7 +67,7 @@ export default function PageSearchMeal({ onSelect }: PageSearchProps) {
           icon="magnifying-glass"
           control={control}
           placeholder={language.search.results.getPlaceholder(
-            language.types.meal.single,
+            language.types.meal.single
           )}
         />
       </View>

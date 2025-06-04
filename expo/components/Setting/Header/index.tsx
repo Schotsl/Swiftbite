@@ -1,5 +1,3 @@
-// HAPPY
-
 import { Fragment, Suspense } from "react";
 import { ActivityIndicator, View } from "react-native";
 

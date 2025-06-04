@@ -1,5 +1,3 @@
-// HAPPY
-
 import TextBody from "@/components/Text/Body";
 import DecorativeNoise from "@/components/Decorative/Noise";
 

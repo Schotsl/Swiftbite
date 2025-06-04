@@ -1,5 +1,3 @@
-// HAPPY
-
 import Animated, {
   withTiming,
   useSharedValue,

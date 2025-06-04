@@ -1,5 +1,3 @@
-// HAPPY
-
 import variables from "@/variables";
 
 import MaskedView from "@react-native-masked-view/masked-view";

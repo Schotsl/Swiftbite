@@ -1,5 +1,3 @@
-// HAPPY
-
 import Label from "@/components/Input/Label";
 import TextSmall from "@/components/Text/Small";
 import InputWeekdayItem from "./Item";

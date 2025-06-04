@@ -1,5 +1,3 @@
-// HAPPY
-
 import TextBody from "@/components/Text/Body";
 import TextSmall from "@/components/Text/Small";
 

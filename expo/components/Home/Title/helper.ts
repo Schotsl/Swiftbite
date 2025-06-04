@@ -1,5 +1,3 @@
-// HAPPY
-
 import language from "@/language";
 
 export const getDateRelative = (date: Date): string => {
@@ -9,13 +7,13 @@ export const getDateRelative = (date: Date): string => {
   const normalizedDateObject = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate(),
+    date.getDate()
   );
 
   const normalizedToday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate(),
+    today.getDate()
   );
 
   const diffTime = normalizedDateObject.getTime() - normalizedToday.getTime();

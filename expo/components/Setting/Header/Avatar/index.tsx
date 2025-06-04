@@ -1,5 +1,3 @@
-// HAPPY
-
 import { User } from "@/types/user";
 import { Image } from "expo-image";
 import { ActivityIndicator, View } from "react-native";

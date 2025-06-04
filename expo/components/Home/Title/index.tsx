@@ -1,5 +1,3 @@
-// HAPPY
-
 import { View } from "react-native";
 import { transformDate } from "@/helper";
 import { getDateRelative } from "./helper";

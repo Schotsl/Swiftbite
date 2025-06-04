@@ -1,5 +1,3 @@
-// HAPPY
-
 import { View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import { useHealth } from "@/context/HealthContext";

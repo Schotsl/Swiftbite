@@ -1,5 +1,3 @@
-// HAPPY
-
 import { Href, useRouter } from "expo-router";
 import { useCameraPermission } from "react-native-vision-camera";
 import { Alert, StyleProp, View, ViewStyle } from "react-native";
@@ -50,7 +48,7 @@ export default function NavigationAddList({
       if (!response) {
         Alert.alert(
           language.alert.permission.title,
-          language.alert.permission.subtitle,
+          language.alert.permission.subtitle
         );
 
         return;

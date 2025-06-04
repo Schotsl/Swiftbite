@@ -1,5 +1,3 @@
-// HAPPY
-
 import { Modal, View } from "react-native";
 import { useState } from "react";
 

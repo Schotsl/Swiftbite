@@ -1,5 +1,3 @@
-// HAPPY
-
 import variables from "@/variables";
 import streakData from "@/queries/streakData";
 

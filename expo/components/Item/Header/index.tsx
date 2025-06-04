@@ -1,5 +1,3 @@
-// HAPPY
-
 import { View } from "react-native";
 
 import TextBody from "@/components/Text/Body";

@@ -1,5 +1,3 @@
-// HAPPY
-
 import { Day } from "../types";
 import { getStyle } from "./helper";
 import { TouchableOpacity, View } from "react-native";

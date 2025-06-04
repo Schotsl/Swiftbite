@@ -1,5 +1,3 @@
-// HAPPY
-
 import HomeWeekDay from "./Day";
 
 import weekData from "@/queries/weekData";

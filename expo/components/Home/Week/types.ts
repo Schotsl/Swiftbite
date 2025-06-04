@@ -1,5 +1,3 @@
-// HAPPY
-
 export type Color = "primary" | "grey" | "transparent";
 
 export type Border = "thick" | "normal" | "dashed" | "none";

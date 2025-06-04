@@ -1,5 +1,3 @@
-// HAPPY
-
 import variables from "@/variables";
 
 import { View } from "react-native";
