@@ -181,9 +181,10 @@ export const supabaseRequest = async (
 ): Promise<Product[]> => {
   try {
     const timeStart = performance.now();
-
+    console.log("[DEBUG] Attempting to generate embedding");
     const vector = await generateEmbedding(user, { value });
 
+    console.log("[DEBUG] Attempting to match product");
     const { data, error: rpcError } = await supabase.rpc("product_match", {
       query_embedding: vector,
       query_type: type,
