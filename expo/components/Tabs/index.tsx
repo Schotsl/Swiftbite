@@ -1,4 +1,5 @@
 import { ScrollView } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 import { Href, useRouter } from "expo-router";
 import { Fragment, useRef, useEffect } from "react";
 import { TouchableOpacity, View, type LayoutChangeEvent } from "react-native";
@@ -69,6 +70,41 @@ export default function Tabs({
 
   return (
     <View>
+      {back && (
+        <View
+          style={{
+            top: 11,
+            left: 0,
+            zIndex: 1000,
+            position: "absolute",
+            flexDirection: "row",
+          }}
+        >
+          <View
+            style={{
+              paddingLeft: variables.padding.page,
+              paddingRight: variables.gap.small,
+              backgroundColor: variables.colors.white,
+            }}
+          >
+            <ButtonSmall
+              icon="arrow-left"
+              nano={true}
+              onPress={() => router.back()}
+            />
+          </View>
+
+          <View style={{ width: variables.gap.normal, height: "100%" }}>
+            <LinearGradient
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
+              style={{ flex: 1 }}
+              colors={["rgba(255,255,255,1)", "rgba(255,255,255,0)"]}
+            />
+          </View>
+        </View>
+      )}
+
       <View
         style={{
           height: variables.heightTab,
@@ -90,22 +126,24 @@ export default function Tabs({
           <View
             style={{
               gap: variables.padding.page,
-              paddingRight: add ? 64 : variables.padding.page,
-              paddingHorizontal: variables.padding.page,
-
               alignItems: "center",
               flexDirection: "row",
               justifyContent: "center",
+
+              paddingLeft: back
+                ? 30 +
+                  variables.padding.page +
+                  variables.gap.small +
+                  variables.gap.normal
+                : variables.padding.page,
+              paddingRight: add
+                ? 30 +
+                  variables.padding.page +
+                  variables.gap.small +
+                  variables.gap.normal
+                : variables.padding.page,
             }}
           >
-            {back && (
-              <ButtonSmall
-                icon="arrow-left"
-                nano={true}
-                onPress={() => router.back()}
-              />
-            )}
-
             {tabs.map((tab, index) => {
               const isLast = index === tabs.length - 1;
               const isActive =
@@ -173,16 +211,38 @@ export default function Tabs({
       </View>
 
       {add && (
-        <ButtonSmall
-          icon="plus"
-          nano={true}
+        <View
           style={{
-            top: 12,
-            right: variables.padding.page,
+            top: 11,
+            right: 0,
+            zIndex: 1000,
             position: "absolute",
+            flexDirection: "row",
           }}
-          onPress={() => router.push(add)}
-        />
+        >
+          <View style={{ width: variables.gap.normal, height: "100%" }}>
+            <LinearGradient
+              end={{ x: 1, y: 0 }}
+              start={{ x: 0, y: 0 }}
+              style={{ flex: 1 }}
+              colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]}
+            />
+          </View>
+
+          <View
+            style={{
+              paddingLeft: variables.gap.small,
+              paddingRight: variables.padding.page,
+              backgroundColor: variables.colors.white,
+            }}
+          >
+            <ButtonSmall
+              icon="plus"
+              nano={true}
+              onPress={() => router.push(add)}
+            />
+          </View>
+        </View>
       )}
     </View>
   );
