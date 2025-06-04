@@ -1,6 +1,6 @@
 import { after } from "next/server";
 import { insertUsage } from "@/utils/usage";
-import { providerFast } from "@/variables";
+import { providerMedium } from "@/variables";
 import { generateObject, streamObject, StreamObjectResult } from "ai";
 import {
   GenericData,
@@ -42,7 +42,7 @@ export async function searchGenerics(
   const genericStream = streamObject({
     model,
     temperature: 0,
-    providerOptions: providerFast,
+    providerOptions: providerMedium,
 
     output: "array",
     schema: genericSearchSchema,

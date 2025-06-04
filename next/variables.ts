@@ -7,3 +7,11 @@ export const providerFast = {
     },
   } satisfies GoogleGenerativeAIProviderOptions,
 };
+
+export const providerMedium = {
+  google: {
+    thinkingConfig: {
+      thinkingBudget: 512,
+    },
+  } satisfies GoogleGenerativeAIProviderOptions,
+};

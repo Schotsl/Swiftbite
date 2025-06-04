@@ -1,6 +1,6 @@
 import { after } from "next/server";
 import { insertUsage } from "@/utils/usage";
-import { providerFast } from "@/variables";
+import { providerMedium } from "@/variables";
 import { generateObject, streamObject, StreamObjectResult } from "ai";
 import {
   ProductData,
@@ -46,7 +46,7 @@ export async function searchProducts(
   const stream = streamObject({
     model,
     temperature: 0,
-    providerOptions: providerFast,
+    providerOptions: providerMedium,
 
     output: "array",
     schema: productSearchSchema,

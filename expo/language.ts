@@ -162,7 +162,7 @@ export default {
       single: "Herhaling",
       plural: "Herhalingen",
       loading: "We zijn je herhaling aan het laden uit onze database",
-      explanation: `Een herhaling is een product dat automatisch toevoegt wordt op de dagen en tijden die jij kiest`,
+      explanation: `Een herhaling is een product dat automatisch toegevoegd wordt op de dagen en tijden die jij kiest`,
       inputRepeatTime: "Herhalen om",
       inputRepeatDate: "Herhalen op",
     },
@@ -255,7 +255,7 @@ export default {
       subtitle: "Deze functionaliteit is nog niet beschikbaar",
     },
     permission: {
-      title: "Toegang verleend",
+      title: "Geen toegang",
       subtitle: "Je hebt geen toegang verleend voor de camera",
     },
     barcode: {
@@ -314,7 +314,7 @@ export default {
         apple: "Inloggen met Apple",
       },
       error: {
-        apple: "Failed to sign in with Apple",
+        apple: "Kon niet inloggen met Apple",
       },
       register: {
         button: "Registreren",
@@ -387,7 +387,7 @@ export default {
       manual: {
         tab: "Handmatig",
         title: "Handmatig inschatten",
-        description: `Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product`,
+        description: `Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro\'s handmatig in te vullen, onthoud dat dit niet als een standaard product wordt opgeslagen.`,
       },
       automatic: {
         tab: "Automatisch",
@@ -492,7 +492,7 @@ export default {
         short: "Verwijder je account definitief.",
         input: {
           password: "Wachtwoord",
-          passwordContent: `Vul hieronder je wachtwoord in om je account te definitief verwijderen.`,
+          passwordContent: `Vul hieronder je wachtwoord in om je account definitief te verwijderen.`,
           passwordIncorrect: "Je wachtwoord is incorrect",
           passwordPlaceholder: "********",
         },
@@ -582,13 +582,13 @@ export default {
       product: `Producten zijn merkartikelen, zoals "Coca-Cola Zero", die altijd naar een exact merk en smaak verwijzen`,
     },
     results: {
-      overloaded: "Je hebt je dagelijkse zoek limiet overschreden",
+      overloaded: "Oeps! Je hebt de dagelijkse zoeklimiet bereikt.",
 
       getDefault: (type: string) => {
         return `Start met zoeken naar ${type.toLowerCase()} door minimaal 4 letters te typen en druk op enter`;
       },
       getEmpty: (type: string) => {
-        return `We hebben geen helaas ${type.toLowerCase()} gevonden met deze naam`;
+        return `We hebben helaas geen ${type.toLowerCase()} gevonden met deze naam`;
       },
       getAdvice: (type: string) => {
         return `Onze AI zoekt de ${type.toLowerCase()} voor je, hoe specifieker je zoekt, hoe beter de resultaten`;
