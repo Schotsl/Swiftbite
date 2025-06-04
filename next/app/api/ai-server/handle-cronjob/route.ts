@@ -25,7 +25,7 @@ export async function POST() {
 
   // Allow a small window around midnight for execution
   if (currentHour !== 0 || currentMinute > 5) {
-    return new Response("{}", { status: 204 });
+    return new Response(null, { status: 204 });
   }
 
   const repeats = await fetchRepeat();

@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
   // Make sure it's the right bucket /generative
   if (bucket !== "generative") {
-    return new Response("{}", { status: 204 });
+    return new Response(null, { status: 204 });
   }
 
   // Make sure the user isn't over their usage limits

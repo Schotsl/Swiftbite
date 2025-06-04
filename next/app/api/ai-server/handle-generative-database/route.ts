@@ -26,7 +26,7 @@ export async function POST(request: Request) {
 
   // If the generative content is image based we don't need to do anything
   if (generativeImage) {
-    return new Response("{}", { status: 204 });
+    return new Response(null, { status: 204 });
   }
 
   after(async () => {

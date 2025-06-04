@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
   // If the title and the ingredients haven't changed we don't need to do anything
   if (!titleChanged && !ingredientsChanged) {
-    return new Response("{}", { status: 204 });
+    return new Response(null, { status: 204 });
   }
 
   after(async () => {
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     ]);
   });
 
-  return new Response("{}", { status: 204 });
+  return new Response(null, { status: 204 });
 }
 
 const updateIngredients = async (uuid: string) => {
