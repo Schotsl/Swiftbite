@@ -56,11 +56,11 @@ export function useSearch() {
         };
 
         const response = await fetch(
-          `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search?query=${encodeURIComponent(search)}&lang=${lang}&type=${type}`,
+          `${process.env.EXPO_PUBLIC_SWIFTBITE_URL}/api/ai/search?query=${encodeURIComponent(search)}&lang=${lang}&type=${type.trim()}`,
           {
             signal,
             headers,
-          },
+          }
         );
 
         if (response.status === 429) {
@@ -119,7 +119,7 @@ export function useSearch() {
         setProducts([]);
       }
     },
-    [],
+    []
   );
 
   return { error, query, search, reset, products, loading, overloaded };
