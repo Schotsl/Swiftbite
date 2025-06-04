@@ -32,7 +32,6 @@ export default function Personal() {
           style={{
             gap: variables.gap.large,
             padding: variables.padding.page,
-            paddingBottom: variables.paddingOverlay,
           }}
         >
           <SettingHeader />
