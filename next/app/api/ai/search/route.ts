@@ -29,21 +29,21 @@ export async function GET(request: NextRequest) {
   if (!lang) {
     return NextResponse.json(
       { error: "Please provide a language" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!query) {
     return NextResponse.json(
       { error: "Please provide a query" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
   if (!type) {
     return NextResponse.json(
       { error: "Please provide a type" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -80,9 +80,9 @@ export async function GET(request: NextRequest) {
                 brand: brand!,
                 quantity_original: quantity?.quantity,
                 quantity_original_unit: quantity?.option,
-              })
+              }),
             ),
-          }
+          },
         )
       : await searchGenerics(
           user,
@@ -95,33 +95,35 @@ export async function GET(request: NextRequest) {
               title: title!,
               category: category!,
             })),
-          }
+          },
         );
 
   after(async () => {
     const results = await generativeStream.object;
     const resultsMapped = results.map((search) =>
-      getProductFromSearch({ search, seed })
+      getProductFromSearch({ search, seed }),
     );
 
     // Normally we await the insert but since we won't automatically redirect to the user to product I'm assuming we'll insert before they click
     await insertProducts(resultsMapped);
 
-    resultsMapped.forEach(async (result) => {
-      if (result.type === "search_generic") {
+    await Promise.all(
+      resultsMapped.map(async (result) => {
+        if (result.type === "search_generic") {
+          const uuid = result.uuid;
+          const search = result.search as GenericSearchData;
+
+          await processSearchGeneric(headers, { uuid, lang, search });
+
+          return;
+        }
+
         const uuid = result.uuid;
-        const search = result.search as GenericSearchData;
+        const search = result.search as ProductSearchData;
 
-        await processSearchGeneric(headers, { uuid, lang, search });
-
-        return;
-      }
-
-      const uuid = result.uuid;
-      const search = result.search as ProductSearchData;
-
-      await processSearchProduct(headers, { uuid, lang, search });
-    });
+        await processSearchProduct(headers, { uuid, lang, search });
+      }),
+    );
   });
 
   const combinedStream = {
@@ -138,7 +140,7 @@ export async function GET(request: NextRequest) {
         console.log(chunk);
 
         const mapped = chunk.map((search) =>
-          getProductFromSearch({ search, seed })
+          getProductFromSearch({ search, seed }),
         );
 
         if (mapped.length > 0) {
