@@ -49,7 +49,7 @@ export default function Button({
 
   if (action === "tertiary") {
     textColor = variables.colors.text.primary;
-    backgroundColorToSet = variables.colors.greyLight;
+    backgroundColorToSet = variables.colors.greyBackground;
   }
 
   if (action === "primary") {

@@ -22,9 +22,14 @@ export default function ItemHeader({ title, subtitle }: ItemHeaderProps) {
         paddingHorizontal: variables.padding.page,
 
         backgroundColor: variables.colors.background.secondary,
+
+        borderBottomColor: variables.border.color,
+        borderBottomWidth: 1,
       }}
     >
-      <TextBody color={variables.colors.text.secondary}>{title}</TextBody>
+      <TextBody color={variables.colors.text.secondary} weight="medium">
+        {title}
+      </TextBody>
       <TextBody color={variables.colors.text.secondary} weight="semibold">
         {subtitle}
       </TextBody>

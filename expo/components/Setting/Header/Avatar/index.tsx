@@ -49,7 +49,7 @@ export default function SettingHeaderAvatar({
               position: "absolute",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: variables.colors.greyLight,
+              backgroundColor: variables.colors.grey,
             }}
           >
             <ActivityIndicator

@@ -57,7 +57,7 @@ export default function Item({
         style={{
           height: 75,
           minWidth: "100%",
-          borderColor: variables.colors.grey,
+          borderColor: variables.border.color,
           borderWidth: border ? 1 : 0,
           flexDirection: "column",
           paddingVertical: 16,
@@ -129,6 +129,7 @@ export default function Item({
 
               <TextSmall
                 color={variables.colors.text.secondary}
+                weight="medium"
                 truncate={true}
               >
                 {subtitle}
@@ -150,7 +151,11 @@ export default function Item({
 
             <View style={{ flex: 1 }}></View>
 
-            <TextSmall color={variables.colors.text.secondary} truncate={true}>
+            <TextSmall
+              color={variables.colors.text.secondary}
+              weight="medium"
+              truncate={true}
+            >
               {rightBottom}
             </TextSmall>
           </View>

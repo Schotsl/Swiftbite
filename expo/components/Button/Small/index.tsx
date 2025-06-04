@@ -55,7 +55,7 @@ export default function ButtonSmall({
         color: variables.colors.white,
         borderWidth: 0,
         borderColor: "transparent",
-        backgroundColor: "transparent",
+        backgroundColor: variables.colors.background.secondary,
       };
     }
 
@@ -69,10 +69,14 @@ export default function ButtonSmall({
     }
 
     return {
-      color: variables.colors.text.secondary,
       borderWidth: variables.border.width,
       borderColor: "transparent",
+
+      color: variables.colors.text.secondary,
       backgroundColor: variables.colors.background.secondary,
+
+      // color: variables.colors.white,
+      // backgroundColor: "#0076D6",
     };
   };
 
@@ -118,6 +122,7 @@ export default function ButtonSmall({
         onPress={onPress}
         onLayout={handleLayout}
         disabled={disabled}
+        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         style={{
           gap: variables.gap.small,
           minWidth: nano ? 28 : 36,
@@ -142,13 +147,13 @@ export default function ButtonSmall({
         <DecorativeNoise />
 
         {icon && (
-          <FontAwesome6 name={icon} size={nano ? 12 : 14} color={color} />
+          <FontAwesome6 name={icon} size={nano ? 13 : 14} color={color} />
         )}
 
         {iconMaterial && (
           <MaterialIcons
             name={iconMaterial}
-            size={nano ? 12 : 14}
+            size={nano ? 13 : 14}
             color={color}
           />
         )}

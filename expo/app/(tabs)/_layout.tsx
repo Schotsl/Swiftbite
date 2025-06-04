@@ -217,7 +217,7 @@ function TabsLayoutIcon({ icon, title, focused }: TabsLayoutIconProps) {
           style={{
             width: 65,
             height: 38,
-            backgroundColor: variables.border.color,
+            backgroundColor: variables.colors.greyText,
           }}
         />
       )}

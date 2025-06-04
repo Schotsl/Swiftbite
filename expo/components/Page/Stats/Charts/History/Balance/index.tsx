@@ -96,7 +96,7 @@ export default function PageStatsChartsHistoryBalance({
         spacing={getWidth()}
         maxValue={getMax()}
         thickness={thickness}
-        xAxisColor={variables.colors.greyDark}
+        xAxisColor={variables.border.color}
         noOfSections={2}
         disableScroll
         dataPointsColor={variables.colors.text.primary}

@@ -73,7 +73,7 @@ export default function Modal({
               marginBottom: button ? 24 : variables.gap.large,
               paddingBottom: 24,
 
-              borderColor: variables.colors.grey,
+              borderColor: variables.border.color,
               borderBottomWidth: variables.border.width,
 
               alignItems: "center",
@@ -95,7 +95,7 @@ export default function Modal({
                 paddingTop: 24,
 
                 borderTopWidth: variables.border.width,
-                borderColor: variables.colors.grey,
+                borderColor: variables.border.color,
               }}
             >
               <Button title={button} action="primary" onPress={onButton} />

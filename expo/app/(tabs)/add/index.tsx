@@ -71,19 +71,19 @@ const getSections = (entries: Entry[]): Section[] => {
 
     if (entryHour >= 6 && entryHour < 12) {
       targetSection = sections.find(
-        (s) => s.title === language.time.morning.label,
+        (s) => s.title === language.time.morning.label
       );
     } else if (entryHour >= 12 && entryHour < 17) {
       targetSection = sections.find(
-        (s) => s.title === language.time.afternoon.label,
+        (s) => s.title === language.time.afternoon.label
       );
     } else if (entryHour >= 17 && entryHour < 21) {
       targetSection = sections.find(
-        (s) => s.title === language.time.evening.label,
+        (s) => s.title === language.time.evening.label
       );
     } else {
       targetSection = sections.find(
-        (s) => s.title === language.time.night.label,
+        (s) => s.title === language.time.night.label
       );
     }
 
@@ -113,8 +113,9 @@ export default function Add() {
     <ScrollView
       style={{
         minHeight: "100%",
+        marginBottom: -1,
         backgroundColor: empty
-          ? variables.colors.greyLight
+          ? variables.colors.greyBackground
           : variables.colors.white,
       }}
     >
@@ -179,13 +180,13 @@ function AddList({ date, onEmpty }: AddListProps) {
     });
 
     const processingProduct = entries.some(
-      ({ product }) => product?.processing,
+      ({ product }) => product?.processing
     );
 
     const processingMeal = entries.some(({ meal }) =>
       meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing,
-      ),
+        (mealProduct) => mealProduct.product?.processing
+      )
     );
 
     const processing = processingIcon || processingProduct || processingMeal;
@@ -227,6 +228,10 @@ function AddList({ date, onEmpty }: AddListProps) {
     <SwipeListView
       sections={sections}
       keyExtractor={(item) => item.uuid}
+      style={{
+        borderTopColor: variables.border.color,
+        borderTopWidth: 1,
+      }}
       renderItem={({ item }) => (
         <AddListItem entry={item} handleSelect={handleSelect} />
       )}
@@ -289,7 +294,7 @@ function AddListEmpty() {
       <View
         style={{
           minHeight: 180,
-          backgroundColor: variables.colors.greyLight,
+          backgroundColor: variables.colors.greyBackground,
           borderTopWidth: variables.border.width,
           borderTopColor: variables.border.color,
         }}

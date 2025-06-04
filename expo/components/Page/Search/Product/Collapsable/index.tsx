@@ -71,7 +71,7 @@ export default function PageSearchProductCollapsable({
 
           borderBottomWidth: variables.border.width,
           borderBottomColor: isOpen
-            ? variables.colors.grey
+            ? variables.border.color
             : variables.colors.text.secondary,
         }}
       >
@@ -96,7 +96,7 @@ export default function PageSearchProductCollapsable({
             products && (
               <View
                 style={{
-                  borderBottomColor: variables.colors.grey,
+                  borderBottomColor: variables.border.color,
                   borderBottomWidth: variables.border.width,
                 }}
               >
@@ -142,7 +142,7 @@ function SearchCollapsableEmpty({ empty, emoji }: SearchCollapsableEmptyProps) {
     <View
       style={{
         minHeight: 180,
-        backgroundColor: variables.colors.greyLight,
+        backgroundColor: variables.colors.greyBackground,
         borderBottomWidth: variables.border.width,
         borderBottomColor: variables.border.color,
       }}

@@ -61,7 +61,7 @@ function SettingHeaderLoading() {
 
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: variables.colors.greyLight,
+        backgroundColor: variables.colors.grey,
       }}
     >
       <ActivityIndicator

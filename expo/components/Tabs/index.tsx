@@ -73,7 +73,7 @@ export default function Tabs({
       {back && (
         <View
           style={{
-            top: 11,
+            top: 12,
             left: 0,
             zIndex: 1000,
             position: "absolute",
@@ -182,11 +182,11 @@ export default function Tabs({
                     }}
                   >
                     <TextLarge
-                      weight="medium"
+                      weight="semibold"
                       color={
                         isActive
                           ? variables.colors.text.primary
-                          : variables.colors.greyDark
+                          : variables.colors.greyText
                       }
                     >
                       {tab.title}
@@ -199,7 +199,7 @@ export default function Tabs({
                         width: 2,
                         height: 18,
 
-                        backgroundColor: variables.colors.greyDark,
+                        backgroundColor: variables.colors.greyText,
                       }}
                     />
                   )}
@@ -213,7 +213,7 @@ export default function Tabs({
       {add && (
         <View
           style={{
-            top: 11,
+            top: 12,
             right: 0,
             zIndex: 1000,
             position: "absolute",

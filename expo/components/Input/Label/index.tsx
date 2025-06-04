@@ -29,8 +29,8 @@ export default function InputLabel({
       {!required && (
         <Text
           size={10}
-          color={variables.colors.greyDark}
           style={{ top: -1 }}
+          color={variables.colors.greyText}
           weight="semibold"
         >
           ({language.input.optional})
