@@ -255,7 +255,7 @@ export default {
       subtitle: "Deze functionaliteit is nog niet beschikbaar",
     },
     permission: {
-      title: "Toegang verleend",
+      title: "Geen toegang",
       subtitle: "Je hebt geen toegang verleend voor de camera",
     },
     barcode: {
@@ -314,7 +314,7 @@ export default {
         apple: "Inloggen met Apple",
       },
       error: {
-        apple: "Failed to sign in with Apple",
+        apple: "Kon niet inloggen met Apple",
       },
       register: {
         button: "Registreren",
@@ -387,7 +387,7 @@ export default {
       manual: {
         tab: "Handmatig",
         title: "Handmatig inschatten",
-        description: `Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro's handmatig in te vullen, dit is geen product`,
+        description: `Hier kun je een maaltijd snel vastleggen door alleen calorieën en macro\'s handmatig in te vullen, onthoud dat dit niet als een standaard product wordt opgeslagen.`,
       },
       automatic: {
         tab: "Automatisch",
@@ -582,7 +582,7 @@ export default {
       product: `Producten zijn merkartikelen, zoals "Coca-Cola Zero", die altijd naar een exact merk en smaak verwijzen`,
     },
     results: {
-      overloaded: "Je hebt je dagelijkse zoeklimiet overschreden",
+      overloaded: "Oeps! Je hebt de dagelijkse zoeklimiet bereikt.",
 
       getDefault: (type: string) => {
         return `Start met zoeken naar ${type.toLowerCase()} door minimaal 4 letters te typen en druk op enter`;
