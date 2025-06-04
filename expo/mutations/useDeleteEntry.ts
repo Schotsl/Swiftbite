@@ -19,6 +19,8 @@ export default function useDeleteEntry() {
       handleError(error);
     },
     onMutate: async (entry: Entry) => {
+      console.log("[Mutation] mutating entries");
+
       const uuid = entry.uuid;
       const date = getDateKey(entry.created_at);
 
@@ -40,18 +42,18 @@ export default function useDeleteEntry() {
       return { uuid, date, previousUuid, previousDate };
     },
     onError: (err, entry, context) => {
+      console.log("[Mutation] failed to delete entry");
+
       // If the mutation fails, use the context returned from onMutate to roll back
       client.setQueryData(["entryData", context?.uuid], context?.previousUuid);
       client.setQueryData(["entryData", context?.date], context?.previousDate);
-
-      console.log("[Mutation] failed to delete entry");
     },
     onSettled: (data, error, uuid, context) => {
+      console.log("[Mutation] deleted entry");
+
       // Always refetch after error or success
       client.invalidateQueries({ queryKey: ["entryData", context?.uuid] });
       client.invalidateQueries({ queryKey: ["entryData", context?.date] });
-
-      console.log("[Mutation] deleted entry");
     },
   });
 }

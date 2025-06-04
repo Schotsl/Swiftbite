@@ -4,7 +4,11 @@ import { supabase } from "./supabase";
 import { handleError } from "@/helper";
 import { generateEmbedding } from "./generative/generate";
 
-export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
+export const fatsecretRequest = async (
+  query: string,
+  signal: AbortSignal,
+  retries = 1,
+): Promise<unknown[]> => {
   try {
     console.log("[SEARCH] Fatsecret request started");
 
@@ -12,6 +16,11 @@ export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
 
     const url = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=95e21b8a439b147f9&q=${query}&fields=items.title,items.link,items.snippet`;
     const response = await fetch(url, { signal });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
     const parsed = await response.json();
     const results = parsed.items;
 
@@ -22,14 +31,20 @@ export const fatsecretRequest = async (query: string, signal: AbortSignal) => {
 
     const resultsSafe = results || [];
     return resultsSafe;
-  } catch (error) {
-    console.error("[SEARCH] Fatsecret request error:", error);
+  } catch {
+    if (retries > 0) {
+      return fatsecretRequest(query, signal, retries - 1);
+    }
 
     return [];
   }
 };
 
-export const googleRequest = async (query: string, signal: AbortSignal) => {
+export const googleRequest = async (
+  query: string,
+  signal: AbortSignal,
+  retries = 1,
+): Promise<unknown[]> => {
   try {
     console.log("[SEARCH] Google request started");
 
@@ -37,6 +52,11 @@ export const googleRequest = async (query: string, signal: AbortSignal) => {
 
     const url = `https://www.googleapis.com/customsearch/v1?key=AIzaSyD6bBggQl1M810Ev11F6V5RCV6TKtfPIVo&cx=e245e29713fe4444b&q=${query}&fields=items.title,items.link,items.snippet`;
     const response = await fetch(url, { signal });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
     const parsed = await response.json();
     const results = parsed.items;
 
@@ -47,9 +67,10 @@ export const googleRequest = async (query: string, signal: AbortSignal) => {
 
     const resultsSafe = results || [];
     return resultsSafe;
-  } catch (error) {
-    console.error("[SEARCH] Google request error:", error);
-
+  } catch {
+    if (retries > 0) {
+      return googleRequest(query, signal, retries - 1);
+    }
     return [];
   }
 };
@@ -58,7 +79,8 @@ export const openfoodRequest = async (
   query: string,
   lang: string,
   signal: AbortSignal,
-) => {
+  retries = 1,
+): Promise<unknown[]> => {
   try {
     const timeStart = performance.now();
 
@@ -111,6 +133,10 @@ export const openfoodRequest = async (
       headers,
     });
 
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
     const parsed = await response.json();
     const results = parsed.hits;
 
@@ -139,9 +165,10 @@ export const openfoodRequest = async (
 
     const minimizedSafe = minimized || [];
     return minimizedSafe;
-  } catch (error) {
-    console.error("[SEARCH] Openfood request error:", error);
-
+  } catch {
+    if (retries > 0) {
+      return openfoodRequest(query, lang, signal, retries - 1);
+    }
     return [];
   }
 };
@@ -150,25 +177,37 @@ export const supabaseRequest = async (
   user: string | null,
   value: string,
   type: Enums<"type">,
+  retries = 1,
 ): Promise<Product[]> => {
-  const timeStart = performance.now();
+  try {
+    const timeStart = performance.now();
 
-  const vector = await generateEmbedding(user, { value });
+    const vector = await generateEmbedding(user, { value });
 
-  const { data, error } = await supabase.rpc("product_match", {
-    query_embedding: vector,
-    query_type: type,
-    match_threshold: 0.6,
-    match_count: 6,
-  });
+    const { data, error: rpcError } = await supabase.rpc("product_match", {
+      query_embedding: vector,
+      query_type: type,
+      match_threshold: 0.6,
+      match_count: 6,
+    });
 
-  handleError(error);
+    if (rpcError) {
+      handleError(rpcError);
+      throw rpcError;
+    }
 
-  const timeEnd = performance.now();
-  const timeDiff = Math.round(timeEnd - timeStart);
+    const timeEnd = performance.now();
+    const timeDiff = Math.round(timeEnd - timeStart);
 
-  console.log(`[SEARCH] Supabase request took ${timeDiff}ms`);
+    console.log(`[SEARCH] Supabase request took ${timeDiff}ms`);
 
-  const resultsSafe = data || [];
-  return resultsSafe;
+    const resultsSafe = data || [];
+    return resultsSafe;
+  } catch {
+    if (retries > 0) {
+      return supabaseRequest(user, value, type, retries - 1);
+    }
+
+    return [];
+  }
 };

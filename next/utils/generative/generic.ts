@@ -21,7 +21,7 @@ export async function searchGenerics(
     google,
   }: {
     query: string;
-    google: string;
+    google: unknown[];
   },
   {
     generics,

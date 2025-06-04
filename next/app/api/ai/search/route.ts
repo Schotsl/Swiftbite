@@ -17,7 +17,6 @@ import { processSearchGeneric, processSearchProduct } from "@/utils/processing";
 export const maxDuration = 300;
 
 export async function GET(request: NextRequest) {
-  console.log("SEARCH");
   const user = await getUser(request);
   const signal = request.signal;
   const headers = request.headers;
@@ -61,6 +60,8 @@ export async function GET(request: NextRequest) {
   // Get all the data in parallel first
   const [google, supabase, openfood, fatsecret] = await Promise.all(promises);
 
+  const supabaseProducts = supabase as Product[];
+
   // Create a stream for AI results
   const generativeStream =
     type === "search_product"
@@ -73,12 +74,14 @@ export async function GET(request: NextRequest) {
             fatsecret,
           },
           {
-            products: supabase.map(({ title, brand, quantity }: Product) => ({
-              title,
-              brand,
-              quantity_original: quantity?.quantity,
-              quantity_original_unit: quantity?.option,
-            })),
+            products: supabaseProducts.map(
+              ({ title, brand, quantity }: Product) => ({
+                title: title!,
+                brand: brand!,
+                quantity_original: quantity?.quantity,
+                quantity_original_unit: quantity?.option,
+              })
+            ),
           }
         )
       : await searchGenerics(
@@ -88,9 +91,9 @@ export async function GET(request: NextRequest) {
             google,
           },
           {
-            generics: supabase.map(({ title, category }: Product) => ({
-              title,
-              category,
+            generics: supabaseProducts.map(({ title, category }: Product) => ({
+              title: title!,
+              category: category!,
             })),
           }
         );
