@@ -6,12 +6,14 @@ import React from "react";
 import Header from "@/components/Header";
 import ButtonOverlay from "@/components/Button/Overlay";
 import RegisterSteps from "@/components/Register/Steps";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import DateTimePicker, {
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 
 import variables from "@/variables";
 
 export default function Step3() {
-  const { setPrevious } = useRegister();
+  const { birth, setBirth, setPrevious } = useRegister();
 
   const handleNext = () => {
     setPrevious(3);
@@ -21,6 +23,13 @@ export default function Step3() {
   const handleBack = () => {
     setPrevious(3);
     router.replace("/sign-up/step-2");
+  };
+
+  const handleChange = (value: DateTimePickerEvent) => {
+    const stamp = value.nativeEvent.timestamp;
+    const date = new Date(stamp);
+
+    setBirth(date);
   };
 
   return (
@@ -45,9 +54,10 @@ export default function Step3() {
 
           <DateTimePicker
             mode="date"
-            value={new Date()}
+            value={birth}
             style={{ marginVertical: -16 }}
             display="spinner"
+            onChange={handleChange}
           />
         </View>
       </ScrollView>

@@ -19,13 +19,16 @@ export default function Step1() {
     Alert.alert(language.alert.demo.title, language.alert.demo.subtitle);
   }, []);
 
-  const { setPrevious } = useRegister();
+  const { setLast, setFirst, setPrevious } = useRegister();
 
   const { control, handleSubmit } = useForm<Step1Data>({
     resolver: zodResolver(step1Schema),
   });
 
-  const handleNext = () => {
+  const handleNext = (data: Step1Data) => {
+    setFirst(data.first_name.trim());
+    setLast(data.last_name.trim());
+
     setPrevious(1);
 
     router.replace("/sign-up/step-2");

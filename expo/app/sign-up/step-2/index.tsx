@@ -81,6 +81,8 @@ function Step2Switcher() {
 }
 
 function Step2Weight() {
+  const { weight, setWeight } = useRegister();
+
   const weights = Array.from({ length: 2010 }, (_, i) => i / 10 + 50);
 
   return (
@@ -89,7 +91,10 @@ function Step2Weight() {
         Gewicht
       </TextLarge>
 
-      <Picker selectedValue={70.5}>
+      <Picker
+        selectedValue={weight}
+        onValueChange={(value) => setWeight(value!)}
+      >
         {weights.map((option) => (
           <Picker.Item
             key={option}
@@ -103,6 +108,8 @@ function Step2Weight() {
 }
 
 function Step2Length() {
+  const { length, setLength } = useRegister();
+
   const lengths = Array.from({ length: 200 }, (_, i) => i + 50);
 
   return (
@@ -111,7 +118,10 @@ function Step2Length() {
         Lengte
       </TextLarge>
 
-      <Picker selectedValue={180}>
+      <Picker
+        selectedValue={length}
+        onValueChange={(value) => setLength(value!)}
+      >
         {lengths.map((option) => (
           <Picker.Item
             key={option}
