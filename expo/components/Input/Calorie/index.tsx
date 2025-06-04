@@ -12,13 +12,17 @@ import { TouchableOpacity, View } from "react-native";
 import { CalorieData, calorieSchema } from "@/schemas/personal/goal";
 import { Control, useController, useForm } from "react-hook-form";
 
-type InputMacroProps = {
+type InputCalorieProps = {
   name: string;
   label: string;
   control: Control<any>;
 };
 
-export default function InputMacro({ name, label, control }: InputMacroProps) {
+export default function InputCalorie({
+  name,
+  label,
+  control,
+}: InputCalorieProps) {
   const [visible, setVisible] = useState(false);
 
   const {
