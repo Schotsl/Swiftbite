@@ -31,22 +31,9 @@ type PageSearchProps = {
 };
 
 export default function PageSearchProduct({ type, onSelect }: PageSearchProps) {
-  const {
-    query,
-    error,
-    loading,
-    products,
-    overloaded,
-    search,
-    reset: resetSearch,
-  } = useSearch();
+  const { query, error, loading, products, overloaded, search } = useSearch();
 
-  const {
-    control,
-    watch,
-    handleSubmit,
-    reset: resetForm,
-  } = useForm<SearchData>({
+  const { control, watch, handleSubmit } = useForm<SearchData>({
     resolver: zodResolver(searchSchema),
   });
 
@@ -88,8 +75,11 @@ export default function PageSearchProduct({ type, onSelect }: PageSearchProps) {
   }, []);
 
   useEffect(() => {
-    resetForm();
-    resetSearch();
+    if (!queryWatched) {
+      return;
+    }
+
+    search(queryWatched, type);
   }, [type]);
 
   const placeholder =
