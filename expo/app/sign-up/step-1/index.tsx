@@ -2,18 +2,23 @@ import { router } from "expo-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRegister } from "@/context/RegisterContext";
-import { ScrollView, View } from "react-native";
+import { ScrollView, Alert, View } from "react-native";
 import { Step1Data, step1Schema } from "@/schemas/register/step-1";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Input from "@/components/Input";
 import Header from "@/components/Header";
 import RegisterSteps from "@/components/Register/Steps";
 import ButtonOverlay from "@/components/Button/Overlay";
 
 import variables from "@/variables";
+import language from "@/language";
 
 export default function Step1() {
+  useEffect(() => {
+    Alert.alert(language.alert.demo.title, language.alert.demo.subtitle);
+  }, []);
+
   const { setPrevious } = useRegister();
 
   const { control, handleSubmit } = useForm<Step1Data>({

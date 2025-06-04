@@ -71,19 +71,19 @@ const getSections = (entries: Entry[]): Section[] => {
 
     if (entryHour >= 6 && entryHour < 12) {
       targetSection = sections.find(
-        (s) => s.title === language.time.morning.label
+        (s) => s.title === language.time.morning.label,
       );
     } else if (entryHour >= 12 && entryHour < 17) {
       targetSection = sections.find(
-        (s) => s.title === language.time.afternoon.label
+        (s) => s.title === language.time.afternoon.label,
       );
     } else if (entryHour >= 17 && entryHour < 21) {
       targetSection = sections.find(
-        (s) => s.title === language.time.evening.label
+        (s) => s.title === language.time.evening.label,
       );
     } else {
       targetSection = sections.find(
-        (s) => s.title === language.time.night.label
+        (s) => s.title === language.time.night.label,
       );
     }
 
@@ -180,13 +180,13 @@ function AddList({ date, onEmpty }: AddListProps) {
     });
 
     const processingProduct = entries.some(
-      ({ product }) => product?.processing
+      ({ product }) => product?.processing,
     );
 
     const processingMeal = entries.some(({ meal }) =>
       meal?.meal_products?.some(
-        (mealProduct) => mealProduct.product?.processing
-      )
+        (mealProduct) => mealProduct.product?.processing,
+      ),
     );
 
     const processing = processingIcon || processingProduct || processingMeal;

@@ -238,6 +238,10 @@ export default {
     },
   },
   alert: {
+    demo: {
+      title: "Demonstratie",
+      subtitle: `Deze pagina is een demonstratie en is niet daadwerkelijk functioneel`,
+    },
     closed: {
       title: "Helaas",
       subtitle: "We staan momenteel niet open voor nieuwe accounts",

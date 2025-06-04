@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ScrollView, View } from "react-native";
+import { ScrollView, Alert, View } from "react-native";
 import { ManualData, manualSchema } from "@/schemas/insert/manual";
 
 import variables from "@/variables";
@@ -13,6 +14,10 @@ import TextBody from "@/components/Text/Body";
 import ButtonOverlay from "@/components/Button/Overlay";
 
 export default function ProductAdd() {
+  useEffect(() => {
+    Alert.alert(language.alert.demo.title, language.alert.demo.subtitle);
+  }, []);
+
   const { control, handleSubmit } = useForm<ManualData>({
     resolver: zodResolver(manualSchema),
     defaultValues: {
