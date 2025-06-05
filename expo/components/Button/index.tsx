@@ -86,6 +86,9 @@ export default function Button({
           <DecorativeNoise />
         </Fragment>
       )}
+
+      {action === "delete" && <DecorativeNoise />}
+
       {loading ? (
         <ActivityIndicator
           size="small"
