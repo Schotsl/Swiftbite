@@ -587,8 +587,10 @@ export default {
       getDefault: (type: string) => {
         return `Start met zoeken naar ${type.toLowerCase()} door minimaal 4 letters te typen en druk op enter`;
       },
-      getEmpty: (type: string, alternative: string) => {
-        return `We hebben helaas geen ${type.toLowerCase()} gevonden, misschien is het te vinden onder ${alternative.toLowerCase()}`;
+      getEmpty: (type: string, alternative?: string) => {
+        return alternative
+          ? `We hebben helaas geen ${type.toLowerCase()} gevonden, misschien is het te vinden onder ${alternative.toLowerCase()}`
+          : `We hebben helaas geen ${type.toLowerCase()} gevonden`;
       },
       getAdvice: (type: string) => {
         return `Onze AI zoekt de ${type.toLowerCase()} voor je, hoe specifieker je zoekt, hoe beter de resultaten`;
