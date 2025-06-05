@@ -36,7 +36,7 @@ export default function PasswordForgotten() {
             justifyContent: "center",
           }}
         >
-          <TextBody weight="medium">Herinner je je wachtwoord?</TextBody>
+          <TextBody weight="medium">Herinner je je wachtwoord? </TextBody>
 
           <TouchableOpacity onPress={handleLogin}>
             <TextBody color={variables.colors.primary} weight="medium">
