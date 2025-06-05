@@ -85,11 +85,12 @@ export default function ButtonSmall({
       return;
     }
 
-    requestAnimationFrame(() => {
+    // Although the timeout is pretty long the user won't see the element until they open it so they won't know
+    setTimeout(() => {
       marker.current?.measureInWindow((x, y) => {
         onPosition({ x, y });
       });
-    });
+    }, 100);
   };
 
   const marker = useRef<View>(null);
@@ -116,11 +117,11 @@ export default function ButtonSmall({
             },
         style,
       ]}
+      onLayout={handleLayout}
     >
       <TouchableOpacity
         ref={marker}
         onPress={onPress}
-        onLayout={handleLayout}
         disabled={disabled}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         style={{
