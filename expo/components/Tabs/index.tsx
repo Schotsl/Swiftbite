@@ -71,38 +71,52 @@ export default function Tabs({
   return (
     <View>
       {back && (
-        <View
-          style={{
-            top: 12,
-            left: 0,
-            zIndex: 1000,
-            position: "absolute",
-            flexDirection: "row",
-          }}
-        >
+        <Fragment>
           <View
             style={{
-              paddingLeft: variables.padding.page,
-              paddingRight: variables.gap.small,
-              backgroundColor: variables.colors.white,
+              top: 12,
+              left: 0,
+              zIndex: 1,
+              position: "absolute",
+              flexDirection: "row",
+              pointerEvents: "none",
             }}
           >
-            <ButtonSmall
-              icon="arrow-left"
-              nano={true}
-              onPress={() => router.back()}
+            <View
+              style={{
+                width: variables.padding.page + 28 + variables.gap.small,
+                height: 28,
+                backgroundColor: variables.colors.white,
+              }}
             />
+
+            <View
+              style={{
+                width: variables.gap.normal,
+                height: "100%",
+              }}
+            >
+              <LinearGradient
+                end={{ x: 1, y: 0 }}
+                start={{ x: 0, y: 0 }}
+                style={{ flex: 1 }}
+                colors={["rgba(255,255,255,1)", "rgba(255,255,255,0)"]}
+              />
+            </View>
           </View>
 
-          <View style={{ width: variables.gap.normal, height: "100%" }}>
-            <LinearGradient
-              end={{ x: 1, y: 0 }}
-              start={{ x: 0, y: 0 }}
-              style={{ flex: 1 }}
-              colors={["rgba(255,255,255,1)", "rgba(255,255,255,0)"]}
-            />
-          </View>
-        </View>
+          <ButtonSmall
+            icon="arrow-left"
+            nano={true}
+            style={{
+              top: 12,
+              left: variables.padding.page,
+              zIndex: 2,
+              position: "absolute",
+            }}
+            onPress={() => router.back()}
+          />
+        </Fragment>
       )}
 
       <View
@@ -211,38 +225,52 @@ export default function Tabs({
       </View>
 
       {add && (
-        <View
-          style={{
-            top: 12,
-            right: 0,
-            zIndex: 1000,
-            position: "absolute",
-            flexDirection: "row",
-          }}
-        >
-          <View style={{ width: variables.gap.normal, height: "100%" }}>
-            <LinearGradient
-              end={{ x: 1, y: 0 }}
-              start={{ x: 0, y: 0 }}
-              style={{ flex: 1 }}
-              colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]}
+        <Fragment>
+          <View
+            style={{
+              top: 12,
+              right: 0,
+              zIndex: 1,
+              position: "absolute",
+              flexDirection: "row",
+              pointerEvents: "none",
+            }}
+          >
+            <View
+              style={{
+                width: variables.gap.normal,
+                height: "100%",
+              }}
+            >
+              <LinearGradient
+                end={{ x: 1, y: 0 }}
+                start={{ x: 0, y: 0 }}
+                style={{ flex: 1 }}
+                colors={["rgba(255,255,255,0)", "rgba(255,255,255,1)"]}
+              />
+            </View>
+
+            <View
+              style={{
+                width: variables.padding.page + 28 + variables.gap.small,
+                height: 28,
+                backgroundColor: variables.colors.white,
+              }}
             />
           </View>
 
-          <View
+          <ButtonSmall
+            icon="plus"
+            nano={true}
             style={{
-              paddingLeft: variables.gap.small,
-              paddingRight: variables.padding.page,
-              backgroundColor: variables.colors.white,
+              top: 12,
+              right: variables.padding.page,
+              zIndex: 2,
+              position: "absolute",
             }}
-          >
-            <ButtonSmall
-              icon="plus"
-              nano={true}
-              onPress={() => router.push(add)}
-            />
-          </View>
-        </View>
+            onPress={() => router.push(add)}
+          />
+        </Fragment>
       )}
     </View>
   );
