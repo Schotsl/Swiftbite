@@ -4,7 +4,7 @@ import { searchBarcode } from "@/utils/generative/barcode";
 import { fatsecretRequest } from "@/utils/internet";
 import { getProductFromSearch } from "@/utils/search";
 import { processSearchProduct } from "@/utils/processing";
-import { googleRequest, openfoodRequest } from "@/utils/internet";
+import { openfoodRequestBarcode, googleRequest } from "@/utils/internet";
 import { after, NextRequest, NextResponse } from "next/server";
 import {
   getUser,
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
 
   const promises = [
     googleRequest(barcode, signal),
-    openfoodRequest(barcode, lang, signal),
+    openfoodRequestBarcode(barcode),
     fatsecretRequest(barcode, signal),
   ];
 

@@ -4,10 +4,11 @@ import { supabase } from "./supabase";
 import { handleError } from "@/helper";
 import { generateEmbedding } from "./generative/generate";
 
+import OpenFoodFacts from "@openfoodfacts/openfoodfacts-nodejs";
+
 export const fatsecretRequest = async (
   query: string,
   signal: AbortSignal,
-  retries = 1,
 ): Promise<unknown[]> => {
   try {
     console.log("[SEARCH] Fatsecret request started");
@@ -32,10 +33,6 @@ export const fatsecretRequest = async (
     const resultsSafe = results || [];
     return resultsSafe;
   } catch {
-    if (retries > 0) {
-      return fatsecretRequest(query, signal, retries - 1);
-    }
-
     return [];
   }
 };
@@ -43,7 +40,6 @@ export const fatsecretRequest = async (
 export const googleRequest = async (
   query: string,
   signal: AbortSignal,
-  retries = 1,
 ): Promise<unknown[]> => {
   try {
     console.log("[SEARCH] Google request started");
@@ -68,18 +64,29 @@ export const googleRequest = async (
     const resultsSafe = results || [];
     return resultsSafe;
   } catch {
-    if (retries > 0) {
-      return googleRequest(query, signal, retries - 1);
-    }
     return [];
   }
+};
+
+// This is different from the fetchProductFromOpenfood because it doesn't map or filter based on quality since we want to give the LLM whatever we can to help with lookup
+export const openfoodRequestBarcode = async (
+  barcode: string,
+): Promise<unknown[]> => {
+  // TODO: Replace this and other getProduct calls with fetch so we can abort the request
+  const client = new OpenFoodFacts(fetch);
+  const product = await client.getProduct(barcode);
+
+  if (!product) {
+    return [];
+  }
+
+  return [product];
 };
 
 export const openfoodRequest = async (
   query: string,
   lang: string,
   signal: AbortSignal,
-  retries = 1,
 ): Promise<unknown[]> => {
   try {
     const timeStart = performance.now();
@@ -166,9 +173,6 @@ export const openfoodRequest = async (
     const minimizedSafe = minimized || [];
     return minimizedSafe;
   } catch {
-    if (retries > 0) {
-      return openfoodRequest(query, lang, signal, retries - 1);
-    }
     return [];
   }
 };
