@@ -68,7 +68,11 @@ export default function Step5() {
         </View>
       </ScrollView>
 
-      <ButtonOverlay title="Volgende stap" onPress={handleNext} />
+      <ButtonOverlay
+        title="Volgende stap"
+        navigation={false}
+        onPress={handleNext}
+      />
     </View>
   );
 }

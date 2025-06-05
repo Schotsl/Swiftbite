@@ -85,7 +85,11 @@ export default function Step7() {
         </View>
       </ScrollView>
 
-      <ButtonOverlay title="Volgende stap" onPress={handleSubmit(handleNext)} />
+      <ButtonOverlay
+        title="Volgende stap"
+        navigation={false}
+        onPress={handleSubmit(handleNext)}
+      />
 
       <Modal
         title="Onveilig doel"

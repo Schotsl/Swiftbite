@@ -3,9 +3,14 @@ import { View } from "react-native";
 import Button, { ButtonProps } from "@/components/Button";
 import variables from "@/variables";
 
-type ButtonOverlayProps = ButtonProps;
+type ButtonOverlayProps = ButtonProps & {
+  navigation?: boolean;
+};
 
-export default function ButtonOverlay({ ...props }: ButtonOverlayProps) {
+export default function ButtonOverlay({
+  navigation = true,
+  ...props
+}: ButtonOverlayProps) {
   return (
     <View
       style={{
@@ -13,7 +18,7 @@ export default function ButtonOverlay({ ...props }: ButtonOverlayProps) {
         right: 0,
         bottom: 0,
         position: "absolute",
-        paddingBottom: 24,
+        paddingBottom: navigation ? 24 : variables.gap.large,
         paddingHorizontal: variables.padding.page,
 
         shadowColor: "#000",

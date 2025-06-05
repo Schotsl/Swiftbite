@@ -58,7 +58,11 @@ export default function Step4() {
         </View>
       </ScrollView>
 
-      <ButtonOverlay title="Volgende stap" onPress={handleNext} />
+      <ButtonOverlay
+        title="Volgende stap"
+        navigation={false}
+        onPress={handleNext}
+      />
     </View>
   );
 }

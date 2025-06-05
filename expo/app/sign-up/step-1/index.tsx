@@ -80,7 +80,11 @@ export default function Step1() {
         </View>
       </ScrollView>
 
-      <ButtonOverlay title="Volgende stap" onPress={handleSubmit(handleNext)} />
+      <ButtonOverlay
+        title="Volgende stap"
+        navigation={false}
+        onPress={handleSubmit(handleNext)}
+      />
     </View>
   );
 }
