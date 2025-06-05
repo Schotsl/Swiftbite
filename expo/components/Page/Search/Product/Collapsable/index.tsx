@@ -103,7 +103,7 @@ export default function PageSearchProductCollapsable({
               >
                 <FlatList
                   data={products}
-                  style={{ height: 374 }}
+                  style={{ maxHeight: 374 }}
                   keyExtractor={(item) => item.uuid}
                   renderItem={({ item, index }) => (
                     <ItemProduct
