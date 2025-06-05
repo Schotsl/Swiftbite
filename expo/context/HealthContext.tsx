@@ -40,6 +40,7 @@ type HealthProviderProps = {
   interval: number;
 };
 
+// I've asked Gemini to implement the data caching in this context
 export const HealthProvider: React.FC<HealthProviderProps> = ({
   children,
   interval,

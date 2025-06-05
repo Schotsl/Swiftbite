@@ -24,6 +24,7 @@ export default function PageStatsSection({
   const animation = new Animated.Value(open ? 0 : 1);
   const animationRef = useRef(animation).current;
 
+  // I've asked Gemini to animate the opening and closing of the section
   useEffect(() => {
     Animated.timing(animationRef, {
       toValue: open ? 0 : 1,

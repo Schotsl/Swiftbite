@@ -12,6 +12,7 @@ export default function CameraVision() {
   const animation = new Animated.Value(0);
   const animationRef = useRef(animation).current;
 
+  // I've asked Gemini to create the fade in and out animation
   useEffect(() => {
     if (feedback) {
       if (feedback !== "OK") {

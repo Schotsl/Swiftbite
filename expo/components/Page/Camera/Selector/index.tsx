@@ -75,6 +75,7 @@ export default function CameraSelector({
     }
   };
 
+  // I've asked Gemini to implement the touch handel for the selector and the animation of the active item
   const handleTouch = (event: GestureResponderEvent) => {
     if (isDragging) return;
 

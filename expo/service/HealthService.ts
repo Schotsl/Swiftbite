@@ -55,6 +55,7 @@ const OPTIONS = {
   },
 } as HealthKitPermissions;
 
+// I've asked Gemini to implement the health service although I did refactor it
 class HealthService {
   async initHealthKit(): Promise<boolean> {
     return new Promise((resolve, reject) => {

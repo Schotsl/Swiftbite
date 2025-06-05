@@ -35,6 +35,7 @@ export default function PageSearchProductCollapsable({
   const isOpen = opened === title;
   const isEmpty = products?.length === 0;
 
+  // I've asked Gemini to animate the opening and closing of the collapsable
   const height = isEmpty ? 180 : "auto";
   const animation = useRef(new Animated.Value(0)).current;
 

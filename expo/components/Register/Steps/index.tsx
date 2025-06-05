@@ -29,6 +29,7 @@ export default function RegisterSteps({ value, total }: StepsProps) {
     fillerValue.value = withTiming(value, { duration: 300 });
   }, [value, fillerValue]);
 
+  // I asked Gemini to animate the changing of the value
   const animatedStyle = useAnimatedStyle(() => {
     const fraction = fillerValue.value / total;
     const percentage = fraction * 100;
