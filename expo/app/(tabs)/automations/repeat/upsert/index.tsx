@@ -197,7 +197,7 @@ export default function AutomationsRepeatUpsert() {
                             language.types.product.plural,
                             language.types.basic.plural,
                             language.types.meal.plural,
-                          ]),
+                          ])
                         )}
                         onPress={() => setOpen(true)}
                       />
@@ -217,10 +217,10 @@ export default function AutomationsRepeatUpsert() {
                   title={
                     isSet
                       ? language.modifications.getPick(
-                          language.types.item.single,
+                          language.types.item.single
                         )
                       : language.modifications.getEdit(
-                          language.types.item.single,
+                          language.types.item.single
                         )
                   }
                   onPress={() => setOpen(true)}
@@ -344,8 +344,8 @@ function AutomationsRepeatUpsertAdd({
           shadow={false}
           title={
             set
-              ? language.modifications.getEdit(language.types.item.single)
-              : language.modifications.getPick(language.types.item.single)
+              ? language.modifications.getPick(language.types.item.single)
+              : language.modifications.getEdit(language.types.item.single)
           }
           onPress={() => onClose()}
         />
