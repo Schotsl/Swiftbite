@@ -1,8 +1,8 @@
 import { FontAwesome6 } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { HealthProvider } from "@/context/HealthContext";
+import { AppState, View } from "react-native";
 import { useEffect, useState } from "react";
-import { StatusBar, AppState, View } from "react-native";
 import { Redirect, SplashScreen, Tabs } from "expo-router";
 
 import supabase from "@/utils/supabase";
@@ -60,14 +60,6 @@ export default function TabsLayout() {
       subscription.unsubscribe();
     };
   }, []);
-
-  useEffect(() => {
-    if (camera) {
-      StatusBar.setBarStyle("light-content");
-    } else {
-      StatusBar.setBarStyle("dark-content");
-    }
-  }, [camera]);
 
   if (loading) {
     return;
