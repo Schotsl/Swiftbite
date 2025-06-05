@@ -38,6 +38,7 @@ export default function InputLength({
 
   const handleOpen = () => {
     setVisible(true);
+    setTemporary(value);
   };
 
   const handleChange = (selected: number) => {
