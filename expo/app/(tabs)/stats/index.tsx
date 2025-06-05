@@ -1,9 +1,9 @@
 import variables from "@/variables";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ScrollView, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { statsSchema, StatsData } from "@/schemas/stats";
 
 import Tabs from "@/components/Tabs";
@@ -26,6 +26,10 @@ export default function Stats() {
     resolver: zodResolver(statsSchema),
     defaultValues: { date: { start, end } },
   });
+
+  useEffect(() => {
+    Alert.alert(language.alert.demo.title, language.alert.demo.subtitle);
+  }, []);
 
   return (
     <View>
