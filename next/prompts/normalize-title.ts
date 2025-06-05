@@ -47,6 +47,16 @@ Your primary task is to transform the \`title\` into a **clear, simplified, sing
   - Example:
     - 'isometric sport drink' -> 'a sport drink'
 
+## Refining meat descriptions:
+  - When a meat item is intended for consumption, avoid ambiguous outputs (e.g., "a chicken", "a pork", "a beef") which might be interpreted as the live animal or be too vague.
+  - Instead, use more descriptive terms like "a piece of [meat type]", "a serving of [meat type]", "a [cut of meat]" (e.g., "a steak", "a chicken breast"), or "a [meat preparation]" (e.g., "a chicken wing", "a slice of ham").
+  - This applies when the context clearly indicates the item as food, not the animal.
+  - If the item is already specific (e.g., "a chicken wing" from "hot wings"), that specificity should be maintained or achieved.
+  - Examples:
+    - Input: "chicken fillet" -> Output: "a piece of chicken" or "a chicken fillet".
+    - Input: "roasted pork loin" -> Output: "a piece of roasted pork" or "a serving of pork".
+    - Input: "beef steak" -> Output: "a steak" or "a piece of beef".
+
 ## Language of output:
   - The \`title\` may be in any language.
   - The output description MUST generally be in clear, simple English. However, exceptions apply for certain culturally specific items (see "Handling Culturally Specific Items" below).
