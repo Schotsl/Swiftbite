@@ -125,8 +125,12 @@ export default function ButtonSmall({
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         style={{
           gap: variables.gap.small,
-          minWidth: nano ? 28 : 36,
-          minHeight: nano ? 28 : 36,
+          minWidth: nano
+            ? variables.heightButtonNano
+            : variables.heightButtonSmall,
+          minHeight: nano
+            ? variables.heightButtonNano
+            : variables.heightButtonSmall,
 
           alignItems: "center",
           flexDirection: "row",

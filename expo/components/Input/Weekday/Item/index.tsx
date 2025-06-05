@@ -45,8 +45,8 @@ export default function InputWeekdayItem({
     <TouchableOpacity
       onPress={handlePress}
       style={{
-        width: 36,
-        height: 36,
+        width: variables.circle.small,
+        height: variables.circle.small,
 
         overflow: "hidden",
         alignItems: "center",
@@ -54,7 +54,7 @@ export default function InputWeekdayItem({
 
         borderColor: border,
         borderWidth: variables.border.width,
-        borderRadius: 36,
+        borderRadius: variables.circle.small,
 
         backgroundColor: background,
       }}

@@ -69,6 +69,8 @@ export default {
 
   heightTab: 62,
   heightButton: 50,
+  heightButtonSmall: 36,
+  heightButtonNano: 28,
   heightOverlay: 75,
 
   paddingTab: 32 + 62,

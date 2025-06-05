@@ -33,6 +33,7 @@ export default function PageStatsChartsHistory({
 
   const { width: widthWindow } = useWindowDimensions();
 
+  // TODO: Why is this 36, I feel like it should be 32 as that is the page padding
   const width = widthWindow - variables.padding.page * 2 - 36;
 
   const handleToggle = (value: string) => {

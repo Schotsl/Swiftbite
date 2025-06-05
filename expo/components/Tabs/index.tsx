@@ -84,8 +84,11 @@ export default function Tabs({
           >
             <View
               style={{
-                width: variables.padding.page + 28 + variables.gap.small,
-                height: 28,
+                width:
+                  variables.gap.small +
+                  variables.padding.page +
+                  variables.heightButtonNano,
+                height: variables.heightButtonNano,
                 backgroundColor: variables.colors.white,
               }}
             />
@@ -252,8 +255,11 @@ export default function Tabs({
 
             <View
               style={{
-                width: variables.padding.page + 28 + variables.gap.small,
-                height: 28,
+                width:
+                  variables.gap.small +
+                  variables.padding.page +
+                  variables.heightButtonNano,
+                height: variables.heightButtonNano,
                 backgroundColor: variables.colors.white,
               }}
             />
