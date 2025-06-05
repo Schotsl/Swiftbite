@@ -12,13 +12,14 @@ export async function fetchProductFromOpenfood(
 ): Promise<(ProductInsert & { options: Option[] }) | null> {
   const client = new OpenFoodFacts(fetch);
   const product = await client.getProduct(barcode);
-  const valid = getValid(product);
 
-  if (!valid) {
+  if (!product) {
     return null;
   }
 
-  if (!product) {
+  const valid = getValid(product);
+
+  if (!valid) {
     return null;
   }
 
