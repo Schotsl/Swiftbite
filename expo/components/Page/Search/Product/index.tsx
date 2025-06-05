@@ -159,16 +159,21 @@ function PageSearchProductContent({
 
   const [opened, setOpened] = useState<string | null>(null);
 
-  const labelPlural =
+  const label =
     type === "search_product"
       ? language.types.product.plural
       : language.types.basic.plural;
+
+  const opposite =
+    type === "search_product"
+      ? language.types.basic.plural
+      : language.types.product.plural;
 
   if (error) {
     return (
       <Empty
         emoji="⚠️"
-        content={language.search.results.getError(labelPlural)}
+        content={language.search.results.getError(label)}
       />
     );
   }
@@ -181,8 +186,8 @@ function PageSearchProductContent({
     return (
       <View style={{ flex: 1 }}>
         <PageSearchProductCollapsable
-          title={language.search.favorite.getTitle(labelPlural)}
-          empty={language.search.favorite.getEmpty(labelPlural)}
+          title={language.search.favorite.getTitle(label)}
+          empty={language.search.favorite.getEmpty(label)}
           emoji="😊"
           opened={opened}
           loading={favoriteProductsLoading}
@@ -192,8 +197,8 @@ function PageSearchProductContent({
         />
 
         <PageSearchProductCollapsable
-          title={language.search.manual.getTitle(labelPlural)}
-          empty={language.search.manual.getEmpty(labelPlural)}
+          title={language.search.manual.getTitle(label)}
+          empty={language.search.manual.getEmpty(label)}
           emoji="📝"
           opened={opened}
           loading={false}
@@ -203,8 +208,8 @@ function PageSearchProductContent({
         />
 
         <PageSearchProductCollapsable
-          title={language.search.often.getTitle(labelPlural)}
-          empty={language.search.often.getEmpty(labelPlural)}
+          title={language.search.often.getTitle(label)}
+          empty={language.search.often.getEmpty(label)}
           emoji="👀"
           opened={opened}
           loading={mostUsedProductsLoading}
@@ -214,8 +219,8 @@ function PageSearchProductContent({
         />
 
         <PageSearchProductCollapsable
-          title={language.search.recent.getTitle(labelPlural)}
-          empty={language.search.recent.getEmpty(labelPlural)}
+          title={language.search.recent.getTitle(label)}
+          empty={language.search.recent.getEmpty(label)}
           emoji="🆕"
           opened={opened}
           loading={mostRecentProductsLoading}
@@ -243,7 +248,7 @@ function PageSearchProductContent({
       <Empty
         emoji="🔎"
         active={true}
-        content={language.search.results.getLoading(labelPlural)}
+        content={language.search.results.getLoading(label)}
       />
     );
   }
@@ -252,8 +257,8 @@ function PageSearchProductContent({
     return (
       <Empty
         emoji="😲"
-        content={language.search.results.getEmpty(labelPlural)}
-        contentSecondary={language.search.results.getAdvice(labelPlural)}
+        content={language.search.results.getEmpty(label, opposite)}
+        contentSecondary={language.search.results.getAdvice(label)}
       />
     );
   }
@@ -262,7 +267,7 @@ function PageSearchProductContent({
     return (
       <Empty
         emoji="🥳"
-        content={language.search.results.getDefault(labelPlural)}
+        content={language.search.results.getDefault(label)}
       />
     );
   }
