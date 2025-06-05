@@ -76,7 +76,7 @@ export async function validateUsage(user: string) {
     return "Hourly limit exceeded";
   }
 
-  if (yearInput > 5000000 || yearOutput > 5000000) {
+  if (yearInput > 50000000 || yearOutput > 50000000) {
     return "Yearly limit exceeded";
   }
 }
