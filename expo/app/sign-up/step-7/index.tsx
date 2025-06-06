@@ -59,7 +59,7 @@ export default function Step7() {
 
             gap: variables.gap.large,
             padding: variables.padding.page,
-            paddingBottom: variables.paddingOverlay,
+            paddingBottom: variables.paddingOverlayEmpty,
           }}
         >
           <RegisterSteps value={7} total={8} />
@@ -78,10 +78,6 @@ export default function Step7() {
             control={control}
             calories={2000}
           />
-
-          <View style={{ marginTop: "auto" }}>
-            <Button title={"Volgende stap"} onPress={handleNext} />
-          </View>
         </View>
       </ScrollView>
 
