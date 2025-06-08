@@ -410,7 +410,7 @@ export default {
       getSubtitle: (count: number) => {
         return count === 0
           ? "Je hebt nog geen logs toegevoegd"
-          : `Je hebt ${count} logs geregistreerd`;
+          : `Je hebt ${count} log${count === 1 ? "" : "s"} geregistreerd`;
       },
       details: {
         title: "Mijn gegevens",
