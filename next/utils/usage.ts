@@ -36,21 +36,21 @@ export async function validateUsage(user: string) {
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", new Date(now - 60 * 1000).toISOString()),
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", hourTimestamp),
     supabase
       .from("usage")
       .select(
-        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()",
+        "input_tokens:input_tokens.sum(), output_tokens:output_tokens.sum()"
       )
       .eq("user_id", user)
       .gte("created_at", yearTimestamp),
@@ -68,11 +68,11 @@ export async function validateUsage(user: string) {
   const yearInput = yearResult.data?.[0]?.input_tokens || 0;
   const yearOutput = yearResult.data?.[0]?.output_tokens || 0;
 
-  if (minuteInput > 50000 || minuteOutput > 50000) {
+  if (minuteInput > 5000000 || minuteOutput > 5000000) {
     return "Minute limit exceeded";
   }
 
-  if (hourInput > 500000 || hourOutput > 500000) {
+  if (hourInput > 5000000 || hourOutput > 5000000) {
     return "Hourly limit exceeded";
   }
 
