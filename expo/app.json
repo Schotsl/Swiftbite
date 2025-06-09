@@ -4,7 +4,7 @@
     "slug": "swiftbite",
     "icon": "./assets/images/icon.png",
     "scheme": "com.sjorsvanholst.swiftbite",
-    "version": "1.0.12",
+    "version": "1.1.0",
     "orientation": "portrait",
     "description": "Swiftbite: scan barcodes of je maaltijd, log in seconden en zie direct calorieën & macro's. Slimme porties, herhaal favorieten en houd grip op je doelen zonder gedoe!",
     "userInterfaceStyle": "automatic",
