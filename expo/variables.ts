@@ -76,4 +76,5 @@ export default {
   paddingTab: 32 + 62,
   paddingOverlay: 32 + 50 + 24,
   paddingOverlayTab: 32 + 50 + 24 + 62,
+  paddingOverlayEmpty: 32 + 50 + 24 + 32,
 };

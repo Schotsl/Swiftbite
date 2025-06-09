@@ -147,7 +147,7 @@ export default function InputMacro({
     <View>
       <Label label={label} />
 
-      <View style={{ marginTop: -4, gap: 32 }}>
+      <View style={{ marginTop: -4, gap: 32, marginBottom: 4 }}>
         <InputMacroItem
           label={language.macros.carbs.short}
           border={variables.macros.carbs.border}

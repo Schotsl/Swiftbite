@@ -49,7 +49,7 @@ export default function Step1() {
 
             gap: variables.gap.large,
             padding: variables.padding.page,
-            paddingBottom: variables.paddingOverlay,
+            paddingBottom: variables.paddingOverlayEmpty,
           }}
         >
           <RegisterSteps value={1} total={8} />

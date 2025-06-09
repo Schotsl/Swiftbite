@@ -171,10 +171,7 @@ function PageSearchProductContent({
 
   if (error) {
     return (
-      <Empty
-        emoji="⚠️"
-        content={language.search.results.getError(label)}
-      />
+      <Empty emoji="⚠️" content={language.search.results.getError(label)} />
     );
   }
 
@@ -265,10 +262,7 @@ function PageSearchProductContent({
 
   if (!isPreviewing || !isSearchable) {
     return (
-      <Empty
-        emoji="🥳"
-        content={language.search.results.getDefault(label)}
-      />
+      <Empty emoji="🥳" content={language.search.results.getDefault(label)} />
     );
   }
 

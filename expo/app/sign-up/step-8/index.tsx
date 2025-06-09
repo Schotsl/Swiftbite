@@ -35,7 +35,7 @@ export default function Step8() {
           gap: variables.gap.large,
           flex: 1,
           padding: variables.padding.page,
-          paddingBottom: variables.gap.large,
+          paddingBottom: variables.paddingOverlayEmpty,
         }}
       >
         <RegisterSteps value={8} total={8} />

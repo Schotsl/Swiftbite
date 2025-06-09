@@ -52,7 +52,6 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
 
   const [startedInitialized, setStartedInitialized] = useState(false);
 
-
   const [weight, setWeight] = useState<number | null>(null);
   const [active, setActive] = useState<number | null>(null);
   const [calories, setCalories] = useState<number | null>(null);
