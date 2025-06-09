@@ -5,7 +5,6 @@ import { ScrollView, View } from "react-native";
 import React, { useState } from "react";
 
 import Modal from "@/components/Modal";
-import Button from "@/components/Button";
 import Header from "@/components/Header";
 import TextBody from "@/components/Text/Body";
 import InputMacro from "@/components/Input/Macro";
@@ -39,7 +38,7 @@ export default function Step7() {
   const handleNext = (data: GoalData) => {
     const { calories, macro } = data;
 
-    setCalories(calories);
+    setCalories({ calories });
     setMacro(macro);
     setPrevious(7);
 
