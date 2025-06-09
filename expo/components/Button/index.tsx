@@ -38,8 +38,11 @@ export default function Button({
   let backgroundColorToSet = variables.colors.primary;
 
   if (action === "secondary") {
-    textColor = variables.colors.text.primary;
-    backgroundColorToSet = variables.colors.background.secondary;
+    // textColor = variables.colors.text.primary;
+    // backgroundColorToSet = variables.colors.background.secondary;
+
+    textColor = variables.colors.white;
+    backgroundColorToSet = "#0076D6";
   }
 
   if (action === "delete") {
