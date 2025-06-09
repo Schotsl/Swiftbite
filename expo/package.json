@@ -58,6 +58,7 @@
     "expo-splash-screen": "~0.30.8",
     "expo-symbols": "~0.4.4",
     "expo-system-ui": "~5.0.7",
+    "expo-updates": "~0.28.14",
     "prettier-plugin-sort-imports": "^1.8.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
