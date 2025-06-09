@@ -22,7 +22,7 @@ export default function useSignInWithApple() {
             provider: "apple",
             token: credential.identityToken!,
           });
-
+          
         handleError(authError);
 
         const { data: userData, error: userError } = await supabase

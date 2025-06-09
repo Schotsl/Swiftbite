@@ -6,11 +6,12 @@ import language from "@/language";
 import { Alert } from "react-native";
 import { Product } from "@/types/product";
 import { ServingData } from "@/schemas/serving";
-import { getMacrosFromProduct } from "@/helper";
+import { getLabel, getMacrosFromProduct } from "@/helper";
 
 type ItemProductProps = {
   icon?: boolean;
   small?: boolean;
+  search?: boolean;
   border?: boolean;
   product: Product;
   serving?: ServingData | null;
@@ -18,6 +19,7 @@ type ItemProductProps = {
 };
 
 export default function ItemProduct({
+  search = false,
   product,
   serving,
   onSelect,
@@ -50,10 +52,21 @@ export default function ItemProduct({
   }
 
   if (product.type === "search_product") {
-    const { processing } = product;
+    const { search, quantity, processing } = product;
 
     const title = processing ? product.search.title : product.title;
     const subtitle = processing ? product.search.brand : product.brand;
+
+    // I really don't like this solution but it's a day before the deadline
+    const metadata = processing
+      ? search.quantity_original && search.quantity_original_unit
+        ? `${search.quantity_original} ${getLabel(search.quantity_original_unit!)}`
+        : null
+      : quantity && quantity.quantity
+        ? `${quantity.quantity} ${getLabel(quantity.option)}`
+        : null;
+
+    const metadataSafe = search ? metadata : null;
 
     return (
       <Item
@@ -62,7 +75,7 @@ export default function ItemProduct({
         title={title}
         subtitle={subtitle}
         subtitleIcon={processing ? "globe" : undefined}
-        rightTop={processing ? null : overwriteTop}
+        rightTop={processing ? metadataSafe : overwriteTop}
         rightBottom={overwriteBottom}
         onPress={() => onSelect(product.uuid)}
       />
@@ -86,7 +99,7 @@ export default function ItemProduct({
       if (processing) {
         Alert.alert(
           language.alert.processing.title,
-          language.alert.processing.subtitle,
+          language.alert.processing.subtitle
         );
 
         return;

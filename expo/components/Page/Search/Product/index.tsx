@@ -273,7 +273,12 @@ function PageSearchProductContent({
         scrollEnabled={false}
         keyExtractor={(item) => item.uuid}
         renderItem={({ item }) => (
-          <ItemProduct icon={false} product={item} onSelect={onSelect} />
+          <ItemProduct
+            icon={false}
+            search={true}
+            product={item}
+            onSelect={onSelect}
+          />
         )}
       />
 
