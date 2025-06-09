@@ -22,7 +22,7 @@ import variables from "@/variables";
 export default function Step7() {
   const [modal, setModal] = useState(true);
 
-  const { setPrevious } = useRegister();
+  const { setPrevious, setCalories, setMacro } = useRegister();
 
   const { handleSubmit, control } = useForm<GoalData>({
     resolver: zodResolver(goalSchema),
@@ -36,13 +36,19 @@ export default function Step7() {
     },
   });
 
-  const handleNext = () => {
+  const handleNext = (data: GoalData) => {
+    const { calories, macro } = data;
+
+    setCalories(calories);
+    setMacro(macro);
     setPrevious(7);
+
     router.replace("/sign-up/step-8");
   };
 
   const handleBack = () => {
     setPrevious(7);
+
     router.replace("/sign-up/step-6");
   };
 
