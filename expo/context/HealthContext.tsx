@@ -31,13 +31,15 @@ type HealthContextType = {
   activeStatus: HealthStatus;
   weightStatus: HealthStatus;
   caloriesStatus: HealthStatus;
+
+  initializeHealth: () => Promise<boolean>;
 };
 
 const HealthContext = createContext<HealthContextType | undefined>(undefined);
 
 type HealthProviderProps = {
   children: ReactNode;
-  interval: number;
+  interval: number | null;
 };
 
 // I've asked Gemini to implement the data caching in this context
@@ -47,6 +49,9 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
 }) => {
   const [healthInitialized, setHealthInitialized] = useState(false);
   const [storageInitialized, setStorageInitialized] = useState(false);
+
+  const [startedInitialized, setStartedInitialized] = useState(false);
+
 
   const [weight, setWeight] = useState<number | null>(null);
   const [active, setActive] = useState<number | null>(null);
@@ -128,6 +133,11 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
       return;
     }
 
+    // If interval is null, don't fetch data
+    if (interval === null) {
+      return;
+    }
+
     // Instantly fetch the data and adjust the state based on the local storage
     const instantState = storageInitialized
       ? HealthStatus.Refreshing
@@ -142,21 +152,29 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
     return () => clearInterval(intervalId);
   }, [interval, healthInitialized, storageInitialized]);
 
-  useEffect(() => {
-    const initializeHealth = async () => {
-      // Load the cache from local storage
-      const storageInitialized = await loadLocal();
-      setStorageInitialized(storageInitialized);
-
-      // Initialize the health service
-      const healthInitialized = await HealthService.initHealthKit();
-      setHealthInitialized(healthInitialized);
-    };
-
-    if (Device.isDevice) {
-      initializeHealth();
+  const initializeHealth = async (): Promise<boolean> => {
+    // If initialization has already started, just return the current state
+    if (startedInitialized) {
+      return healthInitialized;
     }
-  }, []);
+
+    // Check if we're on a real device
+    if (!Device.isDevice) {
+      return false;
+    }
+
+    setStartedInitialized(true);
+
+    // Load the cache from local storage
+    const storageInitialized = await loadLocal();
+    setStorageInitialized(storageInitialized);
+
+    // Initialize the health service
+    const healthServiceInitialized = await HealthService.initHealthKit();
+    setHealthInitialized(healthServiceInitialized);
+
+    return healthServiceInitialized;
+  };
 
   const value: HealthContextType = {
     weight,
@@ -166,6 +184,8 @@ export const HealthProvider: React.FC<HealthProviderProps> = ({
     weightStatus,
     activeStatus,
     caloriesStatus,
+
+    initializeHealth,
   };
 
   return (
