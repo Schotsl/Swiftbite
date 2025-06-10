@@ -19,7 +19,7 @@ type ItemProductProps = {
 };
 
 export default function ItemProduct({
-  search = false,
+  search: searchProps = false,
   product,
   serving,
   onSelect,
@@ -58,13 +58,17 @@ export default function ItemProduct({
     const subtitle = processing ? product.search.brand : product.brand;
 
     // I really don't like this solution but it's a day before the deadline
-    const metadata = processing
-      ? search.quantity_original && search.quantity_original_unit
-        ? `${search.quantity_original} ${getLabel(search.quantity_original_unit!)}`
-        : null
-      : quantity && quantity.quantity
-        ? `${quantity.quantity} ${getLabel(quantity.option)}`
-        : null;
+    let label = processing ? null : overwriteTop;
+
+    if (searchProps) {
+      label = processing
+        ? search.quantity_original && search.quantity_original_unit
+          ? `${search.quantity_original} ${getLabel(search.quantity_original_unit!)}`
+          : null
+        : quantity && quantity.quantity
+          ? `${quantity.quantity} ${getLabel(quantity.option)}`
+          : null;
+    }
 
     return (
       <Item
@@ -73,7 +77,7 @@ export default function ItemProduct({
         title={title}
         subtitle={subtitle}
         subtitleIcon={processing ? "globe" : undefined}
-        rightTop={search ? metadata : processing ? null : metadata}
+        rightTop={label}
         rightBottom={overwriteBottom}
         onPress={() => onSelect(product.uuid)}
       />
