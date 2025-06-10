@@ -66,8 +66,6 @@ export default function ItemProduct({
         ? `${quantity.quantity} ${getLabel(quantity.option)}`
         : null;
 
-    const metadataSafe = search ? metadata : null;
-
     return (
       <Item
         {...props}
@@ -75,7 +73,7 @@ export default function ItemProduct({
         title={title}
         subtitle={subtitle}
         subtitleIcon={processing ? "globe" : undefined}
-        rightTop={processing ? metadataSafe : overwriteTop}
+        rightTop={search ? metadata : processing ? null : metadata}
         rightBottom={overwriteBottom}
         onPress={() => onSelect(product.uuid)}
       />
