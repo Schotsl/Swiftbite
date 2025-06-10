@@ -28,6 +28,12 @@ export async function fetchProductFromOpenfood(
 }
 
 function getValid(product: ProductV2) {
+  const { nutriments } = product;
+
+  if (!nutriments) {
+    return false;
+  }
+
   const keys = [
     "fat_100g",
     "trans-fat_100g",
@@ -44,9 +50,8 @@ function getValid(product: ProductV2) {
     "sugars_100g",
   ];
 
-  // If any value is defined we'll call the product good enough
   for (const key of keys) {
-    if (product[key] !== undefined) {
+    if (nutriments[key] !== undefined) {
       return true;
     }
   }

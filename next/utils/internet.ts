@@ -8,7 +8,7 @@ import OpenFoodFacts from "@openfoodfacts/openfoodfacts-nodejs";
 
 export const fatsecretRequest = async (
   query: string,
-  signal: AbortSignal
+  signal: AbortSignal,
 ): Promise<unknown[]> => {
   try {
     console.log("[SEARCH] Fatsecret request started");
@@ -39,7 +39,7 @@ export const fatsecretRequest = async (
 
 export const googleRequest = async (
   query: string,
-  signal: AbortSignal
+  signal: AbortSignal,
 ): Promise<unknown[]> => {
   try {
     console.log("[SEARCH] Google request started");
@@ -70,7 +70,7 @@ export const googleRequest = async (
 
 // This is different from the fetchProductFromOpenfood because it doesn't map or filter based on quality since we want to give the LLM whatever we can to help with lookup
 export const openfoodRequestBarcode = async (
-  barcode: string
+  barcode: string,
 ): Promise<unknown[]> => {
   // TODO: Replace this and other getProduct calls with fetch so we can abort the request
   const client = new OpenFoodFacts(fetch);
@@ -86,7 +86,7 @@ export const openfoodRequestBarcode = async (
 export const openfoodRequest = async (
   query: string,
   lang: string,
-  signal: AbortSignal
+  signal: AbortSignal,
 ): Promise<unknown[]> => {
   try {
     const timeStart = performance.now();
@@ -156,7 +156,7 @@ export const openfoodRequest = async (
       const brandsUnique = brandsCombined.filter(
         (brand, index, self) =>
           index ===
-          self.findIndex((t) => t.toLowerCase() === brand.toLowerCase())
+          self.findIndex((t) => t.toLowerCase() === brand.toLowerCase()),
       );
 
       delete item.brands_tags;
@@ -181,7 +181,7 @@ export const supabaseRequest = async (
   user: string | null,
   value: string,
   type: Enums<"type">,
-  retries = 1
+  retries = 1,
 ): Promise<Product[]> => {
   try {
     const timeStart = performance.now();
